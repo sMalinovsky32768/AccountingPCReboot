@@ -1,0 +1,16 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:AccountingPC.LightTheme">
+    <Style TargetType="GridSplitter">
+        <Setter Property="Background" Value="#33000000"/>
+    </Style>
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Color.xaml"/>
+        <ResourceDictionary Source="ComboBox.xaml"/>
+        <ResourceDictionary Source="Button.xaml"/>
+        <ResourceDictionary Source="Box.xaml"/>
+        <ResourceDictionary Source="DataGrid.xaml"/>
+        <ResourceDictionary Source="Menu.xaml"/>
+        <ResourceDictionary Source="ListBox.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
