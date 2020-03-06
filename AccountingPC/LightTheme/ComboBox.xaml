@@ -30,7 +30,7 @@
         <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
         <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
         <Setter Property="MinWidth" Value="120"/>
-        <Setter Property="MinHeight" Value="20"/>
+        <Setter Property="Height" Value="25"/>
         <Setter Property="Padding" Value="5 0"/>
         <Setter Property="Template">
             <Setter.Value>

@@ -4,6 +4,7 @@
     <Style x:Key="text-box">
         <Setter Property="TextBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
         <Setter Property="TextBox.Padding" Value="5 0"/>
+        <Setter Property="TextBox.Height" Value="25"/>
         <Setter Property="TextBox.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="TextBox">
@@ -35,6 +36,7 @@
     <Style x:Key="password-box">
         <Setter Property="PasswordBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
         <Setter Property="PasswordBox.Padding" Value="5 0"/>
+        <Setter Property="PasswordBox.Height" Value="25"/>
         <Setter Property="PasswordBox.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="PasswordBox">

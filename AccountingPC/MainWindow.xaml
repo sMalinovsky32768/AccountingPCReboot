@@ -9,10 +9,12 @@
         WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Window.Resources>
         <Style TargetType="TextBox" BasedOn="{StaticResource ResourceKey=text-box}">
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="5 0"/>
+            <Setter Property="Height" Value="30"/>
         </Style>
         <Style TargetType="PasswordBox" BasedOn="{StaticResource ResourceKey=password-box}">
-            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Margin" Value="5 0"/>
+            <Setter Property="Height" Value="30"/>
         </Style>
         <Style TargetType="TextBlock">
             <Setter Property="TextBlock.FontSize" Value="14"/>
@@ -42,7 +44,7 @@
             <TextBlock Grid.Column="1" Text="Пароль:"/>
             <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passwordTextBox" Password="admin"/>
             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="loginButton" Content="Войти" Click="LoginClick" 
-                    IsDefault="True" Style="{DynamicResource primary-button}" HorizontalContentAlignment="Right"/>
+                    IsDefault="True" Style="{DynamicResource primary-button}" Margin="5 0" Height="30"/>
         </Grid>
     </Border>
 </Window>

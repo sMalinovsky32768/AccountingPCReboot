@@ -30,7 +30,7 @@ namespace AccountingPC
         TypeDevice typeDevice;
         TypeChange typeChange;
         int DeviceID;
-        SqlDataAdapter adapter;
+        SqlDataAdapter changeAdapter;
         DataSet set;
 
         public ChangeDeviceWindow(TypeDevice typeD, TypeChange change, int ID)
@@ -214,17 +214,17 @@ namespace AccountingPC
             switch (((ComboBox)sender).Name)
             {
                 case "motherboardPC":
-                    adapter = new SqlDataAdapter($"SELECT Motherboard from PC Where Motherboard LIKE N'{motherboardPC.Text}%'", connectionString);
+                    changeAdapter = new SqlDataAdapter($"SELECT Motherboard from PC Where Motherboard LIKE N'{motherboardPC.Text}%'", connectionString);
                     set = new DataSet();
-                    adapter.Fill(set);
+                    changeAdapter.Fill(set);
                     motherboardPC.ItemsSource = set.Tables[0].DefaultView;
                     motherboardPC.DisplayMemberPath = "Motherboard";
                     motherboardPC.IsDropDownOpen = true;
                     break;
                 case "cpuPC":
-                    adapter = new SqlDataAdapter($"SELECT CPUModel from PC Where CPUModel LIKE N'{cpuPC.Text}%'", connectionString);
+                    changeAdapter = new SqlDataAdapter($"SELECT CPUModel from PC Where CPUModel LIKE N'{cpuPC.Text}%'", connectionString);
                     set = new DataSet();
-                    adapter.Fill(set);
+                    changeAdapter.Fill(set);
                     cpuPC.ItemsSource = set.Tables[0].DefaultView;
                     cpuPC.DisplayMemberPath = "CPUModel";
                     cpuPC.IsDropDownOpen = true;

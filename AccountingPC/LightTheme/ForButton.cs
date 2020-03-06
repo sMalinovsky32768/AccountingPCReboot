@@ -45,6 +45,8 @@ namespace AccountingPC.LightTheme
                 {
                     ((Window)sender).Height = ((AccountingPCWindow)sender).lastHeight;
                     ((Window)sender).Width = ((AccountingPCWindow)sender).lastWidth;
+                    ((AccountingPCWindow)sender).changePopup.Height = ((Window)sender).Height - 300;
+                    ((AccountingPCWindow)sender).changePopup.Width = ((Window)sender).Width - 400;
                 }
                 ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Visible;
                 ((Path)((Button)e.OriginalSource).Template.FindName("Restore", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;
@@ -55,6 +57,13 @@ namespace AccountingPC.LightTheme
                 {
                     ((AccountingPCWindow)sender).lastHeight = ((Window)sender).Height;
                     ((AccountingPCWindow)sender).lastWidth = ((Window)sender).Width;
+                    ((AccountingPCWindow)sender).changePopup.Height = ((Window)sender).Height - 300;
+                    ((AccountingPCWindow)sender).changePopup.Width = ((Window)sender).Width - 400;
+                    if (((AccountingPCWindow)sender).changePopup.IsOpen)
+                    {
+                        ((AccountingPCWindow)sender).changePopup.IsOpen = false;
+                        ((AccountingPCWindow)sender).changePopup.IsOpen = true;
+                    }
                 }
                 ((Window)sender).WindowState = WindowState.Maximized;
                 ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;
