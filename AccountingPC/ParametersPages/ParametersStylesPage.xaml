@@ -52,7 +52,7 @@
                 <TextBlock Text="Параметр" Style="{Binding Mode=OneWay, Source={StaticResource header}}"/>
                 <TextBlock Grid.Column="2" Text="Значение" Style="{Binding Mode=OneWay, Source={StaticResource header}}"/>
                 <TextBlock Text="Тема" Grid.Row="1" Style="{DynamicResource property-name}"/>
-                <ComboBox x:Name="Theme" Grid.Row="1" Grid.Column="2" SelectionChanged="Theme_SelectionChanged">
+                <ComboBox x:Name="Theme" Grid.Row="1" Grid.Column="2" SelectionChanged="Theme_SelectionChanged" Style="{DynamicResource comboBox}">
                     <ComboBoxItem Content="Темная"/>
                     <ComboBoxItem Content="Светлая"/>
                 </ComboBox>

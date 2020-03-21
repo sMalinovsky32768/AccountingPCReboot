@@ -468,7 +468,7 @@ namespace AccountingPC
             changePopup.IsOpen = false;
             isPreOpenPopup = false;
             viewGrid.IsEnabled = true;
-            menu.IsEnabled = false;
+            menu.IsEnabled = true;
         }
     }
 }
