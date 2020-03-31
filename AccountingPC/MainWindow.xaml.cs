@@ -14,31 +14,40 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccountingPC
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindow.xaml
-    /// </summary>
+    public class Authorization
+    {
+        String Login { get; set; }
+        String Pass { get; set; }
+        [Compare("Pass")]
+        String ConfirmPass { get; set; }
+    }
+
     public partial class MainWindow : Window
     {
         // Выход при Esc
         public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
             "Exit", "ExitCommand", typeof(MainWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
+        //Authorization authorization;
 
         public MainWindow()
         {
             InitializeComponent();
             loginTextBox.Focus();
+            //authorization = new Authorization();
+            //DataContext = authorization;
         }
 
         private void LoginClick(object sender, RoutedEventArgs e)
         {
-            string login = loginTextBox.Text;
-            string uName = Settings.Default.USER_NAME;
-            string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
-            string setPass = Settings.Default.PASSWORD_HASH;
+            String login = loginTextBox.Text;
+            String uName = Settings.Default.USER_NAME;
+            String enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
+            String setPass = Settings.Default.PASSWORD_HASH;
             bool isTrueLogin = login == uName;
             bool isTruePassword = enPass == setPass;
             if (isTrueLogin && isTruePassword)

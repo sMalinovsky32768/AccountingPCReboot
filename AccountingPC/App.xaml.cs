@@ -86,7 +86,7 @@ namespace AccountingPC
         /// </summary>
         /// <param name="login">Логин</param>
         /// <param name="pass">Пароль</param>
-        private void SetUserCredentials(string login, string pass)
+        private void SetUserCredentials(string login, String pass)
         {
             if (Settings.Default.USER_NAME == null || Settings.Default.USER_NAME == "")
                 Settings.Default.USER_NAME = login;
@@ -114,7 +114,7 @@ namespace AccountingPC
         /// </summary>
         private void CreateDB()
         {
-            string str;
+            String str;
             SqlConnection myConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True");
             str = "if not exists (select * from sys.databases where name=N'Accounting')"
                   + "begin"

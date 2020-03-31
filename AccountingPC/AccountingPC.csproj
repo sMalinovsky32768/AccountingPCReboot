@@ -60,6 +60,7 @@
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -88,9 +89,6 @@
       <DependentUpon>AccountingPCWindowSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="BlackTheme\ForButton.cs" />
-    <Compile Include="ChangeDeviceWindow.xaml.cs">
-      <DependentUpon>ChangeDeviceWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Devices.cs" />
     <Compile Include="LightTheme\ForButton.cs" />
     <Compile Include="Maps\CreateMapDefault.cs" />
@@ -105,6 +103,7 @@
       <DependentUpon>ViewPlaceInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="TypeDevice.cs" />
+    <Compile Include="ComboBoxValidationRule.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -140,10 +139,6 @@
     <Page Include="BlackTheme\Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ChangeDeviceWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LightTheme\Box.xaml">
       <SubType>Designer</SubType>

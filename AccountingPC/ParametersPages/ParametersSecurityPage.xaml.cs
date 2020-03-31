@@ -69,8 +69,8 @@ namespace AccountingPC.ParametersPages
         /// </returns>
         public KeyValuePair<bool, string> ChangePassword()
         {
-            string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(oldPass.Password)));
-            string setPass = Settings.Default.PASSWORD_HASH;
+            String enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(oldPass.Password)));
+            String setPass = Settings.Default.PASSWORD_HASH;
             if (enPass == setPass)
             {
                 if (newPass.Password == repeatPass.Password)

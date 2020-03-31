@@ -20,6 +20,12 @@ using System.Windows.Controls.Primitives;
 
 namespace AccountingPC
 {
+    enum TypeChange
+    {
+        Add,
+        Change,
+    }
+
     /// <summary>
     /// Логика взаимодействия для AccountingPCWindow.xaml
     /// </summary>
@@ -40,7 +46,7 @@ namespace AccountingPC
         DataSet set;
         TypeDevice typeDevice;
         TypeChange typeChange;
-        int DeviceID;
+        Int32 DeviceID;
         bool isPreOpenPopup;
 
         public AccountingPCWindow()
@@ -55,7 +61,7 @@ namespace AccountingPC
 
         private void window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            changePopup.Height = Height - 300;
+            changePopup.Height = Height - 200;
             changePopup.Width = Width - 400;
             if (changePopup.IsOpen)
             {
@@ -96,7 +102,7 @@ namespace AccountingPC
                 changePopup.IsOpen = false;
             }
             DragMove();// Для перемещение ока
-            changePopup.Height = Height - 300;
+            changePopup.Height = Height - 200;
             changePopup.Width = Width - 400;
             if (isPreOpenPopup)
             {
@@ -123,7 +129,7 @@ namespace AccountingPC
                 ((Path)buttonMaximized.Template.FindName("Maximize", buttonMaximized)).Visibility = Visibility.Visible;
                 ((Path)buttonMaximized.Template.FindName("Restore", buttonMaximized)).Visibility = Visibility.Collapsed;
             }
-            changePopup.Height = Height - 300;
+            changePopup.Height = Height - 200;
             changePopup.Width = Width - 400;
         }
 
@@ -150,8 +156,6 @@ namespace AccountingPC
         {
             typeChange = TypeChange.Add;
             changePopup.IsOpen = true;
-            //new ChangeDeviceWindow(typeDevice, TypeChange.Add).ShowDialog();
-            UpdateDataGrid();
         }
 
         private void ChangeDevice(object sender, RoutedEventArgs e)
@@ -160,24 +164,22 @@ namespace AccountingPC
             DeviceID = Convert.ToInt32(row[0]);
             typeChange = TypeChange.Change;
             changePopup.IsOpen = true;
-            //new ChangeDeviceWindow(typeDevice, TypeChange.Change, id).ShowDialog();
-            UpdateDataGrid();
         }
 
         private void DeleteDevice(object sender, RoutedEventArgs e)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
                 foreach (object obj in view.SelectedItems)
                 {
                     DataRow row = ((DataRowView)obj).Row;
-                    int id = Convert.ToInt32(row[0]);
+                    Int32 id = Convert.ToInt32(row[0]);
                     SqlCommand command = new SqlCommand($"Delete{typeDevice.ToString()}ByID", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new SqlParameter("@ID", id));
-                    int res = command.ExecuteNonQuery();
+                    Int32 res = command.ExecuteNonQuery();
                 }
             }
             UpdateDataGrid();
@@ -185,7 +187,7 @@ namespace AccountingPC
 
         private void UpdateDataGrid()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             switch (list.SelectedIndex)
             {
                 case 0:
@@ -280,11 +282,11 @@ namespace AccountingPC
 
         private void SaveChanges(object sender, RoutedEventArgs e)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                string commandString = $"Update {typeDevice} set InventoryNumber = {Convert.ToUInt32(inventoryNumberPC.Text)}, " +
+                String commandString = $"Update {typeDevice} set InventoryNumber = {Convert.ToUInt32(inventoryNumberPC.Text)}, " +
                     $"Name = N'{namePC.Text}', Cost = {Convert.ToUInt32(costPC.Text)} where ID={DeviceID}";
                 SqlCommand command = new SqlCommand(commandString, connection);
                 //int res = command.ExecuteNonQuery();
@@ -298,7 +300,7 @@ namespace AccountingPC
 
         private void GetComboBoxSourcePC(object sender)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             if (((ComboBox)sender).Name == "cpuPC")
             {
 
@@ -333,9 +335,9 @@ namespace AccountingPC
                 switch (typeChange)
                 {
                     case TypeChange.Change:
-                        string commandString;
+                        String commandString;
                         SqlDataReader reader;
-                        string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                        String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
                         using (SqlConnection connection = new SqlConnection(connectionString))
                         {
                             connection.Open();
@@ -348,16 +350,20 @@ namespace AccountingPC
                                     {
                                         if (reader.Read())
                                         {
-                                            uint invN = Convert.ToUInt32(reader["Инвентарный номер"]);
-                                            string n = reader["Наименование"].ToString();
-                                            uint cost = Convert.ToUInt32(reader["Цена"]);
-                                            string mb = reader["Материнская плата"].ToString();
-                                            string cpu = reader["Процессор"].ToString();
-                                            uint ram = Convert.ToUInt32(reader["ОЗУ"].GetType() != typeof(DBNull) ? reader["ОЗУ"] : 0);
-                                            string os = reader["Операционная система"].ToString();
-                                            string invoice = reader["Номер накладной"].ToString();
-                                            string location = reader["Расположение"].ToString();
-                                            pc = new PC(invN, n, cost, mb, cpu, ram, os, invoice, location);
+                                            pc = new PC()
+                                            {
+                                                InventoryNumber = Convert.ToUInt32(reader["Инвентарный номер"]),
+                                                Name = reader["Наименование"].ToString(),
+                                                Cost = Convert.ToUInt32(reader["Цена"]),
+                                                Motherboard = reader["Материнская плата"].ToString(),
+                                                CPU = reader["Процессор"].ToString(),
+                                                VCard = reader["Видеокарта"].ToString(),
+                                                RAM = Convert.ToUInt32(reader["ОЗУ"].GetType() != typeof(DBNull) ? reader["ОЗУ"] : 0),
+                                                HDD = Convert.ToUInt32(reader["Объем HDD"]),
+                                                OS = reader["Операционная система"].ToString(),
+                                                Invoice = reader["Номер накладной"].ToString(),
+                                                Location = reader["Расположение"].ToString()
+                                            };
                                             inventoryNumberPC.Text = pc.InventoryNumber.ToString();
                                             namePC.Text = pc.Name;
                                             costPC.Text = pc.Cost.ToString();
@@ -458,6 +464,8 @@ namespace AccountingPC
                         }
                         break;
                     case TypeChange.Add:
+                        PC pcAdd = new PC();
+                        pcGrid.DataContext = pcAdd;
                         break;
                 }
             }
@@ -469,6 +477,7 @@ namespace AccountingPC
             isPreOpenPopup = false;
             viewGrid.IsEnabled = true;
             menu.IsEnabled = true;
+            UpdateDataGrid();
         }
     }
 }

@@ -17,7 +17,7 @@ namespace AccountingPC.Maps
     }
     public class Place
     {
-        public int Number { get; set; }
+        public Int32 Number { get; set; }
         public TypeOfPlace TypeOf { get; set; }
 
         public Place(string[] place)
@@ -26,7 +26,7 @@ namespace AccountingPC.Maps
             Number = Convert.ToInt32(place[1]);
         }
 
-        public Place(int num, string type)
+        public Place(int num, String type)
         {
             Number = num;
             TypeOf = (TypeOfPlace)Enum.Parse(TypeOf.GetType(), type);

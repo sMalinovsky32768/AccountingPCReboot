@@ -15,7 +15,7 @@
         <CommandBinding Command="{x:Static local:AccountingPCWindow.PopupCloseCommand}" Executed="PopupClose"/>
     </Window.CommandBindings>
     <!---->
-    <Border RenderTransformOrigin="0.5,0.5" BorderThickness="0" Background="{DynamicResource background-brush}">
+    <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
         <Grid x:Name="windowGrid">
             <Grid x:Name="mainGrid">
                 <Grid.RowDefinitions>
@@ -126,7 +126,7 @@
                 <!---->
             </Grid>
             <Popup x:Name="changePopup" Placement="Custom" CustomPopupPlacementCallback="changePopupPlacement" 
-                   PlacementTarget="{Binding ElementName=windowGrid}" HorizontalOffset="200" VerticalOffset="150" Opened="changePopup_Opened">
+                   PlacementTarget="{Binding ElementName=windowGrid}" HorizontalOffset="200" VerticalOffset="100" Opened="changePopup_Opened">
                 <Popup.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.9" Color="{DynamicResource shadow}"/>
                 </Popup.Effect>
@@ -231,17 +231,16 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Материнская плата"/>
-                                <!--<TextBox Grid.Row="1" x:Name="motherboardPC">
-                            <TextBox.Text>
-                                <Binding Path="Motherboard">
-                                    <Binding.ValidationRules>
-                                        <ExceptionValidationRule/>
-                                    </Binding.ValidationRules>
-                                </Binding>
-                            </TextBox.Text>
-                        </TextBox>-->
                                 <ComboBox Grid.Row="1" x:Name="motherboardPC" IsEditable="True" KeyUp="ComboBox_KeyDown"
-                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True"/>
+                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                    <ComboBox.Text>
+                                        <Binding Path="Motherboard">
+                                            <Binding.ValidationRules>
+                                                <local:ComboBoxValidationRule MaxLength="30"/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ComboBox.Text>
+                                </ComboBox>
                             </Grid>
                             <Grid Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="5">
                                 <Grid.RowDefinitions>
@@ -250,7 +249,99 @@
                                 </Grid.RowDefinitions>
                                 <TextBlock Text="Процессор"/>
                                 <ComboBox Grid.Row="1" x:Name="cpuPC" IsEditable="True" KeyUp="ComboBox_KeyDown" 
-                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True"/>
+                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                    <ComboBox.Text>
+                                        <Binding Path="CPU">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ComboBox.Text>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Row="3" Grid.ColumnSpan="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Видеокарта"/>
+                                <ComboBox Grid.Row="1" x:Name="vCard" IsEditable="True" KeyUp="ComboBox_KeyDown" 
+                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                    <ComboBox.Text>
+                                        <Binding Path="VCard">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ComboBox.Text>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Объем HDD"/>
+                                <TextBox Grid.Row="1" x:Name="hdd">
+                                    <TextBox.Text>
+                                        <Binding Path="HDD">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </TextBox.Text>
+                                </TextBox>
+                            </Grid>
+                            <Grid Grid.Row="3" Grid.Column="7" Grid.ColumnSpan="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Операционная система"/>
+                                <ComboBox Grid.Row="1" x:Name="os" IsEditable="True" KeyUp="ComboBox_KeyDown" 
+                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                    <ComboBox.Text>
+                                        <Binding Path="OS">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ComboBox.Text>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Row="4" Grid.ColumnSpan="5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Номер накладной"/>
+                                <ComboBox Grid.Row="1" x:Name="invoice" IsEditable="True" KeyUp="ComboBox_KeyDown" 
+                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                    <ComboBox.Text>
+                                        <Binding Path="Invoice">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ComboBox.Text>
+                                </ComboBox>
+                            </Grid>
+                            <Grid Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="7">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Расположение"/>
+                                <ComboBox Grid.Row="1" x:Name="location" IsEditable="True" KeyUp="ComboBox_KeyDown" 
+                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                    <ComboBox.Text>
+                                        <Binding Path="Location">
+                                            <Binding.ValidationRules>
+                                                <ExceptionValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ComboBox.Text>
+                                </ComboBox>
                             </Grid>
                         </Grid>
                         <Grid x:Name="notebookGrid" Visibility="Hidden">

@@ -25,7 +25,6 @@ namespace AccountingPC.BlackTheme
         public ForButton()
         {
             CommandManager.RegisterClassCommandBinding(typeof(AccountingPCWindow), new CommandBinding(CloseCommand, CloseWindow));
-            CommandManager.RegisterClassCommandBinding(typeof(ChangeDeviceWindow), new CommandBinding(CloseCommand, CloseWindow));
             CommandManager.RegisterClassCommandBinding(typeof(ParametersWindow), new CommandBinding(CloseCommand, CloseWindow));
             CommandManager.RegisterClassCommandBinding(typeof(AccountingPCWindow), new CommandBinding(MaximizedCommand, MaximizeWindow));
             CommandManager.RegisterClassCommandBinding(typeof(AccountingPCWindow), new CommandBinding(MinimizedCommand, MinimizeWindow));
@@ -45,7 +44,7 @@ namespace AccountingPC.BlackTheme
                 {
                     ((Window)sender).Height = ((AccountingPCWindow)sender).lastHeight;
                     ((Window)sender).Width = ((AccountingPCWindow)sender).lastWidth;
-                    ((AccountingPCWindow)sender).changePopup.Height = ((Window)sender).Height - 300;
+                    ((AccountingPCWindow)sender).changePopup.Height = ((Window)sender).Height - 200;
                     ((AccountingPCWindow)sender).changePopup.Width = ((Window)sender).Width - 400;
                 }
                 ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Visible;
@@ -57,7 +56,7 @@ namespace AccountingPC.BlackTheme
                 {
                     ((AccountingPCWindow)sender).lastHeight = ((Window)sender).Height;
                     ((AccountingPCWindow)sender).lastWidth = ((Window)sender).Width;
-                    ((AccountingPCWindow)sender).changePopup.Height = ((Window)sender).Height - 300;
+                    ((AccountingPCWindow)sender).changePopup.Height = ((Window)sender).Height - 200;
                     ((AccountingPCWindow)sender).changePopup.Width = ((Window)sender).Width - 400;
                     if (((AccountingPCWindow)sender).changePopup.IsOpen)
                     {
