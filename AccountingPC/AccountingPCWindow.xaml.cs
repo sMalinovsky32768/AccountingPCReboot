@@ -46,7 +46,7 @@ namespace AccountingPC
         DataSet set;
         TypeDevice typeDevice;
         TypeChange typeChange;
-        Int32 DeviceID;
+        Int32 deviceID;
         bool isPreOpenPopup;
 
         public AccountingPCWindow()
@@ -161,7 +161,7 @@ namespace AccountingPC
         private void ChangeDevice(object sender, RoutedEventArgs e)
         {
             DataRow row = ((DataRowView)view.SelectedItem).Row;
-            DeviceID = Convert.ToInt32(row[0]);
+            deviceID = Convert.ToInt32(row[0]);
             typeChange = TypeChange.Change;
             changePopup.IsOpen = true;
         }
@@ -286,9 +286,88 @@ namespace AccountingPC
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
-                String commandString = $"Update {typeDevice} set InventoryNumber = {Convert.ToUInt32(inventoryNumberPC.Text)}, " +
-                    $"Name = N'{namePC.Text}', Cost = {Convert.ToUInt32(costPC.Text)} where ID={DeviceID}";
-                SqlCommand command = new SqlCommand(commandString, connection);
+                String commandString;
+                SqlCommand command;
+                switch (typeChange)
+                {
+                    case TypeChange.Add:
+                        switch (typeDevice)
+                        {
+                            case TypeDevice.PC:
+                                commandString = "AddPC";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumberPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", namePC.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(costPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoicePC));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)locationPC.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpuPC.Text));
+                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ramPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hddPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCardPC.Text));
+                                command.Parameters.Add(new SqlParameter("@OSName", osPC.Text));
+                                command.Parameters.Add(new SqlParameter("@MB", motherboardPC.Text));
+                                command.ExecuteNonQuery();
+                                break;
+                            case TypeDevice.Notebook:
+                                break;
+                            case TypeDevice.Monitor:
+                                break;
+                            case TypeDevice.NetworkSwitch:
+                                break;
+                            case TypeDevice.InteractiveWhiteboard:
+                                break;
+                            case TypeDevice.PrinterScanner:
+                                break;
+                            case TypeDevice.Projector:
+                                break;
+                            case TypeDevice.ProjectorScreen:
+                                break;
+                            case TypeDevice.OtherEquipment:
+                                break;
+                        }
+                        break;
+                    case TypeChange.Change:
+                        switch (typeDevice)
+                        {
+                            case TypeDevice.PC:
+                                commandString = "UpdatePCByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumberPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", namePC.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(costPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoicePC.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)locationPC.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpuPC.Text));
+                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ramPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hddPC.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCardPC.Text));
+                                command.Parameters.Add(new SqlParameter("@OSName", osPC.Text));
+                                command.Parameters.Add(new SqlParameter("@MB", motherboardPC.Text));
+                                command.ExecuteNonQuery();
+                                break;
+                            case TypeDevice.Notebook:
+                                break;
+                            case TypeDevice.Monitor:
+                                break;
+                            case TypeDevice.NetworkSwitch:
+                                break;
+                            case TypeDevice.InteractiveWhiteboard:
+                                break;
+                            case TypeDevice.PrinterScanner:
+                                break;
+                            case TypeDevice.Projector:
+                                break;
+                            case TypeDevice.ProjectorScreen:
+                                break;
+                            case TypeDevice.OtherEquipment:
+                                break;
+                        }
+                        break;
+                }
                 //int res = command.ExecuteNonQuery();
             }
         }
@@ -330,21 +409,21 @@ namespace AccountingPC
         {
             viewGrid.IsEnabled = false;
             menu.IsEnabled = false;
+            String commandString;
+            SqlDataReader reader;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             if (!isPreOpenPopup)
             {
                 switch (typeChange)
                 {
                     case TypeChange.Change:
-                        String commandString;
-                        SqlDataReader reader;
-                        String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
                         using (SqlConnection connection = new SqlConnection(connectionString))
                         {
                             connection.Open();
                             switch (typeDevice)
                             {
                                 case TypeDevice.PC:
-                                    commandString = $"SELECT * FROM dbo.GetPCByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetPCByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -362,7 +441,10 @@ namespace AccountingPC
                                                 HDD = Convert.ToUInt32(reader["Объем HDD"]),
                                                 OS = reader["Операционная система"].ToString(),
                                                 Invoice = reader["Номер накладной"].ToString(),
-                                                Location = reader["Расположение"].ToString()
+                                                Location = { 
+                                                    ID = Convert.ToUInt32(reader["PlaceID"]),
+                                                    Name = reader["Расположение"].ToString() 
+                                                }
                                             };
                                             inventoryNumberPC.Text = pc.InventoryNumber.ToString();
                                             namePC.Text = pc.Name;
@@ -373,7 +455,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.Notebook:
-                                    commandString = $"SELECT * FROM dbo.GetNotebookByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetNotebookByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -384,7 +466,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.Monitor:
-                                    commandString = $"SELECT * FROM dbo.GetMonitorByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetMonitorByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -395,7 +477,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.Projector:
-                                    commandString = $"SELECT * FROM dbo.GetProjectorByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetProjectorByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -406,7 +488,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.InteractiveWhiteboard:
-                                    commandString = $"SELECT * FROM dbo.GetBoardByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetBoardByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -417,7 +499,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.ProjectorScreen:
-                                    commandString = $"SELECT * FROM dbo.GetScreenByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetScreenByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -428,7 +510,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.PrinterScanner:
-                                    commandString = $"SELECT * FROM dbo.GetPrinterScannerByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetPrinterScannerByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -439,7 +521,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.NetworkSwitch:
-                                    commandString = $"SELECT * FROM dbo.GetNetworkSwitchByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetNetworkSwitchByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -450,7 +532,7 @@ namespace AccountingPC
                                     }
                                     break;
                                 case TypeDevice.OtherEquipment:
-                                    commandString = $"SELECT * FROM dbo.GetOtherEquipmentByID({DeviceID})";
+                                    commandString = $"SELECT * FROM dbo.GetOtherEquipmentByID({deviceID})";
                                     reader = new SqlCommand(commandString, connection).ExecuteReader();
                                     if (reader.HasRows)
                                     {
@@ -464,8 +546,26 @@ namespace AccountingPC
                         }
                         break;
                     case TypeChange.Add:
-                        PC pcAdd = new PC();
-                        pcGrid.DataContext = pcAdd;
+                        //PC pcAdd = new PC();
+                        //pcGrid.DataContext = pcAdd;
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlDataAdapter dataAdapter;
+                            DataSet dataSet;
+                            connection.Open();
+                            switch (typeDevice)
+                            {
+                                case TypeDevice.PC:
+                                    notebookGrid.Visibility = Visibility.Hidden;
+                                    pcGrid.Visibility = Visibility.Visible;
+                                    dataAdapter = new SqlDataAdapter("SELECT * FROM GetAllLocationByTypeDeviceID(1)", connectionString);
+                                    dataSet = new DataSet();
+                                    dataAdapter.Fill(dataSet);
+                                    locationPC.ItemsSource = dataSet.Tables[0].DefaultView;
+                                    locationPC.DisplayMemberPath = "Place";
+                                    break;
+                            }
+                        }
                         break;
                 }
             }

@@ -7,6 +7,11 @@ using System.Threading.Tasks;
 
 namespace AccountingPC
 {
+    public class DeviceLocation
+    {
+        public UInt32 ID { get; set; }
+        public String Name { get; set; }
+    }
     public abstract class Device
     {
         public UInt32 ID { get; set; }
@@ -18,7 +23,7 @@ namespace AccountingPC
         public UInt32 Cost { get; set; }
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public String Invoice { get; set; }
-        public String Location { get; set; }
+        public DeviceLocation Location { get; set; }
     }
 
     public class PC : Device
