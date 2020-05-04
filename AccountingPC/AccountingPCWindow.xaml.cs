@@ -48,6 +48,34 @@ namespace AccountingPC
         TypeChange typeChange;
         Int32 deviceID;
         bool isPreOpenPopup;
+        SqlDataAdapter aspectRatioDataAdapter;
+        SqlDataAdapter softwareDataAdapter;
+        SqlDataAdapter pcSoftwareDataAdapter;
+        SqlDataAdapter notebookSoftwareDataAdapter;
+        SqlDataAdapter osDataAdapter;
+        SqlDataAdapter screenInstalledDataAdapter;
+        SqlDataAdapter typeDeviceDataAdapter;
+        SqlDataAdapter boardDataAdapter;
+        SqlDataAdapter frequencyDataAdapter;
+        SqlDataAdapter locationDataAdapter;
+        SqlDataAdapter matrixTechnologyDataAdapter;
+        SqlDataAdapter monitorDataAdapter;
+        SqlDataAdapter networkSwitchDataAdapter;
+        SqlDataAdapter notebookDataAdapter;
+        SqlDataAdapter otherEquipmentDataAdapter;
+        SqlDataAdapter paperSizeDataAdapter;
+        SqlDataAdapter pcDataAdapter;
+        SqlDataAdapter printerScannerDataAdapter;
+        SqlDataAdapter projectorDataAdapter;
+        SqlDataAdapter projectorTechnologyDataAdapter;
+        SqlDataAdapter resolutionDataAdapter;
+        SqlDataAdapter typeNetworkSwitchDataAdapter;
+        SqlDataAdapter typeNotebookDataAdapter;
+        SqlDataAdapter typePrinterDataAdapter;
+        SqlDataAdapter typeLicenseDataAdapter;
+        SqlDataAdapter videoConnectorsDataAdapter;
+        SqlDataAdapter wifiFrequencyDataAdapter;
+        SqlDataAdapter DataAdapter;
 
         public AccountingPCWindow()
         {
@@ -194,10 +222,17 @@ namespace AccountingPC
                     adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
+                    set.Tables[0].Columns.Add("Видеоразъемы");
+                    foreach (DataRow row in set.Tables[0].Rows)
+                    {
+                        //row[15] = row[15].GetType()==typeof(DBNull)?row[15]:GetListVideoConnectors(Convert.ToInt32(row[15]));
+                        row[18] = row[15].GetType()== typeof(int)?GetListVideoConnectors(Convert.ToInt32(row[15])):row[15];
+                    }
                     view.ItemsSource = set.Tables[0].DefaultView;
                     if (view.Columns.Count > 0)
                     {
                         view.Columns[0].Visibility = Visibility.Collapsed;
+                        view.Columns[15].Visibility = Visibility.Collapsed;
                     }
                     typeDevice = TypeDevice.PC;
                     break;
@@ -386,8 +421,16 @@ namespace AccountingPC
             }
             switch (((ComboBox)sender).Name)
             {
+                case "namePC":
+                    adapter = new SqlDataAdapter($"SELECT distinct Name from PC Where Name LIKE N'{namePC.Text}%'", connectionString);
+                    set = new DataSet();
+                    adapter.Fill(set);
+                    namePC.ItemsSource = set.Tables[0].DefaultView;
+                    namePC.DisplayMemberPath = "Name";
+                    namePC.IsDropDownOpen = true;
+                    break;
                 case "motherboardPC":
-                    adapter = new SqlDataAdapter($"SELECT Motherboard from PC Where Motherboard LIKE N'{motherboardPC.Text}%'", connectionString);
+                    adapter = new SqlDataAdapter($"SELECT distinct Motherboard from PC Where Motherboard LIKE N'{motherboardPC.Text}%'", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
                     motherboardPC.ItemsSource = set.Tables[0].DefaultView;
@@ -395,7 +438,7 @@ namespace AccountingPC
                     motherboardPC.IsDropDownOpen = true;
                     break;
                 case "cpuPC":
-                    adapter = new SqlDataAdapter($"SELECT CPUModel from PC Where CPUModel LIKE N'{cpuPC.Text}%'", connectionString);
+                    adapter = new SqlDataAdapter($"SELECT distinct CPUModel from PC Where CPUModel LIKE N'{cpuPC.Text}%'", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
                     cpuPC.ItemsSource = set.Tables[0].DefaultView;
@@ -578,6 +621,43 @@ namespace AccountingPC
             viewGrid.IsEnabled = true;
             menu.IsEnabled = true;
             UpdateDataGrid();
+        }
+
+        private String GetListVideoConnectors(Int32 value)
+        {
+            List<String> arr = new List<String>();
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlDataReader reader = new SqlCommand("Select * from dbo.GetAllVideoConnector()" +
+                    "Order by value desc", connection).ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Int32 connectorValue = Convert.ToInt32(reader["Value"]);
+                        if (value >= connectorValue)
+                        {
+                            value -= connectorValue;
+                            arr.Add(reader["Name"].ToString());
+                        }
+                    }
+                }
+            }
+            String res = String.Empty;
+            for (int i = 0; i < arr.Count; i++)
+            {
+                res += $"{arr[i]}";
+                if (i < arr.Count - 1)
+                    res += ", ";
+            }
+            return res;
+        }
+
+        private void GetValueVideoConnectors(object sender)
+        {
+
         }
     }
 }
