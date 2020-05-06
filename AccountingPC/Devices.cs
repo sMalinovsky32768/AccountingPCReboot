@@ -43,6 +43,7 @@ namespace AccountingPC
         public UInt32 HDD { get; set; }
         public String OS { get; set; }
         public List<String> VideoConnectors { get; set; }
+        public int VideoConnectorsValue { get; set; }
 
         public PC() { }
     }
@@ -63,6 +64,11 @@ namespace AccountingPC
         public String OS { get; set; }
         public float Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
+        public int VideoConnectorsValue { get; set; }
+        public int ResolutionID { get; set; }
+        public int FrequencyID { get; set; }
+        public int MatrixTechnologyID { get; set; }
+        public int TypeID { get; set; }
 
         public Notebook() { }
     }
@@ -74,9 +80,44 @@ namespace AccountingPC
         public InteractiveWhiteboard() { }
     }
 
+    public class Projector : Device
+    {
+        public Single Diagonal { get; set; }
+        public List<String> VideoConnectors { get; set; }
+        public int VideoConnectorsValue { get; set; }
+        public int ResolutionID { get; set; }
+        public int ProjectorTechnologyID { get; set; }
+
+        public Projector() { }
+    }
+
+    public class ProjectorScreen : Device
+    {
+        public Single Diagonal { get; set; }
+        public bool IsElectronicDrive { get; set; }
+        public int AspectRatioID { get; set; }
+        public int ScreenInstalledID { get; set; }
+
+        public ProjectorScreen() { }
+    }
+
+    public class PrinterScanner : Device
+    {
+        public Single Diagonal { get; set; }
+        public int TypeID { get; set; }
+        public int PaperSizeID { get; set; }
+
+        public PrinterScanner() { }
+    }
+
     public class Monitor : Device
     {
         public Single Diagonal { get; set; }
+        public List<String> VideoConnectors { get; set; }
+        public int VideoConnectorsValue { get; set; }
+        public int ResolutionID { get; set; }
+        public int FrequencyID { get; set; }
+        public int MatrixTechnologyID { get; set; }
 
         public Monitor() { }
     }
@@ -84,6 +125,7 @@ namespace AccountingPC
     public class NetworkSwitch : Device
     {
         public UInt32 Ports { get; set; }
+        public int WiFiFrequencyID { get; set; }
 
         public NetworkSwitch() { }
     }

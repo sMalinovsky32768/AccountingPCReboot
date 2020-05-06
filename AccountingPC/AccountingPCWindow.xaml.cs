@@ -740,5 +740,10 @@ namespace AccountingPC
             Grid.SetColumnSpan(element, colSpan);
             Grid.SetRowSpan(element, rowSpan);
         }
+
+        private void UpdatePopupSource()
+        {
+
+        }
     }
 }

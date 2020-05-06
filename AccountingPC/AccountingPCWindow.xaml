@@ -445,6 +445,110 @@
                                         <TextBlock Text="Видеовыходы"/>
                                         <ListBox Grid.Row="1" x:Name="vConnectors" SelectionMode="Multiple" Margin="5,1"/>
                                     </Grid>
+
+                                    <Grid x:Name="resolutionGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Максимальное разрешение"/>
+                                        <ComboBox Grid.Row="1" x:Name="resolution" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="screenFrequencyGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Частота обновления"/>
+                                        <ComboBox Grid.Row="1" x:Name="screenFrequency" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="matrixTechnologyGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Технология изготовления матрицы"/>
+                                        <ComboBox Grid.Row="1" x:Name="matrixTechnology" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="projectorTechnologyGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Технология изготовления матрицы"/>
+                                        <ComboBox Grid.Row="1" x:Name="projectorTechnology" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="typeGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Тип"/>
+                                        <ComboBox Grid.Row="1" x:Name="type" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="diagonalGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Диагональ"/>
+                                        <TextBox Grid.Row="1" x:Name="diagonal">
+                                            <TextBox.Text>
+                                                <Binding Path="Diagonal">
+                                                    <Binding.ValidationRules>
+                                                        <ExceptionValidationRule/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                    </Grid>
+                                    <Grid x:Name="aspectRatioGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Соотношение сторон"/>
+                                        <ComboBox Grid.Row="1" x:Name="aspectRatio" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="screenInstalledGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Установка"/>
+                                        <ComboBox Grid.Row="1" x:Name="screenInstalled" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="paperSizeGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Формат бумаги"/>
+                                        <ComboBox Grid.Row="1" x:Name="paperSize" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="PortsGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Количество портов"/>
+                                        <ComboBox Grid.Row="1" x:Name="ports" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="wifiFrequencyGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Частота wifi"/>
+                                        <ComboBox Grid.Row="1" x:Name="wifiFrequency" IsTextSearchEnabled="True"/>
+                                    </Grid>
+                                    <Grid x:Name="isEDriveGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <CheckBox Grid.Row="1" x:Name="isEDrive"/>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
