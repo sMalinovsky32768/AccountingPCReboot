@@ -32,11 +32,17 @@ namespace AccountingPC
         public String Motherboard { get; set; }
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String CPU { get; set; }
+        public int Cores { get; set; }
+        public int Frequency { get; set; }
+        public int MaxFrequency { get; set; }
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String VCard { get; set; }
+        public UInt32 VideoRAM { get; set; }
         public UInt32 RAM { get; set; }
+        public UInt32 FrequencyRAM { get; set; }
         public UInt32 HDD { get; set; }
         public String OS { get; set; }
+        public List<String> VideoConnectors { get; set; }
 
         public PC() { }
     }
@@ -45,12 +51,18 @@ namespace AccountingPC
     {
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String CPU { get; set; }
+        public int Cores { get; set; }
+        public int Frequency { get; set; }
+        public int MaxFrequency { get; set; }
         [StringLength(30, ErrorMessage = "Максимальная длина - 30")]
         public String VCard { get; set; }
+        public UInt32 VideoRAM { get; set; }
         public UInt32 RAM { get; set; }
+        public UInt32 FrequencyRAM { get; set; }
         public UInt32 HDD { get; set; }
         public String OS { get; set; }
         public float Diagonal { get; set; }
+        public List<String> VideoConnectors { get; set; }
 
         public Notebook() { }
     }

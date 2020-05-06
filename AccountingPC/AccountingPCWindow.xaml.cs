@@ -332,17 +332,17 @@ namespace AccountingPC
                                 commandString = "AddPC";
                                 command = new SqlCommand(commandString, connection);
                                 command.CommandType = CommandType.StoredProcedure;
-                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumberPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@Name", namePC.Text));
-                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(costPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoicePC));
-                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)locationPC.SelectedItem)[0]));
-                                command.Parameters.Add(new SqlParameter("@CPU", cpuPC.Text));
-                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ramPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hddPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@Video", vCardPC.Text));
-                                command.Parameters.Add(new SqlParameter("@OSName", osPC.Text));
-                                command.Parameters.Add(new SqlParameter("@MB", motherboardPC.Text));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ram.Text)));
+                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
+                                command.Parameters.Add(new SqlParameter("@OSName", os.Text));
+                                command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                                 command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Notebook:
@@ -371,17 +371,17 @@ namespace AccountingPC
                                 command = new SqlCommand(commandString, connection);
                                 command.CommandType = CommandType.StoredProcedure;
                                 command.Parameters.Add(new SqlParameter("@ID", deviceID));
-                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumberPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@Name", namePC.Text));
-                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(costPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoicePC.Text));
-                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)locationPC.SelectedItem)[0]));
-                                command.Parameters.Add(new SqlParameter("@CPU", cpuPC.Text));
-                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ramPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hddPC.Text)));
-                                command.Parameters.Add(new SqlParameter("@Video", vCardPC.Text));
-                                command.Parameters.Add(new SqlParameter("@OSName", osPC.Text));
-                                command.Parameters.Add(new SqlParameter("@MB", motherboardPC.Text));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ram.Text)));
+                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
+                                command.Parameters.Add(new SqlParameter("@OSName", os.Text));
+                                command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                                 command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Notebook:
@@ -422,28 +422,28 @@ namespace AccountingPC
             switch (((ComboBox)sender).Name)
             {
                 case "namePC":
-                    adapter = new SqlDataAdapter($"SELECT distinct Name from PC Where Name LIKE N'{namePC.Text}%'", connectionString);
+                    adapter = new SqlDataAdapter($"SELECT distinct Name from PC Where Name LIKE N'{name.Text}%'", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
-                    namePC.ItemsSource = set.Tables[0].DefaultView;
-                    namePC.DisplayMemberPath = "Name";
-                    namePC.IsDropDownOpen = true;
+                    name.ItemsSource = set.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+                    name.IsDropDownOpen = true;
                     break;
                 case "motherboardPC":
-                    adapter = new SqlDataAdapter($"SELECT distinct Motherboard from PC Where Motherboard LIKE N'{motherboardPC.Text}%'", connectionString);
+                    adapter = new SqlDataAdapter($"SELECT distinct Motherboard from PC Where Motherboard LIKE N'{motherboard.Text}%'", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
-                    motherboardPC.ItemsSource = set.Tables[0].DefaultView;
-                    motherboardPC.DisplayMemberPath = "Motherboard";
-                    motherboardPC.IsDropDownOpen = true;
+                    motherboard.ItemsSource = set.Tables[0].DefaultView;
+                    motherboard.DisplayMemberPath = "Motherboard";
+                    motherboard.IsDropDownOpen = true;
                     break;
                 case "cpuPC":
-                    adapter = new SqlDataAdapter($"SELECT distinct CPUModel from PC Where CPUModel LIKE N'{cpuPC.Text}%'", connectionString);
+                    adapter = new SqlDataAdapter($"SELECT distinct CPUModel from PC Where CPUModel LIKE N'{cpu.Text}%'", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
-                    cpuPC.ItemsSource = set.Tables[0].DefaultView;
-                    cpuPC.DisplayMemberPath = "CPUModel";
-                    cpuPC.IsDropDownOpen = true;
+                    cpu.ItemsSource = set.Tables[0].DefaultView;
+                    cpu.DisplayMemberPath = "CPUModel";
+                    cpu.IsDropDownOpen = true;
                     break;
             }
         }
@@ -489,11 +489,11 @@ namespace AccountingPC
                                                     Name = reader["Расположение"].ToString() 
                                                 }
                                             };
-                                            inventoryNumberPC.Text = pc.InventoryNumber.ToString();
-                                            namePC.Text = pc.Name;
-                                            costPC.Text = pc.Cost.ToString();
-                                            motherboardPC.Text = pc.Motherboard;
-                                            cpuPC.Text = pc.CPU;
+                                            inventoryNumber.Text = pc.InventoryNumber.ToString();
+                                            name.Text = pc.Name;
+                                            cost.Text = pc.Cost.ToString();
+                                            motherboard.Text = pc.Motherboard;
+                                            cpu.Text = pc.CPU;
                                         }
                                     }
                                     break;
@@ -599,13 +599,11 @@ namespace AccountingPC
                             switch (typeDevice)
                             {
                                 case TypeDevice.PC:
-                                    notebookGrid.Visibility = Visibility.Hidden;
-                                    pcGrid.Visibility = Visibility.Visible;
                                     dataAdapter = new SqlDataAdapter("SELECT * FROM GetAllLocationByTypeDeviceID(1)", connectionString);
                                     dataSet = new DataSet();
                                     dataAdapter.Fill(dataSet);
-                                    locationPC.ItemsSource = dataSet.Tables[0].DefaultView;
-                                    locationPC.DisplayMemberPath = "Place";
+                                    location.ItemsSource = dataSet.Tables[0].DefaultView;
+                                    location.DisplayMemberPath = "Place";
                                     break;
                             }
                         }
@@ -658,6 +656,89 @@ namespace AccountingPC
         private void GetValueVideoConnectors(object sender)
         {
 
+        }
+
+        private void InitializePopup()
+        {
+            inventoryNumberGrid.Visibility = Visibility.Visible;
+            deviceNameGrid.Visibility = Visibility.Visible;
+            costGrid.Visibility = Visibility.Visible;
+            motherboardGrid.Visibility = Visibility.Hidden;
+            cpuGrid.Visibility = Visibility.Hidden;
+            coresGrid.Visibility = Visibility.Hidden;
+            frequencyGrid.Visibility = Visibility.Hidden;
+            maxFrequencyGrid.Visibility = Visibility.Hidden;
+            vCardGrid.Visibility = Visibility.Hidden;
+            videoramGrid.Visibility = Visibility.Hidden;
+            hddGrid.Visibility = Visibility.Hidden;
+            ramGrid.Visibility = Visibility.Hidden;
+            ramFrequencyGrid.Visibility = Visibility.Hidden;
+            osGrid.Visibility = Visibility.Hidden;
+            invoiceGrid.Visibility = Visibility.Hidden;
+            locationGrid.Visibility = Visibility.Hidden;
+            osGrid.Visibility = Visibility.Hidden;
+            vConnectorsGrid.Visibility = Visibility.Hidden;
+            GridPlacement(inventoryNumberGrid, 0, 0, 3);
+            GridPlacement(deviceNameGrid, 3, 0, 7);
+            GridPlacement(costGrid, 10, 0, 2);
+            switch (typeDevice)
+            {
+                case TypeDevice.InteractiveWhiteboard:
+                    break;
+                case TypeDevice.Monitor:
+                    break;
+                case TypeDevice.NetworkSwitch:
+                    break;
+                case TypeDevice.Notebook:
+                    break;
+                case TypeDevice.OtherEquipment:
+                    break;
+                case TypeDevice.PC:
+                    motherboardGrid.Visibility = Visibility.Visible;
+                    cpuGrid.Visibility = Visibility.Visible;
+                    coresGrid.Visibility = Visibility.Visible;
+                    frequencyGrid.Visibility = Visibility.Visible;
+                    maxFrequencyGrid.Visibility = Visibility.Visible;
+                    vCardGrid.Visibility = Visibility.Visible;
+                    videoramGrid.Visibility = Visibility.Visible;
+                    hddGrid.Visibility = Visibility.Visible;
+                    ramGrid.Visibility = Visibility.Visible;
+                    ramFrequencyGrid.Visibility = Visibility.Visible;
+                    osGrid.Visibility = Visibility.Visible;
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    osGrid.Visibility = Visibility.Visible;
+                    vConnectorsGrid.Visibility = Visibility.Visible;
+                    GridPlacement(motherboardGrid, 0, 1, 3);
+                    GridPlacement(cpuGrid, 3, 1, 3);
+                    GridPlacement(coresGrid, 6, 1, 2);
+                    GridPlacement(frequencyGrid, 8, 1, 2);
+                    GridPlacement(maxFrequencyGrid, 10, 1, 2);
+                    GridPlacement(vCardGrid, 0, 2, 4);
+                    GridPlacement(videoramGrid, 4, 2, 2);
+                    GridPlacement(ramGrid, 6, 2, 2);
+                    GridPlacement(ramFrequencyGrid, 8, 2, 2);
+                    GridPlacement(hddGrid, 0, 3, 2);
+                    GridPlacement(osGrid, 2, 3, 4);
+                    GridPlacement(invoiceGrid, 6, 3, 4);
+                    GridPlacement(locationGrid, 0, 4, 10);
+                    GridPlacement(vConnectorsGrid, 10, 2, 2, 3);
+                    break;
+                case TypeDevice.PrinterScanner:
+                    break;
+                case TypeDevice.Projector:
+                    break;
+                case TypeDevice.ProjectorScreen:
+                    break;
+            }
+        }
+
+        private void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 0)
+        {
+            Grid.SetColumn(element, column);
+            Grid.SetRow(element, row);
+            Grid.SetColumnSpan(element, colSpan);
+            Grid.SetRowSpan(element, rowSpan);
         }
     }
 }
