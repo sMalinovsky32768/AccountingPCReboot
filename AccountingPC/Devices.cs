@@ -103,7 +103,6 @@ namespace AccountingPC
 
     public class PrinterScanner : Device
     {
-        public Single Diagonal { get; set; }
         public int TypeID { get; set; }
         public int PaperSizeID { get; set; }
 

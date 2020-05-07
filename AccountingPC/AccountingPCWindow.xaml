@@ -126,7 +126,8 @@
                 <!---->
             </Grid>
             <Popup x:Name="changePopup" Placement="Custom" CustomPopupPlacementCallback="changePopupPlacement" 
-                   PlacementTarget="{Binding ElementName=windowGrid}" HorizontalOffset="200" VerticalOffset="100" Opened="changePopup_Opened">
+                   PlacementTarget="{Binding ElementName=windowGrid}" HorizontalOffset="200" VerticalOffset="100" 
+                   Opened="changePopup_Opened" ScrollViewer.CanContentScroll="True">
                 <Grid>
                     <Border Margin="5">
                         <Border.Effect>
@@ -147,8 +148,10 @@
                                     </Style>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="FontSize" Value="14"/>
-                                        <Setter Property="Margin" Value="10,20,10,5"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="TextWrapping" Value="Wrap"/>
+                                        <Setter Property="Margin" Value="10,5"/>
+                                        <Setter Property="Height" Value="auto"/>
+                                        <Setter Property="VerticalAlignment" Value="Bottom"/>
                                         <Setter Property="FontFamily" Value="Source Sans Pro"/>
                                         <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
                                     </Style>
@@ -172,19 +175,19 @@
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
-                                        <RowDefinition Height="auto"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Grid x:Name="inventoryNumberGrid">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Инвентарный номер" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Инвентарный номер"/>
                                         <TextBox Grid.Row="1" x:Name="inventoryNumber">
                                             <TextBox.Text>
                                                 <Binding Path="InventoryNumber">
@@ -268,7 +271,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Количество ядер" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Количество ядер"/>
                                         <TextBox Grid.Row="1" x:Name="cores">
                                             <TextBox.Text>
                                                 <Binding Path="Cores">
@@ -284,7 +287,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Базовая частота" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Базовая частота"/>
                                         <TextBox Grid.Row="1" x:Name="frequency">
                                             <TextBox.Text>
                                                 <Binding Path="Frequency">
@@ -300,7 +303,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Максимальная частота" TextWrapping="Wrap"/>
+                                        <TextBlock Text="Максимальная частота"/>
                                         <TextBox Grid.Row="1" x:Name="maxFrequency">
                                             <TextBox.Text>
                                                 <Binding Path="MaxFrequency">
@@ -526,7 +529,7 @@
                                         <TextBlock Text="Формат бумаги"/>
                                         <ComboBox Grid.Row="1" x:Name="paperSize" IsTextSearchEnabled="True"/>
                                     </Grid>
-                                    <Grid x:Name="PortsGrid">
+                                    <Grid x:Name="portsGrid">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
                                             <RowDefinition/>
@@ -547,7 +550,11 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <CheckBox Grid.Row="1" x:Name="isEDrive"/>
+                                        <CheckBox Grid.Row="1" x:Name="isEDrive">
+                                            <CheckBox.IsChecked>
+                                                <Binding Path="IsElectronicDrive"/>
+                                            </CheckBox.IsChecked>
+                                        </CheckBox>
                                     </Grid>
                                 </Grid>
                             </Grid>

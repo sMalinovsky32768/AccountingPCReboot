@@ -450,6 +450,7 @@ namespace AccountingPC
 
         private void changePopup_Opened(object sender, EventArgs e)
         {
+            InitializePopup();
             viewGrid.IsEnabled = false;
             menu.IsEnabled = false;
             String commandString;
@@ -663,6 +664,8 @@ namespace AccountingPC
             inventoryNumberGrid.Visibility = Visibility.Visible;
             deviceNameGrid.Visibility = Visibility.Visible;
             costGrid.Visibility = Visibility.Visible;
+            invoiceGrid.Visibility = Visibility.Hidden;
+            locationGrid.Visibility = Visibility.Hidden;
             motherboardGrid.Visibility = Visibility.Hidden;
             cpuGrid.Visibility = Visibility.Hidden;
             coresGrid.Visibility = Visibility.Hidden;
@@ -674,24 +677,84 @@ namespace AccountingPC
             ramGrid.Visibility = Visibility.Hidden;
             ramFrequencyGrid.Visibility = Visibility.Hidden;
             osGrid.Visibility = Visibility.Hidden;
-            invoiceGrid.Visibility = Visibility.Hidden;
-            locationGrid.Visibility = Visibility.Hidden;
-            osGrid.Visibility = Visibility.Hidden;
             vConnectorsGrid.Visibility = Visibility.Hidden;
+            resolutionGrid.Visibility = Visibility.Hidden;
+            screenFrequencyGrid.Visibility = Visibility.Hidden;
+            matrixTechnologyGrid.Visibility = Visibility.Hidden;
+            typeGrid.Visibility = Visibility.Hidden;
+            diagonalGrid.Visibility = Visibility.Hidden;
+            projectorTechnologyGrid.Visibility = Visibility.Hidden;
+            isEDriveGrid.Visibility = Visibility.Hidden;
+            aspectRatioGrid.Visibility = Visibility.Hidden;
+            screenInstalledGrid.Visibility = Visibility.Hidden;
+            paperSizeGrid.Visibility = Visibility.Hidden;
+            portsGrid.Visibility = Visibility.Hidden;
+            wifiFrequencyGrid.Visibility = Visibility.Hidden;
             GridPlacement(inventoryNumberGrid, 0, 0, 3);
             GridPlacement(deviceNameGrid, 3, 0, 7);
             GridPlacement(costGrid, 10, 0, 2);
             switch (typeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    diagonalGrid.Visibility = Visibility.Visible;
                     break;
                 case TypeDevice.Monitor:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible; 
+                    vConnectorsGrid.Visibility = Visibility.Visible;
+                    resolutionGrid.Visibility = Visibility.Visible;
+                    screenFrequencyGrid.Visibility = Visibility.Visible;
+                    matrixTechnologyGrid.Visibility = Visibility.Visible;
+                    diagonalGrid.Visibility = Visibility.Visible;
                     break;
                 case TypeDevice.NetworkSwitch:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    portsGrid.Visibility = Visibility.Visible;
+                    wifiFrequencyGrid.Visibility = Visibility.Visible;
                     break;
                 case TypeDevice.Notebook:
+                    typeGrid.Visibility = Visibility.Hidden;
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    cpuGrid.Visibility = Visibility.Visible;
+                    coresGrid.Visibility = Visibility.Visible;
+                    frequencyGrid.Visibility = Visibility.Visible;
+                    maxFrequencyGrid.Visibility = Visibility.Visible;
+                    vCardGrid.Visibility = Visibility.Visible;
+                    videoramGrid.Visibility = Visibility.Visible;
+                    hddGrid.Visibility = Visibility.Visible;
+                    ramGrid.Visibility = Visibility.Visible;
+                    ramFrequencyGrid.Visibility = Visibility.Visible;
+                    osGrid.Visibility = Visibility.Visible;
+                    vConnectorsGrid.Visibility = Visibility.Visible;
+                    diagonalGrid.Visibility = Visibility.Visible;
+                    resolutionGrid.Visibility = Visibility.Visible;
+                    screenFrequencyGrid.Visibility = Visibility.Visible;
+                    matrixTechnologyGrid.Visibility = Visibility.Visible;
+                    GridPlacement(diagonalGrid, 0, 1, 3);
+                    GridPlacement(cpuGrid, 3, 1, 3);
+                    GridPlacement(coresGrid, 6, 1, 2);
+                    GridPlacement(frequencyGrid, 8, 1, 2);
+                    GridPlacement(maxFrequencyGrid, 10, 1, 2);
+                    GridPlacement(matrixTechnologyGrid, 0, 2, 4);
+                    GridPlacement(resolutionGrid, 4, 2, 2);
+                    GridPlacement(screenFrequencyGrid, 6, 2, 2);
+                    GridPlacement(vCardGrid, 0, 3, 4);
+                    GridPlacement(videoramGrid, 4, 3, 2);
+                    GridPlacement(ramGrid, 6, 3, 2);
+                    GridPlacement(ramFrequencyGrid, 8, 3, 2);
+                    GridPlacement(hddGrid, 0, 4, 2);
+                    GridPlacement(osGrid, 2, 4, 4);
+                    GridPlacement(invoiceGrid, 6, 4, 4);
+                    GridPlacement(locationGrid, 0, 5, 10);
+                    GridPlacement(vConnectorsGrid, 10, 2, 2, 4);
                     break;
                 case TypeDevice.OtherEquipment:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
                     break;
                 case TypeDevice.PC:
                     motherboardGrid.Visibility = Visibility.Visible;
@@ -725,15 +788,31 @@ namespace AccountingPC
                     GridPlacement(vConnectorsGrid, 10, 2, 2, 3);
                     break;
                 case TypeDevice.PrinterScanner:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    paperSizeGrid.Visibility = Visibility.Visible;
+                    typeGrid.Visibility = Visibility.Visible;
                     break;
                 case TypeDevice.Projector:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    vConnectorsGrid.Visibility = Visibility.Visible;
+                    diagonalGrid.Visibility = Visibility.Visible;
+                    resolutionGrid.Visibility = Visibility.Visible;
+                    projectorTechnologyGrid.Visibility = Visibility.Visible;
                     break;
                 case TypeDevice.ProjectorScreen:
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    diagonalGrid.Visibility = Visibility.Visible;
+                    isEDriveGrid.Visibility = Visibility.Visible;
+                    aspectRatioGrid.Visibility = Visibility.Visible;
+                    screenInstalledGrid.Visibility = Visibility.Visible;
                     break;
             }
         }
 
-        private void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 0)
+        private void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 1)
         {
             Grid.SetColumn(element, column);
             Grid.SetRow(element, row);
