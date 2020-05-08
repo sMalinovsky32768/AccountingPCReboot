@@ -49,6 +49,7 @@ namespace AccountingPC
         Int32 deviceID;
         bool isPreOpenPopup;
         SqlDataAdapter aspectRatioDataAdapter;
+        SqlDataAdapter cpuDataAdapter;
         SqlDataAdapter softwareDataAdapter;
         SqlDataAdapter pcSoftwareDataAdapter;
         SqlDataAdapter notebookSoftwareDataAdapter;
@@ -76,6 +77,37 @@ namespace AccountingPC
         SqlDataAdapter videoConnectorsDataAdapter;
         SqlDataAdapter wifiFrequencyDataAdapter;
         SqlDataAdapter DataAdapter;
+
+        DataSet aspectRatioDataSet;
+        DataSet cpuDataSet;
+        DataSet softwareDataSet;
+        DataSet pcSoftwareDataSet;
+        DataSet notebookSoftwareDataSet;
+        DataSet osDataSet;
+        DataSet screenInstalledDataSet;
+        DataSet typeDeviceDataSet;
+        DataSet boardDataSet;
+        DataSet frequencyDataSet;
+        DataSet locationDataSet;
+        DataSet matrixTechnologyDataSet;
+        DataSet monitorDataSet;
+        DataSet networkSwitchDataSet;
+        DataSet notebookDataSet;
+        DataSet otherEquipmentDataSet;
+        DataSet paperSizeDataSet;
+        DataSet pcDataSet;
+        DataSet printerScannerDataSet;
+        DataSet projectorDataSet;
+        DataSet projectorTechnologyDataSet;
+        DataSet resolutionDataSet;
+        DataSet typeNetworkSwitchDataSet;
+        DataSet typeNotebookDataSet;
+        DataSet typePrinterDataSet;
+        DataSet typeLicenseDataSet;
+        DataSet videoConnectorsDataSet;
+        DataSet wifiFrequencyDataSet;
+
+        DataSet DataSet;
 
         public AccountingPCWindow()
         {
@@ -240,24 +272,42 @@ namespace AccountingPC
                     adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
+                    set.Tables[0].Columns.Add("Видеоразъемы");
+                    foreach (DataRow row in set.Tables[0].Rows)
+                    {
+                        row[23] = row[19].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[19])) : row[19];
+                    }
                     view.ItemsSource = set.Tables[0].DefaultView;
                     view.Columns[0].Visibility = Visibility.Collapsed;
+                    view.Columns[19].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Notebook;
                     break;
                 case 2:
                     adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
+                    set.Tables[0].Columns.Add("Видеоразъемы");
+                    foreach (DataRow row in set.Tables[0].Rows)
+                    {
+                        row[12] = row[10].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[10])) : row[10];
+                    }
                     view.ItemsSource = set.Tables[0].DefaultView;
                     view.Columns[0].Visibility = Visibility.Collapsed;
+                    view.Columns[10].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Monitor;
                     break;
                 case 3:
                     adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
+                    set.Tables[0].Columns.Add("Видеоразъемы");
+                    foreach (DataRow row in set.Tables[0].Rows)
+                    {
+                        row[11] = row[9].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[9])) : row[9];
+                    }
                     view.ItemsSource = set.Tables[0].DefaultView;
                     view.Columns[0].Visibility = Visibility.Collapsed;
+                    view.Columns[9].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Projector;
                     break;
                 case 4:
@@ -810,6 +860,7 @@ namespace AccountingPC
                     screenInstalledGrid.Visibility = Visibility.Visible;
                     break;
             }
+            UpdatePopupSource();
         }
 
         private void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 1)
@@ -822,7 +873,112 @@ namespace AccountingPC
 
         private void UpdatePopupSource()
         {
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
+            aspectRatioDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllAspectRatio()", connectionString);
+            aspectRatioDataSet = new DataSet();
+            aspectRatioDataAdapter.Fill(aspectRatioDataSet);
+            aspectRatio.ItemsSource = aspectRatioDataSet.Tables[0].DefaultView;
+            aspectRatio.DisplayMemberPath = "Name";
+
+            osDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS()", connectionString);
+            osDataSet = new DataSet();
+            osDataAdapter.Fill(osDataSet);
+            os.ItemsSource = osDataSet.Tables[0].DefaultView;
+            os.DisplayMemberPath = "Name";
+
+            screenInstalledDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", connectionString);
+            screenInstalledDataSet = new DataSet();
+            screenInstalledDataAdapter.Fill(screenInstalledDataSet);
+            screenInstalled.ItemsSource = screenInstalledDataSet.Tables[0].DefaultView;
+            screenInstalled.DisplayMemberPath = "Name";
+
+            if (typeDevice == TypeDevice.Notebook)
+            {
+                typeNotebookDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", connectionString);
+                typeNotebookDataSet = new DataSet();
+                typeNotebookDataAdapter.Fill(typeNotebookDataSet);
+                type.ItemsSource = typeNotebookDataSet.Tables[0].DefaultView;
+                type.DisplayMemberPath = "Name";
+
+                cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", connectionString);
+                cpuDataSet = new DataSet();
+                cpuDataAdapter.Fill(cpuDataSet);
+                cpu.ItemsSource = cpuDataSet.Tables[0].DefaultView;
+                cpu.DisplayMemberPath = "CPUModel";
+            }
+            if (typeDevice == TypeDevice.PrinterScanner)
+            {
+                typePrinterDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypePrinter()", connectionString);
+                typePrinterDataSet = new DataSet();
+                typePrinterDataAdapter.Fill(typePrinterDataSet);
+                type.ItemsSource = typePrinterDataSet.Tables[0].DefaultView;
+                type.DisplayMemberPath = "Name";
+            }
+            if (typeDevice == TypeDevice.NetworkSwitch)
+            {
+                typeNetworkSwitchDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", connectionString);
+                typeNetworkSwitchDataSet = new DataSet();
+                typeNetworkSwitchDataAdapter.Fill(typeNetworkSwitchDataSet);
+                type.ItemsSource = typeNetworkSwitchDataSet.Tables[0].DefaultView;
+                type.DisplayMemberPath = "Name";
+            }
+            if (typeDevice == TypeDevice.PC)
+            {
+                cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", connectionString);
+                cpuDataSet = new DataSet();
+                cpuDataAdapter.Fill(cpuDataSet);
+                cpu.ItemsSource = cpuDataSet.Tables[0].DefaultView;
+                cpu.DisplayMemberPath = "CPUModel";
+            }
+
+            frequencyDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", connectionString);
+            frequencyDataSet = new DataSet();
+            frequencyDataAdapter.Fill(frequencyDataSet);
+            screenFrequency.ItemsSource = frequencyDataSet.Tables[0].DefaultView;
+            screenFrequency.DisplayMemberPath = "Name";
+
+            locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocation()", connectionString);
+            locationDataSet = new DataSet();
+            locationDataAdapter.Fill(locationDataSet);
+            location.ItemsSource = locationDataSet.Tables[0].DefaultView;
+            location.DisplayMemberPath = "Name";
+
+            matrixTechnologyDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllMatrixTechnology()", connectionString);
+            matrixTechnologyDataSet = new DataSet();
+            matrixTechnologyDataAdapter.Fill(matrixTechnologyDataSet);
+            matrixTechnology.ItemsSource = matrixTechnologyDataSet.Tables[0].DefaultView;
+            matrixTechnology.DisplayMemberPath = "Name";
+
+            paperSizeDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPaperSize()", connectionString);
+            paperSizeDataSet = new DataSet();
+            paperSizeDataAdapter.Fill(paperSizeDataSet);
+            paperSize.ItemsSource = paperSizeDataSet.Tables[0].DefaultView;
+            paperSize.DisplayMemberPath = "Name";
+
+            projectorTechnologyDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorTechnology()", connectionString);
+            projectorTechnologyDataSet = new DataSet();
+            projectorTechnologyDataAdapter.Fill(projectorTechnologyDataSet);
+            projectorTechnology.ItemsSource = projectorTechnologyDataSet.Tables[0].DefaultView;
+            projectorTechnology.DisplayMemberPath = "Name";
+
+            resolutionDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllResolution()", connectionString);
+            resolutionDataSet = new DataSet();
+            resolutionDataAdapter.Fill(resolutionDataSet);
+            resolution.ItemsSource = resolutionDataSet.Tables[0].DefaultView;
+            resolution.DisplayMemberPath = "Name";
+
+            videoConnectorsDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllVideoConnector()", connectionString);
+            videoConnectorsDataSet = new DataSet();
+            videoConnectorsDataAdapter.Fill(videoConnectorsDataSet);
+            vConnectors.ItemsSource = videoConnectorsDataSet.Tables[0].DefaultView;
+            vConnectors.DisplayMemberPath = "Name";
+
+            wifiFrequencyDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllWiFiFrequency()", connectionString);
+            wifiFrequencyDataSet = new DataSet();
+            wifiFrequencyDataAdapter.Fill(wifiFrequencyDataSet);
+            wifiFrequency.ItemsSource = wifiFrequencyDataSet.Tables[0].DefaultView;
+            wifiFrequency.DisplayMemberPath = "Name";
         }
     }
 }
