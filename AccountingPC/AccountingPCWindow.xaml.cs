@@ -76,6 +76,10 @@ namespace AccountingPC
         SqlDataAdapter typeLicenseDataAdapter;
         SqlDataAdapter videoConnectorsDataAdapter;
         SqlDataAdapter wifiFrequencyDataAdapter;
+        SqlDataAdapter nameDataAdapter;
+        SqlDataAdapter motherboardDataAdapter;
+        SqlDataAdapter vCardDataAdapter;
+
         SqlDataAdapter DataAdapter;
 
         DataSet aspectRatioDataSet;
@@ -106,6 +110,9 @@ namespace AccountingPC
         DataSet typeLicenseDataSet;
         DataSet videoConnectorsDataSet;
         DataSet wifiFrequencyDataSet;
+        DataSet nameDataSet;
+        DataSet motherboardDataSet;
+        DataSet vCardDataSet;
 
         DataSet DataSet;
 
@@ -168,6 +175,10 @@ namespace AccountingPC
             {
                 changePopup.IsOpen = true;
                 isPreOpenPopup = false;
+            }
+            if (WindowState == WindowState.Maximized)
+            {
+                
             }
         }
 
@@ -275,29 +286,15 @@ namespace AccountingPC
                     set.Tables[0].Columns.Add("Видеоразъемы");
                     foreach (DataRow row in set.Tables[0].Rows)
                     {
-                        row[23] = row[19].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[19])) : row[19];
+                        row[22] = row[18].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[18])) : row[18];
                     }
                     view.ItemsSource = set.Tables[0].DefaultView;
                     view.Columns[0].Visibility = Visibility.Collapsed;
-                    view.Columns[19].Visibility = Visibility.Collapsed;
+                    view.Columns[18].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Notebook;
                     break;
                 case 2:
                     adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", connectionString);
-                    set = new DataSet();
-                    adapter.Fill(set);
-                    set.Tables[0].Columns.Add("Видеоразъемы");
-                    foreach (DataRow row in set.Tables[0].Rows)
-                    {
-                        row[12] = row[10].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[10])) : row[10];
-                    }
-                    view.ItemsSource = set.Tables[0].DefaultView;
-                    view.Columns[0].Visibility = Visibility.Collapsed;
-                    view.Columns[10].Visibility = Visibility.Collapsed;
-                    typeDevice = TypeDevice.Monitor;
-                    break;
-                case 3:
-                    adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", connectionString);
                     set = new DataSet();
                     adapter.Fill(set);
                     set.Tables[0].Columns.Add("Видеоразъемы");
@@ -308,6 +305,20 @@ namespace AccountingPC
                     view.ItemsSource = set.Tables[0].DefaultView;
                     view.Columns[0].Visibility = Visibility.Collapsed;
                     view.Columns[9].Visibility = Visibility.Collapsed;
+                    typeDevice = TypeDevice.Monitor;
+                    break;
+                case 3:
+                    adapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", connectionString);
+                    set = new DataSet();
+                    adapter.Fill(set);
+                    set.Tables[0].Columns.Add("Видеоразъемы");
+                    foreach (DataRow row in set.Tables[0].Rows)
+                    {
+                        row[10] = row[8].GetType() == typeof(int) ? GetListVideoConnectors(Convert.ToInt32(row[8])) : row[8];
+                    }
+                    view.ItemsSource = set.Tables[0].DefaultView;
+                    view.Columns[0].Visibility = Visibility.Collapsed;
+                    view.Columns[8].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Projector;
                     break;
                 case 4:
@@ -454,47 +465,6 @@ namespace AccountingPC
                         break;
                 }
                 //int res = command.ExecuteNonQuery();
-            }
-        }
-
-        private void ComboBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            GetComboBoxSourcePC(sender);
-        }
-
-        private void GetComboBoxSourcePC(object sender)
-        {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            if (((ComboBox)sender).Name == "cpuPC")
-            {
-
-            }
-            switch (((ComboBox)sender).Name)
-            {
-                case "namePC":
-                    adapter = new SqlDataAdapter($"SELECT distinct Name from PC Where Name LIKE N'{name.Text}%'", connectionString);
-                    set = new DataSet();
-                    adapter.Fill(set);
-                    name.ItemsSource = set.Tables[0].DefaultView;
-                    name.DisplayMemberPath = "Name";
-                    name.IsDropDownOpen = true;
-                    break;
-                case "motherboardPC":
-                    adapter = new SqlDataAdapter($"SELECT distinct Motherboard from PC Where Motherboard LIKE N'{motherboard.Text}%'", connectionString);
-                    set = new DataSet();
-                    adapter.Fill(set);
-                    motherboard.ItemsSource = set.Tables[0].DefaultView;
-                    motherboard.DisplayMemberPath = "Motherboard";
-                    motherboard.IsDropDownOpen = true;
-                    break;
-                case "cpuPC":
-                    adapter = new SqlDataAdapter($"SELECT distinct CPUModel from PC Where CPUModel LIKE N'{cpu.Text}%'", connectionString);
-                    set = new DataSet();
-                    adapter.Fill(set);
-                    cpu.ItemsSource = set.Tables[0].DefaultView;
-                    cpu.DisplayMemberPath = "CPUModel";
-                    cpu.IsDropDownOpen = true;
-                    break;
             }
         }
 
@@ -704,9 +674,39 @@ namespace AccountingPC
             return res;
         }
 
-        private void GetValueVideoConnectors(object sender)
+        private List<String> GetListVideoConnectors(Int32 value, object obj)
         {
+            List<String> arr = new List<String>();
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                SqlDataReader reader = new SqlCommand("Select * from dbo.GetAllVideoConnector()" +
+                    "Order by value desc", connection).ExecuteReader();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        Int32 connectorValue = Convert.ToInt32(reader["Value"]);
+                        if (value >= connectorValue)
+                        {
+                            value -= connectorValue;
+                            arr.Add(reader["Name"].ToString());
+                        }
+                    }
+                }
+            }
+            return arr;
+        }
 
+        private UInt32 GetValueVideoConnectors()
+        {
+            UInt32 value = 0;
+            foreach(var obj in vConnectors.SelectedItems)
+            {
+                value += (uint)((obj as DataRow)["Value"]);
+            }
+            return value;
         }
 
         private void InitializePopup()
@@ -749,24 +749,43 @@ namespace AccountingPC
                     invoiceGrid.Visibility = Visibility.Visible;
                     locationGrid.Visibility = Visibility.Visible;
                     diagonalGrid.Visibility = Visibility.Visible;
+                    GridPlacement(diagonalGrid, 0, 1, 2);
+                    GridPlacement(invoiceGrid, 2, 1, 3);
+                    GridPlacement(locationGrid, 5, 1, 7);
                     break;
                 case TypeDevice.Monitor:
-                    invoiceGrid.Visibility = Visibility.Visible;
-                    locationGrid.Visibility = Visibility.Visible; 
                     vConnectorsGrid.Visibility = Visibility.Visible;
                     resolutionGrid.Visibility = Visibility.Visible;
                     screenFrequencyGrid.Visibility = Visibility.Visible;
                     matrixTechnologyGrid.Visibility = Visibility.Visible;
                     diagonalGrid.Visibility = Visibility.Visible;
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    GridPlacement(diagonalGrid, 0, 1, 2);
+                    GridPlacement(resolutionGrid, 2, 1, 3);
+                    GridPlacement(screenFrequencyGrid, 5, 1, 2);
+                    GridPlacement(matrixTechnologyGrid, 7, 1, 3);
+                    GridPlacement(invoiceGrid, 0, 2, 3);
+                    GridPlacement(locationGrid, 3, 2, 7);
+                    GridPlacement(vConnectorsGrid, 10, 1, 2, 2);
                     break;
                 case TypeDevice.NetworkSwitch:
+                    typeGrid.Visibility = Visibility.Visible;
                     invoiceGrid.Visibility = Visibility.Visible;
                     locationGrid.Visibility = Visibility.Visible;
                     portsGrid.Visibility = Visibility.Visible;
                     wifiFrequencyGrid.Visibility = Visibility.Visible;
+                    GridPlacement(inventoryNumberGrid, 0, 0, 3);
+                    GridPlacement(typeGrid, 3, 0, 2);
+                    GridPlacement(deviceNameGrid, 5, 0, 5);
+                    GridPlacement(costGrid, 10, 0, 2);
+                    GridPlacement(portsGrid, 0, 1, 3);
+                    GridPlacement(wifiFrequencyGrid, 3, 1, 3);
+                    GridPlacement(invoiceGrid, 6, 1, 6);
+                    GridPlacement(locationGrid, 0, 2, 12);
                     break;
                 case TypeDevice.Notebook:
-                    typeGrid.Visibility = Visibility.Hidden;
+                    typeGrid.Visibility = Visibility.Visible;
                     invoiceGrid.Visibility = Visibility.Visible;
                     locationGrid.Visibility = Visibility.Visible;
                     cpuGrid.Visibility = Visibility.Visible;
@@ -784,20 +803,24 @@ namespace AccountingPC
                     resolutionGrid.Visibility = Visibility.Visible;
                     screenFrequencyGrid.Visibility = Visibility.Visible;
                     matrixTechnologyGrid.Visibility = Visibility.Visible;
-                    GridPlacement(diagonalGrid, 0, 1, 3);
-                    GridPlacement(cpuGrid, 3, 1, 3);
-                    GridPlacement(coresGrid, 6, 1, 2);
-                    GridPlacement(frequencyGrid, 8, 1, 2);
-                    GridPlacement(maxFrequencyGrid, 10, 1, 2);
-                    GridPlacement(matrixTechnologyGrid, 0, 2, 4);
-                    GridPlacement(resolutionGrid, 4, 2, 2);
-                    GridPlacement(screenFrequencyGrid, 6, 2, 2);
+                    GridPlacement(inventoryNumberGrid, 0, 0, 3);
+                    GridPlacement(typeGrid, 3, 0, 2);
+                    GridPlacement(deviceNameGrid, 5, 0, 5);
+                    GridPlacement(costGrid, 10, 0, 2);
+                    GridPlacement(cpuGrid, 0, 1, 4);
+                    GridPlacement(coresGrid, 4, 1, 2);
+                    GridPlacement(frequencyGrid, 6, 1, 2);
+                    GridPlacement(maxFrequencyGrid, 8, 1, 2);
+                    GridPlacement(hddGrid, 10, 1, 2);
+                    GridPlacement(diagonalGrid, 0, 2, 2);
+                    GridPlacement(resolutionGrid, 2, 2, 3);
+                    GridPlacement(screenFrequencyGrid, 5, 2, 2);
+                    GridPlacement(matrixTechnologyGrid, 7, 2, 3);
                     GridPlacement(vCardGrid, 0, 3, 4);
                     GridPlacement(videoramGrid, 4, 3, 2);
                     GridPlacement(ramGrid, 6, 3, 2);
                     GridPlacement(ramFrequencyGrid, 8, 3, 2);
-                    GridPlacement(hddGrid, 0, 4, 2);
-                    GridPlacement(osGrid, 2, 4, 4);
+                    GridPlacement(osGrid, 0, 4, 6);
                     GridPlacement(invoiceGrid, 6, 4, 4);
                     GridPlacement(locationGrid, 0, 5, 10);
                     GridPlacement(vConnectorsGrid, 10, 2, 2, 4);
@@ -805,6 +828,8 @@ namespace AccountingPC
                 case TypeDevice.OtherEquipment:
                     invoiceGrid.Visibility = Visibility.Visible;
                     locationGrid.Visibility = Visibility.Visible;
+                    GridPlacement(invoiceGrid, 0, 1, 3);
+                    GridPlacement(locationGrid, 3, 1, 9);
                     break;
                 case TypeDevice.PC:
                     motherboardGrid.Visibility = Visibility.Visible;
@@ -838,26 +863,45 @@ namespace AccountingPC
                     GridPlacement(vConnectorsGrid, 10, 2, 2, 3);
                     break;
                 case TypeDevice.PrinterScanner:
-                    invoiceGrid.Visibility = Visibility.Visible;
-                    locationGrid.Visibility = Visibility.Visible;
                     paperSizeGrid.Visibility = Visibility.Visible;
                     typeGrid.Visibility = Visibility.Visible;
-                    break;
-                case TypeDevice.Projector:
                     invoiceGrid.Visibility = Visibility.Visible;
                     locationGrid.Visibility = Visibility.Visible;
+                    GridPlacement(inventoryNumberGrid, 0, 0, 3);
+                    GridPlacement(typeGrid, 3, 0, 2);
+                    GridPlacement(deviceNameGrid, 5, 0, 5);
+                    GridPlacement(costGrid, 10, 0, 2);
+                    GridPlacement(paperSizeGrid, 0, 1, 2);
+                    GridPlacement(invoiceGrid, 2, 1, 3);
+                    GridPlacement(locationGrid, 5, 1, 7);
+                    break;
+                case TypeDevice.Projector:
                     vConnectorsGrid.Visibility = Visibility.Visible;
                     diagonalGrid.Visibility = Visibility.Visible;
                     resolutionGrid.Visibility = Visibility.Visible;
                     projectorTechnologyGrid.Visibility = Visibility.Visible;
-                    break;
-                case TypeDevice.ProjectorScreen:
                     invoiceGrid.Visibility = Visibility.Visible;
                     locationGrid.Visibility = Visibility.Visible;
+                    GridPlacement(diagonalGrid, 0, 1, 2);
+                    GridPlacement(resolutionGrid, 2, 1, 4);
+                    GridPlacement(projectorTechnologyGrid, 6, 1, 4);
+                    GridPlacement(invoiceGrid, 0, 2, 3);
+                    GridPlacement(locationGrid, 3, 2, 7);
+                    GridPlacement(vConnectorsGrid, 10, 1, 2, 2);
+                    break;
+                case TypeDevice.ProjectorScreen:
                     diagonalGrid.Visibility = Visibility.Visible;
                     isEDriveGrid.Visibility = Visibility.Visible;
                     aspectRatioGrid.Visibility = Visibility.Visible;
                     screenInstalledGrid.Visibility = Visibility.Visible;
+                    invoiceGrid.Visibility = Visibility.Visible;
+                    locationGrid.Visibility = Visibility.Visible;
+                    GridPlacement(diagonalGrid, 0, 1, 2);
+                    GridPlacement(aspectRatioGrid, 2, 1, 2);
+                    GridPlacement(isEDriveGrid, 4, 1, 2);
+                    GridPlacement(screenInstalledGrid, 6, 1, 6);
+                    GridPlacement(invoiceGrid, 0, 2, 3);
+                    GridPlacement(locationGrid, 3, 2, 9);
                     break;
             }
             UpdatePopupSource();
@@ -893,43 +937,113 @@ namespace AccountingPC
             screenInstalled.ItemsSource = screenInstalledDataSet.Tables[0].DefaultView;
             screenInstalled.DisplayMemberPath = "Name";
 
-            if (typeDevice == TypeDevice.Notebook)
+            switch (typeDevice)
             {
-                typeNotebookDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", connectionString);
-                typeNotebookDataSet = new DataSet();
-                typeNotebookDataAdapter.Fill(typeNotebookDataSet);
-                type.ItemsSource = typeNotebookDataSet.Tables[0].DefaultView;
-                type.DisplayMemberPath = "Name";
+                case TypeDevice.InteractiveWhiteboard:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllBoardName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+                    break;
+                case TypeDevice.Monitor:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllMonitorName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+                    break;
+                case TypeDevice.NetworkSwitch:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNetworkSwitchName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
 
-                cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", connectionString);
-                cpuDataSet = new DataSet();
-                cpuDataAdapter.Fill(cpuDataSet);
-                cpu.ItemsSource = cpuDataSet.Tables[0].DefaultView;
-                cpu.DisplayMemberPath = "CPUModel";
-            }
-            if (typeDevice == TypeDevice.PrinterScanner)
-            {
-                typePrinterDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypePrinter()", connectionString);
-                typePrinterDataSet = new DataSet();
-                typePrinterDataAdapter.Fill(typePrinterDataSet);
-                type.ItemsSource = typePrinterDataSet.Tables[0].DefaultView;
-                type.DisplayMemberPath = "Name";
-            }
-            if (typeDevice == TypeDevice.NetworkSwitch)
-            {
-                typeNetworkSwitchDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", connectionString);
-                typeNetworkSwitchDataSet = new DataSet();
-                typeNetworkSwitchDataAdapter.Fill(typeNetworkSwitchDataSet);
-                type.ItemsSource = typeNetworkSwitchDataSet.Tables[0].DefaultView;
-                type.DisplayMemberPath = "Name";
-            }
-            if (typeDevice == TypeDevice.PC)
-            {
-                cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", connectionString);
-                cpuDataSet = new DataSet();
-                cpuDataAdapter.Fill(cpuDataSet);
-                cpu.ItemsSource = cpuDataSet.Tables[0].DefaultView;
-                cpu.DisplayMemberPath = "CPUModel";
+                    typeNetworkSwitchDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", connectionString);
+                    typeNetworkSwitchDataSet = new DataSet();
+                    typeNetworkSwitchDataAdapter.Fill(typeNetworkSwitchDataSet);
+                    type.ItemsSource = typeNetworkSwitchDataSet.Tables[0].DefaultView;
+                    type.DisplayMemberPath = "Name";
+                    break;
+                case TypeDevice.Notebook:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+
+                    typeNotebookDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", connectionString);
+                    typeNotebookDataSet = new DataSet();
+                    typeNotebookDataAdapter.Fill(typeNotebookDataSet);
+                    type.ItemsSource = typeNotebookDataSet.Tables[0].DefaultView;
+                    type.DisplayMemberPath = "Name";
+
+                    cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", connectionString);
+                    cpuDataSet = new DataSet();
+                    cpuDataAdapter.Fill(cpuDataSet);
+                    cpu.ItemsSource = cpuDataSet.Tables[0].DefaultView;
+                    cpu.DisplayMemberPath = "CPUModel";
+
+                    vCardDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", connectionString);
+                    vCardDataSet = new DataSet();
+                    vCardDataAdapter.Fill(vCardDataSet);
+                    vCard.ItemsSource = vCardDataSet.Tables[0].DefaultView;
+                    vCard.DisplayMemberPath = "VideoCard";
+                    break;
+                case TypeDevice.OtherEquipment:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllOtherEquipmentName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+                    break;
+                case TypeDevice.PC:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+
+                    cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", connectionString);
+                    cpuDataSet = new DataSet();
+                    cpuDataAdapter.Fill(cpuDataSet);
+                    cpu.ItemsSource = cpuDataSet.Tables[0].DefaultView;
+                    cpu.DisplayMemberPath = "CPUModel";
+
+                    vCardDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCvCard()", connectionString);
+                    vCardDataSet = new DataSet();
+                    vCardDataAdapter.Fill(vCardDataSet);
+                    vCard.ItemsSource = vCardDataSet.Tables[0].DefaultView;
+                    vCard.DisplayMemberPath = "VideoCard";
+                    break;
+                case TypeDevice.PrinterScanner:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPrinterScannerName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+
+                    typePrinterDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypePrinter()", connectionString);
+                    typePrinterDataSet = new DataSet();
+                    typePrinterDataAdapter.Fill(typePrinterDataSet);
+                    type.ItemsSource = typePrinterDataSet.Tables[0].DefaultView;
+                    type.DisplayMemberPath = "Name";
+                    break;
+                case TypeDevice.Projector:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+                    break;
+                case TypeDevice.ProjectorScreen:
+                    nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorScreenName()", connectionString);
+                    nameDataSet = new DataSet();
+                    nameDataAdapter.Fill(nameDataSet);
+                    name.ItemsSource = nameDataSet.Tables[0].DefaultView;
+                    name.DisplayMemberPath = "Name";
+                    break;
             }
 
             frequencyDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", connectionString);
@@ -979,6 +1093,12 @@ namespace AccountingPC
             wifiFrequencyDataAdapter.Fill(wifiFrequencyDataSet);
             wifiFrequency.ItemsSource = wifiFrequencyDataSet.Tables[0].DefaultView;
             wifiFrequency.DisplayMemberPath = "Name";
+
+            motherboardDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", connectionString);
+            motherboardDataSet = new DataSet();
+            motherboardDataAdapter.Fill(motherboardDataSet);
+            motherboard.ItemsSource = motherboardDataSet.Tables[0].DefaultView;
+            motherboard.DisplayMemberPath = "Name";
         }
     }
 }

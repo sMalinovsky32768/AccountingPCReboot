@@ -62,7 +62,7 @@
                             <ListBoxItem Content="Интерактивные доски"/>
                             <ListBoxItem Content="Экраны для проекторов"/>
                             <ListBoxItem Content="Принтеры и сканеры"/>
-                            <ListBoxItem Content="Коммутаторы"/>
+                            <ListBoxItem Content="Сетевое оборудование"/>
                             <ListBoxItem Content="Другое оборудование"/>
                         </ListBox>
                     </Grid>
@@ -180,7 +180,7 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
-                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid x:Name="inventoryNumberGrid">
                                         <Grid.RowDefinitions>
@@ -550,7 +550,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <CheckBox Grid.Row="1" x:Name="isEDrive">
+                                        <CheckBox Grid.Row="1" x:Name="isEDrive" Content="C электроприводом" HorizontalAlignment="Left">
                                             <CheckBox.IsChecked>
                                                 <Binding Path="IsElectronicDrive"/>
                                             </CheckBox.IsChecked>
