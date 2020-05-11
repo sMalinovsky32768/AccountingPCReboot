@@ -88,10 +88,10 @@
                                           ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                           ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                           TextElement.Foreground="{DynamicResource on-surface-brush}"
-                                          Margin="10 5 23 5" VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                                          Margin="10 1 23 1" VerticalAlignment="Stretch" HorizontalAlignment="Left">
                         </ContentPresenter>
                         <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{StaticResource ComboBoxTextBox}"
-                                 HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="3,3,23,3" Focusable="True" 
+                                 HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,1,28,1" Focusable="True" 
                                  Background="{DynamicResource surface-brush}" Visibility="Hidden" 
                                  IsReadOnly="{TemplateBinding IsReadOnly}" Foreground="{DynamicResource on-surface-brush}"/>
                         <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}"
@@ -104,7 +104,8 @@
                                         <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.9" Color="{DynamicResource shadow}"/>
                                     </Border.Effect>
                                 </Border>
-                                <!----><ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                <!---->
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                 </ScrollViewer>
                             </Grid>
