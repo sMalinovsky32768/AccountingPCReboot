@@ -582,28 +582,114 @@ namespace AccountingPC
                                     {
                                         if (reader.Read())
                                         {
-                                            pc = new PC()
+                                            device = new PC()
                                             {
-                                                InventoryNumber = Convert.ToUInt32(reader["Инвентарный номер"]),
-                                                Name = reader["Наименование"].ToString(),
-                                                Cost = Convert.ToUInt32(reader["Цена"]),
-                                                Motherboard = reader["Материнская плата"].ToString(),
-                                                CPU = reader["Процессор"].ToString(),
-                                                VCard = reader["Видеокарта"].ToString(),
-                                                RAM = Convert.ToUInt32(reader["ОЗУ"].GetType() != typeof(DBNull) ? reader["ОЗУ"] : 0),
-                                                HDD = Convert.ToUInt32(reader["Объем HDD"].GetType() != typeof(DBNull) ? reader["Объем HDD"] : 0),
-                                                OS = reader["Операционная система"].ToString(),
-                                                Invoice = reader["Номер накладной"].ToString(),
+                                                InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                                                Name = reader["Name"].ToString(),
+                                                Cost = Convert.ToUInt32(reader["Cost"]),
+                                                Motherboard = reader["MotherBoard"].ToString(),
+                                                CPU = reader["CPUModel"].ToString(),
+                                                Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull) ? reader["NumberOfCores"] : 0),
+                                                Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull) ? reader["FrequencyProcessor"] : 0),
+                                                MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull) ? reader["MaxFrequencyProcessor"] : 0),
+                                                VCard = reader["VideoCard"].ToString(),
+                                                VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull) ? reader["VideoRAMGB"] : 0),
+                                                RAM = Convert.ToUInt32(reader["RAMGB"].GetType() != typeof(DBNull) ? reader["RAMGB"] : 0),
+                                                FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull) ? reader["FrequencyRAM"] : 0),
+                                                HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull) ? reader["HDDCapacityGB"] : 0),
+                                                /*OS = new OS()
+                                                {
+                                                    ID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
+                                                    Name = reader["OSName"].ToString()
+                                                },
+                                                Invoice = new Invoice()
+                                                {
+                                                    ID = Convert.ToUInt32(reader["InvoiceID"].GetType() != typeof(DBNull) ? reader["InvoiceID"] : 0),
+                                                    Name = reader["InvoiceNumber"].ToString()
+                                                },
                                                 Location = new DeviceLocation() { 
                                                     ID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : null),
-                                                    Name = reader["Расположение"].ToString() 
-                                                }
+                                                    Name = reader["Location"].ToString() 
+                                                }*/
                                             };
-                                            inventoryNumber.Text = pc.InventoryNumber.ToString();
-                                            name.Text = pc.Name;
-                                            cost.Text = pc.Cost.ToString();
+                                            PC pc = device as PC;
+                                            DataTable tableOS = new DataTable();
+                                            tableOS.Columns.Add();
+                                            tableOS.Columns.Add();
+                                            tableOS.Columns.Add();
+                                            pc.OS = new DataView(tableOS).AddNew();
+                                            pc.OS.Row[0] = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0);
+                                            pc.OS.Row[1] = reader["OSName"].ToString();
+                                            pc.OS.Row[2] = Convert.ToUInt32(reader["OSCount"].GetType() != typeof(DBNull) ? reader["OSCount"] : 0);
+
+                                            DataTable tableInvoice = new DataTable();
+                                            tableInvoice.Columns.Add();
+                                            tableInvoice.Columns.Add();
+                                            device.Invoice = new DataView(tableInvoice).AddNew();
+                                            device.Invoice.Row[0] = Convert.ToUInt32(reader["InvoiceID"].GetType() != typeof(DBNull) ? reader["InvoiceID"] : 0);
+                                            device.Invoice.Row[1] = reader["InvoiceNumber"].ToString();
+
+                                            DataTable tableLocation = new DataTable();
+                                            tableLocation.Columns.Add();
+                                            tableLocation.Columns.Add();
+                                            device.Location = new DataView(tableLocation).AddNew();
+                                            device.Location.Row[0] = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0);
+                                            device.Location.Row[1] = reader["Location"].ToString();
+
+                                            inventoryNumber.Text = device.InventoryNumber.ToString();
+                                            name.Text = device.Name;
+                                            cost.Text = device.Cost.ToString();
                                             motherboard.Text = pc.Motherboard;
                                             cpu.Text = pc.CPU;
+                                            cores.Text = pc.Cores.ToString();
+                                            frequency.Text = pc.Frequency.ToString();
+                                            maxFrequency.Text = pc.MaxFrequency.ToString();
+                                            vCard.Text = pc.VCard;
+                                            videoram.Text = pc.VideoRAM.ToString();
+                                            hdd.Text = pc.HDD.ToString();
+                                            ram.Text = pc.RAM.ToString();
+                                            ramFrequency.Text = pc.FrequencyRAM.ToString();
+                                            /*DataTable table = new DataTable();
+                                            DataRow row = table.NewRow();
+                                            object selected = new object();
+                                            foreach (object obj in os.ItemsSource)
+                                            {
+                                                row = (obj as DataRow);
+                                                if (Convert.ToUInt32(row["ID"]) == pc.OS.ID)
+                                                {
+                                                    selected = row;
+                                                }
+                                            }*/
+                                            foreach (object obj in os.ItemsSource)
+                                            {
+                                                DataRowView row;
+                                                row = (obj as DataRowView);
+                                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(pc.OS.Row[0]))
+                                                {
+                                                    os.SelectedItem = row;
+                                                    break;
+                                                }
+                                            }
+                                            foreach (object obj in invoice.ItemsSource)
+                                            {
+                                                DataRowView row;
+                                                row = (obj as DataRowView);
+                                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(device.Invoice.Row[0]))
+                                                {
+                                                    invoice.SelectedItem = row;
+                                                    break;
+                                                }
+                                            }
+                                            foreach (object obj in location.ItemsSource)
+                                            {
+                                                DataRowView row;
+                                                row = (obj as DataRowView);
+                                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(device.Location.Row[0]))
+                                                {
+                                                    location.SelectedItem = row;
+                                                    break;
+                                                }
+                                            }
                                         }
                                     }
                                     break;
@@ -614,7 +700,10 @@ namespace AccountingPC
                                     {
                                         if (reader.Read())
                                         {
+                                            device = new Notebook()
+                                            {
 
+                                            };
                                         }
                                     }
                                     break;

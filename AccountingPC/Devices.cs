@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,20 @@ namespace AccountingPC
         public UInt32 ID { get; set; }
         public String Name { get; set; }
     }
-    public abstract class Device
+
+    public class OS
+    {
+        public UInt32 ID { get; set; }
+        public String Name { get; set; }
+    }
+
+    public class Invoice
+    {
+        public UInt32 ID { get; set; }
+        public String Name { get; set; }
+    }
+
+    public class Device
     {
         public UInt32 ID { get; set; }
         [Required(ErrorMessage = "Поле является обязательным")]
@@ -22,8 +36,8 @@ namespace AccountingPC
         public String Name { get; set; }
         public UInt32 Cost { get; set; }
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
-        public String Invoice { get; set; }
-        public DeviceLocation Location { get; set; }
+        public DataRowView Invoice { get; set; }
+        public DataRowView Location { get; set; }
     }
 
     public class PC : Device
@@ -32,16 +46,17 @@ namespace AccountingPC
         public String Motherboard { get; set; }
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String CPU { get; set; }
-        public int Cores { get; set; }
-        public int Frequency { get; set; }
-        public int MaxFrequency { get; set; }
+        public uint Cores { get; set; }
+        public uint Frequency { get; set; }
+        public uint MaxFrequency { get; set; }
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String VCard { get; set; }
         public UInt32 VideoRAM { get; set; }
         public UInt32 RAM { get; set; }
         public UInt32 FrequencyRAM { get; set; }
         public UInt32 HDD { get; set; }
-        public String OS { get; set; }
+        /*public OS OS { get; set; }*/
+        public DataRowView OS { get; set; }
         public List<String> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
 
