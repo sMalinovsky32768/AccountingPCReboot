@@ -37,7 +37,9 @@ namespace AccountingPC
         public UInt32 Cost { get; set; }
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public DataRowView Invoice { get; set; }
+        public uint InvoiceID { get; set; }
         public DataRowView Location { get; set; }
+        public uint PlaceID { get; set; }
     }
 
     public class PC : Device
@@ -57,6 +59,7 @@ namespace AccountingPC
         public UInt32 HDD { get; set; }
         /*public OS OS { get; set; }*/
         public DataRowView OS { get; set; }
+        public uint OSID { get; set; }
         public List<String> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
 
@@ -67,23 +70,24 @@ namespace AccountingPC
     {
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String CPU { get; set; }
-        public int Cores { get; set; }
-        public int Frequency { get; set; }
-        public int MaxFrequency { get; set; }
+        public uint Cores { get; set; }
+        public uint Frequency { get; set; }
+        public uint MaxFrequency { get; set; }
         [StringLength(30, ErrorMessage = "Максимальная длина - 30")]
         public String VCard { get; set; }
         public UInt32 VideoRAM { get; set; }
         public UInt32 RAM { get; set; }
         public UInt32 FrequencyRAM { get; set; }
         public UInt32 HDD { get; set; }
-        public String OS { get; set; }
+        //public String OS { get; set; }
+        public uint OSID { get; set; }
         public float Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
-        public int ResolutionID { get; set; }
-        public int FrequencyID { get; set; }
-        public int MatrixTechnologyID { get; set; }
-        public int TypeID { get; set; }
+        public uint ResolutionID { get; set; }
+        public uint FrequencyID { get; set; }
+        public uint MatrixTechnologyID { get; set; }
+        public uint TypeID { get; set; }
 
         public Notebook() { }
     }

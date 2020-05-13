@@ -8,7 +8,9 @@
         x:Name="window" x:Class="AccountingPC.AccountingPCWindow" mc:Ignorable="d"
         Title="AccountingPC" Height="768" Width="1366" MinWidth="1000" MinHeight="600"
         WindowStartupLocation="CenterScreen" Icon="images/icon.ico" WindowStyle="None" 
-        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="window_SizeChanged">
+        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="window_SizeChanged"
+        LostFocus="window_LostFocus" GotFocus="window_GotFocus" 
+        Deactivated="window_Deactivated" Activated="window_Activated">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ParametersCommand}" Executed="OpenParameters"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ExitCommand}" Executed="ExitApp"/>
@@ -421,13 +423,13 @@
                                         <TextBlock Text="Номер накладной"/>
                                         <ComboBox Grid.Row="1" x:Name="invoice" IsEditable="True" 
                                                   IsTextSearchEnabled="False" StaysOpenOnEdit="True">
-                                            <ComboBox.Text>
+                                            <ComboBox.SelectedItem>
                                                 <Binding Path="Invoice">
                                                     <Binding.ValidationRules>
                                                         <ExceptionValidationRule/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
-                                            </ComboBox.Text>
+                                            </ComboBox.SelectedItem>
                                         </ComboBox>
                                     </Grid>
 
@@ -446,7 +448,13 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Видеовыходы"/>
-                                        <ListBox Grid.Row="1" x:Name="vConnectors" SelectionMode="Multiple" Margin="5,1"/>
+                                        <ListBox Grid.Row="1" x:Name="vConnectors" SelectionMode="Multiple" Margin="5,1">
+                                            <!--<ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <ListBoxItem Content="{Binding Path=Name}"></ListBoxItem>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>-->
+                                        </ListBox>
                                     </Grid>
 
                                     <Grid x:Name="resolutionGrid">
