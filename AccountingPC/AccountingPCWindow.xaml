@@ -543,7 +543,15 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Количество портов"/>
-                                        <ComboBox Grid.Row="1" x:Name="ports" IsTextSearchEnabled="True"/>
+                                        <TextBox Grid.Row="1" x:Name="ports">
+                                            <TextBox.Text>
+                                                <Binding Path="Ports">
+                                                    <Binding.ValidationRules>
+                                                        <ExceptionValidationRule/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
                                     </Grid>
                                     <Grid x:Name="wifiFrequencyGrid">
                                         <Grid.RowDefinitions>

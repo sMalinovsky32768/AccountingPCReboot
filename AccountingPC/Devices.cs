@@ -36,9 +36,7 @@ namespace AccountingPC
         public String Name { get; set; }
         public UInt32 Cost { get; set; }
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
-        public DataRowView Invoice { get; set; }
-        public uint InvoiceID { get; set; }
-        public DataRowView Location { get; set; }
+        public string InvoiceNumber { get; set; }
         public uint PlaceID { get; set; }
     }
 
@@ -104,8 +102,8 @@ namespace AccountingPC
         public Single Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
-        public int ResolutionID { get; set; }
-        public int ProjectorTechnologyID { get; set; }
+        public uint ResolutionID { get; set; }
+        public uint ProjectorTechnologyID { get; set; }
 
         public Projector() { }
     }
@@ -114,16 +112,16 @@ namespace AccountingPC
     {
         public Single Diagonal { get; set; }
         public bool IsElectronicDrive { get; set; }
-        public int AspectRatioID { get; set; }
-        public int ScreenInstalledID { get; set; }
+        public uint AspectRatioID { get; set; }
+        public uint ScreenInstalledID { get; set; }
 
         public ProjectorScreen() { }
     }
 
     public class PrinterScanner : Device
     {
-        public int TypeID { get; set; }
-        public int PaperSizeID { get; set; }
+        public uint TypeID { get; set; }
+        public uint PaperSizeID { get; set; }
 
         public PrinterScanner() { }
     }
@@ -133,17 +131,18 @@ namespace AccountingPC
         public Single Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
-        public int ResolutionID { get; set; }
-        public int FrequencyID { get; set; }
-        public int MatrixTechnologyID { get; set; }
+        public uint ResolutionID { get; set; }
+        public uint FrequencyID { get; set; }
+        public uint MatrixTechnologyID { get; set; }
 
         public Monitor() { }
     }
 
     public class NetworkSwitch : Device
     {
+        public UInt32 TypeID { get; set; }
         public UInt32 Ports { get; set; }
-        public int WiFiFrequencyID { get; set; }
+        public uint WiFiFrequencyID { get; set; }
 
         public NetworkSwitch() { }
     }
