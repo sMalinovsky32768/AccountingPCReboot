@@ -467,6 +467,7 @@ namespace AccountingPC
                 connection.Open();
                 String commandString;
                 SqlCommand command;
+                uint temp;
                 switch (typeChange)
                 {
                     case TypeChange.Add:
@@ -479,31 +480,172 @@ namespace AccountingPC
                                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
-                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice));
-                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)location.SelectedItem)[0]));
-                                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
-                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ram.Text)));
-                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
-                                command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
-                                command.Parameters.Add(new SqlParameter("@OSName", os.Text));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text == String.Empty ? null : cpu.Text));
+                                temp = Convert.ToUInt32(cores.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@Cores", temp));
+                                temp = Convert.ToUInt32(frequency.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@Frequency", temp));
+                                temp = Convert.ToUInt32(maxFrequency.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
+                                temp = Convert.ToUInt32(ram.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@RAM", temp));
+                                command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToUInt32(ramFrequency.Text)));
+                                temp = Convert.ToUInt32(cores.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCard.Text == String.Empty ? null : vCard.Text));
+                                temp = Convert.ToUInt32(videoram.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToUInt32(videoram.Text)));
+                                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os.SelectedItem)[0]));
                                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                                 command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Notebook:
+                                commandString = "AddNotebook";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)type.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                                temp = Convert.ToUInt32(cores.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@Cores", Convert.ToUInt32(cores.Text)));
+                                temp = Convert.ToUInt32(frequency.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToUInt32(frequency.Text)));
+                                temp = Convert.ToUInt32(maxFrequency.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToUInt32(maxFrequency.Text)));
+                                temp = Convert.ToUInt32(ram.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ram.Text)));
+                                temp = Convert.ToUInt32(ramFrequency.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToUInt32(ramFrequency.Text)));
+                                temp = Convert.ToUInt32(hdd.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCard.Text == String.Empty ? null : vCard.Text));
+                                temp = Convert.ToUInt32(videoram.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToUInt32(videoram.Text)));
+                                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Monitor:
+                                commandString = "AddMonitor";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.NetworkSwitch:
+                                commandString = "AddNetworkSwitch";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                temp = Convert.ToUInt32(ports.Text);
+                                if (temp > 0)
+                                    command.Parameters.Add(new SqlParameter("@Ports", temp));
+                                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.InteractiveWhiteboard:
+                                commandString = "AddInteractiveWhiteboard";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.PrinterScanner:
+                                commandString = "AddPrinterScanner";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Projector:
+                                commandString = "AddProjector";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView)projectorTechnology.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.ProjectorScreen:
+                                commandString = "AddProjectorScreen";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@IsElectronic", Convert.ToBoolean(isEDrive.IsChecked)));
+                                command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.OtherEquipment:
+                                commandString = "AddProjectorScreen";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                         }
                         break;
@@ -519,30 +661,150 @@ namespace AccountingPC
                                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
                                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRow)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
                                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                                command.Parameters.Add(new SqlParameter("@Cores", Convert.ToUInt32(cores.Text)));
+                                command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToUInt32(frequency.Text)));
+                                command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToUInt32(maxFrequency.Text)));
                                 command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ram.Text)));
+                                command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToUInt32(ramFrequency.Text)));
                                 command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
                                 command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
-                                command.Parameters.Add(new SqlParameter("@OSName", os.Text));
+                                command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToUInt32(videoram.Text)));
+                                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os.SelectedItem)[0]));
                                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                                 command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Notebook:
+                                commandString = "UpdateNotebookByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)type.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                                command.Parameters.Add(new SqlParameter("@Cores", Convert.ToUInt32(cores.Text)));
+                                command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToUInt32(frequency.Text)));
+                                command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToUInt32(maxFrequency.Text)));
+                                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToUInt32(ram.Text)));
+                                command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToUInt32(ramFrequency.Text)));
+                                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToUInt32(hdd.Text)));
+                                command.Parameters.Add(new SqlParameter("@Video", vCard.Text == String.Empty ? null : vCard.Text));
+                                command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToUInt32(videoram.Text)));
+                                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Monitor:
+                                commandString = "UpdateMonitorByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.NetworkSwitch:
+                                commandString = "UpdateNetworkSwitchByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Ports", Convert.ToUInt32(ports.Text)));
+                                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.InteractiveWhiteboard:
+                                commandString = "UpdateInteractiveWhiteboardByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                                 break;
                             case TypeDevice.PrinterScanner:
+                                commandString = "UpdatePrinterScannerByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.Projector:
+                                commandString = "UpdateProjectorByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView)projectorTechnology.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.ProjectorScreen:
+                                commandString = "UpdateProjectorScreenByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                                command.Parameters.Add(new SqlParameter("@IsElectronic", Convert.ToBoolean(isEDrive.IsChecked)));
+                                command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio.SelectedItem)[0]));
+                                command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                             case TypeDevice.OtherEquipment:
+                                commandString = "UpdateOtherEquipmentByID";
+                                command = new SqlCommand(commandString, connection);
+                                command.CommandType = CommandType.StoredProcedure;
+                                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                                command.Parameters.Add(new SqlParameter("@Name", name.Text));
+                                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToUInt32(cost.Text)));
+                                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
+                                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location.SelectedItem)[0]));
+                                command.ExecuteNonQuery();
                                 break;
                         }
                         break;
@@ -1086,6 +1348,40 @@ namespace AccountingPC
                         }
                         break;
                     case TypeChange.Add:
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            connection.Open();
+                            switch (typeDevice)
+                            {
+                                case TypeDevice.PC:
+                                    device = new PC();
+                                    break;
+                                case TypeDevice.Notebook:
+                                    device = new Notebook();
+                                    break;
+                                case TypeDevice.Monitor:
+                                    device = new Monitor();
+                                    break;
+                                case TypeDevice.Projector:
+                                    device = new Projector();
+                                    break;
+                                case TypeDevice.InteractiveWhiteboard:
+                                    device = new InteractiveWhiteboard();
+                                    break;
+                                case TypeDevice.ProjectorScreen:
+                                    device = new ProjectorScreen();
+                                    break;
+                                case TypeDevice.PrinterScanner:
+                                    device = new PrinterScanner();
+                                    break;
+                                case TypeDevice.NetworkSwitch:
+                                    device = new NetworkSwitch();
+                                    break;
+                                case TypeDevice.OtherEquipment:
+                                    device = new OtherEquipment();
+                                    break;
+                            }
+                        }
                         break;
                 }
             }
@@ -1157,10 +1453,10 @@ namespace AccountingPC
             return arr;
         }
 
-        private UInt32 GetValueVideoConnectors()
+        private UInt32 GetValueVideoConnectors(ListBox list)
         {
             UInt32 value = 0;
-            foreach(var obj in vConnectors.SelectedItems)
+            foreach(var obj in list.SelectedItems)
             {
                 value += (uint)((obj as DataRow)["Value"]);
             }
@@ -1169,6 +1465,15 @@ namespace AccountingPC
 
         private void InitializePopup()
         {
+            if (typeChange == TypeChange.Add)
+            {
+                autoInvN.Visibility = Visibility.Visible;
+            }
+            else if (typeChange == TypeChange.Change)
+            {
+                autoInvN.Visibility = Visibility.Collapsed;
+                autoInvN.IsChecked = false;
+            }
             inventoryNumberGrid.Visibility = Visibility.Visible;
             deviceNameGrid.Visibility = Visibility.Visible;
             costGrid.Visibility = Visibility.Visible;
@@ -1588,12 +1893,12 @@ namespace AccountingPC
 
         private void window_LostFocus(object sender, RoutedEventArgs e)
         {
-            changePopupPreClose();
+            //changePopupPreClose();
         }
 
         private void window_GotFocus(object sender, RoutedEventArgs e)
         {
-            changePopupPostClose();
+            //changePopupPostClose();
         }
 
         private void window_Deactivated(object sender, EventArgs e)
@@ -1623,6 +1928,16 @@ namespace AccountingPC
             {
                 changePopup.IsOpen = true;
                 isPreOpenPopup = false;
+            }
+        }
+
+        private void autoInvN_Checked(object sender, RoutedEventArgs e)
+        {
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar().ToString();
             }
         }
     }

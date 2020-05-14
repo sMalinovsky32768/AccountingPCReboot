@@ -89,6 +89,7 @@
                                         <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
                                             <Setter Property="Padding" Value="10 5"/>
                                             <Setter Property="Margin" Value="0 5 5 5"/>
+                                            <Setter Property="IsEnabled" Value="True"/>
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding SelectedIndex, ElementName=list}" Value="-1">
                                                     <Setter Property="IsEnabled" Value="False"/>
@@ -96,8 +97,14 @@
                                             </Style.Triggers>
                                         </Style>
                                         <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
-                                            <Setter Property="Padding" Value="10 5"/>
-                                            <Setter Property="Margin" Value="0 5 5 5"/>
+                                            <Setter Property="IsEnabled" Value="False"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=view}" Value="1">
+                                                    <Setter Property="IsEnabled" Value="True"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                        <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding SelectedIndex, ElementName=view}" Value="-1">
                                                     <Setter Property="IsEnabled" Value="False"/>
@@ -112,12 +119,12 @@
                                     </Grid.ColumnDefinitions>
                                     <Button Content="Добавить" Click="AddDevice" Style="{DynamicResource btn-view}"/>
                                     <Button Grid.Column="1" Content="Изменить" Click="ChangeDevice" Style="{DynamicResource btn-edit}"/>
-                                    <Button Grid.Column="2" Content="Удалить" Click="DeleteDevice" Style="{DynamicResource btn-edit}"/>
+                                    <Button Grid.Column="2" Content="Удалить" Click="DeleteDevice" Style="{DynamicResource btn-del}"/>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <Grid Grid.Row="1">
-                            <DataGrid x:Name="view" IsReadOnly="True" SelectionMode="Single"/>
+                            <DataGrid x:Name="view" IsReadOnly="True" SelectionMode="Extended"/>
                         </Grid>
                         <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
                         <Grid Grid.Row="3">
@@ -144,6 +151,14 @@
                                 <Grid.Resources>
                                     <Style TargetType="TextBox" BasedOn="{StaticResource text-box}">
                                         <Setter Property="Margin" Value="5 1"/>
+                                    </Style>
+                                    <Style x:Key="invNTextBox" TargetType="TextBox" BasedOn="{StaticResource text-box}">
+                                        <Setter Property="Margin" Value="5 1"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}" Value="True">
+                                                <Setter Property="TextBox.IsEnabled" Value="False"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
                                     </Style>
                                     <Style TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
                                         <Setter Property="Margin" Value="5 1"/>
@@ -190,7 +205,7 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Инвентарный номер"/>
-                                        <TextBox Grid.Row="1" x:Name="inventoryNumber">
+                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}">
                                             <TextBox.Text>
                                                 <Binding Path="InventoryNumber">
                                                     <Binding.ValidationRules>
@@ -405,15 +420,7 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Операционная система"/>
-                                        <ComboBox Grid.Row="1" x:Name="os" IsTextSearchEnabled="False" StaysOpenOnEdit="True">
-                                            <ComboBox.SelectedItem>
-                                                <Binding Path="OS">
-                                                    <Binding.ValidationRules>
-                                                        <ExceptionValidationRule/>
-                                                    </Binding.ValidationRules>
-                                                </Binding>
-                                            </ComboBox.SelectedItem>
-                                        </ComboBox>
+                                        <ComboBox Grid.Row="1" x:Name="os"/>
                                     </Grid>
                                     <Grid x:Name="invoiceGrid">
                                         <Grid.RowDefinitions>
@@ -423,13 +430,13 @@
                                         <TextBlock Text="Номер накладной"/>
                                         <ComboBox Grid.Row="1" x:Name="invoice" IsEditable="True" 
                                                   IsTextSearchEnabled="False" StaysOpenOnEdit="True">
-                                            <ComboBox.SelectedItem>
-                                                <Binding Path="Invoice">
+                                            <ComboBox.Text>
+                                                <Binding Path="InvoiceNumber">
                                                     <Binding.ValidationRules>
                                                         <ExceptionValidationRule/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
-                                            </ComboBox.SelectedItem>
+                                            </ComboBox.Text>
                                         </ComboBox>
                                     </Grid>
 
@@ -575,7 +582,15 @@
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
+                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="autoInvN_Checked"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Content="Сохранить" Style="{DynamicResource default-button}" Margin="5" Padding="10 5" Click="SaveChanges"/>
                                 </StackPanel>
                             </Grid>

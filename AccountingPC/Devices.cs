@@ -55,8 +55,6 @@ namespace AccountingPC
         public UInt32 RAM { get; set; }
         public UInt32 FrequencyRAM { get; set; }
         public UInt32 HDD { get; set; }
-        /*public OS OS { get; set; }*/
-        public DataRowView OS { get; set; }
         public uint OSID { get; set; }
         public List<String> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
@@ -77,7 +75,6 @@ namespace AccountingPC
         public UInt32 RAM { get; set; }
         public UInt32 FrequencyRAM { get; set; }
         public UInt32 HDD { get; set; }
-        //public String OS { get; set; }
         public uint OSID { get; set; }
         public float Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
