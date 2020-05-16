@@ -6,7 +6,7 @@
         xmlns:Data="clr-namespace:System.Data;assembly=System.Data"
         xmlns:System="clr-namespace:System;assembly=mscorlib" 
         x:Name="window" x:Class="AccountingPC.AccountingPCWindow" mc:Ignorable="d"
-        Title="AccountingPC" Height="768" Width="1366" MinWidth="1000" MinHeight="600"
+        Title="AccountingPC" Height="768" Width="1366" MinWidth="1366" MinHeight="768"
         WindowStartupLocation="CenterScreen" Icon="images/icon.ico" WindowStyle="None" 
         Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="window_SizeChanged"
         LostFocus="window_LostFocus" GotFocus="window_GotFocus" 
@@ -15,6 +15,10 @@
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ParametersCommand}" Executed="OpenParameters"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ExitCommand}" Executed="ExitApp"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.PopupCloseCommand}" Executed="PopupClose"/>
+
+        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}" Executed="SelectViewEquipment"/>
+        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}" Executed="SelectViewSoftware"/>
+        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}" Executed="SelectViewLocation"/>
     </Window.CommandBindings>
     <!---->
     <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
@@ -39,6 +43,11 @@
                             <Separator/>
                             <MenuItem x:Name="menuExit" Header="Выход" InputGestureText="Alt+F4" Command="{x:Static local:AccountingPCWindow.ExitCommand}"/>
                         </MenuItem>
+                        <MenuItem Header="Вид">
+                            <MenuItem Header="Оборудование" InputGestureText="Alt+E" Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}"/>
+                            <MenuItem Header="Программное обеспечение" InputGestureText="Alt+S" Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}"/>
+                            <MenuItem Header="Локации" InputGestureText="Alt+L" Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}"/>
+                        </MenuItem>
                     </Menu>
                     <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
                             Background="{DynamicResource background-brush}"/>
@@ -49,87 +58,188 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="viewGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition MaxWidth="400" MinWidth="200"/>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="4*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid>
-                        <!--Selecting a category Grid-->
-                        <ListBox x:Name="list" SelectionChanged="ListBox_SelectionChanged">
-                            <ListBoxItem Content="Компьютеры"/>
-                            <ListBoxItem Content="Ноутбуки и Моноблоки"/>
-                            <ListBoxItem Content="Мониторы"/>
-                            <ListBoxItem Content="Проекторы"/>
-                            <ListBoxItem Content="Интерактивные доски"/>
-                            <ListBoxItem Content="Экраны для проекторов"/>
-                            <ListBoxItem Content="Принтеры и сканеры"/>
-                            <ListBoxItem Content="Сетевое оборудование"/>
-                            <ListBoxItem Content="Другое оборудование"/>
-                        </ListBox>
-                    </Grid>
-                    <GridSplitter Grid.Column="1" Width="2" ResizeBehavior="PreviousAndNext"/>
-                    <Grid Grid.Column="2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition MinHeight="40" Height="auto"/>
-                            <RowDefinition Height="3*"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition MaxHeight="300" Height="auto"/>
-                        </Grid.RowDefinitions>
+                    <Grid x:Name="equipmentGrid" Visibility="Visible">
+                        <Grid.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ElementName=nowView}" Value="Equipment">
+                                        <Setter Property="Grid.Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MaxWidth="400" MinWidth="200"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
                         <Grid>
-                            <!--Information Category Grid-->
+                            <!--Selecting a category Grid-->
+                            <ListBox x:Name="equipmentCategoryList" SelectionChanged="ListBox_SelectionChanged">
+                                <ListBoxItem Content="Компьютеры"/>
+                                <ListBoxItem Content="Ноутбуки и Моноблоки"/>
+                                <ListBoxItem Content="Мониторы"/>
+                                <ListBoxItem Content="Проекторы"/>
+                                <ListBoxItem Content="Интерактивные доски"/>
+                                <ListBoxItem Content="Экраны для проекторов"/>
+                                <ListBoxItem Content="Принтеры и сканеры"/>
+                                <ListBoxItem Content="Сетевое оборудование"/>
+                                <ListBoxItem Content="Другое оборудование"/>
+                            </ListBox>
+                        </Grid>
+                        <GridSplitter Grid.Column="1" Width="2" ResizeBehavior="PreviousAndNext"/>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MinHeight="40" Height="auto"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition MaxHeight="300" Height="auto"/>
+                            </Grid.RowDefinitions>
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
-                                <Grid></Grid>
-                                <Grid Grid.Column="1">
-                                    <Grid.Resources>
-                                        <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
-                                            <Setter Property="Padding" Value="10 5"/>
-                                            <Setter Property="Margin" Value="0 5 5 5"/>
-                                            <Setter Property="IsEnabled" Value="True"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=list}" Value="-1">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                        <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
-                                            <Setter Property="IsEnabled" Value="False"/>
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=view}" Value="1">
-                                                    <Setter Property="IsEnabled" Value="True"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                        <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SelectedIndex, ElementName=view}" Value="-1">
-                                                    <Setter Property="IsEnabled" Value="False"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Grid.Resources>
+                                <!--Information Category Grid-->
+                                <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Button Content="Добавить" Click="AddDevice" Style="{DynamicResource btn-view}"/>
-                                    <Button Grid.Column="1" Content="Изменить" Click="ChangeDevice" Style="{DynamicResource btn-edit}"/>
-                                    <Button Grid.Column="2" Content="Удалить" Click="DeleteDevice" Style="{DynamicResource btn-del}"/>
+                                    <Grid></Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.Resources>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
+                                                <Setter Property="Padding" Value="10 5"/>
+                                                <Setter Property="Margin" Value="0 5 5 5"/>
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentCategoryList}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=equipmentView}" Value="1">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Content="Добавить" Click="AddDevice" Style="{DynamicResource btn-view}"/>
+                                        <Button Grid.Column="1" Content="Изменить" Click="ChangeDevice" Style="{DynamicResource btn-edit}"/>
+                                        <Button Grid.Column="2" Content="Удалить" Click="DeleteDevice" Style="{DynamicResource btn-del}"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <DataGrid x:Name="equipmentView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="equipmentView_SelectionChanged"/>
+                            </Grid>
+                            <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
+                            <Grid Grid.Row="3">
+                                <!--Information Device Grid-->
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="3*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid>
+                                    <Image x:Name="deviceImage"/>
+                                </Grid>
+                                <Grid Grid.Column="1">
+                                    
                                 </Grid>
                             </Grid>
                         </Grid>
-                        <Grid Grid.Row="1">
-                            <DataGrid x:Name="view" IsReadOnly="True" SelectionMode="Extended"/>
+                    </Grid>
+                    <Grid x:Name="softwareGrid" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MaxWidth="400" MinWidth="200"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <!--Selecting a category Grid-->
+                            <ListBox x:Name="softwareCategoryList" SelectionChanged="ListBox_SelectionChanged">
+                                <ListBoxItem Content="Программное обеспечение"/>
+                                <ListBoxItem Content="Операционные системы"/>
+                            </ListBox>
                         </Grid>
-                        <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
-                        <Grid Grid.Row="3">
-                            <!--Information Device Grid-->
+                        <GridSplitter Grid.Column="1" Width="2" ResizeBehavior="PreviousAndNext"/>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MinHeight="40" Height="auto"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition MaxHeight="300" Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <!--Information Category Grid-->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid></Grid>
+                                    <Grid Grid.Column="1">
+                                        <Grid.Resources>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
+                                                <Setter Property="Padding" Value="10 5"/>
+                                                <Setter Property="Margin" Value="0 5 5 5"/>
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentCategoryList}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=equipmentView}" Value="1">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Content="Добавить" Click="AddSoftware" Style="{DynamicResource btn-view}"/>
+                                        <!--<Button Grid.Column="1" Content="Изменить" Click="ChangeSoftware" Style="{DynamicResource btn-edit}"/>-->
+                                        <Button Grid.Column="2" Content="Удалить" Click="DeleteSoftware" Style="{DynamicResource btn-del}"/>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="1">
+                                <DataGrid x:Name="softwareView" IsReadOnly="True" SelectionMode="Extended"/>
+                            </Grid>
+                            <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
+                            <Grid Grid.Row="3">
+                                <!--Information Device Grid-->
+                            </Grid>
                         </Grid>
+                    </Grid>
+                    <Grid x:Name="locationManagementGrid" Visibility="Collapsed">
+
                     </Grid>
                 </Grid>
                 <!---->
@@ -273,7 +383,7 @@
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Процессор"/>
                                         <ComboBox Grid.Row="1" x:Name="cpu" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True" SelectionChanged="cpu_SelectionChanged">
                                             <ComboBox.Text>
                                                 <Binding Path="CPU">
                                                     <Binding.ValidationRules>
