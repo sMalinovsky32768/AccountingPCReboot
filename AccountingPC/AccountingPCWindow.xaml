@@ -19,6 +19,7 @@
         <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}" Executed="SelectViewEquipment"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}" Executed="SelectViewSoftware"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}" Executed="SelectViewLocation"/>
+        <CommandBinding Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}" Executed="UpdateView_Executed"/>
     </Window.CommandBindings>
     <!---->
     <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
@@ -47,10 +48,12 @@
                             <MenuItem Header="Оборудование" InputGestureText="Alt+E" Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}"/>
                             <MenuItem Header="Программное обеспечение" InputGestureText="Alt+S" Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}"/>
                             <MenuItem Header="Локации" InputGestureText="Alt+L" Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}"/>
+                            <Separator/>
+                            <MenuItem Header="Обновить" InputGestureText="Ctrl+R, F5" Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}"/>
                         </MenuItem>
                     </Menu>
                     <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
-                            Background="{DynamicResource background-brush}"/>
+                                Background="{DynamicResource background-brush}"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
                         <Button x:Name="buttonMinimized" Style="{DynamicResource minimizeButton}"/>
                         <Button x:Name="buttonMaximized" Style="{DynamicResource maximizeButton}"/>
@@ -75,7 +78,7 @@
                         </Grid.ColumnDefinitions>
                         <Grid>
                             <!--Selecting a category Grid-->
-                            <ListBox x:Name="equipmentCategoryList" SelectionChanged="ListBox_SelectionChanged">
+                            <ListBox x:Name="equipmentCategoryList" SelectionChanged="ListBox_SelectionChanged" SelectedIndex="-1">
                                 <ListBoxItem Content="Компьютеры"/>
                                 <ListBoxItem Content="Ноутбуки и Моноблоки"/>
                                 <ListBoxItem Content="Мониторы"/>
@@ -93,7 +96,7 @@
                                 <RowDefinition MinHeight="40" Height="auto"/>
                                 <RowDefinition Height="3*"/>
                                 <RowDefinition Height="auto"/>
-                                <RowDefinition MaxHeight="300" Height="auto"/>
+                                <RowDefinition MaxHeight="300" Height="300"/>
                             </Grid.RowDefinitions>
                             <Grid>
                                 <!--Information Category Grid-->
@@ -149,11 +152,11 @@
                             <Grid Grid.Row="3">
                                 <!--Information Device Grid-->
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <Grid>
-                                    <Image x:Name="deviceImage"/>
+                                <Grid Height="300" Width="auto" MinWidth="200">
+                                    <Image x:Name="deviceImage" Margin="10"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
                                     
@@ -307,6 +310,7 @@
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
                                         <RowDefinition Height="*"/>
+                                        <RowDefinition Height="auto"/>
                                         <RowDefinition Height="auto"/>
                                     </Grid.RowDefinitions>
                                     <Grid x:Name="inventoryNumberGrid">
@@ -688,6 +692,134 @@
                                                 <Binding Path="IsElectronicDrive"/>
                                             </CheckBox.IsChecked>
                                         </CheckBox>
+                                    </Grid>
+
+                                    <Grid x:Name="imageLoadGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.Resources>
+                                            <Style x:Key="image-load-button" TargetType="Button">
+                                                <Setter Property="Margin" Value="0,1,5,1"/>
+                                                <Setter Property="TextBox.Height" Value="25"/>
+                                                <Setter Property="Button.Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Grid>
+                                                                <Border CornerRadius="0,5,5,0" BorderThickness="0" Name="btnBorder" 
+                                                                        Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}" 
+                                                                        Background="{DynamicResource surface-brush}" BorderBrush="{DynamicResource surface-brush}">
+                                                                    <Border.Effect>
+                                                                        <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                                                    </Border.Effect>
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                                                      TextElement.FontWeight="Bold" Name="btnContent" 
+                                                                                      TextElement.Foreground="{DynamicResource on-surface-brush}">
+                                                                    </ContentPresenter>
+                                                                </Border>
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="true">
+                                                                    <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
+                                                                    <Setter TargetName="btnBorder" Property="Effect">
+                                                                        <Setter.Value>
+                                                                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <!--<Setter Property="Button.Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Grid>
+                                                                <Border CornerRadius="5" BorderThickness="0" Name="btnBorder" 
+                                                                        Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}" 
+                                                                        Background="{DynamicResource surface-brush}" BorderBrush="{DynamicResource surface-brush}">
+                                                                    <Border.Effect>
+                                                                        <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                                                    </Border.Effect>
+                                                                    <StackPanel>
+                                                                        <TextBlock x:Name="load_filename"/>
+                                                                        <
+                                                                    </StackPanel>
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                                                      TextElement.FontWeight="Bold" Name="btnContent" 
+                                                                                      TextElement.Foreground="{DynamicResource on-surface-brush}">
+                                                                    </ContentPresenter>
+                                                                </Border>
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsMouseOver" Value="true">
+                                                                    <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
+                                                                    <Setter TargetName="btnBorder" Property="Effect">
+                                                                        <Setter.Value>
+                                                                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>-->
+                                            </Style>
+                                            <Style x:Key="image-filename-text-box" TargetType="TextBox">
+                                                <Setter Property="TextBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
+                                                <Setter Property="TextBox.Padding" Value="5 0"/>
+                                                <Setter Property="TextBox.Margin" Value="5,1,0,1"/>
+                                                <Setter Property="TextBox.Height" Value="25"/>
+                                                <Setter Property="Validation.ErrorTemplate">
+                                                    <Setter.Value>
+                                                        <ControlTemplate>
+                                                            <Border BorderBrush="{DynamicResource error-brush}" BorderThickness="1">
+                                                                <AdornedElementPlaceholder/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                                <Setter Property="TextBox.Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="TextBox">
+                                                            <Grid>
+                                                                <Border CornerRadius="5,0,0,5" BorderThickness="0" x:Name="border"
+                                                                        BorderBrush="{DynamicResource surface-brush}" Background="{DynamicResource surface-brush}" 
+                                                                        Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}">
+                                                                    <Border.Effect>
+                                                                        <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                                                    </Border.Effect>
+                                                                    <!--Для отображения введенного текста-->
+                                                                    <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                            </Grid>
+                                                            <ControlTemplate.Triggers>
+                                                                <Trigger Property="IsFocused" Value="true">
+                                                                    <Setter TargetName="border" Property="Effect">
+                                                                        <Setter.Value>
+                                                                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                                                        </Setter.Value>
+                                                                    </Setter>
+                                                                </Trigger>
+                                                                <Trigger Property="Validation.HasError" Value="True">
+                                                                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                                                                </Trigger>
+                                                            </ControlTemplate.Triggers>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <TextBlock Text="Изображение"/>
+                                        <Grid Grid.Row="1">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5*"/>
+                                                <ColumnDefinition Width="2*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox x:Name="imageFilename" Style="{DynamicResource image-filename-text-box}" IsEnabled="False"/>
+                                            <Button Grid.Column="1" x:Name="imageLoad" Style="{DynamicResource image-load-button}" Click="ImageLoad_Click"/>
+                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
