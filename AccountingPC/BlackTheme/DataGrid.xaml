@@ -248,7 +248,7 @@
                     <Grid>
                         <Border x:Name="columnHeaderBorder" BorderThickness="0" Padding="{TemplateBinding Padding}" CornerRadius="5 5 0 0"
                                 BorderBrush="{DynamicResource surface-background-gradient}"
-                                Background="{DynamicResource primary-light-gradient}">
+                                Background="{DynamicResource surface-brush}">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>

@@ -92,4 +92,20 @@
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
+    <LinearGradientBrush x:Key="surface-gradient" StartPoint="0 0" EndPoint="0 1">
+        <LinearGradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Color="{DynamicResource shadow}" Offset="0"/>
+                <GradientStop Color="{DynamicResource surface}" Offset="0"/>
+            </GradientStopCollection>
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="surface-gradient-reverse" StartPoint="0 0" EndPoint="0 1">
+        <LinearGradientBrush.GradientStops>
+            <GradientStopCollection>
+                <GradientStop Color="{DynamicResource surface}" Offset="0"/>
+                <GradientStop Color="{DynamicResource shadow}" Offset="1"/>
+            </GradientStopCollection>
+        </LinearGradientBrush.GradientStops>
+    </LinearGradientBrush>
 </ResourceDictionary>

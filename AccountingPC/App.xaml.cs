@@ -34,11 +34,11 @@ namespace AccountingPC
             {
                 case 0:
                     Resources.Clear();
-                    Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/NewStyles/BlackTheme.xaml") });
+                    Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml") });
                     break;
                 case 1:
                     Resources.Clear();
-                    Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/NewStyles/LightTheme.xaml") });
+                    Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml") });
                     break;
             }
             notify = new System.Windows.Forms.NotifyIcon(new System.ComponentModel.Container());
