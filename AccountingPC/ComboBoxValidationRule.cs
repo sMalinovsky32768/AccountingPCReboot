@@ -39,4 +39,17 @@ namespace AccountingPC
             return new ValidationResult(true, null);
         }
     }
+
+    public class InventoryNumberValidationRule : ValidationRule
+    {
+        public bool isAvailable { get; set; }
+        public override ValidationResult Validate(object value, CultureInfo cultureInfo)
+        {
+            if (!isAvailable)
+            {
+                return new ValidationResult(false, $"Оборудование с таким инвентарным номеров уже существует");
+            }
+            return new ValidationResult(true, null);
+        }
+    }
 }

@@ -8,24 +8,6 @@ using System.Threading.Tasks;
 
 namespace AccountingPC
 {
-    public class DeviceLocation
-    {
-        public UInt32 ID { get; set; }
-        public String Name { get; set; }
-    }
-
-    public class OS
-    {
-        public UInt32 ID { get; set; }
-        public String Name { get; set; }
-    }
-
-    public class Invoice
-    {
-        public UInt32 ID { get; set; }
-        public String Name { get; set; }
-    }
-
     public class Device
     {
         public UInt32 ID { get; set; }
@@ -54,6 +36,7 @@ namespace AccountingPC
         public UInt32 VideoRAM { get; set; }
         public UInt32 RAM { get; set; }
         public UInt32 FrequencyRAM { get; set; }
+        public UInt32 SSD { get; set; }
         public UInt32 HDD { get; set; }
         public uint OSID { get; set; }
         public List<String> VideoConnectors { get; set; }
@@ -74,6 +57,7 @@ namespace AccountingPC
         public UInt32 VideoRAM { get; set; }
         public UInt32 RAM { get; set; }
         public UInt32 FrequencyRAM { get; set; }
+        public UInt32 SSD { get; set; }
         public UInt32 HDD { get; set; }
         public uint OSID { get; set; }
         public float Diagonal { get; set; }

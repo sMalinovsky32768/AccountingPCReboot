@@ -8,9 +8,9 @@
         x:Name="window" x:Class="AccountingPC.AccountingPCWindow" mc:Ignorable="d"
         Title="AccountingPC" Height="768" Width="1366" MinWidth="1366" MinHeight="768"
         WindowStartupLocation="CenterScreen" Icon="images/icon.ico" WindowStyle="None" 
-        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="window_SizeChanged"
-        LostFocus="window_LostFocus" GotFocus="window_GotFocus" 
-        Deactivated="window_Deactivated" Activated="window_Activated">
+        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged"
+        LostFocus="Window_LostFocus" GotFocus="Window_GotFocus" 
+        Deactivated="Window_Deactivated" Activated="Window_Activated">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ParametersCommand}" Executed="OpenParameters"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ExitCommand}" Executed="ExitApp"/>
@@ -28,6 +28,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition/>
+                    <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
                 <Grid Panel.ZIndex="9999">
                     <Grid.ColumnDefinitions>
@@ -49,7 +50,7 @@
                             <MenuItem Header="Программное обеспечение" InputGestureText="Alt+S" Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}"/>
                             <MenuItem Header="Локации" InputGestureText="Alt+L" Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}"/>
                             <Separator/>
-                            <MenuItem Header="Обновить" InputGestureText="Ctrl+R, F5" Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}"/>
+                            <MenuItem Header="Обновить" InputGestureText="Ctrl+R, F5" Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}"/>
                         </MenuItem>
                     </Menu>
                     <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
@@ -146,7 +147,7 @@
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
-                                <DataGrid x:Name="equipmentView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="equipmentView_SelectionChanged"/>
+                                <DataGrid x:Name="equipmentView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="EquipmentView_SelectionChanged"/>
                             </Grid>
                             <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
                             <Grid Grid.Row="3">
@@ -245,11 +246,16 @@
 
                     </Grid>
                 </Grid>
+                <Grid Grid.Row="2">
+                    <StatusBar Name="status">
+                        <StatusBarItem x:Name="statusItem1"/>
+                    </StatusBar>
+                </Grid>
                 <!---->
             </Grid>
-            <Popup x:Name="changePopup" Placement="Custom" CustomPopupPlacementCallback="changePopupPlacement" 
+            <Popup x:Name="changePopup" Placement="Custom" CustomPopupPlacementCallback="ChangePopupPlacement" 
                    PlacementTarget="{Binding ElementName=windowGrid}" HorizontalOffset="200" VerticalOffset="100" 
-                   Opened="changePopup_Opened" ScrollViewer.CanContentScroll="True">
+                   Opened="ChangePopup_Opened" ScrollViewer.CanContentScroll="True">
                 <Grid>
                     <Border Margin="5">
                         <Border.Effect>
@@ -319,11 +325,12 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Инвентарный номер"/>
-                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}">
+                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" TextChanged="inventoryNumber_TextChanged">
                                             <TextBox.Text>
                                                 <Binding Path="InventoryNumber">
                                                     <Binding.ValidationRules>
                                                         <ExceptionValidationRule/>
+                                                        <local:InventoryNumberValidationRule IsAvailable="{Binding availableInvN}"/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox.Text>
@@ -512,6 +519,22 @@
                                         </TextBox>
                                     </Grid>
 
+                                    <Grid x:Name="ssdGrid">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Объем SSD"/>
+                                        <TextBox Grid.Row="1" x:Name="ssd">
+                                            <TextBox.Text>
+                                                <Binding Path="SSD">
+                                                    <Binding.ValidationRules>
+                                                        <ExceptionValidationRule/>
+                                                    </Binding.ValidationRules>
+                                                </Binding>
+                                            </TextBox.Text>
+                                        </TextBox>
+                                    </Grid>
                                     <Grid x:Name="hddGrid">
                                         <Grid.RowDefinitions>
                                             <RowDefinition/>
@@ -702,7 +725,7 @@
                                         <Grid.Resources>
                                             <Style x:Key="image-load-button" TargetType="Button">
                                                 <Setter Property="Margin" Value="0,1,5,1"/>
-                                                <Setter Property="TextBox.Height" Value="25"/>
+                                                <Setter Property="Height" Value="25"/>
                                                 <Setter Property="Button.Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="Button">
@@ -814,11 +837,12 @@
                                         <TextBlock Text="Изображение"/>
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="5*"/>
-                                                <ColumnDefinition Width="2*"/>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition MaxWidth="80"/>
                                             </Grid.ColumnDefinitions>
                                             <TextBox x:Name="imageFilename" Style="{DynamicResource image-filename-text-box}" IsEnabled="False"/>
-                                            <Button Grid.Column="1" x:Name="imageLoad" Style="{DynamicResource image-load-button}" Click="ImageLoad_Click"/>
+                                            <Button Grid.Column="1" x:Name="imageLoad" Style="{DynamicResource image-load-button}" 
+                                                    Click="ImageLoad_Click" Content="Открыть"/>
                                         </Grid>
                                     </Grid>
                                 </Grid>
