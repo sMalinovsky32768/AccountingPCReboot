@@ -325,12 +325,12 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Инвентарный номер"/>
-                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" TextChanged="inventoryNumber_TextChanged">
+                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" MouseEnter="inventoryNumber_MouseEnter">
                                             <TextBox.Text>
                                                 <Binding Path="InventoryNumber">
                                                     <Binding.ValidationRules>
                                                         <ExceptionValidationRule/>
-                                                        <local:InventoryNumberValidationRule IsAvailable="{Binding availableInvN}"/>
+                                                        <local:InventoryNumberValidationRule/>
                                                     </Binding.ValidationRules>
                                                 </Binding>
                                             </TextBox.Text>

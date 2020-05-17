@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -42,14 +44,32 @@ namespace AccountingPC
 
     public class InventoryNumberValidationRule : ValidationRule
     {
-        public bool isAvailable { get; set; }
+        //public bool IsAvailable { get; set; }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
-            if (!isAvailable)
+            if (!Check(value)) 
             {
                 return new ValidationResult(false, $"Оборудование с таким инвентарным номеров уже существует");
             }
             return new ValidationResult(true, null);
+        }
+
+        public Boolean Check(object value)
+        {
+            String s = (String)value;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            int inv;
+            if (s != "" && Int32.TryParse(s, out inv))
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    SqlCommand command = new SqlCommand($"SELECT dbo.IsAvailableInventoryNumber({inv})", connection);
+                    object obj = command.ExecuteScalar();
+                    return Convert.ToBoolean(obj);
+                }
+            }
+            return true;
         }
     }
 }

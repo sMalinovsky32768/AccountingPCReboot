@@ -37,7 +37,13 @@ namespace AccountingPC
         private View nowView;
 
         private Dictionary<int, byte[]> images;
-
+        ToolTip inventoryNumberToolTip;
+        //public static readonly DependencyProperty AvailableInvNProperty;
+        //public Boolean AvailableInvN
+        //{
+        //    get { return (bool)GetValue(AvailableInvNProperty); }
+        //    set { SetValue(AvailableInvNProperty, value); }
+        //}
         public double lastHeight;
         public double lastWidth;
         public static readonly RoutedCommand ParametersCommand = new RoutedUICommand(
@@ -66,7 +72,6 @@ namespace AccountingPC
         TypeDevice typeDevice;
         TypeChange typeChange;
         Int32 deviceID;
-        Boolean availableInvN;
         bool isPreOpenPopup; 
         List<ListBoxItem> videoConnectorsItems;
 
@@ -136,6 +141,10 @@ namespace AccountingPC
         DataSet motherboardDataSet;
         DataSet vCardDataSet;
 
+        static AccountingPCWindow()
+        {
+            //AvailableInvNProperty = DependencyProperty.Register("AvailableInvN", typeof(bool), typeof(AccountingPCWindow));
+        }
         public AccountingPCWindow()
         {
             InitializeComponent();
@@ -146,6 +155,7 @@ namespace AccountingPC
             //equipmentCategoryList.SelectedIndex = 0;
             isPreOpenPopup = false;
             nowView = View.Equipment;
+            //ValidationRule rule = Validation.
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -2279,19 +2289,35 @@ namespace AccountingPC
             UpdateImages();
         }
 
-        private void inventoryNumber_TextChanged(object sender, TextChangedEventArgs e)
+        private void inventoryNumber_MouseEnter(object sender, MouseEventArgs e)
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand("SELECT * FROM dbo.GetAllImages()", connection);
-                availableInvN = Convert.ToBoolean(command.ExecuteScalar());
-                if (!availableInvN)
-                {
-                    
-                }
-            }
+            //Task task;
+            //if (inventoryNumberToolTip != null)
+            //{
+            //    inventoryNumberToolTip.IsOpen = true;
+            //    task = new Task(() =>
+            //    {
+            //        try
+            //        {
+            //            for (int i = 0; i < 3; i++)
+            //            {
+            //                i++;
+            //                Thread.Sleep(1000);
+            //            }
+            //            Dispatcher.Invoke(() => {
+            //                try
+            //                {
+            //                    if (inventoryNumberToolTip != null)
+            //                        inventoryNumberToolTip.IsOpen = false;
+            //                }
+            //                catch { }
+            //            });
+
+            //        }
+            //        catch { }
+            //    });
+            //    task.Start();
+            //}
         }
     }
 }

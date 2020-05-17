@@ -8,7 +8,8 @@
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border BorderBrush="{DynamicResource error-brush}" BorderThickness="1">
+                    <Border CornerRadius="5" BorderThickness="1" x:Name="border" BorderBrush="{DynamicResource error-brush}" 
+                            Background="{DynamicResource surface-brush}" Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}">
                         <AdornedElementPlaceholder/>
                     </Border>
                 </ControlTemplate>
