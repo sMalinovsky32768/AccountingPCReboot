@@ -30,7 +30,7 @@ namespace AccountingPC
             {
                 App.Current.ShutdownMode = ShutdownMode.OnLastWindowClose;
             }
-            /*switch (Settings.Default.THEME)
+            switch (Settings.Default.THEME)
             {
                 case 0:
                     Resources.Clear();
@@ -40,7 +40,7 @@ namespace AccountingPC
                     Resources.Clear();
                     Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/NewStyles/LightTheme.xaml") });
                     break;
-            }*/
+            }
             notify = new System.Windows.Forms.NotifyIcon(new System.ComponentModel.Container());
             notifyContextMenu = new System.Windows.Forms.ContextMenu( new System.Windows.Forms.MenuItem[] 
             { new System.Windows.Forms.MenuItem("Выход", new EventHandler(ShutdownCurrentApp)) });

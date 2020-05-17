@@ -90,11 +90,6 @@
                                   L 0 17.09375 C 0 18.386719 1.050781 19.4375 2.34375 19.4375 L 22.65625 19.4375 
                                   C 23.949219 19.4375 25 18.386719 25 17.09375 L 25 15.53125 C 25 14.238281 23.949219 13.1875 22.65625 13.1875 Z"
                                   Stroke="{DynamicResource on-primary-brush}" Fill="{DynamicResource on-primary-brush}"/>
-                            <!--<Path x:Name="Minimize" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                Data="M 22.65625 15.1875 L 2.34375 15.1875 C 1.050781 15.1875 0 16.238281 0 17.53125 
-                                  L 0 19.09375 C 0 20.386719 1.050781 21.4375 2.34375 21.4375 L 22.65625 21.4375 
-                                  C 23.949219 21.4375 25 20.386719 25 19.09375 L 25 17.53125 C 25 16.238281 23.949219 15.1875 22.65625 15.1875 Z"
-                                  Stroke="{DynamicResource on-primary-brush}" Fill="{DynamicResource on-primary-brush}"/>-->
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
