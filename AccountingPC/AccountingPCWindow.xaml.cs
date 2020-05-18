@@ -32,8 +32,18 @@ namespace AccountingPC
 
     public class Software
     {
+        private int countInstalled;
+
         public int ID { get; set; }
         public String Name { get; set; }
+        public int CountInstalled { get => countInstalled; set => countInstalled = value; }
+        public String CountInstalledString
+        {
+            get
+            {
+                return $"Установлено на {countInstalled} устройствах";
+            }
+        }
     }
 
     /// <summary>
@@ -44,7 +54,7 @@ namespace AccountingPC
         private View nowView;
 
         private Dictionary<int, byte[]> images;
-        ToolTip inventoryNumberToolTip;
+
         //public static readonly DependencyProperty AvailableInvNProperty;
         //public Boolean AvailableInvN
         //{
@@ -2212,7 +2222,7 @@ namespace AccountingPC
                     pcSoftware = new List<Software>();
                     foreach (DataRow row in pcSoftwareDataSet.Tables[0].Rows)
                     {
-                        pcSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString() });
+                        pcSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString(), CountInstalled = Convert.ToInt32(row[2]) });
                     }
                     softwareOnDevice.ItemsSource = pcSoftware;
                     break;
@@ -2223,7 +2233,7 @@ namespace AccountingPC
                     notebookSoftware = new List<Software>();
                     foreach(DataRow row in notebookSoftwareDataSet.Tables[0].Rows)
                     {
-                        notebookSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString() });
+                        notebookSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString(), CountInstalled = Convert.ToInt32(row[2]) });
                     }
                     softwareOnDevice.ItemsSource = notebookSoftware;
                     break;

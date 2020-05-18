@@ -175,7 +175,8 @@
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Path=Name}"/>
+                                                        <TextBlock Text="{Binding Path=Name}" 
+                                                                   ToolTip="{Binding Path=CountInstalledString}"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>

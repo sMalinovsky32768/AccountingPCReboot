@@ -89,7 +89,7 @@
                                 Data="M 22.65625 13.1875 L 2.34375 13.1875 C 1.050781 13.1875 0 14.238281 0 15.53125 
                                   L 0 17.09375 C 0 18.386719 1.050781 19.4375 2.34375 19.4375 L 22.65625 19.4375 
                                   C 23.949219 19.4375 25 18.386719 25 17.09375 L 25 15.53125 C 25 14.238281 23.949219 13.1875 22.65625 13.1875 Z"
-                                  Stroke="{DynamicResource on-primary-brush}" Fill="{DynamicResource on-primary-brush}"/>
+                                  Stroke="{DynamicResource on-background-brush}" Fill="{DynamicResource on-surface-brush}"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -161,7 +161,7 @@
                                   C 2.578125 -0.0625 2.988281 -0.0625 3.242188 0.191406 L 6.75 3.726562 L 10.257812 0.191406 
                                   C 10.511719 -0.0625 10.921875 -0.0625 11.175781 0.191406 L 13.308594 2.324219 
                                   C 13.5625 2.578125 13.5625 2.988281 13.308594 3.242188 L 9.773438 6.75 Z"
-                                  Stroke="{DynamicResource on-primary-brush}" Fill="{DynamicResource on-primary-brush}"/>
+                                  Stroke="{DynamicResource on-background-brush}" Fill="{DynamicResource on-surface-brush}"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
