@@ -160,7 +160,27 @@
                                     <Image x:Name="deviceImage" Margin="10"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    
+                                    <Grid x:Name="installedSoftware" Visibility="Collapsed">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}" FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
+                                        <ListBox Grid.Row="1" Margin="10" x:Name="softwareOnDevice" Style="{DynamicResource list-box-no-selected}">
+                                            <!--<ListView.View>
+                                                <GridView>
+                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}"/>
+                                                </GridView>
+                                            </ListView.View>-->
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Path=Name}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>

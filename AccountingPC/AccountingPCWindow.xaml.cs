@@ -30,6 +30,12 @@ namespace AccountingPC
         Location,
     }
 
+    public class Software
+    {
+        public int ID { get; set; }
+        public String Name { get; set; }
+    }
+
     /// <summary>
     /// Логика взаимодействия для AccountingPCWindow.xaml
     /// </summary>
@@ -76,6 +82,8 @@ namespace AccountingPC
         bool isPreOpenPopup; 
         List<ListBoxItem> videoConnectorsItems;
         Binding invNBinding;
+        List<Software> pcSoftware;
+        List<Software> notebookSoftware;
 
         SqlDataAdapter aspectRatioDataAdapter;
         SqlDataAdapter cpuDataAdapter;
@@ -450,6 +458,7 @@ namespace AccountingPC
                         //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                         equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     }
+                    installedSoftware.Visibility = Visibility.Visible;
                     typeDevice = TypeDevice.PC;
                     break;
                 case 1:
@@ -459,6 +468,7 @@ namespace AccountingPC
                     //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Notebook;
+                    installedSoftware.Visibility = Visibility.Visible;
                     break;
                 case 2:
                     equipmentView.ItemsSource = monitorDataSet.Tables[0].DefaultView;
@@ -467,6 +477,7 @@ namespace AccountingPC
                     //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Monitor;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
                 case 3:
                     equipmentView.ItemsSource = projectorDataSet.Tables[0].DefaultView;
@@ -475,36 +486,42 @@ namespace AccountingPC
                     //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Projector;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
                 case 4:
                     equipmentView.ItemsSource = boardDataSet.Tables[0].DefaultView;
                     equipmentView.Columns[0].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.InteractiveWhiteboard;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
                 case 5:
                     equipmentView.ItemsSource = projectorScreenDataSet.Tables[0].DefaultView;
                     equipmentView.Columns[0].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.ProjectorScreen;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
                 case 6:
                     equipmentView.ItemsSource = printerScannerDataSet.Tables[0].DefaultView;
                     equipmentView.Columns[0].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.PrinterScanner;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
                 case 7:
                     equipmentView.ItemsSource = networkSwitchDataSet.Tables[0].DefaultView;
                     equipmentView.Columns[0].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.NetworkSwitch;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
                 case 8:
                     equipmentView.ItemsSource = otherEquipmentDataSet.Tables[0].DefaultView;
                     equipmentView.Columns[0].Visibility = Visibility.Collapsed;
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.OtherEquipment;
+                    installedSoftware.Visibility = Visibility.Hidden;
                     break;
             }
         }
@@ -2158,6 +2175,7 @@ namespace AccountingPC
 
         private void EquipmentView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            deviceID = Convert.ToInt32(((DataRowView)equipmentView?.SelectedItem)?.Row?[0]);
             BitmapFrame frame = null;
             //deviceImage.Source = BitmapFrame.Create();
             int col;
@@ -2183,6 +2201,33 @@ namespace AccountingPC
                 }
             }
             deviceImage.Source = frame;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            switch (typeDevice)
+            {
+                case TypeDevice.PC:
+                    pcSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({deviceID})", connectionString);
+                    pcSoftwareDataSet = new DataSet();
+                    pcSoftwareDataAdapter.Fill(pcSoftwareDataSet);
+                    softwareOnDevice.ItemsSource = pcSoftwareDataSet.Tables[0].DefaultView;
+                    pcSoftware = new List<Software>();
+                    foreach (DataRow row in pcSoftwareDataSet.Tables[0].Rows)
+                    {
+                        pcSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString() });
+                    }
+                    softwareOnDevice.ItemsSource = pcSoftware;
+                    break;
+                case TypeDevice.Notebook:
+                    notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({deviceID})", connectionString);
+                    notebookSoftwareDataSet = new DataSet();
+                    notebookSoftwareDataAdapter.Fill(notebookSoftwareDataSet);
+                    notebookSoftware = new List<Software>();
+                    foreach(DataRow row in notebookSoftwareDataSet.Tables[0].Rows)
+                    {
+                        notebookSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString() });
+                    }
+                    softwareOnDevice.ItemsSource = notebookSoftware;
+                    break;
+            }
         }
 
         /*private int saveImage(string filename)
@@ -2300,33 +2345,7 @@ namespace AccountingPC
 
         private void inventoryNumber_MouseEnter(object sender, MouseEventArgs e)
         {
-            //Task task;
-            //if (inventoryNumberToolTip != null)
-            //{
-            //    inventoryNumberToolTip.IsOpen = true;
-            //    task = new Task(() =>
-            //    {
-            //        try
-            //        {
-            //            for (int i = 0; i < 3; i++)
-            //            {
-            //                i++;
-            //                Thread.Sleep(1000);
-            //            }
-            //            Dispatcher.Invoke(() => {
-            //                try
-            //                {
-            //                    if (inventoryNumberToolTip != null)
-            //                        inventoryNumberToolTip.IsOpen = false;
-            //                }
-            //                catch { }
-            //            });
-
-            //        }
-            //        catch { }
-            //    });
-            //    task.Start();
-            //}
+            
         }
 
         private void InventoryNumber_Error(object sender, ValidationErrorEventArgs e)
