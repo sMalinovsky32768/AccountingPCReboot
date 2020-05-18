@@ -935,13 +935,13 @@ namespace AccountingPC
                         isPreOpenPopup = false;
                         viewGrid.IsEnabled = true;
                         menu.IsEnabled = true;
-                        UpdateData();
-                        UpdateImages();
-                        ChangeView();
                         break;
                 }
                 //int res = command.ExecuteNonQuery();
             }
+            UpdateData();
+            UpdateImages();
+            ChangeView();
         }
 
         private void ChangePopup_Opened(object sender, EventArgs e)
@@ -1538,9 +1538,9 @@ namespace AccountingPC
             isPreOpenPopup = false;
             viewGrid.IsEnabled = true;
             menu.IsEnabled = true;
-            UpdateData();
-            UpdateImages();
-            ChangeView();
+            //UpdateData();
+            //UpdateImages();
+            //ChangeView();
         }
 
         private String GetVideoConnectors(Int32 value)

@@ -96,7 +96,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition MinHeight="40" Height="auto"/>
                                 <RowDefinition Height="3*"/>
-                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="2"/>
                                 <RowDefinition MaxHeight="300" Height="300"/>
                             </Grid.RowDefinitions>
                             <Grid>
@@ -149,7 +149,7 @@
                             <Grid Grid.Row="1">
                                 <DataGrid x:Name="equipmentView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="EquipmentView_SelectionChanged"/>
                             </Grid>
-                            <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
+                            <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"/>
                             <Grid Grid.Row="3">
                                 <!--Information Device Grid-->
                                 <Grid.ColumnDefinitions>

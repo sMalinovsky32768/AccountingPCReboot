@@ -13,5 +13,6 @@
         <ResourceDictionary Source="Menu.xaml"/>
         <ResourceDictionary Source="ListBox.xaml"/>
         <ResourceDictionary Source="Scroll.xaml"/>
+        <ResourceDictionary Source="StatusBar.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
