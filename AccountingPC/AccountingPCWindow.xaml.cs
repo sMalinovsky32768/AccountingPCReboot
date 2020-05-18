@@ -13,6 +13,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Media;
+using System.Windows.Data;
 
 namespace AccountingPC
 {
@@ -74,6 +75,7 @@ namespace AccountingPC
         Int32 deviceID;
         bool isPreOpenPopup; 
         List<ListBoxItem> videoConnectorsItems;
+        Binding invNBinding;
 
         SqlDataAdapter aspectRatioDataAdapter;
         SqlDataAdapter cpuDataAdapter;
@@ -830,7 +832,7 @@ namespace AccountingPC
                                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToInt32(cost.Text)));
                                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
                                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
-                                command.Parameters.Add(new SqlParameter("@Ports", Convert.ToInt32(ports.Text)));
+                                command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
                                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
                                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
@@ -893,7 +895,7 @@ namespace AccountingPC
                                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
                                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                                command.Parameters.Add(new SqlParameter("@IsElectronic", Convert.ToBoolean(isEDrive.IsChecked)));
+                                command.Parameters.Add(new SqlParameter("@IsEDrive", Convert.ToBoolean(isEDrive.IsChecked)));
                                 command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
                                 command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled?.SelectedItem)?[0]));
                                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
@@ -985,7 +987,7 @@ namespace AccountingPC
                                                 HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull) ? reader["HDDCapacityGB"] : 0),
                                                 OSID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
                                                 //InvoiceID = Convert.ToUInt32(reader["InvoiceID"].GetType() != typeof(DBNull) ? reader["InvoiceID"] : 0),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
                                                 VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull) ? reader["VideoConnectors"] : 0),
                                             };
@@ -1065,7 +1067,7 @@ namespace AccountingPC
                                                 SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull) ? reader["SSDCapacityGB"] : 0),
                                                 HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull) ? reader["HDDCapacityGB"] : 0),
                                                 OSID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
                                                 Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull) ? reader["ScreenDiagonal"] : 0),
                                                 ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull) ? reader["ResolutionID"] : 0),
@@ -1167,7 +1169,7 @@ namespace AccountingPC
                                                 InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
                                                 Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull) ? reader["ScreenDiagonal"] : 0),
                                                 ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull) ? reader["ResolutionID"] : 0),
@@ -1239,7 +1241,7 @@ namespace AccountingPC
                                                 InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
                                                 Diagonal = Convert.ToSingle(reader["MaxDiagonal"].GetType() != typeof(DBNull) ? reader["MaxDiagonal"] : 0),
                                                 ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull) ? reader["ResolutionID"] : 0),
@@ -1300,9 +1302,9 @@ namespace AccountingPC
                                                 InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                                                Diagonal = Convert.ToSingle(reader["MaxDiagonal"].GetType() != typeof(DBNull) ? reader["MaxDiagonal"] : 0),
+                                                Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull) ? reader["Diagonal"] : 0),
                                             };
                                             InteractiveWhiteboard board = device as InteractiveWhiteboard;
 
@@ -1325,9 +1327,9 @@ namespace AccountingPC
                                                 InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                                                Diagonal = Convert.ToSingle(reader["MaxDiagonal"].GetType() != typeof(DBNull) ? reader["MaxDiagonal"] : 0),
+                                                Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull) ? reader["Diagonal"] : 0),
                                                 AspectRatioID = Convert.ToUInt32(reader["AspectRatioID"].GetType() != typeof(DBNull) ? reader["AspectRatioID"] : 0),
                                                 ScreenInstalledID = Convert.ToUInt32(reader["ScreenInstalledID"].GetType() != typeof(DBNull) ? reader["ScreenInstalledID"] : 0),
                                                 IsElectronicDrive = Convert.ToBoolean(reader["IsElectronicDrive"].GetType() != typeof(DBNull) ? reader["IsElectronicDrive"] : 0),
@@ -1375,7 +1377,7 @@ namespace AccountingPC
                                                 TypeID = Convert.ToUInt32(reader["TypePrinterID"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
                                                 PaperSizeID = Convert.ToUInt32(reader["PaperSizeID"].GetType() != typeof(DBNull) ? reader["PaperSizeID"] : 0),
                                             };
@@ -1420,9 +1422,9 @@ namespace AccountingPC
                                                 TypeID = Convert.ToUInt32(reader["TypeID"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                                                Ports = Convert.ToUInt32(reader["NumberOfPorts"].GetType() != typeof(DBNull) ? reader["PaperSizeID"] : 0),
+                                                Ports = Convert.ToUInt32(reader["NumberOfPorts"].GetType() != typeof(DBNull) ? reader["NumberOfPorts"] : 0),
                                                 WiFiFrequencyID = Convert.ToUInt32(reader["WiFiFrequencyID"].GetType() != typeof(DBNull) ? reader["WiFiFrequencyID"] : 0),
                                             };
                                             NetworkSwitch networkSwitch = device as NetworkSwitch;
@@ -1466,7 +1468,7 @@ namespace AccountingPC
                                                 InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                                                 Name = reader["Name"].ToString(),
                                                 Cost = Convert.ToUInt32(reader["Cost"]),
-                                                InvoiceNumber = reader["InvoiceID"].ToString(),
+                                                InvoiceNumber = reader["InvoiceNumber"].ToString(),
                                                 PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
                                             };
 
@@ -1619,11 +1621,20 @@ namespace AccountingPC
             if (typeChange == TypeChange.Add)
             {
                 autoInvN.Visibility = Visibility.Visible;
+                if (disabledRepeatInvN.IsChecked==true)
+                {
+                    disabledRepeatInvN_Checked();
+                }
+                else
+                {
+                    disabledRepeatInvN_Unchecked();
+                }
             }
             else if (typeChange == TypeChange.Change)
             {
                 autoInvN.Visibility = Visibility.Collapsed;
                 autoInvN.IsChecked = false;
+                disabledRepeatInvN_Unchecked();
             }
             inventoryNumberGrid.Visibility = Visibility.Visible;
             deviceNameGrid.Visibility = Visibility.Visible;
@@ -2074,7 +2085,6 @@ namespace AccountingPC
             {
                 isPreOpenPopup = true;
                 changePopup.IsOpen = false;
-                //changePopup.Visibility = Visibility.Collapsed;
             }
         }
 
@@ -2086,7 +2096,6 @@ namespace AccountingPC
             {
                 changePopup.IsOpen = true;
                 isPreOpenPopup = false;
-                //changePopup.Visibility = Visibility.Visible;
             }
         }
 
@@ -2318,6 +2327,45 @@ namespace AccountingPC
             //    });
             //    task.Start();
             //}
+        }
+
+        private void InventoryNumber_Error(object sender, ValidationErrorEventArgs e)
+        {
+            return;
+        }
+
+        private void changeAnalog_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void disabledRepeatInvN_Checked(object sender, RoutedEventArgs e)
+        {
+            disabledRepeatInvN_Checked();
+        }
+
+        private void disabledRepeatInvN_Unchecked(object sender, RoutedEventArgs e)
+        {
+            disabledRepeatInvN_Unchecked();
+        }
+
+        private void disabledRepeatInvN_Checked()
+        {
+            invNBinding = new Binding();
+            invNBinding.Path = new PropertyPath("InventoryNumber");
+            invNBinding.ValidationRules.Clear();
+            invNBinding.ValidationRules.Add(new DataErrorValidationRule());
+            invNBinding.ValidationRules.Add(new InventoryNumberValidationRule());
+            inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
+        }
+
+        private void disabledRepeatInvN_Unchecked()
+        {
+            invNBinding = new Binding();
+            invNBinding.Path = new PropertyPath("InventoryNumber");
+            invNBinding.ValidationRules.Clear();
+            invNBinding.ValidationRules.Add(new DataErrorValidationRule());
+            inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
         }
     }
 }

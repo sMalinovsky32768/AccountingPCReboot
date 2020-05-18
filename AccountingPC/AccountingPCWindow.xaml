@@ -156,7 +156,7 @@
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Height="300" Width="auto" MinWidth="200">
+                                <Grid Height="300" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <Image x:Name="deviceImage" Margin="10"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
@@ -259,7 +259,7 @@
                 <Grid>
                     <Border Margin="5">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.3" Color="{DynamicResource shadow}"/>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.9" Color="{DynamicResource shadow}"/>
                         </Border.Effect>
                         <Grid x:Name="grid" Background="{DynamicResource surface-brush}">
                             <Grid.RowDefinitions>
@@ -273,10 +273,34 @@
                                     </Style>
                                     <Style x:Key="invNTextBox" TargetType="TextBox" BasedOn="{StaticResource text-box}">
                                         <Setter Property="Margin" Value="5 1"/>
+                                        <Setter Property="IsEnabled" Value="True"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}" Value="True">
                                                 <Setter Property="TextBox.IsEnabled" Value="False"/>
                                             </DataTrigger>
+                                            <!--<DataTrigger Binding="{Binding IsChecked, ElementName=disabledRepeatInvN}" Value="True">
+                                                <Setter Property="TextBox.Text">
+                                                    <Setter.Value>
+                                                        <Binding Path="InventoryNumber" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <ExceptionValidationRule/>
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsChecked, ElementName=disabledRepeatInvN}" Value="False">
+                                                <Setter Property="TextBox.Text">
+                                                    <Setter.Value>
+                                                        <Binding Path="InventoryNumber" NotifyOnValidationError="True">
+                                                            <Binding.ValidationRules>
+                                                                <ExceptionValidationRule/>
+                                                                <local:InventoryNumberValidationRule/>
+                                                            </Binding.ValidationRules>
+                                                        </Binding>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </DataTrigger>-->
                                         </Style.Triggers>
                                     </Style>
                                     <Style TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
@@ -325,9 +349,9 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Инвентарный номер"/>
-                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" MouseEnter="inventoryNumber_MouseEnter">
+                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" MouseEnter="inventoryNumber_MouseEnter" Validation.Error="InventoryNumber_Error">
                                             <TextBox.Text>
-                                                <Binding Path="InventoryNumber">
+                                                <Binding Path="InventoryNumber" NotifyOnValidationError="True">
                                                     <Binding.ValidationRules>
                                                         <ExceptionValidationRule/>
                                                         <local:InventoryNumberValidationRule/>
@@ -797,7 +821,7 @@
                                                 <Setter Property="Validation.ErrorTemplate">
                                                     <Setter.Value>
                                                         <ControlTemplate>
-                                                            <Border BorderBrush="{DynamicResource error-brush}" BorderThickness="1">
+                                                            <Border CornerRadius="5,0,0,5" BorderBrush="{DynamicResource error-brush}" BorderThickness="1,1,0,1">
                                                                 <AdornedElementPlaceholder/>
                                                             </Border>
                                                         </ControlTemplate>
@@ -852,9 +876,13 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
                                               VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="autoInvN_Checked"/>
+                                    <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
+                                              VerticalAlignment="Center" IsChecked="True" Checked="disabledRepeatInvN_Checked" Unchecked="disabledRepeatInvN_Unchecked"/>
+                                    <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" 
+                                              VerticalAlignment="Center" IsChecked="False" Checked="changeAnalog_Checked"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Content="Сохранить" Style="{DynamicResource default-button}" Margin="5" Padding="10 5" Click="SaveChanges"/>
