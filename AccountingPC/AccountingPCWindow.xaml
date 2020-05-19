@@ -195,7 +195,9 @@
                                                     <ContextMenu>
                                                         <ContextMenu.ItemTemplate>
                                                             <DataTemplate>
-                                                                <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}"/>
+                                                                <Button Content="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}" 
+                                                                        Click="addSoftwareItem" BorderBrush="Transparent" Background="Transparent" 
+                                                                        Foreground="{DynamicResource on-background-brush}"/>
                                                             </DataTemplate>
                                                         </ContextMenu.ItemTemplate>
                                                     </ContextMenu>
