@@ -153,30 +153,61 @@
                             <Grid Grid.Row="3">
                                 <!--Information Device Grid-->
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="0.5*" MinWidth="400"/>
+                                    <ColumnDefinition x:Name="softwareColumn"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid Height="300" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
                                     <Image x:Name="deviceImage" Margin="10"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <Grid x:Name="installedSoftware" Visibility="Collapsed">
+                                    <Grid x:Name="installedSoftware">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}" FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}"/>
-                                        <ListBox Grid.Row="1" Margin="10" x:Name="softwareOnDevice" Style="{DynamicResource list-box-no-selected}">
-                                            <!--<ListView.View>
-                                                <GridView>
-                                                    <GridViewColumn DisplayMemberBinding="{Binding Path=Name}"/>
-                                                </GridView>
-                                            </ListView.View>-->
+                                        <Grid Margin="20,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.Resources>
+                                                <Style x:Key="soft-button" TargetType="Button" BasedOn="{StaticResource default-button}">
+                                                    <Setter Property="FontSize" Value="18"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                    <Setter Property="Width" Value="30"/>
+                                                    <Setter Property="Height" Value="30"/>
+                                                    <Setter Property="Margin" Value="2"/>
+                                                </Style>
+                                                <Style x:Key="soft-del-button" TargetType="Button" BasedOn="{StaticResource soft-button}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareOnDevice}" Value="-1">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Resources>
+                                            <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}" 
+                                                   FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" VerticalAlignment="Center"/>
+                                            <Button Grid.Column="1" x:Name="addSoftware" Content="+" Style="{DynamicResource soft-button}" Click="addSoftware_Click">
+                                                <Button.ContextMenu>
+                                                    <ContextMenu>
+                                                        <ContextMenu.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}"/>
+                                                            </DataTemplate>
+                                                        </ContextMenu.ItemTemplate>
+                                                    </ContextMenu>
+                                                </Button.ContextMenu>
+                                            </Button>
+                                            <Button Grid.Column="2" x:Name="delSoftware" Content="-" Style="{DynamicResource soft-del-button}" Click="delSoftware_Click"/>
+                                        </Grid>
+                                        <ListBox Grid.Row="1" Margin="10,5" x:Name="softwareOnDevice" Style="{DynamicResource list-box-no-selected}">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Path=Name}" 
-                                                                   ToolTip="{Binding Path=CountInstalledString}"/>
+                                                        <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>

@@ -41,7 +41,10 @@ namespace AccountingPC
         {
             get
             {
-                return $"Установлено на {countInstalled} устройствах";
+                if (countInstalled > 0)
+                    return $"Установлено на {countInstalled} устройствах";
+                else
+                    return "Ни разу не установлено";
             }
         }
     }
@@ -94,11 +97,15 @@ namespace AccountingPC
         Binding invNBinding;
         List<Software> pcSoftware;
         List<Software> notebookSoftware;
+        List<Software> pcNotInstalledSoftware;
+        List<Software> notebookNotInstalledSoftware;
 
         SqlDataAdapter aspectRatioDataAdapter;
         SqlDataAdapter cpuDataAdapter;
         SqlDataAdapter softwareDataAdapter;
+        SqlDataAdapter pcNotInstalledSoftwareDataAdapter;
         SqlDataAdapter pcSoftwareDataAdapter;
+        SqlDataAdapter notebookNotInstalledSoftwareDataAdapter;
         SqlDataAdapter notebookSoftwareDataAdapter;
         SqlDataAdapter osDataAdapter;
         SqlDataAdapter screenInstalledDataAdapter;
@@ -127,11 +134,13 @@ namespace AccountingPC
         SqlDataAdapter nameDataAdapter;
         SqlDataAdapter motherboardDataAdapter;
         SqlDataAdapter vCardDataAdapter;
-
+        
         DataSet aspectRatioDataSet;
         DataSet cpuDataSet;
         DataSet softwareDataSet;
+        DataSet pcNotInstalledSoftwareDataSet;
         DataSet pcSoftwareDataSet;
+        DataSet notebookNotInstalledSoftwareDataSet;
         DataSet notebookSoftwareDataSet;
         DataSet osDataSet;
         DataSet screenInstalledDataSet;
@@ -469,6 +478,7 @@ namespace AccountingPC
                         equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     }
                     installedSoftware.Visibility = Visibility.Visible;
+                    softwareColumn.Width = new GridLength(1, GridUnitType.Star);
                     typeDevice = TypeDevice.PC;
                     break;
                 case 1:
@@ -479,6 +489,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Notebook;
                     installedSoftware.Visibility = Visibility.Visible;
+                    softwareColumn.Width = new GridLength(1, GridUnitType.Star);
                     break;
                 case 2:
                     equipmentView.ItemsSource = monitorDataSet.Tables[0].DefaultView;
@@ -488,6 +499,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Monitor;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
                 case 3:
                     equipmentView.ItemsSource = projectorDataSet.Tables[0].DefaultView;
@@ -497,6 +509,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.Projector;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
                 case 4:
                     equipmentView.ItemsSource = boardDataSet.Tables[0].DefaultView;
@@ -504,6 +517,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.InteractiveWhiteboard;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
                 case 5:
                     equipmentView.ItemsSource = projectorScreenDataSet.Tables[0].DefaultView;
@@ -511,6 +525,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.ProjectorScreen;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
                 case 6:
                     equipmentView.ItemsSource = printerScannerDataSet.Tables[0].DefaultView;
@@ -518,6 +533,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.PrinterScanner;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
                 case 7:
                     equipmentView.ItemsSource = networkSwitchDataSet.Tables[0].DefaultView;
@@ -525,6 +541,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.NetworkSwitch;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
                 case 8:
                     equipmentView.ItemsSource = otherEquipmentDataSet.Tables[0].DefaultView;
@@ -532,6 +549,7 @@ namespace AccountingPC
                     equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
                     typeDevice = TypeDevice.OtherEquipment;
                     installedSoftware.Visibility = Visibility.Hidden;
+                    softwareColumn.Width = GridLength.Auto;
                     break;
             }
         }
@@ -2222,9 +2240,28 @@ namespace AccountingPC
                     pcSoftware = new List<Software>();
                     foreach (DataRow row in pcSoftwareDataSet.Tables[0].Rows)
                     {
-                        pcSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString(), CountInstalled = Convert.ToInt32(row[2]) });
+                        pcSoftware.Add(new Software()
+                        {
+                            ID = Convert.ToInt32(row[0]),
+                            Name = row[1].ToString(),
+                            CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                        });
                     }
                     softwareOnDevice.ItemsSource = pcSoftware;
+
+                    pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({deviceID})", connectionString);
+                    pcNotInstalledSoftwareDataSet = new DataSet();
+                    pcNotInstalledSoftwareDataAdapter.Fill(pcNotInstalledSoftwareDataSet);
+                    pcNotInstalledSoftware = new List<Software>();
+                    foreach (DataRow row in pcNotInstalledSoftwareDataSet.Tables[0].Rows)
+                    {
+                        pcNotInstalledSoftware.Add(new Software() { 
+                            ID = Convert.ToInt32(row[0]), 
+                            Name = row[1].ToString(), 
+                            CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0) 
+                        });
+                    }
+                    addSoftware.ContextMenu.ItemsSource = pcNotInstalledSoftware;
                     break;
                 case TypeDevice.Notebook:
                     notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({deviceID})", connectionString);
@@ -2233,9 +2270,29 @@ namespace AccountingPC
                     notebookSoftware = new List<Software>();
                     foreach(DataRow row in notebookSoftwareDataSet.Tables[0].Rows)
                     {
-                        notebookSoftware.Add(new Software() { ID = Convert.ToInt32(row[0]), Name = row[1].ToString(), CountInstalled = Convert.ToInt32(row[2]) });
+                        notebookSoftware.Add(new Software()
+                        {
+                            ID = Convert.ToInt32(row[0]),
+                            Name = row[1].ToString(),
+                            CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                        });
                     }
                     softwareOnDevice.ItemsSource = notebookSoftware;
+
+                    notebookNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({deviceID})", connectionString);
+                    notebookNotInstalledSoftwareDataSet = new DataSet();
+                    notebookNotInstalledSoftwareDataAdapter.Fill(notebookNotInstalledSoftwareDataSet);
+                    notebookNotInstalledSoftware = new List<Software>();
+                    foreach (DataRow row in notebookNotInstalledSoftwareDataSet.Tables[0].Rows)
+                    {
+                        notebookNotInstalledSoftware.Add(new Software()
+                        {
+                            ID = Convert.ToInt32(row[0]),
+                            Name = row[1].ToString(),
+                            CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                        });
+                    }
+                    addSoftware.ContextMenu.ItemsSource = notebookNotInstalledSoftware;
                     break;
             }
         }
@@ -2395,6 +2452,31 @@ namespace AccountingPC
             invNBinding.ValidationRules.Clear();
             invNBinding.ValidationRules.Add(new DataErrorValidationRule());
             inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
+        }
+
+        private void addSoftware_Click(object sender, RoutedEventArgs e)
+        {
+            ((Button)sender).ContextMenu.IsOpen = true;
+        }
+
+        private void delSoftware_Click(object sender, RoutedEventArgs e)
+        {
+            int licenseID = ((Software)softwareOnDevice.SelectedItem).ID;
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = null;
+                switch (typeDevice)
+                {
+                    case TypeDevice.PC:
+                        command = new SqlCommand($"Delete from InstalledSoftwarePC where PCID={deviceID} and LicenseID={licenseID}", connection);
+                        break;
+                    case TypeDevice.Notebook:
+                        command = new SqlCommand($"Delete from InstalledSoftwareNotebook where NotebookID={deviceID} and LicenseID={licenseID}", connection);
+                        break;
+                }
+                command?.ExecuteNonQuery();
+            }
         }
     }
 }
