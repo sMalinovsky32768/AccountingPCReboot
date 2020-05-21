@@ -62,7 +62,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="viewGrid">
-                    <Grid x:Name="equipmentGrid" Visibility="Visible">
+                    <Grid x:Name="equipmentGrid" Visibility="Collapsed">
                         <Grid.Style>
                             <Style>
                                 <Style.Triggers>
@@ -219,7 +219,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid x:Name="softwareGrid" Visibility="Collapsed">
+                    <Grid x:Name="softwareGrid" Visibility="Visible">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MaxWidth="400" MinWidth="200"/>
                             <ColumnDefinition Width="auto"/>
@@ -255,7 +255,7 @@
                                                 <Setter Property="Margin" Value="0 5 5 5"/>
                                                 <Setter Property="IsEnabled" Value="True"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentCategoryList}" Value="-1">
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareCategoryList}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -263,14 +263,14 @@
                                             <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
                                                 <Setter Property="IsEnabled" Value="False"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=equipmentView}" Value="1">
+                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=softwareView}" Value="1">
                                                         <Setter Property="IsEnabled" Value="True"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareView}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>

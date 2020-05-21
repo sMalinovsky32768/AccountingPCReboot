@@ -23,6 +23,12 @@ namespace AccountingPC
         Change,
     }
 
+    enum TypeSoft
+    {
+        Software,
+        OS,
+    }
+
     enum View
     {
         Equipment,
@@ -90,6 +96,7 @@ namespace AccountingPC
             "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
         TypeDevice typeDevice;
+        TypeSoft typeSoft;
         TypeChange typeChange;
         Int32 deviceID;
         bool isPreOpenPopup; 
@@ -179,7 +186,8 @@ namespace AccountingPC
             InitializeComponent();
             lastHeight = Height;
             lastWidth = Width;
-            UpdateAllData();
+            UpdateAllEquipmentData();
+            UpdateAllSoftwareData();
             UpdateImages();
             //equipmentCategoryList.SelectedIndex = 0;
             isPreOpenPopup = false;
@@ -272,9 +280,10 @@ namespace AccountingPC
             {
                 case View.Equipment:
                     //UpdateData();
-                    ChangeView();
+                    ChangeEquipmentView();
                     break;
                 case View.Software:
+                    ChangeSoftwareView();
                     break;
                 case View.Location:
                     break;
@@ -328,10 +337,10 @@ namespace AccountingPC
                 catch { }
             });
             task.Start();
-            UpdateData();
+            UpdateEquipmentData();
         }
 
-        private void UpdateData()
+        private void UpdateEquipmentData()
         {
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             switch (typeDevice)
@@ -404,7 +413,7 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateAllData()
+        private void UpdateAllEquipmentData()
         {
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             pcDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", connectionString);
@@ -464,7 +473,7 @@ namespace AccountingPC
             otherEquipmentDataAdapter.Fill(otherEquipmentDataSet);
         }
 
-        private void ChangeView()
+        private void ChangeEquipmentView()
         {
             switch (equipmentCategoryList.SelectedIndex)
             {
@@ -984,9 +993,9 @@ namespace AccountingPC
                 }
                 //int res = command.ExecuteNonQuery();
             }
-            UpdateData();
+            UpdateEquipmentData();
             UpdateImages();
-            ChangeView();
+            ChangeEquipmentView();
         }
 
         private void ChangePopup_Opened(object sender, EventArgs e)
@@ -1905,7 +1914,7 @@ namespace AccountingPC
             osDataSet = new DataSet();
             osDataAdapter.Fill(osDataSet);
             os.ItemsSource = osDataSet.Tables[0].DefaultView;
-            os.DisplayMemberPath = "Name";
+            os.DisplayMemberPath = "Наименование";
 
             screenInstalledDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", connectionString);
             screenInstalledDataSet = new DataSet();
@@ -2176,6 +2185,7 @@ namespace AccountingPC
             equipmentGrid.Visibility = Visibility.Collapsed;
             softwareGrid.Visibility = Visibility.Visible;
             locationManagementGrid.Visibility = Visibility.Collapsed;
+            softwareCategoryList.SelectedIndex = 0;
         }
 
         private void SelectViewLocation(object sender, ExecutedRoutedEventArgs e)
@@ -2340,8 +2350,8 @@ namespace AccountingPC
 
         private void UpdateView_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            UpdateAllData();
-            ChangeView();
+            UpdateAllEquipmentData();
+            ChangeEquipmentView();
             UpdateImages();
         }
 
@@ -2508,5 +2518,53 @@ namespace AccountingPC
                     break;
             }
         }
+
+        /* Программное обеспечение */
+
+        private void ChangeSoftwareView()
+        {
+            switch (softwareCategoryList.SelectedIndex)
+            {
+                case 0:
+                    softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
+                    typeSoft = TypeSoft.Software;
+                    break;
+                case 1:
+                    softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
+                    typeSoft = TypeSoft.OS;
+                    break;
+            }
+        }
+
+        private void UpdateSoftwareData()
+        {
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            switch (typeSoft)
+            {
+                case TypeSoft.Software:
+                    softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", connectionString);
+                    softwareDataSet = new DataSet();
+                    softwareDataAdapter.Fill(softwareDataSet);
+                    break;
+                case TypeSoft.OS:
+                    osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", connectionString);
+                    osDataSet = new DataSet();
+                    osDataAdapter.Fill(osDataSet);
+                    break;
+            }
+        }
+
+        private void UpdateAllSoftwareData()
+        {
+            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", connectionString);
+            softwareDataSet = new DataSet();
+            softwareDataAdapter.Fill(softwareDataSet);
+
+            osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", connectionString);
+            osDataSet = new DataSet();
+            osDataAdapter.Fill(osDataSet);
+        }
+
     }
 }
