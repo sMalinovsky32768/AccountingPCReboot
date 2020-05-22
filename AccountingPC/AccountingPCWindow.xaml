@@ -190,20 +190,20 @@
                                             </Grid.Resources>
                                             <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}" 
                                                    FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" VerticalAlignment="Center"/>
-                                            <Button Grid.Column="1" x:Name="addSoftware" Content="+" Style="{DynamicResource soft-button}" Click="addSoftware_Click">
+                                            <Button Grid.Column="1" x:Name="addSoftware" Content="+" Style="{DynamicResource soft-button}" Click="AddSoftware_Click">
                                                 <Button.ContextMenu>
                                                     <ContextMenu>
                                                         <ContextMenu.ItemTemplate>
                                                             <DataTemplate>
                                                                 <Button Content="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}" 
-                                                                        Click="addSoftwareItem" BorderBrush="Transparent" Background="Transparent" 
+                                                                        Click="AddSoftwareItem" BorderBrush="Transparent" Background="Transparent" 
                                                                         Foreground="{DynamicResource on-background-brush}"/>
                                                             </DataTemplate>
                                                         </ContextMenu.ItemTemplate>
                                                     </ContextMenu>
                                                 </Button.ContextMenu>
                                             </Button>
-                                            <Button Grid.Column="2" x:Name="delSoftware" Content="-" Style="{DynamicResource soft-del-button}" Click="delSoftware_Click"/>
+                                            <Button Grid.Column="2" x:Name="delSoftware" Content="-" Style="{DynamicResource soft-del-button}" Click="DelSoftware_Click"/>
                                         </Grid>
                                         <ListBox Grid.Row="1" Margin="10,5" x:Name="softwareOnDevice" Style="{DynamicResource list-box-no-selected}">
                                             <ListBox.ItemTemplate>
@@ -403,7 +403,7 @@
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Инвентарный номер"/>
-                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" MouseEnter="inventoryNumber_MouseEnter" Validation.Error="InventoryNumber_Error">
+                                        <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}" MouseEnter="InventoryNumber_MouseEnter" Validation.Error="InventoryNumber_Error">
                                             <TextBox.Text>
                                                 <Binding Path="InventoryNumber" NotifyOnValidationError="True">
                                                     <Binding.ValidationRules>
@@ -934,9 +934,9 @@
                                     <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
                                               VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="autoInvN_Checked"/>
                                     <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
-                                              VerticalAlignment="Center" IsChecked="True" Checked="disabledRepeatInvN_Checked" Unchecked="disabledRepeatInvN_Unchecked"/>
+                                              VerticalAlignment="Center" IsChecked="True" Checked="DisabledRepeatInvN_Checked" Unchecked="DisabledRepeatInvN_Unchecked"/>
                                     <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" 
-                                              VerticalAlignment="Center" IsChecked="False" Checked="changeAnalog_Checked"/>
+                                              VerticalAlignment="Center" IsChecked="False" Checked="ChangeAnalog_Checked"/>
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                     <Button Content="Сохранить" Style="{DynamicResource default-button}" Margin="5" Padding="10 5" Click="SaveChanges"/>

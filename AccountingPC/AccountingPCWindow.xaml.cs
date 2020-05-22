@@ -1677,18 +1677,18 @@ namespace AccountingPC
                 autoInvN.Visibility = Visibility.Visible;
                 if (disabledRepeatInvN.IsChecked==true)
                 {
-                    disabledRepeatInvN_Checked();
+                    DisabledRepeatInvN_Checked();
                 }
                 else
                 {
-                    disabledRepeatInvN_Unchecked();
+                    DisabledRepeatInvN_Unchecked();
                 }
             }
             else if (typeChange == TypeChange.Change)
             {
                 autoInvN.Visibility = Visibility.Collapsed;
                 autoInvN.IsChecked = false;
-                disabledRepeatInvN_Unchecked();
+                DisabledRepeatInvN_Unchecked();
             }
             inventoryNumberGrid.Visibility = Visibility.Visible;
             deviceNameGrid.Visibility = Visibility.Visible;
@@ -2350,12 +2350,23 @@ namespace AccountingPC
 
         private void UpdateView_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            UpdateAllEquipmentData();
-            ChangeEquipmentView();
-            UpdateImages();
+            switch (nowView)
+            {
+                case View.Equipment:
+                    UpdateAllEquipmentData();
+                    ChangeEquipmentView();
+                    UpdateImages();
+                    break;
+                case View.Software:
+                    UpdateAllSoftwareData();
+                    ChangeSoftwareView();
+                    break;
+                case View.Location:
+                    break;
+            }
         }
 
-        private void inventoryNumber_MouseEnter(object sender, MouseEventArgs e)
+        private void InventoryNumber_MouseEnter(object sender, MouseEventArgs e)
         {
             
         }
@@ -2365,22 +2376,22 @@ namespace AccountingPC
             return;
         }
 
-        private void changeAnalog_Checked(object sender, RoutedEventArgs e)
+        private void ChangeAnalog_Checked(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void disabledRepeatInvN_Checked(object sender, RoutedEventArgs e)
+        private void DisabledRepeatInvN_Checked(object sender, RoutedEventArgs e)
         {
-            disabledRepeatInvN_Checked();
+            DisabledRepeatInvN_Checked();
         }
 
-        private void disabledRepeatInvN_Unchecked(object sender, RoutedEventArgs e)
+        private void DisabledRepeatInvN_Unchecked(object sender, RoutedEventArgs e)
         {
-            disabledRepeatInvN_Unchecked();
+            DisabledRepeatInvN_Unchecked();
         }
 
-        private void disabledRepeatInvN_Checked()
+        private void DisabledRepeatInvN_Checked()
         {
             invNBinding = new Binding();
             invNBinding.Path = new PropertyPath("InventoryNumber");
@@ -2390,7 +2401,7 @@ namespace AccountingPC
             inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
         }
 
-        private void disabledRepeatInvN_Unchecked()
+        private void DisabledRepeatInvN_Unchecked()
         {
             invNBinding = new Binding();
             invNBinding.Path = new PropertyPath("InventoryNumber");
@@ -2399,12 +2410,12 @@ namespace AccountingPC
             inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
         }
 
-        private void addSoftware_Click(object sender, RoutedEventArgs e)
+        private void AddSoftware_Click(object sender, RoutedEventArgs e)
         {
             ((Button)sender).ContextMenu.IsOpen = true;
         }
 
-        private void delSoftware_Click(object sender, RoutedEventArgs e)
+        private void DelSoftware_Click(object sender, RoutedEventArgs e)
         {
             int licenseID = ((Software)softwareOnDevice.SelectedItem).ID;
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -2414,10 +2425,16 @@ namespace AccountingPC
                 switch (typeDevice)
                 {
                     case TypeDevice.PC:
-                        command = new SqlCommand($"Delete from InstalledSoftwarePC where PCID={deviceID} and LicenseID={licenseID}", connection);
+                        command = new SqlCommand($"DeleteInstalledSoftwarePC", connection);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@PCID", deviceID);
+                        command.Parameters.Add("@LicenseID", licenseID);
                         break;
                     case TypeDevice.Notebook:
-                        command = new SqlCommand($"Delete from InstalledSoftwareNotebook where NotebookID={deviceID} and LicenseID={licenseID}", connection);
+                        command = new SqlCommand($"DeleteInstalledSoftwareNotebook", connection);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@NotebookID", deviceID);
+                        command.Parameters.Add("@LicenseID", licenseID);
                         break;
                 }
                 command?.ExecuteNonQuery();
@@ -2425,7 +2442,7 @@ namespace AccountingPC
             UpdateSoftwareOnDevice();
         }
 
-        private void addSoftwareItem(object sender, RoutedEventArgs e)
+        private void AddSoftwareItem(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
             Software software = (Software)button.DataContext;
@@ -2437,10 +2454,16 @@ namespace AccountingPC
                 switch (typeDevice)
                 {
                     case TypeDevice.PC:
-                        command = new SqlCommand($"Insert into InstalledSoftwarePC (PCID, LicenseID) Values({deviceID}, {licenseID})", connection);
+                        command = new SqlCommand($"AddInstalledSoftwarePC", connection);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@PCID", deviceID);
+                        command.Parameters.Add("@LicenseID", licenseID);
                         break;
                     case TypeDevice.Notebook:
-                        command = new SqlCommand($"Insert into InstalledSoftwareNotebook (NotebookID, LicenseID) values ({deviceID}, {licenseID})", connection);
+                        command = new SqlCommand($"AddInstalledSoftwareNotebook", connection);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@NotebookID", deviceID);
+                        command.Parameters.Add("@LicenseID", licenseID);
                         break;
                 }
                 command?.ExecuteNonQuery();
