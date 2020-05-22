@@ -455,19 +455,19 @@ namespace AccountingPC
                     case TypeSoft.Software:
                         command = new SqlCommand($"AddLicenseSoftware", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add("@Name", null);
-                        command.Parameters.Add("@Price", null);
-                        command.Parameters.Add("@Count", null);
-                        command.Parameters.Add("@InvoiceID", null);
-                        command.Parameters.Add("@Type", null);
+                        command.Parameters.Add(new SqlParameter("@Name", null));
+                        command.Parameters.Add(new SqlParameter("@Price", null));
+                        command.Parameters.Add(new SqlParameter("@Count", null));
+                        command.Parameters.Add(new SqlParameter("@InvoiceID", null));
+                        command.Parameters.Add(new SqlParameter("@Type", null));
                         break;
                     case TypeSoft.OS:
                         command = new SqlCommand($"", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add("@Name", null);
-                        command.Parameters.Add("@Price", null);
-                        command.Parameters.Add("@Count", null);
-                        command.Parameters.Add("@InvoiceID", null);
+                        command.Parameters.Add(new SqlParameter("@Name", null));
+                        command.Parameters.Add(new SqlParameter("@Price", null));
+                        command.Parameters.Add(new SqlParameter("@Count", null));
+                        command.Parameters.Add(new SqlParameter("@InvoiceID", null));
                         break;
                 }
                 command?.ExecuteNonQuery();
@@ -588,14 +588,14 @@ namespace AccountingPC
                     case TypeDevice.PC:
                         command = new SqlCommand($"DeleteInstalledSoftwarePC", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add("@PCID", deviceID);
-                        command.Parameters.Add("@LicenseID", licenseID);
+                        command.Parameters.Add(new SqlParameter("@PCID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                     case TypeDevice.Notebook:
                         command = new SqlCommand($"DeleteInstalledSoftwareNotebook", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add("@NotebookID", deviceID);
-                        command.Parameters.Add("@LicenseID", licenseID);
+                        command.Parameters.Add(new SqlParameter("@NotebookID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                 }
                 command?.ExecuteNonQuery();
@@ -617,14 +617,14 @@ namespace AccountingPC
                     case TypeDevice.PC:
                         command = new SqlCommand($"AddInstalledSoftwarePC", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add("@PCID", deviceID);
-                        command.Parameters.Add("@LicenseID", licenseID);
+                        command.Parameters.Add(new SqlParameter("@PCID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                     case TypeDevice.Notebook:
                         command = new SqlCommand($"AddInstalledSoftwareNotebook", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add("@NotebookID", deviceID);
-                        command.Parameters.Add("@LicenseID", licenseID);
+                        command.Parameters.Add(new SqlParameter("@NotebookID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                 }
                 command?.ExecuteNonQuery();
