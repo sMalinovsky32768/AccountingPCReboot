@@ -16,7 +16,7 @@ namespace AccountingPC
         [Required(ErrorMessage = "Поле является обязательным")]
         [StringLength(200, ErrorMessage = "Максимальная длина - 200")]
         public String Name { get; set; }
-        public UInt32 Cost { get; set; }
+        public float Cost { get; set; }
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public string InvoiceNumber { get; set; }
         public uint PlaceID { get; set; }
