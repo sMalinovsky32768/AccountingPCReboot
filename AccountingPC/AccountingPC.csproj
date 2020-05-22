@@ -85,13 +85,24 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AccountingPCWindow.UpdateSoftwareOnDevice.cs" />
+    <Compile Include="AccountingPCWindow.UpdateSource.cs" />
+    <Compile Include="AccountingPCWindow.InitializePopup.cs" />
+    <Compile Include="AccountingPCWindow.UpdateEquipments.cs" />
+    <Compile Include="AccountingPCWindow.GetEquipments.cs" />
+    <Compile Include="AccountingPCWindow.AddEquipments.cs" />
+    <Compile Include="AccountingPCWindow.UpdateData.cs" />
+    <Compile Include="AccountingPCWindow.Part2.cs" />
+    <Compile Include="AccountingPCWindow.Part1.cs" />
     <Compile Include="AccountingPCWindowSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AccountingPCWindowSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="Devices.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="LightTheme\ForButton.cs" />
     <Compile Include="Maps\CreateMapDefault.cs" />
     <Compile Include="Maps\MapDefault.xaml.cs">
@@ -104,8 +115,8 @@
     <Compile Include="Maps\ViewPlaceInfo.xaml.cs">
       <DependentUpon>ViewPlaceInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TypeDevice.cs" />
-    <Compile Include="ComboBoxValidationRule.cs" />
+    <Compile Include="Software.cs" />
+    <Compile Include="AccountingPCValidationRules.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

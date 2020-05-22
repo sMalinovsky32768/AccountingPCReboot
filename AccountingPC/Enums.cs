@@ -1,11 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AccountingPC
+﻿namespace AccountingPC
 {
+    enum TypeChange
+    {
+        Add,
+        Change,
+    }
+
+    enum TypeSoft
+    {
+        Software,
+        OS,
+    }
+
+    enum View
+    {
+        Equipment,
+        Software,
+        Location,
+    }
+
     public enum TypeDevice
     {
         PC,

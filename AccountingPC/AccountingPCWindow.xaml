@@ -310,6 +310,9 @@
             <Popup x:Name="changePopup" Placement="Custom" CustomPopupPlacementCallback="ChangePopupPlacement" 
                    PlacementTarget="{Binding ElementName=windowGrid}" HorizontalOffset="200" VerticalOffset="100" 
                    Opened="ChangePopup_Opened" ScrollViewer.CanContentScroll="True">
+                <Popup.CommandBindings>
+                    <CommandBinding Command="{x:Static local:AccountingPCWindow.PopupCloseCommand}" Executed="PopupClose"/>
+                </Popup.CommandBindings>
                 <Grid>
                     <Border Margin="5">
                         <Border.Effect>
@@ -332,29 +335,6 @@
                                             <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}" Value="True">
                                                 <Setter Property="TextBox.IsEnabled" Value="False"/>
                                             </DataTrigger>
-                                            <!--<DataTrigger Binding="{Binding IsChecked, ElementName=disabledRepeatInvN}" Value="True">
-                                                <Setter Property="TextBox.Text">
-                                                    <Setter.Value>
-                                                        <Binding Path="InventoryNumber" NotifyOnValidationError="True">
-                                                            <Binding.ValidationRules>
-                                                                <ExceptionValidationRule/>
-                                                            </Binding.ValidationRules>
-                                                        </Binding>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsChecked, ElementName=disabledRepeatInvN}" Value="False">
-                                                <Setter Property="TextBox.Text">
-                                                    <Setter.Value>
-                                                        <Binding Path="InventoryNumber" NotifyOnValidationError="True">
-                                                            <Binding.ValidationRules>
-                                                                <ExceptionValidationRule/>
-                                                                <local:InventoryNumberValidationRule/>
-                                                            </Binding.ValidationRules>
-                                                        </Binding>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </DataTrigger>-->
                                         </Style.Triggers>
                                     </Style>
                                     <Style TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
@@ -472,7 +452,7 @@
                                         </Grid.RowDefinitions>
                                         <TextBlock Text="Процессор"/>
                                         <ComboBox Grid.Row="1" x:Name="cpu" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True" SelectionChanged="cpu_SelectionChanged">
+                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True" SelectionChanged="Cpu_SelectionChanged">
                                             <ComboBox.Text>
                                                 <Binding Path="CPU">
                                                     <Binding.ValidationRules>
@@ -932,7 +912,7 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
-                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="autoInvN_Checked"/>
+                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="AutoInvN_Checked"/>
                                     <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
                                               VerticalAlignment="Center" IsChecked="True" Checked="DisabledRepeatInvN_Checked" Unchecked="DisabledRepeatInvN_Unchecked"/>
                                     <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" 
