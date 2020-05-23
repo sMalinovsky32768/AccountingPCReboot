@@ -115,8 +115,9 @@
     <Compile Include="Maps\ViewPlaceInfo.xaml.cs">
       <DependentUpon>ViewPlaceInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Software.cs" />
+    <Compile Include="InstalledSoftware.cs" />
     <Compile Include="AccountingPCValidationRules.cs" />
+    <Compile Include="Software.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

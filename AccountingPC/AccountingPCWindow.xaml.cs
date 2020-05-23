@@ -21,6 +21,13 @@ namespace AccountingPC
     public partial class AccountingPCWindow : Window
     {
         private View nowView;
+        private bool IsChangeAnalog { get; set; }
+        private TypeDevice TypeDevice { get; set; }
+        private TypeSoft TypeSoft { get; set; }
+        private TypeChange TypeChange { get; set; }
+        private int DeviceID { get; set; }
+        private bool IsPreOpenEquipmentPopup { get; set; }
+        private bool IsPreOpenSoftwarePopup { get; set; }
 
         private Dictionary<int, byte[]> images;
 
@@ -55,17 +62,12 @@ namespace AccountingPC
         public static readonly RoutedCommand UpdateViewCommand = new RoutedUICommand(
             "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
-        TypeDevice typeDevice;
-        TypeSoft typeSoft;
-        TypeChange typeChange;
-        Int32 deviceID;
-        bool isPreOpenPopup;
         List<ListBoxItem> videoConnectorsItems;
         Binding invNBinding;
-        List<Software> pcSoftware;
-        List<Software> notebookSoftware;
-        List<Software> pcNotInstalledSoftware;
-        List<Software> notebookNotInstalledSoftware;
+        List<InstalledSoftware> pcSoftware;
+        List<InstalledSoftware> notebookSoftware;
+        List<InstalledSoftware> pcNotInstalledSoftware;
+        List<InstalledSoftware> notebookNotInstalledSoftware;
 
         SqlDataAdapter aspectRatioDataAdapter;
         SqlDataAdapter cpuDataAdapter;
@@ -150,7 +152,7 @@ namespace AccountingPC
             UpdateAllSoftwareData();
             UpdateImages();
             //equipmentCategoryList.SelectedIndex = 0;
-            isPreOpenPopup = false;
+            IsPreOpenEquipmentPopup = false;
             nowView = View.Equipment;
             //ValidationRule rule = Validation.
         }
@@ -195,8 +197,8 @@ namespace AccountingPC
         {
             LoadFromSettings();
             ChangeWindowState();
-            changePopup.Height = Height - 200;
-            changePopup.Width = Width - 400;
+            changeEquipmentPopup.Height = Height - 200;
+            changeEquipmentPopup.Width = Width - 400;
             equipmentGrid.Visibility = Visibility.Visible;
             equipmentCategoryList.SelectedIndex = 0;
         }
@@ -228,16 +230,16 @@ namespace AccountingPC
 
         private void AddDevice(object sender, RoutedEventArgs e)
         {
-            typeChange = TypeChange.Add;
-            changePopup.IsOpen = true;
+            TypeChange = TypeChange.Add;
+            changeEquipmentPopup.IsOpen = true;
         }
 
         private void ChangeDevice(object sender, RoutedEventArgs e)
         {
             DataRow row = ((DataRowView)equipmentView.SelectedItem).Row;
-            deviceID = Convert.ToInt32(row[0]);
-            typeChange = TypeChange.Change;
-            changePopup.IsOpen = true;
+            DeviceID = Convert.ToInt32(row[0]);
+            TypeChange = TypeChange.Change;
+            changeEquipmentPopup.IsOpen = true;
         }
 
         private void DeleteDevice(object sender, RoutedEventArgs e)
@@ -250,7 +252,7 @@ namespace AccountingPC
                 {
                     DataRow row = ((DataRowView)obj).Row;
                     Int32 id = Convert.ToInt32(row[0]);
-                    SqlCommand command = new SqlCommand($"Delete{typeDevice.ToString()}ByID", connection);
+                    SqlCommand command = new SqlCommand($"Delete{TypeDevice.ToString()}ByID", connection);
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add(new SqlParameter("@ID", id));
                     Int32 res = command.ExecuteNonQuery();
@@ -290,51 +292,51 @@ namespace AccountingPC
             ChangeSoftwareView();
         }
 
-        private void ChangePopup_Opened(object sender, EventArgs e)
+        private void ChangeEquipmentPopup_Opened(object sender, EventArgs e)
         {
             viewGrid.IsEnabled = false;
             menu.IsEnabled = false;
-            if (!isPreOpenPopup)
+            if (!IsPreOpenEquipmentPopup)
             {
                 InitializePopup();
                 String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-                switch (typeChange)
+                switch (TypeChange)
                 {
                     case TypeChange.Change:
-                        switch (typeDevice)
+                        switch (TypeDevice)
                         {
                             case TypeDevice.PC:
-                                GetPC(connectionString, device, deviceID);
+                                GetPC(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.Notebook:
-                                GetNotebook(connectionString, device, deviceID);
+                                GetNotebook(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.Monitor:
-                                GetMonitor(connectionString, device, deviceID);
+                                GetMonitor(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.Projector:
-                                GetProjector(connectionString, device, deviceID);
+                                GetProjector(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.InteractiveWhiteboard:
-                                GetInteractiveWhiteboard(connectionString, device, deviceID);
+                                GetInteractiveWhiteboard(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.ProjectorScreen:
-                                GetProjectorScreen(connectionString, device, deviceID);
+                                GetProjectorScreen(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.PrinterScanner:
-                                GetPrinterScanner(connectionString, device, deviceID);
+                                GetPrinterScanner(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.NetworkSwitch:
-                                GetNetworkSwitch(connectionString, device, deviceID);
+                                GetNetworkSwitch(connectionString, device, DeviceID);
                                 break;
                             case TypeDevice.OtherEquipment:
-                                GetOtherEquipment(connectionString, device, deviceID);
+                                GetOtherEquipment(connectionString, device, DeviceID);
                                 break;
                         }
                         SetDeviceLocationAndInvoice(device);
                         break;
                     case TypeChange.Add:
-                        switch (typeDevice)
+                        switch (TypeDevice)
                         {
                             case TypeDevice.PC:
                                 device = new PC();
@@ -371,13 +373,22 @@ namespace AccountingPC
 
         private void PopupClose(object sender, ExecutedRoutedEventArgs e)
         {
-            changePopup.IsOpen = false;
-            isPreOpenPopup = false;
+            switch (nowView)
+            {
+                case View.Equipment:
+                    changeEquipmentPopup.IsOpen = false;
+                    IsPreOpenEquipmentPopup = false;
+                    UpdateEquipmentData();
+                    UpdateImages();
+                    ChangeEquipmentView();
+                    break;
+                case View.Software:
+                    changeSoftwarePopup.IsOpen = false;
+                    IsPreOpenSoftwarePopup = false;
+                    break;
+            }
             viewGrid.IsEnabled = true;
             menu.IsEnabled = true;
-            UpdateEquipmentData();
-            UpdateImages();
-            ChangeEquipmentView();
         }
 
         private void Window_LostFocus(object sender, RoutedEventArgs e)
@@ -450,7 +461,7 @@ namespace AccountingPC
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = null;
-                switch (typeSoft)
+                switch (TypeSoft)
                 {
                     case TypeSoft.Software:
                         command = new SqlCommand($"AddLicenseSoftware", connection);
@@ -486,11 +497,11 @@ namespace AccountingPC
 
         private void EquipmentView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            deviceID = Convert.ToInt32(((DataRowView)equipmentView?.SelectedItem)?.Row?[0]);
+            DeviceID = Convert.ToInt32(((DataRowView)equipmentView?.SelectedItem)?.Row?[0]);
             BitmapFrame frame = null;
             //deviceImage.Source = BitmapFrame.Create();
             int col;
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.PC:
                 case TypeDevice.Notebook:
@@ -558,7 +569,12 @@ namespace AccountingPC
 
         private void ChangeAnalog_Checked(object sender, RoutedEventArgs e)
         {
+            IsChangeAnalog = true;
+        }
 
+        private void changeAnalog_Unchecked(object sender, RoutedEventArgs e)
+        {
+            IsChangeAnalog = false;
         }
 
         private void DisabledRepeatInvN_Checked(object sender, RoutedEventArgs e)
@@ -578,23 +594,23 @@ namespace AccountingPC
 
         private void DelSoftware_Click(object sender, RoutedEventArgs e)
         {
-            int licenseID = ((Software)softwareOnDevice.SelectedItem).ID;
+            int licenseID = ((InstalledSoftware)softwareOnDevice.SelectedItem).ID;
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = null;
-                switch (typeDevice)
+                switch (TypeDevice)
                 {
                     case TypeDevice.PC:
                         command = new SqlCommand($"DeleteInstalledSoftwarePC", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@PCID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@PCID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                     case TypeDevice.Notebook:
                         command = new SqlCommand($"DeleteInstalledSoftwareNotebook", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@NotebookID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@NotebookID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                 }
@@ -606,30 +622,35 @@ namespace AccountingPC
         private void AddSoftwareItem(object sender, RoutedEventArgs e)
         {
             Button button = sender as Button;
-            Software software = (Software)button.DataContext;
+            InstalledSoftware software = (InstalledSoftware)button.DataContext;
             int licenseID = software.ID;
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = null;
-                switch (typeDevice)
+                switch (TypeDevice)
                 {
                     case TypeDevice.PC:
                         command = new SqlCommand($"AddInstalledSoftwarePC", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@PCID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@PCID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                     case TypeDevice.Notebook:
                         command = new SqlCommand($"AddInstalledSoftwareNotebook", connection);
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@NotebookID", deviceID));
+                        command.Parameters.Add(new SqlParameter("@NotebookID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                 }
                 command?.ExecuteNonQuery();
             }
             UpdateSoftwareOnDevice();
+        }
+
+        private void changeSoftwarePopup_Opened(object sender, EventArgs e)
+        {
+
         }
     }
 }

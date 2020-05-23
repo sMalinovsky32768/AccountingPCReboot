@@ -16,7 +16,7 @@ namespace AccountingPC
                 commandString = "UpdatePCByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -36,6 +36,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -50,7 +51,7 @@ namespace AccountingPC
                 commandString = "UpdateNotebookByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
@@ -74,6 +75,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -88,7 +90,7 @@ namespace AccountingPC
                 commandString = "UpdateMonitorByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -100,6 +102,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -114,7 +117,7 @@ namespace AccountingPC
                 commandString = "UpdateNetworkSwitchByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -124,6 +127,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -138,7 +142,7 @@ namespace AccountingPC
                 commandString = "UpdateInteractiveWhiteboardByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -146,6 +150,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -160,7 +165,7 @@ namespace AccountingPC
                 commandString = "UpdatePrinterScannerByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -169,6 +174,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -183,7 +189,7 @@ namespace AccountingPC
                 commandString = "UpdateProjectorByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -194,6 +200,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -208,7 +215,7 @@ namespace AccountingPC
                 commandString = "UpdateProjectorScreenByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
@@ -219,6 +226,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }
@@ -233,13 +241,14 @@ namespace AccountingPC
                 commandString = "UpdateOtherEquipmentByID";
                 command = new SqlCommand(commandString, connection);
                 command.CommandType = CommandType.StoredProcedure;
-                command.Parameters.Add(new SqlParameter("@ID", deviceID));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
         }

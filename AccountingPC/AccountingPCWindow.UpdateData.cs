@@ -102,7 +102,7 @@ namespace AccountingPC
             }
             installedSoftware.Visibility = Visibility.Visible;
             softwareColumn.Width = new GridLength(1, GridUnitType.Star);
-            typeDevice = TypeDevice.PC;
+            TypeDevice = TypeDevice.PC;
         }
 
         private void SetViewToNotebook()
@@ -112,7 +112,7 @@ namespace AccountingPC
             equipmentView.Columns[19].Visibility = Visibility.Collapsed;
             //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.Notebook;
+            TypeDevice = TypeDevice.Notebook;
             installedSoftware.Visibility = Visibility.Visible;
             softwareColumn.Width = new GridLength(1, GridUnitType.Star);
         }
@@ -124,7 +124,7 @@ namespace AccountingPC
             equipmentView.Columns[9].Visibility = Visibility.Collapsed;
             //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.Monitor;
+            TypeDevice = TypeDevice.Monitor;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }
@@ -136,7 +136,7 @@ namespace AccountingPC
             equipmentView.Columns[8].Visibility = Visibility.Collapsed;
             //equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 2].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.Projector;
+            TypeDevice = TypeDevice.Projector;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }
@@ -146,7 +146,7 @@ namespace AccountingPC
             equipmentView.ItemsSource = boardDataSet.Tables[0].DefaultView;
             equipmentView.Columns[0].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.InteractiveWhiteboard;
+            TypeDevice = TypeDevice.InteractiveWhiteboard;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }
@@ -156,7 +156,7 @@ namespace AccountingPC
             equipmentView.ItemsSource = projectorScreenDataSet.Tables[0].DefaultView;
             equipmentView.Columns[0].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.ProjectorScreen;
+            TypeDevice = TypeDevice.ProjectorScreen;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }
@@ -166,7 +166,7 @@ namespace AccountingPC
             equipmentView.ItemsSource = printerScannerDataSet.Tables[0].DefaultView;
             equipmentView.Columns[0].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.PrinterScanner;
+            TypeDevice = TypeDevice.PrinterScanner;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }
@@ -176,7 +176,7 @@ namespace AccountingPC
             equipmentView.ItemsSource = networkSwitchDataSet.Tables[0].DefaultView;
             equipmentView.Columns[0].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.NetworkSwitch;
+            TypeDevice = TypeDevice.NetworkSwitch;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }
@@ -186,7 +186,7 @@ namespace AccountingPC
             equipmentView.ItemsSource = otherEquipmentDataSet.Tables[0].DefaultView;
             equipmentView.Columns[0].Visibility = Visibility.Collapsed;
             equipmentView.Columns[equipmentView.Columns.Count - 1].Visibility = Visibility.Collapsed;
-            typeDevice = TypeDevice.OtherEquipment;
+            TypeDevice = TypeDevice.OtherEquipment;
             installedSoftware.Visibility = Visibility.Hidden;
             softwareColumn.Width = GridLength.Auto;
         }

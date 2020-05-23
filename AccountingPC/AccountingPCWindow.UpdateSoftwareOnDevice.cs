@@ -11,7 +11,7 @@ namespace AccountingPC
         private void UpdateSoftwareOnDevice()
         {
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.PC:
                     UpdateSoftwareOnPC(connectionString);
@@ -26,14 +26,14 @@ namespace AccountingPC
 
         private void UpdateSoftwareOnPC(String connectionString)
         {
-            pcSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({deviceID})", connectionString);
+            pcSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", connectionString);
             pcSoftwareDataSet = new DataSet();
             pcSoftwareDataAdapter.Fill(pcSoftwareDataSet);
             softwareOnDevice.ItemsSource = pcSoftwareDataSet.Tables[0].DefaultView;
-            pcSoftware = new List<Software>();
+            pcSoftware = new List<InstalledSoftware>();
             foreach (DataRow row in pcSoftwareDataSet.Tables[0].Rows)
             {
-                pcSoftware.Add(new Software()
+                pcSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -45,13 +45,13 @@ namespace AccountingPC
 
         private void UpdateSoftwareOnNotebook(String connectionString)
         {
-            notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({deviceID})", connectionString);
+            notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", connectionString);
             notebookSoftwareDataSet = new DataSet();
             notebookSoftwareDataAdapter.Fill(notebookSoftwareDataSet);
-            notebookSoftware = new List<Software>();
+            notebookSoftware = new List<InstalledSoftware>();
             foreach (DataRow row in notebookSoftwareDataSet.Tables[0].Rows)
             {
-                notebookSoftware.Add(new Software()
+                notebookSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -63,13 +63,13 @@ namespace AccountingPC
 
         private void UpdateNotInstalledSoftwareOnPC(String connectionString)
         {
-            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({deviceID})", connectionString);
+            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", connectionString);
             pcNotInstalledSoftwareDataSet = new DataSet();
             pcNotInstalledSoftwareDataAdapter.Fill(pcNotInstalledSoftwareDataSet);
-            pcNotInstalledSoftware = new List<Software>();
+            pcNotInstalledSoftware = new List<InstalledSoftware>();
             foreach (DataRow row in pcNotInstalledSoftwareDataSet.Tables[0].Rows)
             {
-                pcNotInstalledSoftware.Add(new Software()
+                pcNotInstalledSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -81,13 +81,13 @@ namespace AccountingPC
 
         private void UpdateNotInstalledSoftwareOnNotebook(String connectionString)
         {
-            notebookNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({deviceID})", connectionString);
+            notebookNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", connectionString);
             notebookNotInstalledSoftwareDataSet = new DataSet();
             notebookNotInstalledSoftwareDataAdapter.Fill(notebookNotInstalledSoftwareDataSet);
-            notebookNotInstalledSoftware = new List<Software>();
+            notebookNotInstalledSoftware = new List<InstalledSoftware>();
             foreach (DataRow row in notebookNotInstalledSoftwareDataSet.Tables[0].Rows)
             {
-                notebookNotInstalledSoftware.Add(new Software()
+                notebookNotInstalledSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),

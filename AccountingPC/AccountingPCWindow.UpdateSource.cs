@@ -37,7 +37,7 @@ namespace AccountingPC
 
         private void UpdateSourceForName(String connectionString)
         {
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
                     nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllBoardName()", connectionString);
@@ -76,7 +76,7 @@ namespace AccountingPC
 
         private void UpdateSourceForLocation(String connectionString)
         {
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
                     locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(4)", connectionString);
@@ -115,7 +115,7 @@ namespace AccountingPC
 
         private void UpdateSourceForCPU(String connectionString)
         {
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.Notebook:
                     cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", connectionString);
@@ -136,7 +136,7 @@ namespace AccountingPC
 
         private void UpdateSourceForVideoCard(String connectionString)
         {
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.Notebook:
                     vCardDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", connectionString);
@@ -157,7 +157,7 @@ namespace AccountingPC
 
         private void UpdateSourceForType(String connectionString)
         {
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.NetworkSwitch:
                     typeNetworkSwitchDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", connectionString);

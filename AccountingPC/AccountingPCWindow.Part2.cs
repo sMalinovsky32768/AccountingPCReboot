@@ -103,21 +103,33 @@ namespace AccountingPC
 
         private void ChangePopupPreClose()
         {
-            if (changePopup.IsOpen)
+            if (changeEquipmentPopup.IsOpen)
             {
-                isPreOpenPopup = true;
-                changePopup.IsOpen = false;
+                IsPreOpenEquipmentPopup = true;
+                changeEquipmentPopup.IsOpen = false;
+            }
+            if (changeSoftwarePopup.IsOpen)
+            {
+                IsPreOpenSoftwarePopup = true;
+                changeSoftwarePopup.IsOpen = false;
             }
         }
 
         private void ChangePopupPostClose()
         {
-            changePopup.Height = Height - 200;
-            changePopup.Width = Width - 400;
-            if (isPreOpenPopup)
+            if (IsPreOpenEquipmentPopup)
             {
-                changePopup.IsOpen = true;
-                isPreOpenPopup = false;
+                changeEquipmentPopup.Height = Height - 200;
+                changeEquipmentPopup.Width = Width - 400;
+                changeEquipmentPopup.IsOpen = true;
+                IsPreOpenEquipmentPopup = false;
+            }
+            if (IsPreOpenSoftwarePopup)
+            {
+                changeSoftwarePopup.Height = Height - 200;
+                changeSoftwarePopup.Width = Width - 400;
+                changeSoftwarePopup.IsOpen = true;
+                IsPreOpenSoftwarePopup = false;
             }
         }
 
@@ -187,7 +199,7 @@ namespace AccountingPC
             else
             {
                 int col;
-                switch (typeDevice)
+                switch (TypeDevice)
                 {
                     case TypeDevice.PC:
                     case TypeDevice.Notebook:
@@ -234,11 +246,11 @@ namespace AccountingPC
             {
                 case 0:
                     softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
-                    typeSoft = TypeSoft.Software;
+                    TypeSoft = TypeSoft.Software;
                     break;
                 case 1:
                     softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
-                    typeSoft = TypeSoft.OS;
+                    TypeSoft = TypeSoft.OS;
                     break;
             }
         }
@@ -246,7 +258,7 @@ namespace AccountingPC
         private void UpdateSoftwareData()
         {
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            switch (typeSoft)
+            switch (TypeSoft)
             {
                 case TypeSoft.Software:
                     softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", connectionString);

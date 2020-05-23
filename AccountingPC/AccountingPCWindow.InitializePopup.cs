@@ -6,7 +6,8 @@ namespace AccountingPC
     {
         private void ResetPopup()
         {
-            if (typeChange == TypeChange.Add)
+            imageFilename.Text = string.Empty;
+            if (TypeChange == TypeChange.Add)
             {
                 autoInvN.Visibility = Visibility.Visible;
                 if (disabledRepeatInvN.IsChecked == true)
@@ -18,7 +19,7 @@ namespace AccountingPC
                     DisabledRepeatInvN_Unchecked();
                 }
             }
-            else if (typeChange == TypeChange.Change)
+            else if (TypeChange == TypeChange.Change)
             {
                 autoInvN.Visibility = Visibility.Collapsed;
                 autoInvN.IsChecked = false;

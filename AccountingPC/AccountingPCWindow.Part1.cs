@@ -15,7 +15,7 @@ namespace AccountingPC
         private void UpdateEquipmentData()
         {
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.PC:
                     UpdatePCData(connectionString);
@@ -98,7 +98,7 @@ namespace AccountingPC
         private void InitializePopup()
         {
             ResetPopup();
-            switch (typeDevice)
+            switch (TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
                     InitializePopupForInteractiveWhiteboard();
@@ -157,10 +157,10 @@ namespace AccountingPC
         {
             Task task;
             String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            switch (typeChange)
+            switch (TypeChange)
             {
                 case TypeChange.Add:
-                    switch (typeDevice)
+                    switch (TypeDevice)
                     {
                         case TypeDevice.PC:
                             AddPC(connectionString);
@@ -208,7 +208,7 @@ namespace AccountingPC
                     task.Start();
                     break;
                 case TypeChange.Change:
-                    switch (typeDevice)
+                    switch (TypeDevice)
                     {
                         case TypeDevice.PC:
                             UpdatePC(connectionString);
@@ -254,8 +254,8 @@ namespace AccountingPC
                         catch { }
                     });
                     task.Start();
-                    changePopup.IsOpen = false;
-                    isPreOpenPopup = false;
+                    changeEquipmentPopup.IsOpen = false;
+                    IsPreOpenEquipmentPopup = false;
                     viewGrid.IsEnabled = true;
                     menu.IsEnabled = true;
                     break;
