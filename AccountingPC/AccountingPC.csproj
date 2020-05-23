@@ -85,6 +85,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AccountingPCWindow.SoftwareManagement.cs" />
     <Compile Include="AccountingPCWindow.UpdateSoftwareOnDevice.cs" />
     <Compile Include="AccountingPCWindow.UpdateSource.cs" />
     <Compile Include="AccountingPCWindow.InitializePopup.cs" />

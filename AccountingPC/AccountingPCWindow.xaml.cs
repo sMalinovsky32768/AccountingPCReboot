@@ -20,7 +20,39 @@ namespace AccountingPC
     /// </summary>
     public partial class AccountingPCWindow : Window
     {
-        private View nowView;
+
+        public static String ConnectionString { get; set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+        public static readonly RoutedCommand ParametersCommand = new RoutedUICommand(
+            "Parameters", "ParametersCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F12) }));
+
+        public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
+            "Exit", "ExitCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F4, ModifierKeys.Alt) }));
+
+        public static readonly RoutedCommand PopupCloseCommand = new RoutedUICommand(
+            "PopupClose", "PopupCloseCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
+
+        public static readonly RoutedCommand SelectViewEquipmentCommand = new RoutedUICommand(
+            "SelectViewEquipment", "SelectViewEquipmentCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.E, ModifierKeys.Alt) }));
+
+        public static readonly RoutedCommand SelectViewSoftwareCommand = new RoutedUICommand(
+            "SelectViewSoftware", "SelectViewSoftwareCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.S, ModifierKeys.Alt) }));
+
+        public static readonly RoutedCommand SelectViewLocationCommand = new RoutedUICommand(
+            "SelectViewLocation", "SelectViewLocationCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.L, ModifierKeys.Alt) }));
+
+
+        public static readonly RoutedCommand UpdateViewCommand = new RoutedUICommand(
+            "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
+
+        private View NowView { get; set; }
         private bool IsChangeAnalog { get; set; }
         private TypeDevice TypeDevice { get; set; }
         private TypeSoft TypeSoft { get; set; }
@@ -29,45 +61,19 @@ namespace AccountingPC
         private bool IsPreOpenEquipmentPopup { get; set; }
         private bool IsPreOpenSoftwarePopup { get; set; }
 
+        Binding invNBinding;
+
         private Dictionary<int, byte[]> images;
 
-        //public static readonly DependencyProperty AvailableInvNProperty;
-        //public Boolean AvailableInvN
-        //{
-        //    get { return (bool)GetValue(AvailableInvNProperty); }
-        //    set { SetValue(AvailableInvNProperty, value); }
-        //}
-        public double lastHeight;
-        public double lastWidth;
-        public static readonly RoutedCommand ParametersCommand = new RoutedUICommand(
-            "Parameters", "ParametersCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F12) }));
-        public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
-            "Exit", "ExitCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F4, ModifierKeys.Alt) }));
-        public static readonly RoutedCommand PopupCloseCommand = new RoutedUICommand(
-            "PopupClose", "PopupCloseCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
-
-        public static readonly RoutedCommand SelectViewEquipmentCommand = new RoutedUICommand(
-            "SelectViewEquipment", "SelectViewEquipmentCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.E, ModifierKeys.Alt) }));
-        public static readonly RoutedCommand SelectViewSoftwareCommand = new RoutedUICommand(
-            "SelectViewSoftware", "SelectViewSoftwareCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.S, ModifierKeys.Alt) }));
-        public static readonly RoutedCommand SelectViewLocationCommand = new RoutedUICommand(
-            "SelectViewLocation", "SelectViewLocationCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.L, ModifierKeys.Alt) }));
-
-        public static readonly RoutedCommand UpdateViewCommand = new RoutedUICommand(
-            "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
         List<ListBoxItem> videoConnectorsItems;
-        Binding invNBinding;
+
         List<InstalledSoftware> pcSoftware;
         List<InstalledSoftware> notebookSoftware;
         List<InstalledSoftware> pcNotInstalledSoftware;
         List<InstalledSoftware> notebookNotInstalledSoftware;
+
+        public double lastHeight;
+        public double lastWidth;
 
         SqlDataAdapter aspectRatioDataAdapter;
         SqlDataAdapter cpuDataAdapter;
@@ -153,7 +159,7 @@ namespace AccountingPC
             UpdateImages();
             //equipmentCategoryList.SelectedIndex = 0;
             IsPreOpenEquipmentPopup = false;
-            nowView = View.Equipment;
+            NowView = View.Equipment;
             //ValidationRule rule = Validation.
         }
 
@@ -215,7 +221,7 @@ namespace AccountingPC
 
         private void ListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            switch (nowView)
+            switch (NowView)
             {
                 case View.Equipment:
                     ChangeEquipmentView();
@@ -244,8 +250,7 @@ namespace AccountingPC
 
         private void DeleteDevice(object sender, RoutedEventArgs e)
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 foreach (object obj in equipmentView.SelectedItems)
@@ -282,7 +287,6 @@ namespace AccountingPC
 
         private void SaveChanges(object sender, RoutedEventArgs e)
         {
-            //String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             SaveOrUpdateDB();
             UpdateEquipmentData();
             UpdateImages();
@@ -299,38 +303,37 @@ namespace AccountingPC
             if (!IsPreOpenEquipmentPopup)
             {
                 InitializePopup();
-                String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
                 switch (TypeChange)
                 {
                     case TypeChange.Change:
                         switch (TypeDevice)
                         {
                             case TypeDevice.PC:
-                                GetPC(connectionString, device, DeviceID);
+                                GetPC(device, DeviceID);
                                 break;
                             case TypeDevice.Notebook:
-                                GetNotebook(connectionString, device, DeviceID);
+                                GetNotebook(device, DeviceID);
                                 break;
                             case TypeDevice.Monitor:
-                                GetMonitor(connectionString, device, DeviceID);
+                                GetMonitor(device, DeviceID);
                                 break;
                             case TypeDevice.Projector:
-                                GetProjector(connectionString, device, DeviceID);
+                                GetProjector(device, DeviceID);
                                 break;
                             case TypeDevice.InteractiveWhiteboard:
-                                GetInteractiveWhiteboard(connectionString, device, DeviceID);
+                                GetInteractiveWhiteboard(device, DeviceID);
                                 break;
                             case TypeDevice.ProjectorScreen:
-                                GetProjectorScreen(connectionString, device, DeviceID);
+                                GetProjectorScreen(device, DeviceID);
                                 break;
                             case TypeDevice.PrinterScanner:
-                                GetPrinterScanner(connectionString, device, DeviceID);
+                                GetPrinterScanner(device, DeviceID);
                                 break;
                             case TypeDevice.NetworkSwitch:
-                                GetNetworkSwitch(connectionString, device, DeviceID);
+                                GetNetworkSwitch(device, DeviceID);
                                 break;
                             case TypeDevice.OtherEquipment:
-                                GetOtherEquipment(connectionString, device, DeviceID);
+                                GetOtherEquipment(device, DeviceID);
                                 break;
                         }
                         SetDeviceLocationAndInvoice(device);
@@ -373,7 +376,7 @@ namespace AccountingPC
 
         private void PopupClose(object sender, ExecutedRoutedEventArgs e)
         {
-            switch (nowView)
+            switch (NowView)
             {
                 case View.Equipment:
                     changeEquipmentPopup.IsOpen = false;
@@ -385,6 +388,8 @@ namespace AccountingPC
                 case View.Software:
                     changeSoftwarePopup.IsOpen = false;
                     IsPreOpenSoftwarePopup = false;
+                    UpdateSoftwareData();
+                    ChangeSoftwareView();
                     break;
             }
             viewGrid.IsEnabled = true;
@@ -413,12 +418,17 @@ namespace AccountingPC
 
         private void AutoInvN_Checked(object sender, RoutedEventArgs e)
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar().ToString();
+                inventoryNumber.IsEnabled = false;
             }
+        }
+
+        private void autoInvN_Unchecked(object sender, RoutedEventArgs e)
+        {
+            inventoryNumber.IsEnabled = true;
         }
 
         private void Cpu_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -431,7 +441,7 @@ namespace AccountingPC
 
         private void SelectViewEquipment(object sender, ExecutedRoutedEventArgs e)
         {
-            nowView = View.Equipment;
+            NowView = View.Equipment;
             equipmentGrid.Visibility = Visibility.Visible;
             softwareGrid.Visibility = Visibility.Collapsed;
             locationManagementGrid.Visibility = Visibility.Collapsed;
@@ -440,7 +450,7 @@ namespace AccountingPC
 
         private void SelectViewSoftware(object sender, ExecutedRoutedEventArgs e)
         {
-            nowView = View.Software;
+            NowView = View.Software;
             equipmentGrid.Visibility = Visibility.Collapsed;
             softwareGrid.Visibility = Visibility.Visible;
             locationManagementGrid.Visibility = Visibility.Collapsed;
@@ -449,7 +459,7 @@ namespace AccountingPC
 
         private void SelectViewLocation(object sender, ExecutedRoutedEventArgs e)
         {
-            nowView = View.Location;
+            NowView = View.Location;
             equipmentGrid.Visibility = Visibility.Collapsed;
             softwareGrid.Visibility = Visibility.Collapsed;
             locationManagementGrid.Visibility = Visibility.Visible;
@@ -457,32 +467,7 @@ namespace AccountingPC
 
         private void AddSoftware(object sender, RoutedEventArgs e)
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = null;
-                switch (TypeSoft)
-                {
-                    case TypeSoft.Software:
-                        command = new SqlCommand($"AddLicenseSoftware", connection);
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@Name", null));
-                        command.Parameters.Add(new SqlParameter("@Price", null));
-                        command.Parameters.Add(new SqlParameter("@Count", null));
-                        command.Parameters.Add(new SqlParameter("@InvoiceID", null));
-                        command.Parameters.Add(new SqlParameter("@Type", null));
-                        break;
-                    case TypeSoft.OS:
-                        command = new SqlCommand($"", connection);
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new SqlParameter("@Name", null));
-                        command.Parameters.Add(new SqlParameter("@Price", null));
-                        command.Parameters.Add(new SqlParameter("@Count", null));
-                        command.Parameters.Add(new SqlParameter("@InvoiceID", null));
-                        break;
-                }
-                command?.ExecuteNonQuery();
-            }
+            
         }
 
         private void ChangeSoftware(object sender, RoutedEventArgs e)
@@ -541,7 +526,7 @@ namespace AccountingPC
 
         private void UpdateView_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            switch (nowView)
+            switch (NowView)
             {
                 case View.Equipment:
                     UpdateAllEquipmentData();
@@ -595,8 +580,7 @@ namespace AccountingPC
         private void DelSoftware_Click(object sender, RoutedEventArgs e)
         {
             int licenseID = ((InstalledSoftware)softwareOnDevice.SelectedItem).ID;
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 SqlCommand command = null;
                 switch (TypeDevice)
@@ -624,8 +608,7 @@ namespace AccountingPC
             Button button = sender as Button;
             InstalledSoftware software = (InstalledSoftware)button.DataContext;
             int licenseID = software.ID;
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 SqlCommand command = null;
                 switch (TypeDevice)
@@ -650,7 +633,22 @@ namespace AccountingPC
 
         private void changeSoftwarePopup_Opened(object sender, EventArgs e)
         {
-
+            switch (TypeChange)
+            {
+                case TypeChange.Add:
+                    switch (TypeSoft)
+                    {
+                        case TypeSoft.Software:
+                            AddSoftware();
+                            break;
+                        case TypeSoft.OS:
+                            AddOS();
+                            break;
+                    }
+                    break;
+                case TypeChange.Change:
+                    break;
+            }
         }
     }
 }

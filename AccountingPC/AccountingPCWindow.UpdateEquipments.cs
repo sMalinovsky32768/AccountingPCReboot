@@ -6,11 +6,11 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        private void UpdatePC(String connectionString)
+        private void UpdatePC()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdatePCByID";
@@ -41,11 +41,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateNotebook(String connectionString)
+        private void UpdateNotebook()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateNotebookByID";
@@ -80,11 +80,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateMonitor(String connectionString)
+        private void UpdateMonitor()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateMonitorByID";
@@ -107,11 +107,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateNetworkSwitch(String connectionString)
+        private void UpdateNetworkSwitch()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateNetworkSwitchByID";
@@ -132,11 +132,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateInteractiveWhiteboard(String connectionString)
+        private void UpdateInteractiveWhiteboard()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateInteractiveWhiteboardByID";
@@ -155,11 +155,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdatePrinterScanner(String connectionString)
+        private void UpdatePrinterScanner()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdatePrinterScannerByID";
@@ -179,11 +179,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateProjector(String connectionString)
+        private void UpdateProjector()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateProjectorByID";
@@ -205,11 +205,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateProjectorScreen(String connectionString)
+        private void UpdateProjectorScreen()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateProjectorScreenByID";
@@ -231,11 +231,11 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateOtherEquipment(String connectionString)
+        private void UpdateOtherEquipment()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateOtherEquipmentByID";

@@ -14,51 +14,49 @@ namespace AccountingPC
 
         private void UpdateEquipmentData()
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             switch (TypeDevice)
             {
                 case TypeDevice.PC:
-                    UpdatePCData(connectionString);
+                    UpdatePCData();
                     break;
                 case TypeDevice.Notebook:
-                    UpdateNotebookData(connectionString);
+                    UpdateNotebookData();
                     break;
                 case TypeDevice.Monitor:
-                    UpdateMonitorData(connectionString);
+                    UpdateMonitorData();
                     break;
                 case TypeDevice.Projector:
-                    UpdateProjectorData(connectionString);
+                    UpdateProjectorData();
                     break;
                 case TypeDevice.InteractiveWhiteboard:
-                    UpdateInteractiveWhiteboardData(connectionString);
+                    UpdateInteractiveWhiteboardData();
                     break;
                 case TypeDevice.ProjectorScreen:
-                    UpdateProjectorScreenData(connectionString);
+                    UpdateProjectorScreenData();
                     break;
                 case TypeDevice.PrinterScanner:
-                    UpdatePrinterScannerData(connectionString);
+                    UpdatePrinterScannerData();
                     break;
                 case TypeDevice.NetworkSwitch:
-                    UpdateNetworkSwitchData(connectionString);
+                    UpdateNetworkSwitchData();
                     break;
                 case TypeDevice.OtherEquipment:
-                    UpdateOtherEquipmentData(connectionString);
+                    UpdateOtherEquipmentData();
                     break;
             }
         }
 
         private void UpdateAllEquipmentData()
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            UpdatePCData(connectionString);
-            UpdateNotebookData(connectionString);
-            UpdateMonitorData(connectionString);
-            UpdateProjectorData(connectionString);
-            UpdateInteractiveWhiteboardData(connectionString);
-            UpdateProjectorScreenData(connectionString);
-            UpdatePrinterScannerData(connectionString);
-            UpdateNetworkSwitchData(connectionString);
-            UpdateOtherEquipmentData(connectionString);
+            UpdatePCData();
+            UpdateNotebookData();
+            UpdateMonitorData();
+            UpdateProjectorData();
+            UpdateInteractiveWhiteboardData();
+            UpdateProjectorScreenData();
+            UpdatePrinterScannerData();
+            UpdateNetworkSwitchData();
+            UpdateOtherEquipmentData();
         }
 
         private void ChangeEquipmentView()
@@ -133,61 +131,59 @@ namespace AccountingPC
 
         private void UpdatePopupSource()
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-            UpdateSourceForAspectRatio(connectionString);
-            UpdateSourceForOS(connectionString);
-            UpdateSourceForScreenInstalled(connectionString);
-            UpdateSourceForName(connectionString);
-            UpdateSourceForLocation(connectionString);
-            UpdateSourceForCPU(connectionString);
-            UpdateSourceForVideoCard(connectionString);
-            UpdateSourceForType(connectionString);
-            UpdateSourceForFrequency(connectionString);
-            UpdateSourceForMatrixTechology(connectionString);
-            UpdateSourceForPaperSize(connectionString);
-            UpdateSourceForProjectorTechnology(connectionString);
-            UpdateSourceForResolution(connectionString);
-            UpdateSourceForVideoConnectors(connectionString);
-            UpdateSourceForWifiFrequency(connectionString);
-            UpdateSourceForMotherboard(connectionString);
+            UpdateSourceForAspectRatio();
+            UpdateSourceForOS();
+            UpdateSourceForScreenInstalled();
+            UpdateSourceForName();
+            UpdateSourceForLocation();
+            UpdateSourceForCPU();
+            UpdateSourceForVideoCard();
+            UpdateSourceForType();
+            UpdateSourceForFrequency();
+            UpdateSourceForMatrixTechology();
+            UpdateSourceForPaperSize();
+            UpdateSourceForProjectorTechnology();
+            UpdateSourceForResolution();
+            UpdateSourceForVideoConnectors();
+            UpdateSourceForWifiFrequency();
+            UpdateSourceForMotherboard();
         }
 
         private void SaveOrUpdateDB()
         {
             Task task;
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             switch (TypeChange)
             {
                 case TypeChange.Add:
                     switch (TypeDevice)
                     {
                         case TypeDevice.PC:
-                            AddPC(connectionString);
+                            AddPC();
                             break;
                         case TypeDevice.Notebook:
-                            AddNotebook(connectionString);
+                            AddNotebook();
                             break;
                         case TypeDevice.Monitor:
-                            AddMonitor(connectionString);
+                            AddMonitor();
                             break;
                         case TypeDevice.NetworkSwitch:
-                            AddNetworkSwitch(connectionString);
+                            AddNetworkSwitch();
                             break;
                         case TypeDevice.InteractiveWhiteboard:
-                            AddInteractiveWhiteboard(connectionString);
+                            AddInteractiveWhiteboard();
                             break;
                         case TypeDevice.PrinterScanner:
-                            AddPrinterScanner(connectionString);
+                            AddPrinterScanner();
                             break;
                         case TypeDevice.Projector:
-                            AddProjector(connectionString);
+                            AddProjector();
                             break;
                         case TypeDevice.ProjectorScreen:
-                            AddProjectorScreen(connectionString);
+                            AddProjectorScreen();
                             break;
                         case TypeDevice.OtherEquipment:
-                            AddOtherEquipment(connectionString);
+                            AddOtherEquipment();
                             break;
                     }
                     statusItem1.Content = "Успешно добавлено";
@@ -211,31 +207,31 @@ namespace AccountingPC
                     switch (TypeDevice)
                     {
                         case TypeDevice.PC:
-                            UpdatePC(connectionString);
+                            UpdatePC();
                             break;
                         case TypeDevice.Notebook:
-                            UpdateNotebook(connectionString);
+                            UpdateNotebook();
                             break;
                         case TypeDevice.Monitor:
-                            UpdateMonitor(connectionString);
+                            UpdateMonitor();
                             break;
                         case TypeDevice.NetworkSwitch:
-                            UpdateNetworkSwitch(connectionString);
+                            UpdateNetworkSwitch();
                             break;
                         case TypeDevice.InteractiveWhiteboard:
-                            UpdateInteractiveWhiteboard(connectionString);
+                            UpdateInteractiveWhiteboard();
                             break;
                         case TypeDevice.PrinterScanner:
-                            UpdatePrinterScanner(connectionString);
+                            UpdatePrinterScanner();
                             break;
                         case TypeDevice.Projector:
-                            UpdateProjector(connectionString);
+                            UpdateProjector();
                             break;
                         case TypeDevice.ProjectorScreen:
-                            UpdateProjectorScreen(connectionString);
+                            UpdateProjectorScreen();
                             break;
                         case TypeDevice.OtherEquipment:
-                            UpdateOtherEquipment(connectionString);
+                            UpdateOtherEquipment();
                             break;
                     }
                     statusItem1.Content = "Успешно изменено";

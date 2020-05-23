@@ -16,8 +16,7 @@ namespace AccountingPC
         private String GetVideoConnectors(Int32 value)
         {
             List<String> arr = new List<String>();
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlDataReader reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection).ExecuteReader();
@@ -47,8 +46,7 @@ namespace AccountingPC
         private List<String> GetListVideoConnectors(Int32 value)
         {
             List<String> arr = new List<String>();
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlDataReader reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection).ExecuteReader();
@@ -135,7 +133,6 @@ namespace AccountingPC
 
         /*private int saveImage(string filename)
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();
@@ -162,8 +159,7 @@ namespace AccountingPC
         {
             Dictionary<int, byte[]> temp = new Dictionary<int, byte[]>();
 
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlDataReader reader = new SqlCommand("SELECT * FROM dbo.GetAllImages()", connection).ExecuteReader();
@@ -257,16 +253,15 @@ namespace AccountingPC
 
         private void UpdateSoftwareData()
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             switch (TypeSoft)
             {
                 case TypeSoft.Software:
-                    softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", connectionString);
+                    softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
                     softwareDataSet = new DataSet();
                     softwareDataAdapter.Fill(softwareDataSet);
                     break;
                 case TypeSoft.OS:
-                    osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", connectionString);
+                    osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
                     osDataSet = new DataSet();
                     osDataAdapter.Fill(osDataSet);
                     break;
@@ -275,12 +270,11 @@ namespace AccountingPC
 
         private void UpdateAllSoftwareData()
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", connectionString);
+            softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
             softwareDataSet = new DataSet();
             softwareDataAdapter.Fill(softwareDataSet);
 
-            osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", connectionString);
+            osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
             osDataSet = new DataSet();
             osDataAdapter.Fill(osDataSet);
         }

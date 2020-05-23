@@ -912,7 +912,7 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
-                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="AutoInvN_Checked"/>
+                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="AutoInvN_Checked" Unchecked="autoInvN_Unchecked"/>
                                     <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
                                               VerticalAlignment="Center" IsChecked="True" Checked="DisabledRepeatInvN_Checked" Unchecked="DisabledRepeatInvN_Unchecked"/>
                                     <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" VerticalAlignment="Center"

@@ -6,12 +6,12 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        private void AddPC(String connectionString)
+        private void AddPC()
         {
             String commandString;
             SqlCommand command;
             int temp;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddPC";
@@ -56,12 +56,12 @@ namespace AccountingPC
             }
         }
 
-        private void AddNotebook(String connectionString)
+        private void AddNotebook()
         {
             String commandString;
             SqlCommand command;
             int temp;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddNotebook";
@@ -110,11 +110,11 @@ namespace AccountingPC
             }
         }
 
-        private void AddMonitor(String connectionString)
+        private void AddMonitor()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddMonitor";
@@ -135,12 +135,12 @@ namespace AccountingPC
             }
         }
 
-        private void AddNetworkSwitch(String connectionString)
+        private void AddNetworkSwitch()
         {
             String commandString;
             SqlCommand command;
             int temp;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddNetworkSwitch";
@@ -161,11 +161,11 @@ namespace AccountingPC
             }
         }
 
-        private void AddInteractiveWhiteboard(String connectionString)
+        private void AddInteractiveWhiteboard()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddInteractiveWhiteboard";
@@ -182,11 +182,11 @@ namespace AccountingPC
             }
         }
 
-        private void AddPrinterScanner(String connectionString)
+        private void AddPrinterScanner()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddPrinterScanner";
@@ -204,11 +204,11 @@ namespace AccountingPC
             }
         }
 
-        private void AddProjector(String connectionString)
+        private void AddProjector()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddProjector";
@@ -228,11 +228,11 @@ namespace AccountingPC
             }
         }
 
-        private void AddProjectorScreen(String connectionString)
+        private void AddProjectorScreen()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddProjectorScreen";
@@ -252,11 +252,11 @@ namespace AccountingPC
             }
         }
 
-        private void AddOtherEquipment(String connectionString)
+        private void AddOtherEquipment()
         {
             String commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddOtherEquipment";

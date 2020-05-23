@@ -7,9 +7,9 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        private void UpdatePCData(String connectionString)
+        private void UpdatePCData()
         {
-            pcDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", connectionString);
+            pcDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", ConnectionString);
             pcDataSet = new DataSet();
             pcDataAdapter.Fill(pcDataSet);
             pcDataSet.Tables[0].Columns.Add("Видеоразъемы");
@@ -19,9 +19,9 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateNotebookData(String connectionString)
+        private void UpdateNotebookData()
         {
-            notebookDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", connectionString);
+            notebookDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", ConnectionString);
             notebookDataSet = new DataSet();
             notebookDataAdapter.Fill(notebookDataSet);
             notebookDataSet.Tables[0].Columns.Add("Видеоразъемы");
@@ -31,9 +31,9 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateMonitorData(String connectionString)
+        private void UpdateMonitorData()
         {
-            monitorDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", connectionString);
+            monitorDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", ConnectionString);
             monitorDataSet = new DataSet();
             monitorDataAdapter.Fill(monitorDataSet);
             monitorDataSet.Tables[0].Columns.Add("Видеоразъемы");
@@ -43,9 +43,9 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateProjectorData(String connectionString)
+        private void UpdateProjectorData()
         {
-            projectorDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", connectionString);
+            projectorDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString);
             projectorDataSet = new DataSet();
             projectorDataAdapter.Fill(projectorDataSet);
             projectorDataSet.Tables[0].Columns.Add("Видеоразъемы");
@@ -55,37 +55,37 @@ namespace AccountingPC
             }
         }
 
-        private void UpdateInteractiveWhiteboardData(String connectionString)
+        private void UpdateInteractiveWhiteboardData()
         {
-            boardDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllBoard()", connectionString);
+            boardDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllBoard()", ConnectionString);
             boardDataSet = new DataSet();
             boardDataAdapter.Fill(boardDataSet);
         }
 
-        private void UpdateProjectorScreenData(String connectionString)
+        private void UpdateProjectorScreenData()
         {
-            projectorScreenDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", connectionString);
+            projectorScreenDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString);
             projectorScreenDataSet = new DataSet();
             projectorScreenDataAdapter.Fill(projectorScreenDataSet);
         }
 
-        private void UpdatePrinterScannerData(String connectionString)
+        private void UpdatePrinterScannerData()
         {
-            printerScannerDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", connectionString);
+            printerScannerDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString);
             printerScannerDataSet = new DataSet();
             printerScannerDataAdapter.Fill(printerScannerDataSet);
         }
 
-        private void UpdateNetworkSwitchData(String connectionString)
+        private void UpdateNetworkSwitchData()
         {
-            networkSwitchDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", connectionString);
+            networkSwitchDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString);
             networkSwitchDataSet = new DataSet();
             networkSwitchDataAdapter.Fill(networkSwitchDataSet);
         }
 
-        private void UpdateOtherEquipmentData(String connectionString)
+        private void UpdateOtherEquipmentData()
         {
-            otherEquipmentDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", connectionString);
+            otherEquipmentDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString);
             otherEquipmentDataSet = new DataSet();
             otherEquipmentDataAdapter.Fill(otherEquipmentDataSet);
         }

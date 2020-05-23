@@ -10,23 +10,22 @@ namespace AccountingPC
     {
         private void UpdateSoftwareOnDevice()
         {
-            String connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
             switch (TypeDevice)
             {
                 case TypeDevice.PC:
-                    UpdateSoftwareOnPC(connectionString);
-                    UpdateNotInstalledSoftwareOnPC(connectionString);
+                    UpdateSoftwareOnPC();
+                    UpdateNotInstalledSoftwareOnPC();
                     break;
                 case TypeDevice.Notebook:
-                    UpdateSoftwareOnNotebook(connectionString);
-                    UpdateNotInstalledSoftwareOnNotebook(connectionString);
+                    UpdateSoftwareOnNotebook();
+                    UpdateNotInstalledSoftwareOnNotebook();
                     break;
             }
         }
 
-        private void UpdateSoftwareOnPC(String connectionString)
+        private void UpdateSoftwareOnPC()
         {
-            pcSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", connectionString);
+            pcSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString);
             pcSoftwareDataSet = new DataSet();
             pcSoftwareDataAdapter.Fill(pcSoftwareDataSet);
             softwareOnDevice.ItemsSource = pcSoftwareDataSet.Tables[0].DefaultView;
@@ -43,9 +42,9 @@ namespace AccountingPC
             softwareOnDevice.ItemsSource = pcSoftware;
         }
 
-        private void UpdateSoftwareOnNotebook(String connectionString)
+        private void UpdateSoftwareOnNotebook()
         {
-            notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", connectionString);
+            notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString);
             notebookSoftwareDataSet = new DataSet();
             notebookSoftwareDataAdapter.Fill(notebookSoftwareDataSet);
             notebookSoftware = new List<InstalledSoftware>();
@@ -61,9 +60,9 @@ namespace AccountingPC
             softwareOnDevice.ItemsSource = notebookSoftware;
         }
 
-        private void UpdateNotInstalledSoftwareOnPC(String connectionString)
+        private void UpdateNotInstalledSoftwareOnPC()
         {
-            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", connectionString);
+            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString);
             pcNotInstalledSoftwareDataSet = new DataSet();
             pcNotInstalledSoftwareDataAdapter.Fill(pcNotInstalledSoftwareDataSet);
             pcNotInstalledSoftware = new List<InstalledSoftware>();
@@ -79,9 +78,9 @@ namespace AccountingPC
             addSoftware.ContextMenu.ItemsSource = pcNotInstalledSoftware;
         }
 
-        private void UpdateNotInstalledSoftwareOnNotebook(String connectionString)
+        private void UpdateNotInstalledSoftwareOnNotebook()
         {
-            notebookNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", connectionString);
+            notebookNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString);
             notebookNotInstalledSoftwareDataSet = new DataSet();
             notebookNotInstalledSoftwareDataAdapter.Fill(notebookNotInstalledSoftwareDataSet);
             notebookNotInstalledSoftware = new List<InstalledSoftware>();

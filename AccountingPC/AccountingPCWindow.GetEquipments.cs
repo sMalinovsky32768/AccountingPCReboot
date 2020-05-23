@@ -7,11 +7,11 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        private void GetPC(String connectionString, Device d, int id)
+        private void GetPC(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetPCByID({id})";
@@ -96,11 +96,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetNotebook(String connectionString, Device d, int id)
+        private void GetNotebook(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetNotebookByID({id})";
@@ -218,11 +218,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetMonitor(String connectionString, Device d, int id)
+        private void GetMonitor(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetMonitorByID({id})";
@@ -298,11 +298,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetProjector(String connectionString, Device d, int id)
+        private void GetProjector(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetProjectorByID({id})";
@@ -367,11 +367,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetInteractiveWhiteboard(String connectionString, Device d, int id)
+        private void GetInteractiveWhiteboard(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetBoardByID({id})";
@@ -400,11 +400,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetProjectorScreen(String connectionString, Device d, int id)
+        private void GetProjectorScreen(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetScreenByID({id})";
@@ -457,11 +457,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetPrinterScanner(String connectionString, Device d, int id)
+        private void GetPrinterScanner(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetPrinterScannerByID({id})";
@@ -510,11 +510,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetNetworkSwitch(String connectionString, Device d, int id)
+        private void GetNetworkSwitch(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetNetworkSwitchByID({id})";
@@ -565,11 +565,11 @@ namespace AccountingPC
             }
         }
 
-        private void GetOtherEquipment(String connectionString, Device d, int id)
+        private void GetOtherEquipment(Device d, int id)
         {
             String commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetOtherEquipmentByID({id})";
