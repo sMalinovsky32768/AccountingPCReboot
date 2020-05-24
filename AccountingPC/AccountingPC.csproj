@@ -100,6 +100,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AccountingPCWindowSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ReportOptions.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="Devices.cs" />
@@ -118,6 +119,7 @@
     </Compile>
     <Compile Include="InstalledSoftware.cs" />
     <Compile Include="AccountingPCValidationRules.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="Software.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>

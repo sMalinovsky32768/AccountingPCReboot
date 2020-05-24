@@ -21,7 +21,7 @@ namespace AccountingPC
     public partial class AccountingPCWindow : Window
     {
 
-        public static String ConnectionString { get; set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static readonly RoutedCommand ParametersCommand = new RoutedUICommand(
             "Parameters", "ParametersCommand", typeof(AccountingPCWindow),
@@ -43,6 +43,10 @@ namespace AccountingPC
             "SelectViewSoftware", "SelectViewSoftwareCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.S, ModifierKeys.Alt) }));
 
+        public static readonly RoutedCommand SelectViewInvoiceCommand = new RoutedUICommand(
+            "SelectViewInvoice", "SelectViewInvoiceCommand", typeof(AccountingPCWindow),
+            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.I, ModifierKeys.Alt) }));
+
         public static readonly RoutedCommand SelectViewLocationCommand = new RoutedUICommand(
             "SelectViewLocation", "SelectViewLocationCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.L, ModifierKeys.Alt) }));
@@ -62,7 +66,7 @@ namespace AccountingPC
         private bool IsPreOpenEquipmentPopup { get; set; }
         private bool IsPreOpenSoftwarePopup { get; set; }
 
-        Binding invNBinding;
+        private Binding invNBinding;
 
         private Dictionary<int, byte[]> images;
 
@@ -110,6 +114,7 @@ namespace AccountingPC
         SqlDataAdapter vCardDataAdapter;
         SqlDataAdapter typeDeviceDataAdapter;
         SqlDataAdapter typeLicenseDataAdapter;
+        SqlDataAdapter allDevicesDataAdapter;
 
         DataSet aspectRatioDataSet;
         DataSet cpuDataSet;
@@ -145,6 +150,7 @@ namespace AccountingPC
         DataSet vCardDataSet;
         DataSet typeDeviceDataSet;
         DataSet typeLicenseDataSet;
+        DataSet allDevicesDataSet;
 
         static AccountingPCWindow()
         {
@@ -444,6 +450,11 @@ namespace AccountingPC
         private void SelectViewSoftware(object sender, ExecutedRoutedEventArgs e)
         {
             SelectViewSoftware();
+        }
+
+        private void SelectViewInvoice(object sender, ExecutedRoutedEventArgs e)
+        {
+            SelectViewInvoice();
         }
 
         private void SelectViewLocation(object sender, ExecutedRoutedEventArgs e)

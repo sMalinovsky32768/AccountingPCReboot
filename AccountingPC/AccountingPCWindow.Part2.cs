@@ -278,6 +278,14 @@ namespace AccountingPC
             softwareCategoryList.SelectedIndex = 0;
         }
 
+        private void SelectViewInvoice()
+        {
+            //NowView = View.Location;
+            //equipmentGrid.Visibility = Visibility.Collapsed;
+            //softwareGrid.Visibility = Visibility.Collapsed;
+            //locationManagementGrid.Visibility = Visibility.Visible;
+        }
+
         private void SelectViewLocation()
         {
             NowView = View.Location;

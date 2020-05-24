@@ -18,6 +18,7 @@
 
         <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}" Executed="SelectViewEquipment"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}" Executed="SelectViewSoftware"/>
+        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewInvoiceCommand}" Executed="SelectViewInvoice"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}" Executed="SelectViewLocation"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}" Executed="UpdateView_Executed"/>
     </Window.CommandBindings>
@@ -48,6 +49,7 @@
                         <MenuItem Header="Вид">
                             <MenuItem Header="Оборудование" InputGestureText="Alt+E" Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}"/>
                             <MenuItem Header="Программное обеспечение" InputGestureText="Alt+S" Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}"/>
+                            <MenuItem Header="Накладные" InputGestureText="Alt+I" Command="{x:Static local:AccountingPCWindow.SelectViewInvoiceCommand}"/>
                             <MenuItem Header="Локации" InputGestureText="Alt+L" Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}"/>
                             <Separator/>
                             <MenuItem Header="Обновить" InputGestureText="Ctrl+R, F5" Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}"/>
