@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AccountingPC
 {
-    public class Software
+    internal class Software
     {
         public int ID { get; set; }
         [Required(ErrorMessage = "Поле является обязательным")]
@@ -19,12 +19,12 @@ namespace AccountingPC
         public string InvoiceNumber { get; set; }
     }
     
-    public class LicenseSoftware : Software
+    internal class LicenseSoftware : Software
     {
         public int Type { get; set; }
     }
 
-    public class OS : Software
+    internal class OS : Software
     {
 
     }

@@ -95,35 +95,51 @@ namespace AccountingPC
 
         private void InitializePopup()
         {
-            ResetPopup();
-            switch (TypeDevice)
+            ResetEquipmentPopup();
+            switch (NowView)
             {
-                case TypeDevice.InteractiveWhiteboard:
-                    InitializePopupForInteractiveWhiteboard();
+                case View.Equipment:
+                    switch (TypeDevice)
+                    {
+                        case TypeDevice.InteractiveWhiteboard:
+                            InitializePopupForInteractiveWhiteboard();
+                            break;
+                        case TypeDevice.Monitor:
+                            InitializePopupForMonitor();
+                            break;
+                        case TypeDevice.NetworkSwitch:
+                            InitializePopupForNetworkSwitch();
+                            break;
+                        case TypeDevice.Notebook:
+                            InitializePopupForNotebook();
+                            break;
+                        case TypeDevice.OtherEquipment:
+                            InitializePopupForOtherEquipment();
+                            break;
+                        case TypeDevice.PC:
+                            InitializePopupForPC();
+                            break;
+                        case TypeDevice.PrinterScanner:
+                            InitializePopupForPrinterScanner();
+                            break;
+                        case TypeDevice.Projector:
+                            InitializePopupForProjector();
+                            break;
+                        case TypeDevice.ProjectorScreen:
+                            InitializePopupForProjectorScreen();
+                            break;
+                    }
                     break;
-                case TypeDevice.Monitor:
-                    InitializePopupForMonitor();
-                    break;
-                case TypeDevice.NetworkSwitch:
-                    InitializePopupForNetworkSwitch();
-                    break;
-                case TypeDevice.Notebook:
-                    InitializePopupForNotebook();
-                    break;
-                case TypeDevice.OtherEquipment:
-                    InitializePopupForOtherEquipment();
-                    break;
-                case TypeDevice.PC:
-                    InitializePopupForPC();
-                    break;
-                case TypeDevice.PrinterScanner:
-                    InitializePopupForPrinterScanner();
-                    break;
-                case TypeDevice.Projector:
-                    InitializePopupForProjector();
-                    break;
-                case TypeDevice.ProjectorScreen:
-                    InitializePopupForProjectorScreen();
+                case View.Software:
+                    switch (TypeSoft)
+                    {
+                        case TypeSoft.LicenseSoftware:
+                            InitializePopupForSoftware();
+                            break;
+                        case TypeSoft.OS:
+                            InitializePopupForOS();
+                            break;
+                    }
                     break;
             }
             UpdatePopupSource();
@@ -131,26 +147,33 @@ namespace AccountingPC
 
         private void UpdatePopupSource()
         {
-
-            UpdateSourceForAspectRatio();
-            UpdateSourceForOS();
-            UpdateSourceForScreenInstalled();
-            UpdateSourceForName();
-            UpdateSourceForLocation();
-            UpdateSourceForCPU();
-            UpdateSourceForVideoCard();
-            UpdateSourceForType();
-            UpdateSourceForFrequency();
-            UpdateSourceForMatrixTechology();
-            UpdateSourceForPaperSize();
-            UpdateSourceForProjectorTechnology();
-            UpdateSourceForResolution();
-            UpdateSourceForVideoConnectors();
-            UpdateSourceForWifiFrequency();
-            UpdateSourceForMotherboard();
+            switch (NowView)
+            {
+                case View.Equipment:
+                    UpdateSourceForAspectRatio();
+                    UpdateSourceForOS();
+                    UpdateSourceForScreenInstalled();
+                    UpdateSourceForName();
+                    UpdateSourceForLocation();
+                    UpdateSourceForCPU();
+                    UpdateSourceForVideoCard();
+                    UpdateSourceForType();
+                    UpdateSourceForFrequency();
+                    UpdateSourceForMatrixTechology();
+                    UpdateSourceForPaperSize();
+                    UpdateSourceForProjectorTechnology();
+                    UpdateSourceForResolution();
+                    UpdateSourceForVideoConnectors();
+                    UpdateSourceForWifiFrequency();
+                    UpdateSourceForMotherboard();
+                    break;
+                case View.Software:
+                    UpdateSourceForTypeLicense();
+                    break;
+            }
         }
 
-        private void SaveOrUpdateDB()
+        private void SaveOrUpdateEquipmentDB()
         {
             Task task;
             switch (TypeChange)
@@ -232,6 +255,72 @@ namespace AccountingPC
                             break;
                         case TypeDevice.OtherEquipment:
                             UpdateOtherEquipment();
+                            break;
+                    }
+                    statusItem1.Content = "Успешно изменено";
+                    task = new Task(() =>
+                    {
+                        try
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                i++;
+                                Thread.Sleep(1000);
+                            }
+                            Dispatcher.Invoke(() => statusItem1.Content = string.Empty);
+
+                        }
+                        catch { }
+                    });
+                    task.Start();
+                    changeEquipmentPopup.IsOpen = false;
+                    IsPreOpenEquipmentPopup = false;
+                    viewGrid.IsEnabled = true;
+                    menu.IsEnabled = true;
+                    break;
+            }
+        }
+
+        private void SaveOrUpdateSoftwareDB()
+        {
+            Task task;
+            switch (TypeChange)
+            {
+                case TypeChange.Add:
+                    switch (TypeSoft)
+                    {
+                        case TypeSoft.LicenseSoftware:
+                            AddSoftware();
+                            break;
+                        case TypeSoft.OS:
+                            AddOS();
+                            break;
+                    }
+                    statusItem1.Content = "Успешно добавлено";
+                    task = new Task(() =>
+                    {
+                        try
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                i++;
+                                Thread.Sleep(1000);
+                            }
+                            Dispatcher.Invoke(() => statusItem1.Content = string.Empty);
+
+                        }
+                        catch { }
+                    });
+                    task.Start();
+                    break;
+                case TypeChange.Change:
+                    switch (TypeSoft)
+                    {
+                        case TypeSoft.LicenseSoftware:
+                            UpdateSoftware();
+                            break;
+                        case TypeSoft.OS:
+                            UpdateOS();
                             break;
                     }
                     statusItem1.Content = "Успешно изменено";

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace AccountingPC
 {
-    public class Device
+    internal class Device
     {
         public UInt32 ID { get; set; }
         [Required(ErrorMessage = "Поле является обязательным")]
@@ -18,7 +18,7 @@ namespace AccountingPC
         public uint PlaceID { get; set; }
     }
 
-    public class PC : Device
+    internal class PC : Device
     {
         [StringLength(30, ErrorMessage = "Максимальная длина - 30")]
         public String Motherboard { get; set; }
@@ -41,7 +41,7 @@ namespace AccountingPC
         public PC() { }
     }
 
-    public class Notebook : Device
+    internal class Notebook : Device
     {
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
         public String CPU { get; set; }
@@ -67,14 +67,14 @@ namespace AccountingPC
         public Notebook() { }
     }
 
-    public class InteractiveWhiteboard : Device
+    internal class InteractiveWhiteboard : Device
     {
         public Single Diagonal { get; set; }
 
         public InteractiveWhiteboard() { }
     }
 
-    public class Projector : Device
+    internal class Projector : Device
     {
         public Single Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
@@ -85,7 +85,7 @@ namespace AccountingPC
         public Projector() { }
     }
 
-    public class ProjectorScreen : Device
+    internal class ProjectorScreen : Device
     {
         public Single Diagonal { get; set; }
         public bool IsElectronicDrive { get; set; }
@@ -95,7 +95,7 @@ namespace AccountingPC
         public ProjectorScreen() { }
     }
 
-    public class PrinterScanner : Device
+    internal class PrinterScanner : Device
     {
         public uint TypeID { get; set; }
         public uint PaperSizeID { get; set; }
@@ -103,7 +103,7 @@ namespace AccountingPC
         public PrinterScanner() { }
     }
 
-    public class Monitor : Device
+    internal class Monitor : Device
     {
         public Single Diagonal { get; set; }
         public List<String> VideoConnectors { get; set; }
@@ -115,7 +115,7 @@ namespace AccountingPC
         public Monitor() { }
     }
 
-    public class NetworkSwitch : Device
+    internal class NetworkSwitch : Device
     {
         public UInt32 TypeID { get; set; }
         public UInt32 Ports { get; set; }
@@ -124,7 +124,7 @@ namespace AccountingPC
         public NetworkSwitch() { }
     }
 
-    public class OtherEquipment : Device
+    internal class OtherEquipment : Device
     {
         public OtherEquipment() { }
     }

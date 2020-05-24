@@ -4,7 +4,7 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        private void ResetPopup()
+        private void ResetEquipmentPopup()
         {
             imageFilename.Text = string.Empty;
             if (TypeChange == TypeChange.Add)
@@ -239,6 +239,33 @@ namespace AccountingPC
             GridPlacement(screenInstalledGrid, 6, 1, 6);
             GridPlacement(invoiceGrid, 0, 2, 3);
             GridPlacement(locationGrid, 3, 2, 9);
+        }
+
+        private void InitializePopupForSoftware()
+        {
+            softwareNameGrid.Visibility = Visibility.Visible;
+            softwareCostGrid.Visibility = Visibility.Visible;
+            softwareCountGrid.Visibility = Visibility.Visible;
+            softwareInvoiceGrid.Visibility = Visibility.Visible;
+            typeLicenseGrid.Visibility = Visibility.Visible;
+            GridPlacement(softwareNameGrid, 0, 0, 4);
+            GridPlacement(typeLicenseGrid, 4, 0, 2);
+            GridPlacement(softwareCostGrid, 0, 1, 2);
+            GridPlacement(softwareCountGrid, 2, 1, 2);
+            GridPlacement(softwareInvoiceGrid, 4, 1, 2);
+        }
+
+        private void InitializePopupForOS()
+        {
+            softwareNameGrid.Visibility = Visibility.Visible;
+            softwareCostGrid.Visibility = Visibility.Visible;
+            softwareCountGrid.Visibility = Visibility.Visible;
+            softwareInvoiceGrid.Visibility = Visibility.Visible;
+            typeLicenseGrid.Visibility = Visibility.Hidden;
+            GridPlacement(softwareNameGrid, 0, 0, 6);
+            GridPlacement(softwareCostGrid, 0, 1, 2);
+            GridPlacement(softwareCountGrid, 2, 1, 2);
+            GridPlacement(softwareInvoiceGrid, 4, 1, 2);
         }
     }
 }

@@ -58,6 +58,7 @@ namespace AccountingPC
         private TypeSoft TypeSoft { get; set; }
         private TypeChange TypeChange { get; set; }
         private int DeviceID { get; set; }
+        private int SoftwareID { get; set; }
         private bool IsPreOpenEquipmentPopup { get; set; }
         private bool IsPreOpenSoftwarePopup { get; set; }
 
@@ -203,10 +204,9 @@ namespace AccountingPC
         {
             LoadFromSettings();
             ChangeWindowState();
+            SelectViewEquipment();
             changeEquipmentPopup.Height = Height - 200;
             changeEquipmentPopup.Width = Width - 400;
-            equipmentGrid.Visibility = Visibility.Visible;
-            equipmentCategoryList.SelectedIndex = 0;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -287,13 +287,10 @@ namespace AccountingPC
 
         private void SaveChanges(object sender, RoutedEventArgs e)
         {
-            SaveOrUpdateDB();
+            SaveOrUpdateEquipmentDB();
             UpdateEquipmentData();
             UpdateImages();
             ChangeEquipmentView();
-
-            UpdateSoftwareData();
-            ChangeSoftwareView();
         }
 
         private void ChangeEquipmentPopup_Opened(object sender, EventArgs e)
@@ -441,43 +438,66 @@ namespace AccountingPC
 
         private void SelectViewEquipment(object sender, ExecutedRoutedEventArgs e)
         {
-            NowView = View.Equipment;
-            equipmentGrid.Visibility = Visibility.Visible;
-            softwareGrid.Visibility = Visibility.Collapsed;
-            locationManagementGrid.Visibility = Visibility.Collapsed;
-            equipmentCategoryList.SelectedIndex = 0;
+            SelectViewEquipment();
         }
 
         private void SelectViewSoftware(object sender, ExecutedRoutedEventArgs e)
         {
-            NowView = View.Software;
-            equipmentGrid.Visibility = Visibility.Collapsed;
-            softwareGrid.Visibility = Visibility.Visible;
-            locationManagementGrid.Visibility = Visibility.Collapsed;
-            softwareCategoryList.SelectedIndex = 0;
+            SelectViewSoftware();
         }
 
         private void SelectViewLocation(object sender, ExecutedRoutedEventArgs e)
         {
-            NowView = View.Location;
-            equipmentGrid.Visibility = Visibility.Collapsed;
-            softwareGrid.Visibility = Visibility.Collapsed;
-            locationManagementGrid.Visibility = Visibility.Visible;
+            SelectViewLocation();
         }
 
         private void AddSoftware(object sender, RoutedEventArgs e)
         {
-            
+            TypeChange = TypeChange.Add;
+            changeSoftwarePopup.IsOpen = true;
         }
 
         private void ChangeSoftware(object sender, RoutedEventArgs e)
         {
-
+            DataRow row = ((DataRowView)softwareView.SelectedItem).Row;
+            DeviceID = Convert.ToInt32(row[0]);
+            TypeChange = TypeChange.Change;
+            changeSoftwarePopup.IsOpen = true;
         }
 
         private void DeleteSoftware(object sender, RoutedEventArgs e)
         {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                connection.Open();
+                foreach (object obj in softwareView.SelectedItems)
+                {
+                    DataRow row = ((DataRowView)obj).Row;
+                    Int32 id = Convert.ToInt32(row[0]);
+                    SqlCommand command = new SqlCommand($"Delete{TypeSoft.ToString()}", connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add(new SqlParameter("@ID", id));
+                    Int32 res = command.ExecuteNonQuery();
+                }
+            }
+            statusItem1.Content = "Успешно удалено";
+            Task task;
+            task = new Task(() =>
+            {
+                try
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        i++;
+                        Thread.Sleep(1000);
+                    }
+                    Dispatcher.Invoke(() => statusItem1.Content = string.Empty);
 
+                }
+                catch { }
+            });
+            task.Start();
+            UpdateSoftwareData();
         }
 
         private void EquipmentView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -557,7 +577,7 @@ namespace AccountingPC
             IsChangeAnalog = true;
         }
 
-        private void changeAnalog_Unchecked(object sender, RoutedEventArgs e)
+        private void ChangeAnalog_Unchecked(object sender, RoutedEventArgs e)
         {
             IsChangeAnalog = false;
         }
@@ -631,24 +651,51 @@ namespace AccountingPC
             UpdateSoftwareOnDevice();
         }
 
-        private void changeSoftwarePopup_Opened(object sender, EventArgs e)
+        private void ChangeSoftwarePopup_Opened(object sender, EventArgs e)
         {
+            viewGrid.IsEnabled = false;
+            menu.IsEnabled = false;
             switch (TypeChange)
             {
                 case TypeChange.Add:
                     switch (TypeSoft)
                     {
-                        case TypeSoft.Software:
-                            AddSoftware();
+                        case TypeSoft.LicenseSoftware:
+                            soft = new LicenseSoftware();
+                            //AddSoftware();
                             break;
                         case TypeSoft.OS:
-                            AddOS();
+                            soft = new OS();
+                            //AddOS();
                             break;
                     }
                     break;
                 case TypeChange.Change:
+                    switch (TypeSoft)
+                    {
+                        case TypeSoft.LicenseSoftware:
+                            GetLicenseSoftware(soft, SoftwareID);
+                            //AddSoftware();
+                            break;
+                        case TypeSoft.OS:
+                            GetOS(soft, SoftwareID);
+                            //AddOS();
+                            break;
+                    }
                     break;
             }
+        }
+
+        private void SoftwareView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SoftwareID = Convert.ToInt32(((DataRowView)softwareView?.SelectedItem)?.Row?[0]);
+        }
+
+        private void SaveChangesForSoftware(object sender, RoutedEventArgs e)
+        {
+            SaveOrUpdateSoftwareDB();
+            UpdateSoftwareData();
+            ChangeSoftwareView();
         }
     }
 }

@@ -171,16 +171,22 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="DGR_Border" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}"/>
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="DGR_Border" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
-                            <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}"/>
+            </Trigger>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <!--Style and template for the resize control on the DataGridRowHeader.-->

@@ -236,49 +236,6 @@ namespace AccountingPC
             inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
         }
 
-        private void ChangeSoftwareView()
-        {
-            switch (softwareCategoryList.SelectedIndex)
-            {
-                case 0:
-                    softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
-                    TypeSoft = TypeSoft.Software;
-                    break;
-                case 1:
-                    softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
-                    TypeSoft = TypeSoft.OS;
-                    break;
-            }
-        }
-
-        private void UpdateSoftwareData()
-        {
-            switch (TypeSoft)
-            {
-                case TypeSoft.Software:
-                    softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
-                    softwareDataSet = new DataSet();
-                    softwareDataAdapter.Fill(softwareDataSet);
-                    break;
-                case TypeSoft.OS:
-                    osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
-                    osDataSet = new DataSet();
-                    osDataAdapter.Fill(osDataSet);
-                    break;
-            }
-        }
-
-        private void UpdateAllSoftwareData()
-        {
-            softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
-            softwareDataSet = new DataSet();
-            softwareDataAdapter.Fill(softwareDataSet);
-
-            osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
-            osDataSet = new DataSet();
-            osDataAdapter.Fill(osDataSet);
-        }
-
         private void LoadFromSettings()
         {
             Height = AccountingPCWindowSettings.Default.Height > MinHeight ? AccountingPCWindowSettings.Default.Height : MinHeight;
@@ -301,6 +258,32 @@ namespace AccountingPC
                 ((System.Windows.Shapes.Path)buttonMaximized.Template.FindName("Maximize", buttonMaximized)).Visibility = Visibility.Visible;
                 ((System.Windows.Shapes.Path)buttonMaximized.Template.FindName("Restore", buttonMaximized)).Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void SelectViewEquipment()
+        {
+            NowView = View.Equipment;
+            equipmentGrid.Visibility = Visibility.Visible;
+            softwareGrid.Visibility = Visibility.Collapsed;
+            locationManagementGrid.Visibility = Visibility.Collapsed;
+            equipmentCategoryList.SelectedIndex = 0;
+        }
+
+        private void SelectViewSoftware()
+        {
+            NowView = View.Software;
+            equipmentGrid.Visibility = Visibility.Collapsed;
+            softwareGrid.Visibility = Visibility.Visible;
+            locationManagementGrid.Visibility = Visibility.Collapsed;
+            softwareCategoryList.SelectedIndex = 0;
+        }
+
+        private void SelectViewLocation()
+        {
+            NowView = View.Location;
+            equipmentGrid.Visibility = Visibility.Collapsed;
+            softwareGrid.Visibility = Visibility.Collapsed;
+            locationManagementGrid.Visibility = Visibility.Visible;
         }
     }
 }

@@ -2,19 +2,17 @@
 
 namespace AccountingPC
 {
-    public class InstalledSoftware
+    internal class InstalledSoftware
     {
-        private int countInstalled;
-
         public int ID { get; set; }
         public String Name { get; set; }
-        public int CountInstalled { get => countInstalled; set => countInstalled = value; }
+        public int CountInstalled { get; set; }
         public String CountInstalledString
         {
             get
             {
-                if (countInstalled > 0)
-                    return $"Установлено на {countInstalled} устройствах";
+                if (CountInstalled > 0)
+                    return $"Установлено на {CountInstalled} устройствах";
                 else
                     return "Ни разу не установлено";
             }

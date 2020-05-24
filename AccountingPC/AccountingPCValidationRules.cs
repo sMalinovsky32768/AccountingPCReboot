@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace AccountingPC
 {
-    public class ComboBoxValidationRule : ValidationRule
+    internal class ComboBoxValidationRule : ValidationRule
     {
         public UInt32 MaxLength { get; set; }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
@@ -36,7 +36,7 @@ namespace AccountingPC
         }
     }
 
-    public class InventoryNumberValidationRule : ValidationRule
+    internal class InventoryNumberValidationRule : ValidationRule
     {
         //public bool IsAvailable { get; set; }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

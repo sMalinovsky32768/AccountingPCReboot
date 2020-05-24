@@ -264,5 +264,14 @@ namespace AccountingPC
             motherboard.ItemsSource = motherboardDataSet.Tables[0].DefaultView;
             motherboard.DisplayMemberPath = "Name";
         }
+
+        private void UpdateSourceForTypeLicense()
+        {
+            typeLicenseDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString);
+            typeLicenseDataSet = new DataSet();
+            typeLicenseDataAdapter.Fill(typeLicenseDataSet);
+            typeLicense.ItemsSource = typeLicenseDataSet.Tables[0].DefaultView;
+            typeLicense.DisplayMemberPath = "Name";
+        }
     }
 }

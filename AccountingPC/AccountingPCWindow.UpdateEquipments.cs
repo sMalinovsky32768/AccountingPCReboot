@@ -21,7 +21,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
                 command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
@@ -57,7 +58,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
@@ -95,7 +97,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
@@ -122,7 +125,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
@@ -147,7 +151,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
@@ -170,7 +175,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
@@ -194,7 +200,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView)projectorTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
@@ -220,7 +227,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@IsEDrive", Convert.ToBoolean(isEDrive.IsChecked)));
                 command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
@@ -246,7 +254,8 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
