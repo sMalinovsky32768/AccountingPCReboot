@@ -10,6 +10,24 @@ namespace AccountingPC.AccountingReport
 {
     internal static class Report
     {
+
+        public static Dictionary<TypeReport, string> ReportNames { get; set; } = new Dictionary<TypeReport, string>()
+        {
+            {TypeReport.Simple,             "Общий (оборудование)" },
+            {TypeReport.Full,               "Полный" },
+            {TypeReport.OnlyPC,             "Компьютеры" },
+            {TypeReport.OnlyNotebook,       "Ноутбуки и Моноблоки" },
+            {TypeReport.OnlyMonitor,        "Мониторы" },
+            {TypeReport.OnlyProjector,      "Проекторы" },
+            {TypeReport.OnlyBoard,          "Интерактивные доски" },
+            {TypeReport.OnlyScreen,         "Экраны для проекторов" },
+            {TypeReport.OnlyPrinterScanner, "Принтеры и сканеры" },
+            {TypeReport.OnlyNetworkSwitch,  "Сетевое оборудование" },
+            {TypeReport.OnlyOtherEquipment, "Прочее оборудование" },
+            {TypeReport.Software,           "Программное обеспечение" },
+            {TypeReport.OS,                 "Операционные системы" },
+            {TypeReport.SoftAndOS,          "Общий (ПО&ОС)" },
+        };
         public static Dictionary<TypeReport, ReportRelation> Relation { get; set; } = new Dictionary<TypeReport, ReportRelation>()
         {
             {

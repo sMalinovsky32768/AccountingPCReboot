@@ -21,6 +21,7 @@ namespace AccountingPC.LightTheme
         {
             CommandManager.RegisterClassCommandBinding(typeof(AccountingPCWindow), new CommandBinding(CloseCommand, CloseWindow));
             CommandManager.RegisterClassCommandBinding(typeof(ParametersWindow), new CommandBinding(CloseCommand, CloseWindow));
+            CommandManager.RegisterClassCommandBinding(typeof(AccountingReport.ConfiguringReportWindow), new CommandBinding(CloseCommand, CloseWindow));
             CommandManager.RegisterClassCommandBinding(typeof(AccountingPCWindow), new CommandBinding(MaximizedCommand, MaximizeWindow));
             CommandManager.RegisterClassCommandBinding(typeof(AccountingPCWindow), new CommandBinding(MinimizedCommand, MinimizeWindow));
         }

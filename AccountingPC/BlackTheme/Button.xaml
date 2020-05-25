@@ -78,6 +78,8 @@
     </Style>
     <Style x:Key="minimizeButton" BasedOn="{StaticResource controlButton}">
         <Setter Property="Button.Command" Value="{x:Static local:ForButton.MinimizedCommand}"/>
+        <!--<Setter Property="Button.FontFamily" Value="Segoe MDL2 Assets"/>
+        <Setter Property="Button.Content" Value="&#xe921;"/>-->
         <Setter Property="Button.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

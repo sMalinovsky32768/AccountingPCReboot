@@ -1,0 +1,60 @@
+﻿<Window x:Name="window" x:Class="AccountingPC.AccountingReport.ConfiguringReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AccountingPC.AccountingReport"
+        mc:Ignorable="d"
+        Title="Ностройка отчета" Height="800" Width="500" WindowStyle="None">
+    <Grid>
+        <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
+            <Grid x:Name="windowGrid">
+                <Grid x:Name="mainGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <Grid Panel.ZIndex="9999">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="auto"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.Effect>
+                            <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.7" Color="{DynamicResource shadow}"/>
+                        </Grid.Effect>
+                        <TextBlock Text="{Binding Title, ElementName=window}" Foreground="{DynamicResource on-background-brush}"/>
+                        <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
+                                Background="{DynamicResource background-brush}"/>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
+                            <!--<Button x:Name="buttonMinimized" Style="{DynamicResource minimizeButton}"/>
+                            <Button x:Name="buttonMaximized" Style="{DynamicResource maximizeButton}"/>-->
+                            <Button x:Name="buttonExit" Style="{DynamicResource exitAppButton}"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" x:Name="configureGrid">
+                        <StackPanel Orientation="Vertical" Margin="0,5">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock" BasedOn="{StaticResource textBlock}">
+                                    <Setter Property="Margin" Value="5"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <StackPanel Margin="10,5">
+                                <TextBlock Text="Тип отчета"/>
+                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}"/>
+                            </StackPanel>
+                            <Separator/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <StatusBar Name="status">
+                            <StatusBarItem x:Name="statusItem1"/>
+                        </StatusBar>
+                    </Grid>
+                    <!---->
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

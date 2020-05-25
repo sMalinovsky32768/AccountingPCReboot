@@ -710,27 +710,15 @@ namespace AccountingPC
 
         private void CreateReport_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
-            dialog.Filter = "Excel | *.xlsx;*.xls";
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            dialog.FileName = "Report.xlsx";
+            //System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
+            //dialog.Filter = "Excel | *.xlsx;*.xls";
+            //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            //dialog.FileName = $"Report_{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
             //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             //    return;
-            //Report.SaveReport(dialog.FileName, TypeReport.Full);
-            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
-            //    return;
-            //Report.SaveReport(dialog.FileName, TypeReport.Simple);
-            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
-            //    return;
-            //Report.SaveReport(dialog.FileName, TypeReport.OnlyPC);
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
-                return;
-            Report.SaveReport(dialog.FileName, new ReportOptions()
-            {
-                IsLocation=false,
-                IsAcquisitionDate=false,
-                IsInvoice=false,
-            });
+            //Report.SaveReport(dialog.FileName);
+
+            new ConfiguringReportWindow().ShowDialog();
         }
     }
 }

@@ -4,6 +4,10 @@
     <Style TargetType="GridSplitter">
         <Setter Property="Background" Value="#33000000"/>
     </Style>
+    <Style TargetType="TextBlock" x:Key="textBlock">
+        <!--<Setter Property="Padding" Value="5"/>-->
+        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
+    </Style>
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Color.xaml"/>
         <ResourceDictionary Source="ComboBox.xaml"/>

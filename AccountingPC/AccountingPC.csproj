@@ -100,6 +100,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AccountingPCWindowSettings.settings</DependentUpon>
     </Compile>
+    <Compile Include="AccountingReport\ConfiguringReportWindow.xaml.cs">
+      <DependentUpon>ConfiguringReportWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AccountingReport\ReportColumnRelation.cs" />
     <Compile Include="AccountingReport\ReportRelation.cs" />
     <Compile Include="Autorization.cs" />
@@ -124,6 +127,10 @@
     <Compile Include="AccountingReport\ReportOptions.cs" />
     <Compile Include="Software.cs" />
     <Page Include="AccountingPCWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AccountingReport\ConfiguringReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -387,5 +394,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Segoe mdl2 assets.ttf"/>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
