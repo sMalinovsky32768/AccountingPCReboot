@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
 
 namespace AccountingPC.AccountingReport
 {
@@ -302,17 +303,51 @@ namespace AccountingPC.AccountingReport
                 {
                     set.Tables.Add(Relation[type].TableName);
                     options.TypeReport = type;
-                    new SqlDataAdapter($"Select * From dbo.{Relation[type].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[type].TableName);
+                    //new SqlDataAdapter($"Select * From dbo.{Relation[type].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[type].TableName);
+                    new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[type].TableName);
                 }
             }
             else
             {
                 set.Tables.Add(Relation[options.TypeReport].TableName);
-                new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}()" +
-                    $"{options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
+                //new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
+                new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
             }
 
             return set;
+        }
+
+        private static string CommandTextBuilder(ReportOptions options)
+        {
+            List<string> vs = new List<string>();
+
+            string commandText = "SELECT ";
+
+            ReportRelation relation = Relation[options.TypeReport];
+
+            foreach (ReportColumn column in relation.Columns)
+            {
+                FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
+
+                if (Convert.ToBoolean(field?.GetValue(options)))
+                {
+                    vs.Add(ReportColumnRelation.ColumnRelationships[column]);
+                }
+            }
+
+            int i = 0;
+            foreach (string str in vs)
+            {
+                commandText += $"[{str}]";
+                if (i < vs.Count)
+                    commandText += ", ";
+                i++;
+            }
+
+            commandText += $" FROM dbo.{relation.TableName}";
+            commandText += options.SortingString;
+
+            return commandText;
         }
 
         public static ExcelFile CreateReport(ReportOptions options)

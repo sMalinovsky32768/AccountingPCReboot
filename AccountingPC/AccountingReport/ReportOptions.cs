@@ -41,13 +41,42 @@ namespace AccountingPC.AccountingReport
     internal class ReportOptions
     {
         public TypeReport TypeReport { get; set; } = TypeReport.Simple;
-        public bool IsInvN { get; set; } = true;
-        public bool IsType { get; set; } = true;
+        public bool IsInventoryNumber { get; set; } = true;
         public bool IsName { get; set; } = true;
         public bool IsCost { get; set; } = true;
-        public bool IsInvoice { get; set; } = false;
+        public bool IsInvoiceNumber { get; set; } = true;
         public bool IsAcquisitionDate { get; set; } = true;
-        public bool IsLocation { get; set; } = true;
+        public bool IsAudience { get; set; } = true;
+        public bool IsDiagonal { get; set; } = true;
+        public bool IsScreenDiagonal { get; set; } = true;
+        public bool IsMaxDiagonal { get; set; } = true;
+        public bool IsIsElectronicDrive { get; set; } = true;
+        public bool IsAspectRatio { get; set; } = true;
+        public bool IsScreenInstalled { get; set; } = true;
+        public bool IsProjectorTechnology { get; set; } = true;
+        public bool IsScreenResolution { get; set; } = true;
+        public bool IsVideoConnectors { get; set; } = true;
+        public bool IsType { get; set; } = true;
+        public bool IsPaperSize { get; set; } = true;
+        public bool IsMotherboard { get; set; } = true;
+        public bool IsCPU { get; set; } = true;
+        public bool IsCores { get; set; } = true;
+        public bool IsProcessorFrequency { get; set; } = true;
+        public bool IsMaxProcessorFrequency { get; set; } = true;
+        public bool IsRAM { get; set; } = true;
+        public bool IsFrequencyRAM { get; set; } = true;
+        public bool IsVCard { get; set; } = true;
+        public bool IsVideoRAM { get; set; } = true;
+        public bool IsSSD { get; set; } = true;
+        public bool IsHDD { get; set; } = true;
+        public bool IsOS { get; set; } = true;
+        public bool IsScreenFrequency { get; set; } = true;
+        public bool IsMatrixTechnology { get; set; } = true;
+        public bool IsNumberOfPorts { get; set; } = true;
+        public bool IsWiFiFrequency { get; set; } = true;
+        public bool IsTotalCost { get; set; } = true;
+        public bool IsTypeLicense { get; set; } = true;
+        public bool IsCount { get; set; } = true;
         public List<SortingParam> SortingParamList { get; set; } = new List<SortingParam>() { new SortingParam() };
         public string SortingString
         {
