@@ -12,6 +12,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Data;
+using AccountingPC.AccountingReport;
 
 namespace AccountingPC
 {
@@ -114,7 +115,6 @@ namespace AccountingPC
         SqlDataAdapter vCardDataAdapter;
         SqlDataAdapter typeDeviceDataAdapter;
         SqlDataAdapter typeLicenseDataAdapter;
-        SqlDataAdapter allDevicesDataAdapter;
 
         DataSet aspectRatioDataSet;
         DataSet cpuDataSet;
@@ -150,7 +150,6 @@ namespace AccountingPC
         DataSet vCardDataSet;
         DataSet typeDeviceDataSet;
         DataSet typeLicenseDataSet;
-        DataSet allDevicesDataSet;
 
         static AccountingPCWindow()
         {
@@ -707,6 +706,31 @@ namespace AccountingPC
             SaveOrUpdateSoftwareDB();
             UpdateSoftwareData();
             ChangeSoftwareView();
+        }
+
+        private void CreateReport_Click(object sender, RoutedEventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
+            dialog.Filter = "Excel | *.xlsx;*.xls";
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            dialog.FileName = "Report.xlsx";
+            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            //    return;
+            //Report.SaveReport(dialog.FileName, TypeReport.Full);
+            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            //    return;
+            //Report.SaveReport(dialog.FileName, TypeReport.Simple);
+            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            //    return;
+            //Report.SaveReport(dialog.FileName, TypeReport.OnlyPC);
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+                return;
+            Report.SaveReport(dialog.FileName, new ReportOptions()
+            {
+                IsLocation=false,
+                IsAcquisitionDate=false,
+                IsInvoice=false,
+            });
         }
     }
 }

@@ -54,11 +54,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GemBox.Pdf, Version=13.0.35.1074, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
-      <HintPath>..\packages\GemBox.Pdf.13.0.0.1074\lib\net35\GemBox.Pdf.dll</HintPath>
+    <Reference Include="GemBox.Pdf, Version=13.0.35.1100, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
+      <HintPath>..\packages\GemBox.Pdf.13.0.1100\lib\net35\GemBox.Pdf.dll</HintPath>
     </Reference>
-    <Reference Include="GemBox.Spreadsheet, Version=45.0.35.1084, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
-      <HintPath>..\packages\GemBox.Spreadsheet.45.0.0.1084\lib\net35\GemBox.Spreadsheet.dll</HintPath>
+    <Reference Include="GemBox.Spreadsheet, Version=45.0.0.1176, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
+      <HintPath>..\packages\GemBox.Spreadsheet.45.0.1176\lib\net35\GemBox.Spreadsheet.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
@@ -100,7 +100,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AccountingPCWindowSettings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ReportOptions.cs" />
+    <Compile Include="AccountingReport\ReportColumnRelation.cs" />
+    <Compile Include="AccountingReport\ReportRelation.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="Devices.cs" />
@@ -119,7 +120,8 @@
     </Compile>
     <Compile Include="InstalledSoftware.cs" />
     <Compile Include="AccountingPCValidationRules.cs" />
-    <Compile Include="Report.cs" />
+    <Compile Include="AccountingReport\Report.cs" />
+    <Compile Include="AccountingReport\ReportOptions.cs" />
     <Compile Include="Software.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
