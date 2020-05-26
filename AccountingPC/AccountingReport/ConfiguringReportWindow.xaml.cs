@@ -94,7 +94,8 @@ namespace AccountingPC.AccountingReport
         private void TypeReportBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             KeyValuePair<TypeReport, string> pair = (KeyValuePair<TypeReport, string>)typeReportBox.SelectedItem;
-            CurrentReport.Options.TypeReport = pair.Key;
+            CurrentReport = new Report(pair.Key);
+            //CurrentReport.Options.TypeReport = pair.Key;
             UpdateReportConfig();
         }
 
