@@ -38,6 +38,14 @@ namespace AccountingPC.AccountingReport
         //Default,
     }
 
+    internal enum CreateReportOptions
+    {
+        SaveToFile,
+        OpenExcel,
+        Print,
+        Preview,
+    }
+
     internal class OrderName
     {
         public SortOrder Order { get; set; }
@@ -127,57 +135,47 @@ namespace AccountingPC.AccountingReport
 
     internal class ReportOptions
     {
-        public delegate void TypeReportChanged();
-        public event TypeReportChanged TypeReportChangedEvent;
+        public delegate void ReportChanged();
+        public event ReportChanged TypeReportChangedEvent;
+        public event ReportChanged CreateOptionsChangedEvent;
 
         private TypeReport typeReport;
-        public TypeReport TypeReport {
+        private ReportName reportName;
+        private CreateReportOptions createOptions = CreateReportOptions.SaveToFile;
+
+        public TypeReport TypeReport
+        {
             get => typeReport;
             set
             {
                 typeReport = value;
+                reportName = Report.GetReportName(TypeReport);
                 TypeReportChangedEvent?.Invoke();
             }
         }
-        //public bool IsInventoryNumber { get; set; } = true;
-        //public bool IsName { get; set; } = true;
-        //public bool IsCost { get; set; } = true;
-        //public bool IsInvoiceNumber { get; set; } = true;
-        //public bool IsAcquisitionDate { get; set; } = true;
-        //public bool IsAudience { get; set; } = true;
-        //public bool IsDiagonal { get; set; } = true;
-        //public bool IsScreenDiagonal { get; set; } = true;
-        //public bool IsMaxDiagonal { get; set; } = true;
-        //public bool IsIsElectronicDrive { get; set; } = true;
-        //public bool IsAspectRatio { get; set; } = true;
-        //public bool IsScreenInstalled { get; set; } = true;
-        //public bool IsProjectorTechnology { get; set; } = true;
-        //public bool IsScreenResolution { get; set; } = true;
-        //public bool IsVideoConnectors { get; set; } = true;
-        //public bool IsType { get; set; } = true;
-        //public bool IsPaperSize { get; set; } = true;
-        //public bool IsMotherboard { get; set; } = true;
-        //public bool IsCPU { get; set; } = true;
-        //public bool IsCores { get; set; } = true;
-        //public bool IsProcessorFrequency { get; set; } = true;
-        //public bool IsMaxProcessorFrequency { get; set; } = true;
-        //public bool IsRAM { get; set; } = true;
-        //public bool IsFrequencyRAM { get; set; } = true;
-        //public bool IsVCard { get; set; } = true;
-        //public bool IsVideoRAM { get; set; } = true;
-        //public bool IsSSD { get; set; } = true;
-        //public bool IsHDD { get; set; } = true;
-        //public bool IsOS { get; set; } = true;
-        //public bool IsScreenFrequency { get; set; } = true;
-        //public bool IsMatrixTechnology { get; set; } = true;
-        //public bool IsNumberOfPorts { get; set; } = true;
-        //public bool IsWiFiFrequency { get; set; } = true;
-        //public bool IsTotalCost { get; set; } = true;
-        //public bool IsTypeLicense { get; set; } = true;
-        //public bool IsCount { get; set; } = true;
+        public ReportName ReportName
+        {
+            get => reportName;
+            set
+            {
+                reportName = value;
+                typeReport = value.Type;
+                TypeReportChangedEvent?.Invoke();
+            }
+        }
+
+        public CreateReportOptions CreateOptions 
+        {
+            get => createOptions;
+            set
+            {
+                createOptions = value;
+                CreateOptionsChangedEvent?.Invoke();
+            } 
+        }
         private Grouping Grouping { get; set; }
 
-        public ObservableCollection<SortingParam> SortingParamList { get; set; }
+        public ObservableCollection<SortingParam> SortingParamList { get; set; } = new ObservableCollection<SortingParam>();
 
         public string GetSortingString()
         {
@@ -194,7 +192,7 @@ namespace AccountingPC.AccountingReport
                 if (columns.Contains(param.Column))
                 {
                     temp += $"[{ReportColumnRelation.GetColumnName(param.Column)}] ";
-                    if (param.Order==SortOrder.Asc)
+                    if (param.Order == SortOrder.Asc)
                         temp += "asc";
                     else
                         temp += "desc";
@@ -207,9 +205,11 @@ namespace AccountingPC.AccountingReport
             return temp;
         }
 
-        public ReportOptions()
+        public ReportOptions() { SortingParamList.CollectionChanged += SortingParamList_CollectionChanged; }
+
+        public ReportOptions(TypeReport typeReport)
         {
-            TypeReport = TypeReport.Simple;
+            TypeReport = TypeReport;
             SortingParamList = new ObservableCollection<SortingParam>()
             {
                 new SortingParam()

@@ -10,26 +10,50 @@ using System.Security.RightsManagement;
 
 namespace AccountingPC.AccountingReport
 {
+    public class ReportName
+    {
+        public TypeReport Type { get; set; }
+        public string Name { get; set; }
+    }
+
     internal class Report
     {
-        public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        public readonly static String ConnectionString  = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public static Dictionary<TypeReport, string> ReportNames { get; set; } = new Dictionary<TypeReport, string>()
+        //public static Dictionary<TypeReport, string> ReportNames { get; set; } = new Dictionary<TypeReport, string>()
+        //{
+        //    {TypeReport.Simple,             "Общий (оборудование)" },
+        //    {TypeReport.Full,               "Полный" },
+        //    {TypeReport.OnlyPC,             "Компьютеры" },
+        //    {TypeReport.OnlyNotebook,       "Ноутбуки и Моноблоки" },
+        //    {TypeReport.OnlyMonitor,        "Мониторы" },
+        //    {TypeReport.OnlyProjector,      "Проекторы" },
+        //    {TypeReport.OnlyBoard,          "Интерактивные доски" },
+        //    {TypeReport.OnlyScreen,         "Экраны для проекторов" },
+        //    {TypeReport.OnlyPrinterScanner, "Принтеры и сканеры" },
+        //    {TypeReport.OnlyNetworkSwitch,  "Сетевое оборудование" },
+        //    {TypeReport.OnlyOtherEquipment, "Прочее оборудование" },
+        //    {TypeReport.Software,           "Программное обеспечение" },
+        //    {TypeReport.OS,                 "Операционные системы" },
+        //    {TypeReport.SoftAndOS,          "Общий (ПО&ОС)" },
+        //};
+
+        private static readonly ObservableCollection<ReportName> reportNamesCollection = new ObservableCollection<ReportName>()
         {
-            {TypeReport.Simple,             "Общий (оборудование)" },
-            {TypeReport.Full,               "Полный" },
-            {TypeReport.OnlyPC,             "Компьютеры" },
-            {TypeReport.OnlyNotebook,       "Ноутбуки и Моноблоки" },
-            {TypeReport.OnlyMonitor,        "Мониторы" },
-            {TypeReport.OnlyProjector,      "Проекторы" },
-            {TypeReport.OnlyBoard,          "Интерактивные доски" },
-            {TypeReport.OnlyScreen,         "Экраны для проекторов" },
-            {TypeReport.OnlyPrinterScanner, "Принтеры и сканеры" },
-            {TypeReport.OnlyNetworkSwitch,  "Сетевое оборудование" },
-            {TypeReport.OnlyOtherEquipment, "Прочее оборудование" },
-            {TypeReport.Software,           "Программное обеспечение" },
-            {TypeReport.OS,                 "Операционные системы" },
-            {TypeReport.SoftAndOS,          "Общий (ПО&ОС)" },
+            new ReportName() {Type = TypeReport.Simple,             Name = "Общий (оборудование)" },
+            new ReportName() {Type = TypeReport.Full,               Name = "Полный" },
+            new ReportName() {Type = TypeReport.OnlyPC,             Name = "Компьютеры" },
+            new ReportName() {Type = TypeReport.OnlyNotebook,       Name = "Ноутбуки и Моноблоки" },
+            new ReportName() {Type = TypeReport.OnlyMonitor,        Name = "Мониторы" },
+            new ReportName() {Type = TypeReport.OnlyProjector,      Name = "Проекторы" },
+            new ReportName() {Type = TypeReport.OnlyBoard,          Name = "Интерактивные доски" },
+            new ReportName() {Type = TypeReport.OnlyScreen,         Name = "Экраны для проекторов" },
+            new ReportName() {Type = TypeReport.OnlyPrinterScanner, Name = "Принтеры и сканеры" },
+            new ReportName() {Type = TypeReport.OnlyNetworkSwitch,  Name = "Сетевое оборудование" },
+            new ReportName() {Type = TypeReport.OnlyOtherEquipment, Name = "Прочее оборудование" },
+            new ReportName() {Type = TypeReport.Software,           Name = "Программное обеспечение" },
+            new ReportName() {Type = TypeReport.OS,                 Name = "Операционные системы" },
+            new ReportName() {Type = TypeReport.SoftAndOS,          Name = "Общий (ПО&ОС)" },
         };
 
         public static Dictionary<TypeReport, ReportRelation> Relation { get; set; } = new Dictionary<TypeReport, ReportRelation>()
@@ -313,38 +337,56 @@ namespace AccountingPC.AccountingReport
             },
         };
 
-        public ReportOptions Options { get; set; }
+        public ReportOptions Options { get; private set; } = new ReportOptions();
 
         public ObservableCollection<ColumnRelation> UsedReportColumns { get; set; }
         public ObservableCollection<ColumnRelation> UnusedReportColumns { get; set; }
 
-        public Report(TypeReport typeReport)
-        {
-            InitializeReport(new ReportOptions() { TypeReport = typeReport, });
-        }
+        public static ObservableCollection<ReportName> ReportNamesCollection => reportNamesCollection;
 
-        public Report(ReportOptions options) 
-        {
-            InitializeReport(options);
-        }
+        public Report() { Options.TypeReportChangedEvent += TypeChangedEventHandler; }
+
+        //public Report(TypeReport typeReport)
+        //{
+        //    InitializeReport(new ReportOptions() { TypeReport = typeReport, });
+        //}
+
+        //public Report(ReportOptions options) 
+        //{
+        //    InitializeReport(options);
+        //}
 
         private void InitializeReport(ReportOptions options)
         {
             Options = options;
-            Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
+            Options.TypeReportChangedEvent += TypeChangedEventHandler;
         }
 
         private void InitializeColumn()
         {
             UsedReportColumns = new ObservableCollection<ColumnRelation>();
             UnusedReportColumns = new ObservableCollection<ColumnRelation>();
-            foreach (ColumnRelation relation in ReportColumnRelation.ColumnRelationships)
+            if (Options.TypeReport != TypeReport.Full)
             {
-                if (Relation[Options.TypeReport].Columns.Contains(relation.Column))
+                foreach (ColumnRelation relation in ReportColumnRelation.ColumnRelationships)
                 {
-                    UnusedReportColumns.Add(relation);
+                    if (Relation[Options.TypeReport].Columns.Contains(relation.Column))
+                    {
+                        UnusedReportColumns.Add(relation);
+                    }
                 }
             }
+        }
+        public static ReportName GetReportName(TypeReport typeReport)
+        {
+            foreach (ReportName reportName in ReportNamesCollection)
+            {
+                if (reportName.Type == typeReport)
+                {
+                    return reportName;
+                }
+            }
+            return null;
         }
 
         public static string CommandTextBuilder(ReportOptions options)
@@ -553,12 +595,9 @@ namespace AccountingPC.AccountingReport
         //    CreateReport(options).Save(path);
         //}
 
-        private void TypeReportChangedEventHandler()
+        private void TypeChangedEventHandler()
         {
-            if (Options.TypeReport != TypeReport.Full)
-            {
-                InitializeColumn();
-            }
+            InitializeColumn();
         }
     }
 }

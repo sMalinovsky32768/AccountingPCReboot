@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Data;
 using AccountingPC.AccountingReport;
+using System.Linq;
 
 namespace AccountingPC
 {
@@ -166,7 +167,33 @@ namespace AccountingPC
             //equipmentCategoryList.SelectedIndex = 0;
             IsPreOpenEquipmentPopup = false;
             NowView = View.Equipment;
-            //ValidationRule rule = Validation.
+            reportMenu.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+            reportMenu.ItemsSource = AccountingReport.Report.ReportNamesCollection;
+            reportMenu.DisplayMemberPath = "Name";
+            //if (reportMenu.ItemContainerGenerator.Status ==
+            //    System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            //{
+            //    var containers = reportMenu.Items.Cast<object>().Select(
+            //        item => (FrameworkElement)reportMenu.ItemContainerGenerator.ContainerFromItem(item));
+            //    foreach (var container in containers)
+            //    {
+            //        (container as MenuItem).Click += CreateReport_Click;
+            //    }
+            //}
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+        {
+            if (reportMenu.ItemContainerGenerator.Status ==
+                System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            {
+                var containers = reportMenu.Items.Cast<object>().Select(
+                    item => (FrameworkElement)reportMenu.ItemContainerGenerator.ContainerFromItem(item));
+                foreach (var container in containers)
+                {
+                    (container as MenuItem).Click += CreateReport_Click;
+                }
+            }
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -717,8 +744,11 @@ namespace AccountingPC
             //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
             //    return;
             //Report.SaveReport(dialog.FileName);
-
-            new ConfiguringReportWindow().ShowDialog();
+            ReportName reportName = ((sender as MenuItem).Header as ReportName);
+            if (reportName!=null)
+                new ConfiguringReportWindow(reportName.Type).ShowDialog();
+            else
+                new ConfiguringReportWindow().ShowDialog();
         }
     }
 }

@@ -34,18 +34,20 @@
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Row="1" x:Name="configureGrid">
-                        <StackPanel Orientation="Vertical" Margin="0,5">
-                            <StackPanel.Resources>
+                        <DockPanel Margin="0,5">
+                            <DockPanel.Resources>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource textBlock}">
                                     <Setter Property="Margin" Value="5"/>
                                 </Style>
-                            </StackPanel.Resources>
-                            <StackPanel Margin="10,5">
+                            </DockPanel.Resources>
+                            <StackPanel Margin="10,5" DockPanel.Dock="Top">
                                 <TextBlock Text="Тип отчета"/>
-                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}" SelectionChanged="TypeReportBox_SelectionChanged"/>
+                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}" 
+                                          SelectedItem="{Binding Path=CurrentReport.Options.ReportName, UpdateSourceTrigger=PropertyChanged}"
+                                          SelectionChanged="TypeReportBox_SelectionChanged"/>
                             </StackPanel>
-                            <Separator/>
-                            <Grid x:Name="selectionColumnGrid" Height="200" Margin="10,5">
+                            <Separator DockPanel.Dock="Top"/>
+                            <Grid x:Name="selectionColumnGrid" Height="200" Margin="10,5" DockPanel.Dock="Top">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width='auto'/>
@@ -106,8 +108,8 @@
                                 </StackPanel>
                                 <ListBox x:Name="usedColumn" Grid.Column="2"/>
                             </Grid>
-                            <Separator/>
-                            <Grid x:Name="selectionSortingParamGrid" Margin="10,5">
+                            <Separator DockPanel.Dock="Top"/>
+                            <Grid x:Name="selectionSortingParamGrid" Margin="10,5" DockPanel.Dock="Top">
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
                                     <RowDefinition/>
@@ -118,9 +120,72 @@
                                         <Button.Style>
                                             <Style BasedOn="{StaticResource default-button}" TargetType="Button">
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="5">
+                                                    <DataTrigger Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="6">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="0"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="0"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="1"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="1"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="2"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="2"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="3"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="3"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="4"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="4"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="5"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="5"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
+                                                    <MultiDataTrigger>
+                                                        <MultiDataTrigger.Conditions>
+                                                            <Condition Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="6"/>
+                                                            <Condition Binding="{Binding ElementName=usedColumn, Path=Items.Count}" Value="6"/>
+                                                        </MultiDataTrigger.Conditions>
+                                                        <MultiDataTrigger.Setters>
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </MultiDataTrigger.Setters>
+                                                    </MultiDataTrigger>
                                                 </Style.Triggers>
                                             </Style>
                                         </Button.Style>
@@ -167,32 +232,10 @@
                                         </Grid>
                                     </Button>
                                 </StackPanel>
-                                <!--<ListView x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single"
-                                          ItemsSource="{Binding CurrentReport.Options.SortingParamList}" SourceUpdated="SortingParamsList_SourceUpdated">
-                                    <ListView.Style>
-                                        <Style TargetType="ListView" BasedOn="{StaticResource ListView}">
-                                            <Setter Property="ItemTemplate">
-                                                <Setter.Value>
-                                                    <DataTemplate>
-                                                        <Grid Width="{Binding ActualWidth-20, ElementName=window}">
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="*"/>
-                                                            </Grid.ColumnDefinitions>
-                                                            <ComboBox x:Name="col" ItemsSource="{Binding CurrentReport.UsedReportColumns}" DisplayMemberPath="Name" 
-                                                          SelectedItem="{Binding Path=Column}" Style="{DynamicResource comboBox}"/>
-                                                            <ComboBox x:Name="order" Grid.Column="1" ItemsSource="{Binding SortOrderRelation.OrderNames}" DisplayMemberPath="Name" 
-                                                          SelectedItem="{Binding Path=Order}" Style="{DynamicResource comboBox}"/>
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ListView.Style>
-                                </ListView>-->
-                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single" SourceUpdated="SortingParamsList_SourceUpdated">
+                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single" Height="300"
+                                         SourceUpdated="SortingParamsList_SourceUpdated" VerticalAlignment="Top">
                                     <ListBox.Style>
-                                        <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                        <Style TargetType="ListBox" BasedOn="{StaticResource list-box-no-selected}">
                                             <Setter Property="ItemTemplate">
                                                 <Setter.Value>
                                                     <DataTemplate>
@@ -217,14 +260,25 @@
                                         </Style>
                                     </ListBox.Style>
                                 </ListBox>
-                                <Grid x:Name="sortingParamsGrid" Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                </Grid>
                             </Grid>
-                        </StackPanel>
+                            <Separator DockPanel.Dock="Top"/>
+                            <StackPanel DockPanel.Dock="Top">
+                                <RadioButton x:Name="IsSaveReport" GroupName="CreateReportOption" 
+                                             Content="Сохранить" Checked="IsSaveReport_Checked"/>
+                                <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption" 
+                                             Content="Открыть в Excel" Checked="IsOperReport_Checked"/>
+                                <RadioButton x:Name="IsPrintReport" GroupName="CreateReportOption" 
+                                             Content="Печать" Checked="IsPrintReport_Checked"/>
+                                <RadioButton x:Name="IsPreviewReport" GroupName="CreateReportOption" 
+                                             Content="Предварительный просмотр" Checked="IsPreviewReport_Checked" IsEnabled="False"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                                        Height="35" Margin="0,0,5,0" DockPanel.Dock="Bottom">
+                                <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True" Content="Отмена" Click="Cancel_Click"/>
+                                <Button Style="{DynamicResource primary-button}" Width="100" IsDefault="True" Content="Создать" Click="CreateReport_Click"/>
+                            </StackPanel>
+                            <Separator DockPanel.Dock="Bottom"/>
+                        </DockPanel>
                     </Grid>
                     <Grid Grid.Row="2">
                         <StatusBar Name="status">

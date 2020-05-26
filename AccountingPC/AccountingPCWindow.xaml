@@ -54,8 +54,8 @@
                             <Separator/>
                             <MenuItem Header="Обновить" InputGestureText="Ctrl+R, F5" Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}"/>
                         </MenuItem>
-                        <MenuItem Header="Отчет">
-                            <MenuItem Header="Простой" Click="CreateReport_Click"/>
+                        <MenuItem Header="Отчет" x:Name="reportMenu">
+                            <!--<MenuItem Header="Простой" Click="CreateReport_Click"/>
                             <MenuItem Header="Полный" Click="CreateReport_Click"/>
                             <MenuItem Header="Компьютеры" Click="CreateReport_Click"/>
                             <MenuItem Header="Ноутбуки и Моноблоки" Click="CreateReport_Click"/>
@@ -65,7 +65,7 @@
                             <MenuItem Header="Экраны для проекторов" Click="CreateReport_Click"/>
                             <MenuItem Header="Принтеры и сканеры" Click="CreateReport_Click"/>
                             <MenuItem Header="Сетевое оборудование" Click="CreateReport_Click"/>
-                            <MenuItem Header="Прочее оборудование" Click="CreateReport_Click"/>
+                            <MenuItem Header="Прочее оборудование" Click="CreateReport_Click"/>-->
                         </MenuItem>
                     </Menu>
                     <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 

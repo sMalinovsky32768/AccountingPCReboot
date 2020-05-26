@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,63 @@ namespace AccountingPC.AccountingReport
     public partial class ConfiguringReportWindow : Window
     {
         internal Report CurrentReport { get; set; }
+
         public ConfiguringReportWindow(TypeReport typeReport = TypeReport.Simple)
         {
             InitializeComponent();
-            CurrentReport = new Report(typeReport);
+            //typeReportBox.ItemsSource = Report.ReportNames;
+            //typeReportBox.DisplayMemberPath = "Value";
+            typeReportBox.ItemsSource = Report.ReportNamesCollection;
+            typeReportBox.DisplayMemberPath = "Name";
+            CurrentReport = new Report();
             CurrentReport.Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
+            CurrentReport.Options.CreateOptionsChangedEvent += Options_CreateOptionsChangedEvent;
+            CurrentReport.Options.TypeReport = typeReport;
+            //typeReportBox.SetBinding(ComboBox.SelectedItemProperty, "CurrentReport.Options.ReportName");
+            sortingParamsList.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+        }
+
+        private void Options_CreateOptionsChangedEvent()
+        {
+            switch (CurrentReport.Options.CreateOptions)
+            {
+                case CreateReportOptions.SaveToFile:
+                    IsSaveReport.IsChecked = true;
+                    break;
+                case CreateReportOptions.OpenExcel:
+                    IsOperReport.IsChecked = true;
+                    break;
+                case CreateReportOptions.Print:
+                    IsPrintReport.IsChecked = true;
+                    break;
+                case CreateReportOptions.Preview:
+                    IsPreviewReport.IsChecked = true;
+                    break;
+            }
+        }
+
+        private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+        {
+            if (sortingParamsList.ItemContainerGenerator.Status == 
+                System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
+            {
+                var containers = sortingParamsList.Items.Cast<object>().Select(
+                    item => (FrameworkElement)sortingParamsList.ItemContainerGenerator.ContainerFromItem(item));
+                foreach(var container in containers)
+                {
+                    container.Loaded += Container_Loaded;
+                }
+            }
+        }
+
+        private void Container_Loaded(object sender, RoutedEventArgs e)
+        {
+            var element = (FrameworkElement)sender;
+            element.Loaded -= Container_Loaded;
+
+            var grid = VisualTreeHelper.GetChild(element, 0) as Grid;
+
+            SetSourceForSorting();
         }
 
         public void UpdateReportConfig()
@@ -41,7 +94,7 @@ namespace AccountingPC.AccountingReport
                 usedColumn.ItemsSource = CurrentReport.UsedReportColumns;
                 usedColumn.DisplayMemberPath = "Name";
 
-                SetSourceForSorting();
+                //SetSourceForSorting();
             }
             else
             {
@@ -82,6 +135,14 @@ namespace AccountingPC.AccountingReport
                     ((ComboBox)template?.FindName("col", contentPresenter)).ItemsSource = CurrentReport.UsedReportColumns;
                     ((ComboBox)template?.FindName("order", contentPresenter)).ItemsSource = SortOrderRelation.OrderNames;
                 }
+                else
+                {
+                    //listBoxItem.Visibility = Visibility.Collapsed;
+                }
+            }
+            if (sortingParamsList.Items.Count > 0)
+            {
+                //_ = sortingParamsList.Items[sortingParamsList.Items.Count - 1].GetType;
             }
         }
 
@@ -93,24 +154,31 @@ namespace AccountingPC.AccountingReport
 
         private void TypeReportBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            KeyValuePair<TypeReport, string> pair = (KeyValuePair<TypeReport, string>)typeReportBox.SelectedItem;
-            CurrentReport = new Report(pair.Key);
+            //KeyValuePair<TypeReport, string> pair = (KeyValuePair<TypeReport, string>)typeReportBox.SelectedItem;
+            //CurrentReport = new Report(pair.Key);
+            if (typeReportBox.SelectedItem != null)
+                CurrentReport.Options.TypeReport = ((ReportName)typeReportBox.SelectedItem).Type;
+
             //CurrentReport.Options.TypeReport = pair.Key;
-            UpdateReportConfig();
         }
 
         private void TypeReportChangedEventHandler()
         {
-            foreach (KeyValuePair<TypeReport, string> pair in ((Dictionary<TypeReport, string>)typeReportBox.ItemsSource))
+            foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
             {
-                if (pair.Key == CurrentReport.Options.TypeReport &&
-                    ((KeyValuePair<TypeReport, string>)typeReportBox.SelectedItem).Key != pair.Key) 
+                if (reportName.Type == CurrentReport.Options.TypeReport)
                 {
-                    typeReportBox.SelectedItem = pair;
+                    if (((ReportName)typeReportBox?.SelectedItem)?.Type != reportName.Type)
+                    {
+                        
+                    }
+                    typeReportBox.SelectedItem = reportName;
                     break;
                 }
             }
+
             sortingParamsList.ItemsSource = CurrentReport.Options.SortingParamList;
+            UpdateReportConfig();
         }
 
         private void UseColumnButton_Click(object sender, RoutedEventArgs e)
@@ -131,14 +199,11 @@ namespace AccountingPC.AccountingReport
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            typeReportBox.ItemsSource = Report.ReportNames;
-            typeReportBox.DisplayMemberPath = "Value";
-            
-            foreach (KeyValuePair<TypeReport,string> pair in typeReportBox.ItemsSource)
+            foreach (ReportName reportName in typeReportBox.ItemsSource)
             {
-                if (CurrentReport.Options.TypeReport == pair.Key)
+                if (CurrentReport.Options.TypeReport == reportName.Type)
                 {
-                    typeReportBox.SelectedItem = pair;
+                    typeReportBox.SelectedItem = reportName;
                     return;
                 }
             }
@@ -149,18 +214,48 @@ namespace AccountingPC.AccountingReport
         private void DelSortingParamButton_Click(object sender, RoutedEventArgs e)
         {
             CurrentReport.Options.SortingParamList.Remove((SortingParam)sortingParamsList.SelectedItem);
-            SetSourceForSorting();
+            //SetSourceForSorting();
         }
 
         private void AddSortingParamButton_Click(object sender, RoutedEventArgs e)
         {
             CurrentReport.Options.SortingParamList.Add(new SortingParam());
-            SetSourceForSorting();
+            //SetSourceForSorting();
         }
 
         private void SortingParamsList_SourceUpdated(object sender, DataTransferEventArgs e)
         {
-            SetSourceForSorting();
+            //SetSourceForSorting();
+        }
+
+        private void CreateReport_Click(object sender, RoutedEventArgs e)
+        {
+            //CurrentReport.CreateReport().Save();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void IsSaveReport_Checked(object sender, RoutedEventArgs e)
+        {
+            CurrentReport.Options.CreateOptions = CreateReportOptions.SaveToFile;
+        }
+
+        private void IsOperReport_Checked(object sender, RoutedEventArgs e)
+        {
+            CurrentReport.Options.CreateOptions = CreateReportOptions.OpenExcel;
+        }
+
+        private void IsPrintReport_Checked(object sender, RoutedEventArgs e)
+        {
+            CurrentReport.Options.CreateOptions = CreateReportOptions.Print;
+        }
+
+        private void IsPreviewReport_Checked(object sender, RoutedEventArgs e)
+        {
+            CurrentReport.Options.CreateOptions = CreateReportOptions.Preview;
         }
     }
 }
