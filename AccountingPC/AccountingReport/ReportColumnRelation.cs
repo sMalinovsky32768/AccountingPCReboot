@@ -78,7 +78,7 @@ namespace AccountingPC.AccountingReport
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.ScreenInstalled, "Установка экрана"));
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.ProjectorTechnology, "Технология проецирования"));
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.ScreenResolution, "Максимальное разрешение"));
-            ColumnRelationships.Add(new ColumnRelation(ReportColumn.VideoConnectors, "VideoConnectors"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.VideoConnectors, "Видеоразъемы"));
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.Type, "Тип"));
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.PaperSize, "Максимальный формат"));
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.Motherboard, "Материнская плата"));
@@ -113,20 +113,5 @@ namespace AccountingPC.AccountingReport
             }
             return String.Empty;
         }
-
-        /*public string this[ReportColumn column]
-        {
-            get
-            {
-                foreach (ColunmRelation relation in ColumnRelationships)
-                {
-                    if (relation.Column == column)
-                    {
-                        return relation.Name;
-                    }
-                }
-                return String.Empty;
-            }
-        }*/
     }
 }

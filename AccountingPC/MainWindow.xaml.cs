@@ -33,6 +33,7 @@ namespace AccountingPC
             bool isTruePassword = enPass == setPass;
             if (isTrueLogin && isTruePassword)
             {
+                Hide();
                 new AccountingPCWindow().Show();
                 Close();
             }

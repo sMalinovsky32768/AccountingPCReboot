@@ -375,7 +375,7 @@ namespace AccountingPC.AccountingReport
             }
 
             commandText += $" FROM dbo.{relation.TableName}";
-            commandText += options.SortingString;
+            commandText += options.GetSortingString();
 
             return commandText;
         }
@@ -440,21 +440,35 @@ namespace AccountingPC.AccountingReport
             return book;
         }
 
-        private string CommandTextBuilder()
+        private string CommandTextBuilder(bool isFull = false)
         {
             List<string> vs = new List<string>();
 
-            string commandText = "SELECT ";
-
             ReportRelation relation = Relation[Options.TypeReport];
 
-            foreach (ReportColumn column in relation.Columns)
-            {
-                FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
+            string commandText = "SELECT ";
 
-                if (Convert.ToBoolean(field?.GetValue(Options)))
+            if (isFull)
+            {
+                //foreach (ReportColumn column in relation.Columns)
+                //{
+                //    FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
+
+                //    if (Convert.ToBoolean(field?.GetValue(Options)))
+                //    {
+                //        vs.Add(ReportColumnRelation.GetColumnName(column));
+                //    }
+                //}
+                foreach (ReportColumn column in relation.Columns)
                 {
                     vs.Add(ReportColumnRelation.GetColumnName(column));
+                }
+            }
+            else
+            {
+                foreach (ColumnRelation columnRelation in UsedReportColumns)
+                {
+                    vs.Add(ReportColumnRelation.GetColumnName(columnRelation.Column));
                 }
             }
 
@@ -468,7 +482,7 @@ namespace AccountingPC.AccountingReport
             }
 
             commandText += $" FROM dbo.{relation.TableName}";
-            commandText += Options.SortingString;
+            commandText += Options.GetSortingString();
 
             return commandText;
         }
@@ -484,14 +498,14 @@ namespace AccountingPC.AccountingReport
                     set.Tables.Add(Relation[type].TableName);
                     Options.TypeReport = type;
                     //new SqlDataAdapter($"Select * From dbo.{Relation[type].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[type].TableName);
-                    new SqlDataAdapter(CommandTextBuilder(Options), ConnectionString).Fill(set, Relation[type].TableName);
+                    new SqlDataAdapter(CommandTextBuilder(true), ConnectionString).Fill(set, Relation[type].TableName);
                 }
             }
             else
             {
                 set.Tables.Add(Relation[Options.TypeReport].TableName);
                 //new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
-                new SqlDataAdapter(CommandTextBuilder(Options), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
+                new SqlDataAdapter(CommandTextBuilder(), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
             }
 
             return set;
@@ -504,7 +518,7 @@ namespace AccountingPC.AccountingReport
                 Options = new ReportOptions();
             }
 
-            DataSet dataSet = GetDataSet(Options);
+            DataSet dataSet = GetDataSet();
 
             SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
             SpreadsheetInfo.FreeLimitReached += (sender, e) => e.FreeLimitReachedAction = FreeLimitReachedAction.ContinueAsTrial;

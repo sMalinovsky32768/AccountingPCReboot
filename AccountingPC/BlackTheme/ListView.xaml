@@ -56,7 +56,7 @@
 
     <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
         <Setter Property="Width" Value="18"/>
-        <Setter Property="Background" Value="{DynamicResource surface-gradient}"/>
+        <Setter Property="Background" Value="{DynamicResource background-brush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
@@ -66,7 +66,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource surface-background-gradient}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource background-brush}"/>
     </Style>
 
     <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="GridViewColumnHeader">
@@ -94,8 +94,8 @@
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
                         <Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" Padding="2,0,2,0" 
-                                BorderBrush="{DynamicResource surface-background-gradient}" 
-                                Background="{DynamicResource surface-gradient}">
+                                BorderBrush="{DynamicResource background-brush}" 
+                                Background="{DynamicResource background-brush}">
                             <ContentPresenter x:Name="HeaderContent" Margin="0,0,0,1" RecognizesAccessKey="True"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -114,8 +114,8 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="GridViewColumnHeader">
                             <Canvas Name="PART_FloatingHeaderCanvas">
-                                <Rectangle Fill="#60000000"  Width="{TemplateBinding ActualWidth}"
-                                           Height="{TemplateBinding ActualHeight}"/>
+                                <!--<Rectangle Fill="#60000000"  Width="{TemplateBinding ActualWidth}"
+                                           Height="{TemplateBinding ActualHeight}"/>-->
                             </Canvas>
                         </ControlTemplate>
                     </Setter.Value>
@@ -136,7 +136,7 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="{x:Type ListView}" TargetType="ListView">
+    <Style x:Key="ListView" TargetType="ListView">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
@@ -169,7 +169,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="{x:Type ListViewItem}" TargetType="ListViewItem">
+    <!--<Style x:Key="{x:Type ListViewItem}" TargetType="ListViewItem">
         <Setter Property="SnapsToDevicePixels" Value="true"/>
         <Setter Property="OverridesDefaultStyle" Value="true"/>
         <Setter Property="Template">
@@ -207,5 +207,5 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-    </Style>
+    </Style>-->
 </ResourceDictionary>

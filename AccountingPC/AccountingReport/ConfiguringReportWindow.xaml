@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
-        Title="Ностройка отчета" Height="800" Width="500" WindowStyle="None" Loaded="Window_Loaded">
+        Title="Ностройка отчета" Height="800" Width="600" WindowStyle="None" Loaded="Window_Loaded">
     <Grid>
         <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
             <Grid x:Name="windowGrid">
@@ -51,9 +51,7 @@
                                     <ColumnDefinition Width='auto'/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <ListBox x:Name="unusedColumn">
-                                    
-                                </ListBox>
+                                <ListBox x:Name="unusedColumn"/>
                                 <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
                                     <Button x:Name="useColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                                             Margin="0,0,0,10" Click="UseColumnButton_Click">
@@ -106,9 +104,125 @@
                                         </Grid>
                                     </Button>
                                 </StackPanel>
-                                <ListBox x:Name="usedColumn" Grid.Column="2">
-                                    
+                                <ListBox x:Name="usedColumn" Grid.Column="2"/>
+                            </Grid>
+                            <Separator/>
+                            <Grid x:Name="selectionSortingParamGrid" Margin="10,5">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,0">
+                                    <Button x:Name="addSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                            Margin="0,0,10,0" Click="AddSortingParamButton_Click">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource default-button}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=sortingParamsList, Path=Items.Count}" Value="5">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <Grid>
+                                            <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                                  3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
+                                                  20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
+                                            <Path Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
+                                                  18.277344 13.296875 L 13.554688 13.296875 L 13.554688 17.429688 C 13.554688 
+                                                  17.726562 13.277344 17.96875 12.9375 17.96875 L 10.0625 17.96875 C 9.722656 
+                                                  17.96875 9.445312 17.726562 9.445312 17.429688 L 9.445312 13.296875 L 
+                                                  4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 12.757812 
+                                                  L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 9.703125 
+                                                  L 9.445312 9.703125 L 9.445312 5.570312 C 9.445312 5.273438 9.722656 5.03125 
+                                                  10.0625 5.03125 L 12.9375 5.03125 C 13.277344 5.03125 13.554688 5.273438 
+                                                  13.554688 5.570312 L 13.554688 9.703125 L 18.277344 9.703125 C 18.617188 
+                                                  9.703125 18.894531 9.945312 18.894531 10.242188 Z" 
+                                                  Fill="{DynamicResource on-background-brush}"/>
+                                        </Grid>
+                                    </Button>
+                                    <Button x:Name="delSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                            Margin="0" Click="DelSortingParamButton_Click">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource default-button}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=sortingParamsList, Path=SelectedIndex}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                        <Grid>
+                                            <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                                  3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
+                                                  20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
+                                            <Path Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
+                                                  12.757812 L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 
+                                                  9.703125 L 18.277344 9.703125 C 18.617188 9.703125 18.894531 9.945312 
+                                                  18.894531 10.242188 L 18.894531 12.757812 C 18.894531 13.054688 18.617188 
+                                                  13.296875 18.277344 13.296875 Z " 
+                                                  Fill="{DynamicResource on-background-brush}"/>
+                                        </Grid>
+                                    </Button>
+                                </StackPanel>
+                                <!--<ListView x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single"
+                                          ItemsSource="{Binding CurrentReport.Options.SortingParamList}" SourceUpdated="SortingParamsList_SourceUpdated">
+                                    <ListView.Style>
+                                        <Style TargetType="ListView" BasedOn="{StaticResource ListView}">
+                                            <Setter Property="ItemTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <Grid Width="{Binding ActualWidth-20, ElementName=window}">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <ComboBox x:Name="col" ItemsSource="{Binding CurrentReport.UsedReportColumns}" DisplayMemberPath="Name" 
+                                                          SelectedItem="{Binding Path=Column}" Style="{DynamicResource comboBox}"/>
+                                                            <ComboBox x:Name="order" Grid.Column="1" ItemsSource="{Binding SortOrderRelation.OrderNames}" DisplayMemberPath="Name" 
+                                                          SelectedItem="{Binding Path=Order}" Style="{DynamicResource comboBox}"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.Style>
+                                </ListView>-->
+                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single" SourceUpdated="SortingParamsList_SourceUpdated">
+                                    <ListBox.Style>
+                                        <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                            <Setter Property="ItemTemplate">
+                                                <Setter.Value>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.Resources>
+                                                                <Style x:Key="box" TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
+                                                                    <Setter Property="Margin" Value="5"/>
+                                                                </Style>
+                                                            </Grid.Resources>
+                                                            <ComboBox x:Name="col" DisplayMemberPath="Name" 
+                                                          SelectedItem="{Binding Path=ColumnRelation}" Style="{DynamicResource box}"/>
+                                                            <ComboBox x:Name="order" Grid.Column="1" DisplayMemberPath="Name" 
+                                                          SelectedItem="{Binding Path=OrderName}" Style="{DynamicResource box}"/>
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListBox.Style>
                                 </ListBox>
+                                <Grid x:Name="sortingParamsGrid" Grid.Row="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                </Grid>
                             </Grid>
                         </StackPanel>
                     </Grid>
