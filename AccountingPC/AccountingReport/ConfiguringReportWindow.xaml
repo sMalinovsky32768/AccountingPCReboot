@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
-        Title="Ностройка отчета" Height="800" Width="500" WindowStyle="None">
+        Title="Ностройка отчета" Height="800" Width="500" WindowStyle="None" Loaded="Window_Loaded">
     <Grid>
         <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
             <Grid x:Name="windowGrid">
@@ -42,21 +42,30 @@
                             </StackPanel.Resources>
                             <StackPanel Margin="10,5">
                                 <TextBlock Text="Тип отчета"/>
-                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}"/>
+                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}" SelectionChanged="TypeReportBox_SelectionChanged"/>
                             </StackPanel>
                             <Separator/>
-                            <Grid Height="200" Margin="10,5">
+                            <Grid x:Name="selectionColumnGrid" Height="200" Margin="10,5">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width='auto'/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <ListBox>
+                                <ListBox x:Name="unusedColumn">
                                     
                                 </ListBox>
                                 <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
-                                    <Button Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Style="{DynamicResource default-button}" Margin="0,0,0,10">
+                                    <Button x:Name="useColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                            Margin="0,0,0,10" Click="UseColumnButton_Click">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource default-button}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=unusedColumn, Path=SelectedIndex}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
                                         <Grid>
                                             <Path Data="M 11.5 0.359375 C 17.65625 0.359375 22.640625 5.34375 22.640625 11.5 
                                                   C 22.640625 17.65625 17.65625 22.640625 11.5 22.640625 C 5.34375 22.640625 
@@ -71,8 +80,17 @@
                                                   Fill="{DynamicResource on-background-brush}"/>
                                         </Grid>
                                     </Button>
-                                    <Button Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Style="{DynamicResource default-button}" Margin="0">
+                                    <Button x:Name="notUseColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                            Margin="0" Click="NotUseColumnButton_Click">
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource default-button}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=usedColumn, Path=SelectedIndex}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
                                         <Grid>
                                             <Path Data="M 11.5 22.640625 C 5.34375 22.640625 0.359375 17.65625 0.359375 11.5 
                                                   C 0.359375 5.34375 5.34375 0.359375 11.5 0.359375 C 17.65625 0.359375 
@@ -88,7 +106,7 @@
                                         </Grid>
                                     </Button>
                                 </StackPanel>
-                                <ListBox Grid.Column="2">
+                                <ListBox x:Name="usedColumn" Grid.Column="2">
                                     
                                 </ListBox>
                             </Grid>

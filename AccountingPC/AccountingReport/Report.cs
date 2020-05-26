@@ -1,15 +1,18 @@
 ﻿using GemBox.Spreadsheet;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Reflection;
+using System.Security.RightsManagement;
 
 namespace AccountingPC.AccountingReport
 {
-    internal static class Report
+    internal class Report
     {
+        public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static Dictionary<TypeReport, string> ReportNames { get; set; } = new Dictionary<TypeReport, string>()
         {
@@ -28,6 +31,7 @@ namespace AccountingPC.AccountingReport
             {TypeReport.OS,                 "Операционные системы" },
             {TypeReport.SoftAndOS,          "Общий (ПО&ОС)" },
         };
+
         public static Dictionary<TypeReport, ReportRelation> Relation { get; set; } = new Dictionary<TypeReport, ReportRelation>()
         {
             {
@@ -309,7 +313,72 @@ namespace AccountingPC.AccountingReport
             },
         };
 
-        public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        public ReportOptions Options { get; set; }
+
+        public ObservableCollection<ColumnRelation> UsedReportColumns { get; set; }
+        public ObservableCollection<ColumnRelation> UnusedReportColumns { get; set; }
+
+        public Report(TypeReport typeReport)
+        {
+            InitializeReport(new ReportOptions() { TypeReport = typeReport, });
+        }
+
+        public Report(ReportOptions options) 
+        {
+            InitializeReport(options);
+        }
+
+        private void InitializeReport(ReportOptions options)
+        {
+            Options = options;
+            Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
+        }
+
+        private void InitializeColumn()
+        {
+            UsedReportColumns = new ObservableCollection<ColumnRelation>();
+            UnusedReportColumns = new ObservableCollection<ColumnRelation>();
+            foreach (ColumnRelation relation in ReportColumnRelation.ColumnRelationships)
+            {
+                if (Relation[Options.TypeReport].Columns.Contains(relation.Column))
+                {
+                    UnusedReportColumns.Add(relation);
+                }
+            }
+        }
+
+        public static string CommandTextBuilder(ReportOptions options)
+        {
+            List<string> vs = new List<string>();
+
+            string commandText = "SELECT ";
+
+            ReportRelation relation = Relation[options.TypeReport];
+
+            foreach (ReportColumn column in relation.Columns)
+            {
+                FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
+
+                if (Convert.ToBoolean(field?.GetValue(options)))
+                {
+                    vs.Add(ReportColumnRelation.GetColumnName(column));
+                }
+            }
+
+            int i = 0;
+            foreach (string str in vs)
+            {
+                commandText += $"[{str}]";
+                if (i < vs.Count)
+                    commandText += ", ";
+                i++;
+            }
+
+            commandText += $" FROM dbo.{relation.TableName}";
+            commandText += options.SortingString;
+
+            return commandText;
+        }
 
         private static DataSet GetDataSet(ReportOptions options)
         {
@@ -333,39 +402,6 @@ namespace AccountingPC.AccountingReport
             }
 
             return set;
-        }
-
-        private static string CommandTextBuilder(ReportOptions options)
-        {
-            List<string> vs = new List<string>();
-
-            string commandText = "SELECT ";
-
-            ReportRelation relation = Relation[options.TypeReport];
-
-            foreach (ReportColumn column in relation.Columns)
-            {
-                FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
-
-                if (Convert.ToBoolean(field?.GetValue(options)))
-                {
-                    vs.Add(ReportColumnRelation.ColumnRelationships[column]);
-                }
-            }
-
-            int i = 0;
-            foreach (string str in vs)
-            {
-                commandText += $"[{str}]";
-                if (i < vs.Count)
-                    commandText += ", ";
-                i++;
-            }
-
-            commandText += $" FROM dbo.{relation.TableName}";
-            commandText += options.SortingString;
-
-            return commandText;
         }
 
         public static ExcelFile CreateReport(ReportOptions options)
@@ -404,9 +440,111 @@ namespace AccountingPC.AccountingReport
             return book;
         }
 
-        public static void SaveReport(string path, ReportOptions options = null)
+        private string CommandTextBuilder()
         {
-            CreateReport(options).Save(path);
+            List<string> vs = new List<string>();
+
+            string commandText = "SELECT ";
+
+            ReportRelation relation = Relation[Options.TypeReport];
+
+            foreach (ReportColumn column in relation.Columns)
+            {
+                FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
+
+                if (Convert.ToBoolean(field?.GetValue(Options)))
+                {
+                    vs.Add(ReportColumnRelation.GetColumnName(column));
+                }
+            }
+
+            int i = 0;
+            foreach (string str in vs)
+            {
+                commandText += $"[{str}]";
+                if (i < vs.Count)
+                    commandText += ", ";
+                i++;
+            }
+
+            commandText += $" FROM dbo.{relation.TableName}";
+            commandText += Options.SortingString;
+
+            return commandText;
+        }
+
+        private DataSet GetDataSet()
+        {
+            DataSet set = null;
+
+            if (Options.TypeReport == TypeReport.Full)
+            {
+                foreach (TypeReport type in Relation.Keys)
+                {
+                    set.Tables.Add(Relation[type].TableName);
+                    Options.TypeReport = type;
+                    //new SqlDataAdapter($"Select * From dbo.{Relation[type].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[type].TableName);
+                    new SqlDataAdapter(CommandTextBuilder(Options), ConnectionString).Fill(set, Relation[type].TableName);
+                }
+            }
+            else
+            {
+                set.Tables.Add(Relation[Options.TypeReport].TableName);
+                //new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
+                new SqlDataAdapter(CommandTextBuilder(Options), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
+            }
+
+            return set;
+        }
+
+        public ExcelFile CreateReport()
+        {
+            if (Options == null)
+            {
+                Options = new ReportOptions();
+            }
+
+            DataSet dataSet = GetDataSet(Options);
+
+            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
+            SpreadsheetInfo.FreeLimitReached += (sender, e) => e.FreeLimitReachedAction = FreeLimitReachedAction.ContinueAsTrial;
+
+            var book = new ExcelFile();
+
+            foreach (DataTable dataTable in dataSet.Tables)
+            {
+                ExcelWorksheet worksheet = book.Worksheets.Add(dataTable.TableName);
+
+                worksheet.InsertDataTable(dataTable, new InsertDataTableOptions()
+                {
+                    ColumnHeaders = true,
+                });
+
+                // Установка денежного типа для Цены
+                if (worksheet.Cells.FindText("Цена", false, out _, out int col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                }
+                foreach (ExcelColumn column in worksheet.Columns)
+                {
+                    column.AutoFit();
+                }
+            }
+
+            return book;
+        }
+
+        //public static void SaveReport(string path, ReportOptions options = null)
+        //{
+        //    CreateReport(options).Save(path);
+        //}
+
+        private void TypeReportChangedEventHandler()
+        {
+            if (Options.TypeReport != TypeReport.Full)
+            {
+                InitializeColumn();
+            }
         }
     }
 }

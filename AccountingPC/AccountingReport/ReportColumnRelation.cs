@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,47 +47,86 @@ namespace AccountingPC.AccountingReport
         Count,
     }
 
+    internal class ColumnRelation
+    {
+        public ReportColumn Column { get; set; }
+        public string Name { get; set; }
+
+        public ColumnRelation(ReportColumn column, string name)
+        {
+            Column = column;
+            Name = name;
+        }
+    }
+
     internal static class ReportColumnRelation
     {
-        public static Dictionary<ReportColumn, String> ColumnRelationships { get; set; }
+        public static ObservableCollection<ColumnRelation> ColumnRelationships { get; set; } = new ObservableCollection<ColumnRelation>();
         static ReportColumnRelation()
         {
-            ColumnRelationships.Add(ReportColumn.InventoryNumber, "Инвентарный номер");
-            ColumnRelationships.Add(ReportColumn.Name, "Наименование");
-            ColumnRelationships.Add(ReportColumn.Cost, "Цена");
-            ColumnRelationships.Add(ReportColumn.InvoiceNumber, "Номер накладной");
-            ColumnRelationships.Add(ReportColumn.AcquisitionDate, "Дата приобретения");
-            ColumnRelationships.Add(ReportColumn.Audience, "Аудитория");
-            ColumnRelationships.Add(ReportColumn.Diagonal, "Диагональ");
-            ColumnRelationships.Add(ReportColumn.ScreenDiagonal, "Диагональ экрана");
-            ColumnRelationships.Add(ReportColumn.MaxDiagonal, "Максимальная диагональ");
-            ColumnRelationships.Add(ReportColumn.IsElectronicDrive, "С электроприводом");
-            ColumnRelationships.Add(ReportColumn.AspectRatio, "Соотношение сторон");
-            ColumnRelationships.Add(ReportColumn.ScreenInstalled, "Установка экрана");
-            ColumnRelationships.Add(ReportColumn.ProjectorTechnology, "Технология проецирования");
-            ColumnRelationships.Add(ReportColumn.ScreenResolution, "Максимальное разрешение");
-            ColumnRelationships.Add(ReportColumn.VideoConnectors, "VideoConnectors");
-            ColumnRelationships.Add(ReportColumn.Type, "Тип");
-            ColumnRelationships.Add(ReportColumn.PaperSize, "Максимальный формат");
-            ColumnRelationships.Add(ReportColumn.Motherboard, "Материнская плата");
-            ColumnRelationships.Add(ReportColumn.CPU, "Процессор");
-            ColumnRelationships.Add(ReportColumn.Cores, "Количество ядер");
-            ColumnRelationships.Add(ReportColumn.ProcessorFrequency, "Базовая частота");
-            ColumnRelationships.Add(ReportColumn.MaxProcessorFrequency, "Максимальная частота");
-            ColumnRelationships.Add(ReportColumn.RAM, "ОЗУ");
-            ColumnRelationships.Add(ReportColumn.FrequencyRAM, "Частота памяти");
-            ColumnRelationships.Add(ReportColumn.VCard, "Видеокарта");
-            ColumnRelationships.Add(ReportColumn.VideoRAM, "Видеопамять");
-            ColumnRelationships.Add(ReportColumn.SSD, "Объем SSD");
-            ColumnRelationships.Add(ReportColumn.HDD, "Объем HDD");
-            ColumnRelationships.Add(ReportColumn.OS, "Операционная система");
-            ColumnRelationships.Add(ReportColumn.ScreenFrequency, "Частота обновления");
-            ColumnRelationships.Add(ReportColumn.MatrixTechnology, "Технология изготовления матрицы");
-            ColumnRelationships.Add(ReportColumn.NumberOfPorts, "Количество портов");
-            ColumnRelationships.Add(ReportColumn.WiFiFrequency, "Частота Wi-Fi");
-            ColumnRelationships.Add(ReportColumn.TotalCost, "Общая стоимость");
-            ColumnRelationships.Add(ReportColumn.TypeLicense, "Тип лицензии");
-            ColumnRelationships.Add(ReportColumn.Count, "Количество");
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.InventoryNumber, "Инвентарный номер"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Name, "Наименование"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Cost, "Цена"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.InvoiceNumber, "Номер накладной"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.AcquisitionDate, "Дата приобретения"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Audience, "Аудитория"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Diagonal, "Диагональ"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.ScreenDiagonal, "Диагональ экрана"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.MaxDiagonal, "Максимальная диагональ"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.IsElectronicDrive, "С электроприводом"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.AspectRatio, "Соотношение сторон"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.ScreenInstalled, "Установка экрана"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.ProjectorTechnology, "Технология проецирования"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.ScreenResolution, "Максимальное разрешение"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.VideoConnectors, "VideoConnectors"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Type, "Тип"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.PaperSize, "Максимальный формат"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Motherboard, "Материнская плата"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.CPU, "Процессор"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Cores, "Количество ядер"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.ProcessorFrequency, "Базовая частота"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.MaxProcessorFrequency, "Максимальная частота"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.RAM, "ОЗУ"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.FrequencyRAM, "Частота памяти"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.VCard, "Видеокарта"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.VideoRAM, "Видеопамять"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.SSD, "Объем SSD"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.HDD, "Объем HDD"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.OS, "Операционная система"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.ScreenFrequency, "Частота обновления"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.MatrixTechnology, "Технология изготовления матрицы"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.NumberOfPorts, "Количество портов"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.WiFiFrequency, "Частота Wi-Fi"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.TotalCost, "Общая стоимость"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.TypeLicense, "Тип лицензии"));
+            ColumnRelationships.Add(new ColumnRelation(ReportColumn.Count, "Количество"));
         }
+
+        public static string GetColumnName(ReportColumn column)
+        {
+            foreach (ColumnRelation relation in ColumnRelationships)
+            {
+                if (relation.Column == column)
+                {
+                    return relation.Name;
+                }
+            }
+            return String.Empty;
+        }
+
+        /*public string this[ReportColumn column]
+        {
+            get
+            {
+                foreach (ColunmRelation relation in ColumnRelationships)
+                {
+                    if (relation.Column == column)
+                    {
+                        return relation.Name;
+                    }
+                }
+                return String.Empty;
+            }
+        }*/
     }
 }

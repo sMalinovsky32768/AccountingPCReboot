@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AccountingPC.AccountingReport
 {
-    internal enum TypeReport
+    public enum TypeReport
     {
         Simple,
         Full,
@@ -40,7 +40,18 @@ namespace AccountingPC.AccountingReport
 
     internal class ReportOptions
     {
-        public TypeReport TypeReport { get; set; } = TypeReport.Simple;
+        public delegate void TypeReportChanged();
+        public event TypeReportChanged TypeReportChangedEvent;
+
+        private TypeReport typeReport;
+        public TypeReport TypeReport {
+            get => typeReport;
+            set
+            {
+                typeReport = value;
+                TypeReportChangedEvent?.Invoke();
+            }
+        }
         public bool IsInventoryNumber { get; set; } = true;
         public bool IsName { get; set; } = true;
         public bool IsCost { get; set; } = true;
@@ -93,7 +104,7 @@ namespace AccountingPC.AccountingReport
                     List<ReportColumn> columns = Report.Relation[TypeReport].Columns;
                     if (columns.Contains(param.Column))
                     {
-                        temp += $"[{ReportColumnRelation.ColumnRelationships[param.Column]}] ";
+                        temp += $"[{ReportColumnRelation.GetColumnName(param.Column)}] ";
                         if (param.IsAscending)
                             temp += "asc";
                         else
@@ -108,5 +119,10 @@ namespace AccountingPC.AccountingReport
             }
         }
         private Grouping Grouping { get; set; }
+
+        public ReportOptions()
+        {
+            TypeReport = TypeReport.Simple;
+        }
     }
 }
