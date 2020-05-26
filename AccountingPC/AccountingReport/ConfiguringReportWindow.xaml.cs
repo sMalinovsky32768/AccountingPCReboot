@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace AccountingPC.AccountingReport
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            //System.IO.Path.GetTempPath();
             DragMove();// Для перемещение окна
         }
     }

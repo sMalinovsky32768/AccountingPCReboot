@@ -10,7 +10,7 @@
                 <ControlTemplate TargetType="Button">
                     <Grid>
                         <Border CornerRadius="5" BorderThickness="0" Name="btnBorder" 
-                                Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}" 
+                                Padding="{TemplateBinding Padding}"  
                                 Background="{DynamicResource surface-brush}"
                                 BorderBrush="{DynamicResource surface-brush}">
                             <Border.Effect>
