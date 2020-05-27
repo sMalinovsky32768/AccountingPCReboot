@@ -18,7 +18,10 @@ namespace AccountingPC.AccountingReport
 
     internal class Report
     {
-        public readonly static String ConnectionString  = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        public delegate void ColumnUpdate();
+        public event ColumnUpdate UsedColumnUpdateEvent;
+        public event ColumnUpdate UnusedColumnUpdateEvent;
+        public readonly static String ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         //public static Dictionary<TypeReport, string> ReportNames { get; set; } = new Dictionary<TypeReport, string>()
         //{
@@ -55,6 +58,8 @@ namespace AccountingPC.AccountingReport
             new ReportName() {Type = TypeReport.OS,                 Name = "Операционные системы" },
             new ReportName() {Type = TypeReport.SoftAndOS,          Name = "Общий (ПО&ОС)" },
         };
+        private ObservableCollection<ColumnRelation> usedReportColumns;
+        private ObservableCollection<ColumnRelation> unusedReportColumns;
 
         public static Dictionary<TypeReport, ReportRelation> Relation { get; set; } = new Dictionary<TypeReport, ReportRelation>()
         {
@@ -339,8 +344,24 @@ namespace AccountingPC.AccountingReport
 
         public ReportOptions Options { get; private set; } = new ReportOptions();
 
-        public ObservableCollection<ColumnRelation> UsedReportColumns { get; set; }
-        public ObservableCollection<ColumnRelation> UnusedReportColumns { get; set; }
+        public ObservableCollection<ColumnRelation> UsedReportColumns
+        {
+            get => usedReportColumns;
+            set
+            {
+                usedReportColumns = value;
+                UsedColumnUpdateEvent?.Invoke();
+            }
+        }
+        public ObservableCollection<ColumnRelation> UnusedReportColumns 
+        {
+            get => unusedReportColumns;
+            set
+            {
+                unusedReportColumns = value;
+                UnusedColumnUpdateEvent?.Invoke();
+            }
+        }
 
         public static ObservableCollection<ReportName> ReportNamesCollection => reportNamesCollection;
 
@@ -430,20 +451,28 @@ namespace AccountingPC.AccountingReport
             {
                 foreach (TypeReport type in Relation.Keys)
                 {
-                    set.Tables.Add(Relation[type].TableName);
                     options.TypeReport = type;
+                    FillDataSet(options, set);
+                    //set.Tables.Add(Relation[type].TableName);
+                    //new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[type].TableName);
                     //new SqlDataAdapter($"Select * From dbo.{Relation[type].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[type].TableName);
-                    new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[type].TableName);
                 }
             }
             else
             {
-                set.Tables.Add(Relation[options.TypeReport].TableName);
+                FillDataSet(options, set);
+                //set.Tables.Add(Relation[options.TypeReport].TableName);
+                //new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
                 //new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
-                new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
             }
 
             return set;
+        }
+
+        private static void FillDataSet(ReportOptions options, DataSet set)
+        {
+            set.Tables.Add(Relation[options.TypeReport].TableName);
+            new SqlDataAdapter(CommandTextBuilder(options), ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
         }
 
         public static ExcelFile CreateReport(ReportOptions options)
@@ -492,15 +521,6 @@ namespace AccountingPC.AccountingReport
 
             if (isFull)
             {
-                //foreach (ReportColumn column in relation.Columns)
-                //{
-                //    FieldInfo field = typeof(ReportOptions).GetField($"Is{column.ToString()}");
-
-                //    if (Convert.ToBoolean(field?.GetValue(Options)))
-                //    {
-                //        vs.Add(ReportColumnRelation.GetColumnName(column));
-                //    }
-                //}
                 foreach (ReportColumn column in relation.Columns)
                 {
                     vs.Add(ReportColumnRelation.GetColumnName(column));
@@ -518,48 +538,52 @@ namespace AccountingPC.AccountingReport
             foreach (string str in vs)
             {
                 commandText += $"[{str}]";
+                i++;
                 if (i < vs.Count)
                     commandText += ", ";
-                i++;
             }
 
-            commandText += $" FROM dbo.{relation.TableName}";
-            commandText += Options.GetSortingString();
+            commandText += $" FROM dbo.{relation.Function}()";
+            commandText += Options.GetSortingString(isFull);
 
             return commandText;
         }
 
         private DataSet GetDataSet()
         {
-            DataSet set = null;
+            DataSet set = new DataSet();
 
             if (Options.TypeReport == TypeReport.Full)
             {
                 foreach (TypeReport type in Relation.Keys)
                 {
-                    set.Tables.Add(Relation[type].TableName);
                     Options.TypeReport = type;
+                    FillDataSet(set, true);
+                    //set.Tables.Add(Relation[type].TableName);
+                    //new SqlDataAdapter(CommandTextBuilder(true), ConnectionString).Fill(set, Relation[type].TableName);
                     //new SqlDataAdapter($"Select * From dbo.{Relation[type].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[type].TableName);
-                    new SqlDataAdapter(CommandTextBuilder(true), ConnectionString).Fill(set, Relation[type].TableName);
                 }
+                Options.TypeReport = TypeReport.Full;
             }
             else
             {
-                set.Tables.Add(Relation[Options.TypeReport].TableName);
+                FillDataSet(set);
+                //set.Tables.Add(Relation[Options.TypeReport].TableName);
+                //new SqlDataAdapter(CommandTextBuilder(), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
                 //new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
-                new SqlDataAdapter(CommandTextBuilder(), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
             }
 
             return set;
         }
 
+        private void FillDataSet(DataSet set, bool isFull = false)
+        {
+            set.Tables.Add(Relation[Options.TypeReport].TableName);
+            new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
+        }
+
         public ExcelFile CreateReport()
         {
-            if (Options == null)
-            {
-                Options = new ReportOptions();
-            }
-
             DataSet dataSet = GetDataSet();
 
             SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,9 +35,17 @@ namespace AccountingPC.AccountingReport
             CurrentReport = new Report();
             CurrentReport.Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
             CurrentReport.Options.CreateOptionsChangedEvent += Options_CreateOptionsChangedEvent;
+            CurrentReport.UnusedColumnUpdateEvent += CurrentReport_UnusedColumnUpdateEvent;
             CurrentReport.Options.TypeReport = typeReport;
+            typeReportBox.SelectedItem = CurrentReport.Options.ReportName;
             //typeReportBox.SetBinding(ComboBox.SelectedItemProperty, "CurrentReport.Options.ReportName");
             sortingParamsList.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+        }
+
+        private void CurrentReport_UnusedColumnUpdateEvent()
+        {
+            if (unusedColumn.Items.Count > 0)
+                unusedColumn.SelectedIndex = 0;
         }
 
         private void Options_CreateOptionsChangedEvent()
@@ -98,6 +108,10 @@ namespace AccountingPC.AccountingReport
             }
             else
             {
+                unusedColumn.ItemsSource = null;
+                usedColumn.ItemsSource = null;
+                sortingParamsList.ItemsSource = null;
+
                 selectionColumnGrid.IsEnabled = false;
                 selectionSortingParamGrid.IsEnabled = false;
             }
@@ -148,18 +162,13 @@ namespace AccountingPC.AccountingReport
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //System.IO.Path.GetTempPath();
             DragMove();// Для перемещение окна
         }
 
         private void TypeReportBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //KeyValuePair<TypeReport, string> pair = (KeyValuePair<TypeReport, string>)typeReportBox.SelectedItem;
-            //CurrentReport = new Report(pair.Key);
             if (typeReportBox.SelectedItem != null)
                 CurrentReport.Options.TypeReport = ((ReportName)typeReportBox.SelectedItem).Type;
-
-            //CurrentReport.Options.TypeReport = pair.Key;
         }
 
         private void TypeReportChangedEventHandler()
@@ -168,10 +177,6 @@ namespace AccountingPC.AccountingReport
             {
                 if (reportName.Type == CurrentReport.Options.TypeReport)
                 {
-                    if (((ReportName)typeReportBox?.SelectedItem)?.Type != reportName.Type)
-                    {
-                        
-                    }
                     typeReportBox.SelectedItem = reportName;
                     break;
                 }
@@ -231,6 +236,21 @@ namespace AccountingPC.AccountingReport
         private void CreateReport_Click(object sender, RoutedEventArgs e)
         {
             //CurrentReport.CreateReport().Save();
+            switch (CurrentReport.Options.CreateOptions)
+            {
+                case CreateReportOptions.SaveToFile:
+                    SaveReport();
+                    break;
+                case CreateReportOptions.OpenExcel:
+                    //OpenReport();
+                    Thread thread = new Thread(new ThreadStart(OpenReport));
+                    thread.Start();
+                    break;
+                case CreateReportOptions.Print:
+                    break;
+                case CreateReportOptions.Preview:
+                    break;
+            }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -256,6 +276,33 @@ namespace AccountingPC.AccountingReport
         private void IsPreviewReport_Checked(object sender, RoutedEventArgs e)
         {
             CurrentReport.Options.CreateOptions = CreateReportOptions.Preview;
+        }
+
+        private void SaveReport()
+        {
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.Filter = "Excel | *.xlsx;*.xls";
+            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            dialog.FileName = $"Report_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
+            if (dialog.ShowDialog(this) == false)
+                return;
+            CurrentReport.CreateReport().Save(dialog.FileName);
+        }
+
+        private void OpenReport()
+        {
+            string fileName = $@"{System.IO.Path.GetTempPath()}Report" +
+                $@"_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
+            Task task = new Task(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    CurrentReport.CreateReport().Save(fileName);
+                    Process.Start("excel.exe", fileName);
+                });
+            });
+            task.Start();
+            //await task.Start();
         }
     }
 }

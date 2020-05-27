@@ -177,11 +177,13 @@ namespace AccountingPC.AccountingReport
 
         public ObservableCollection<SortingParam> SortingParamList { get; set; } = new ObservableCollection<SortingParam>();
 
-        public string GetSortingString()
+        public string GetSortingString(bool isFull = false)
         {
             string temp = string.Empty;
 
-            if (SortingParamList.Count > 0)
+            if (isFull) return string.Empty;
+
+            if (SortingParamList.Count <= 0)
                 return string.Empty;
             temp += " order by ";
 
@@ -196,9 +198,9 @@ namespace AccountingPC.AccountingReport
                         temp += "asc";
                     else
                         temp += "desc";
+                    i++;
                     if (i < SortingParamList.Count)
                         temp += ", ";
-                    i++;
                 }
             }
 
