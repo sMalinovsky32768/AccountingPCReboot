@@ -53,7 +53,23 @@
                                     <ColumnDefinition Width='auto'/>
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
-                                <ListBox x:Name="unusedColumn"/>
+                                <ListBox x:Name="unusedColumn">
+                                    <!--<ListBox.Style>
+                                        <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+                                            <Style.Triggers>
+                                                <MultiDataTrigger>
+                                                    <MultiDataTrigger.Conditions>
+                                                        <Condition Binding="{Binding Path=HasItem, ElementName=unusedColumn}" Value="True"/>
+                                                        <Condition Binding="{Binding Path=SelectedIndex, ElementName=unusedColumn}" Value="-1"/>
+                                                    </MultiDataTrigger.Conditions>
+                                                    <MultiDataTrigger.Setters>
+                                                        <Setter Property="SelectedIndex" Value="1"/>
+                                                    </MultiDataTrigger.Setters>
+                                                </MultiDataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListBox.Style>-->
+                                </ListBox>
                                 <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
                                     <Button x:Name="useColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                                             Margin="0,0,0,10" Click="UseColumnButton_Click">

@@ -9,6 +9,8 @@ namespace AccountingPC
 {
     public partial class MainWindow : Window
     {
+        internal AccountingPCWindow accounting;
+
         // Выход при Esc
         public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
             "Exit", "ExitCommand", typeof(MainWindow),
@@ -34,7 +36,8 @@ namespace AccountingPC
             if (isTrueLogin && isTruePassword)
             {
                 Hide();
-                new AccountingPCWindow().Show();
+                //new AccountingPCWindow().Show();
+                accounting.Show();
                 Close();
             }
             else
@@ -51,6 +54,11 @@ namespace AccountingPC
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();// Для перемещение ока
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            accounting = new AccountingPCWindow();
         }
     }
 }

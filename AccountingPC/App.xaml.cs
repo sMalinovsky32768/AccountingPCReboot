@@ -30,11 +30,11 @@ namespace AccountingPC
             switch (Settings.Default.THEME)
             {
                 case 0:
-                    Resources.Clear();
+                    Resources = new ResourceDictionary();
                     Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml") });
                     break;
                 case 1:
-                    Resources.Clear();
+                    Resources = new ResourceDictionary();
                     Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml") });
                     break;
             }
@@ -56,6 +56,19 @@ namespace AccountingPC
             }
             SetUserCredentials();
             // CreateDB();
+        }
+
+        private void ClearSources(ResourceDictionary dictionary)
+        {
+            dictionary.Clear();
+            if (dictionary.MergedDictionaries.Count > 0)
+            {
+                foreach (ResourceDictionary innerDictionary in dictionary.MergedDictionaries)
+                {
+                    ClearSources(innerDictionary);
+                    dictionary.Remove(innerDictionary);
+                }
+            }
         }
 
         private void ShutdownCurrentApp(object sender, EventArgs e)
