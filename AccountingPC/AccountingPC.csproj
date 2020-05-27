@@ -104,7 +104,9 @@
       <DependentUpon>ConfiguringReportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AccountingReport\ReportColumnRelation.cs" />
+    <Compile Include="AccountingReport\ReportNames.cs" />
     <Compile Include="AccountingReport\ReportRelation.cs" />
+    <Compile Include="AccountingReport\ReportRelationCollection.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="Devices.cs" />

@@ -136,6 +136,7 @@ namespace AccountingPC.AccountingReport
     internal class ReportOptions
     {
         public delegate void ReportChanged();
+
         public event ReportChanged TypeReportChangedEvent;
         public event ReportChanged CreateOptionsChangedEvent;
 
@@ -149,7 +150,7 @@ namespace AccountingPC.AccountingReport
             set
             {
                 typeReport = value;
-                reportName = Report.GetReportName(TypeReport);
+                reportName = ReportNames.GetReportName(TypeReport);
                 TypeReportChangedEvent?.Invoke();
             }
         }
@@ -173,7 +174,8 @@ namespace AccountingPC.AccountingReport
                 CreateOptionsChangedEvent?.Invoke();
             } 
         }
-        private Grouping Grouping { get; set; }
+
+        //private Grouping Grouping { get; set; }
 
         public ObservableCollection<SortingParam> SortingParamList { get; set; } = new ObservableCollection<SortingParam>();
 
@@ -190,7 +192,7 @@ namespace AccountingPC.AccountingReport
             int i = 0;
             foreach (SortingParam param in SortingParamList)
             {
-                List<ReportColumn> columns = Report.Relation[TypeReport].Columns;
+                List<ReportColumn> columns = ReportRelationCollection.Collection[TypeReport].Columns;
                 if (columns.Contains(param.Column))
                 {
                     temp += $"[{ReportColumnRelation.GetColumnName(param.Column)}] ";
@@ -220,24 +222,6 @@ namespace AccountingPC.AccountingReport
                     Order = SortOrder.Asc,
                 }
             };
-            SortingParamList.CollectionChanged += SortingParamList_CollectionChanged;
-        }
-
-        private void SortingParamList_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            //if (e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add)
-            //{
-            //    foreach (SortingParam param in e.NewItems)
-            //    {
-            //        foreach (SortingParam param1 in SortingParamList)
-            //        {
-            //            if (param.Column == param1.Column)
-            //            {
-            //                SortingParamList.Remove(param);
-            //            }
-            //        }
-            //    }
-            //}
         }
     }
 }

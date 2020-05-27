@@ -24,4 +24,3 @@
         <ResourceDictionary Source="RadioButton.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
-</ResourceDictionary>

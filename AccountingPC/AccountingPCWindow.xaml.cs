@@ -168,7 +168,7 @@ namespace AccountingPC
             IsPreOpenEquipmentPopup = false;
             NowView = View.Equipment;
             reportMenu.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
-            reportMenu.ItemsSource = AccountingReport.Report.ReportNamesCollection;
+            reportMenu.ItemsSource = ReportNames.ReportNamesCollection;
             reportMenu.DisplayMemberPath = "Name";
             //if (reportMenu.ItemContainerGenerator.Status ==
             //    System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)

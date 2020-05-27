@@ -30,7 +30,7 @@ namespace AccountingPC.AccountingReport
             InitializeComponent();
             //typeReportBox.ItemsSource = Report.ReportNames;
             //typeReportBox.DisplayMemberPath = "Value";
-            typeReportBox.ItemsSource = Report.ReportNamesCollection;
+            typeReportBox.ItemsSource = ReportNames.ReportNamesCollection;
             typeReportBox.DisplayMemberPath = "Name";
             CurrentReport = new Report();
             CurrentReport.Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
@@ -139,6 +139,8 @@ namespace AccountingPC.AccountingReport
 
         private void SetSourceForSorting()
         {
+            ObservableCollection<ColumnRelation> relations = new ObservableCollection<ColumnRelation>();
+            ObservableCollection<OrderName> orderNames = new ObservableCollection<OrderName>();
             foreach (var item in sortingParamsList.Items)
             {
                 ListBoxItem listBoxItem = (ListBoxItem)(sortingParamsList?.ItemContainerGenerator?.ContainerFromItem(item));
@@ -146,8 +148,15 @@ namespace AccountingPC.AccountingReport
                 DataTemplate template = contentPresenter?.ContentTemplate;
                 if (template != null)
                 {
-                    ((ComboBox)template?.FindName("col", contentPresenter)).ItemsSource = CurrentReport.UsedReportColumns;
-                    ((ComboBox)template?.FindName("order", contentPresenter)).ItemsSource = SortOrderRelation.OrderNames;
+                    ComboBox colBox = (ComboBox)template?.FindName("col", contentPresenter);
+                    ComboBox orderBox = (ComboBox)template?.FindName("order", contentPresenter);
+
+                    colBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
+                    orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
+                    if (colBox.SelectedItem != null)
+                        relations.Add((ColumnRelation)colBox.SelectedItem);
+                    if (orderBox.SelectedItem != null)
+                        orderNames.Add((OrderName)orderBox.SelectedItem);
                 }
                 else
                 {
