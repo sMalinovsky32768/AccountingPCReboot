@@ -8,12 +8,6 @@ using System.Data.SqlClient;
 
 namespace AccountingPC.AccountingReport
 {
-    public class ReportName
-    {
-        public TypeReport Type { get; set; }
-        public string Name { get; set; }
-    }
-
     internal class Report
     {
         public static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -151,6 +145,11 @@ namespace AccountingPC.AccountingReport
                     i++;
                 }
             }
+
+            if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
+            {
+                set.Tables[tableName].Columns.Remove("VideoConnectors");
+            }
         }
 
         public ExcelFile CreateReport()
@@ -176,10 +175,15 @@ namespace AccountingPC.AccountingReport
                 {
                     worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
                 }
-                foreach (ExcelColumn column in worksheet.Columns)
-                {
-                    column.AutoFit();
-                }
+
+                //foreach (ExcelColumn column in worksheet.Columns)
+                //{
+                //    column.AutoFit();
+                //}
+
+                int columnCount = worksheet.CalculateMaxUsedColumns();
+                for (int i = 0; i < columnCount; i++)
+                    worksheet.Columns[i].AutoFit(1, worksheet.Rows[1], worksheet.Rows[worksheet.Rows.Count - 1]);
             }
 
             return book;

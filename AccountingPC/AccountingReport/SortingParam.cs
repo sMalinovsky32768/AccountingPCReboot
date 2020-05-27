@@ -11,6 +11,20 @@
     {
         public SortOrder Order { get; set; }
         public string Name { get; set; }
+
+        public static bool operator ==(OrderName value1, OrderName value2) => (value1.Order == value2.Order) && (value1.Name == value2.Name);
+
+        public static bool operator !=(OrderName value1, OrderName value2) => (value1.Order != value2.Order) || (value1.Name != value2.Name);
+
+        public override bool Equals(object obj)
+        {
+            return this == (OrderName)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 
     /// <summary>
@@ -59,6 +73,20 @@
                 orderName = value;
                 order = value.Order;
             }
+        }
+
+        public static bool operator ==(SortingParam value1, SortingParam value2) => (value1.Order == value2.Order) && (value1.Column == value2.Column);
+
+        public static bool operator !=(SortingParam value1, SortingParam value2) => (value1.Order != value2.Order) || (value1.Column != value2.Column);
+
+        public override bool Equals(object obj)
+        {
+            return this == (SortingParam)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

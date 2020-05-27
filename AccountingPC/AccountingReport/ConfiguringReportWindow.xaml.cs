@@ -247,6 +247,7 @@ namespace AccountingPC.AccountingReport
                 case CreateReportOptions.OpenExcel:
                     //OpenReport();
                     Thread thread = new Thread(new ThreadStart(OpenReport));
+                    thread.IsBackground = true;
                     thread.Start();
                     break;
                 case CreateReportOptions.Print:
@@ -289,7 +290,11 @@ namespace AccountingPC.AccountingReport
             dialog.FileName = $"Report_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
             if (dialog.ShowDialog(this) == false)
                 return;
-            CurrentReport.CreateReport().Save(dialog.FileName);
+            //CurrentReport.CreateReport().Save(dialog.FileName);
+            Thread thread = new Thread(new ParameterizedThreadStart(SaveReport));
+            thread.IsBackground = true;
+            thread.Start(dialog.FileName);
+            //SaveReport(dialog.FileName);
         }
 
         private void OpenReport()
@@ -300,12 +305,37 @@ namespace AccountingPC.AccountingReport
             {
                 Dispatcher.Invoke(() =>
                 {
-                    CurrentReport.CreateReport().Save(fileName);
+                    //CurrentReport.CreateReport().Save(fileName);
+                    SaveReport(fileName);
                     Process.Start("excel.exe", fileName);
                 });
             });
             task.Start();
             //await task.Start();
+        }
+
+        private void SaveReport(string fileName)
+        {
+            try
+            {
+                CurrentReport.CreateReport().Save(fileName);
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void SaveReport(object fileName)
+        {
+            try
+            {
+                CurrentReport.CreateReport().Save((String)fileName);
+            }
+            catch
+            {
+
+            }
         }
     }
 }
