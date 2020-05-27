@@ -7,19 +7,19 @@ namespace AccountingPC.AccountingReport
         public TypeReport Type { get; set; }
         public string Name { get; set; }
 
-        public static bool operator ==(ReportName value1, ReportName value2) => (value1.Type == value2.Type) && (value1.Name == value2.Name);
+        //public static bool operator ==(ReportName value1, ReportName value2) => (value1.Type == value2.Type) && (value1.Name == value2.Name);
 
-        public static bool operator !=(ReportName value1, ReportName value2) => (value1.Type != value2.Type) || (value1.Name != value2.Name);
+        //public static bool operator !=(ReportName value1, ReportName value2) => (value1.Type != value2.Type) || (value1.Name != value2.Name);
 
-        public override bool Equals(object obj)
-        {
-            return this == (ReportName)obj;
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    return this == (ReportName)obj;
+        //}
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
     }
 
     internal static class ReportNames

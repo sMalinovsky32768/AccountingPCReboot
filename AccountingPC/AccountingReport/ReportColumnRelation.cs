@@ -53,19 +53,19 @@ namespace AccountingPC.AccountingReport
             Name = name;
         }
 
-        public static bool operator ==(ColumnRelation value1, ColumnRelation value2) => (value1.Column == value2.Column) && (value1.Name == value2.Name);
+        //public static bool operator ==(ColumnRelation value1, ColumnRelation value2) => (value1.Column == value2.Column) && (value1.Name == value2.Name);
 
-        public static bool operator !=(ColumnRelation value1, ColumnRelation value2) => (value1.Column != value2.Column) || (value1.Name != value2.Name);
+        //public static bool operator !=(ColumnRelation value1, ColumnRelation value2) => (value1.Column != value2.Column) || (value1.Name != value2.Name);
 
-        public override bool Equals(object obj)
-        {
-            return this == (ColumnRelation)obj;
-        }
+        //public override bool Equals(object obj)
+        //{
+        //    return this == (ColumnRelation)obj;
+        //}
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
     }
 
     internal static class ReportColumnRelation

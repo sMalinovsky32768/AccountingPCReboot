@@ -170,10 +170,71 @@ namespace AccountingPC.AccountingReport
                     ColumnHeaders = true,
                 });
 
+                int col;
                 // Установка денежного типа для Цены
-                if (worksheet.Cells.FindText("Цена", false, out _, out int col))
+                if (worksheet.Cells.FindText("Цена", false, out _, out col))
                 {
                     worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                    if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                        if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
+                        {
+                            foreach (ExcelRow row in worksheet.Rows)
+                            {
+                                int rowIndex = row.Index;
+                                if (rowIndex == 0) continue;
+                                string cell = worksheet.Cells[rowIndex, col].Name;
+                                string cell2 = worksheet.Cells[rowIndex, col2].Name;
+                                string formula = $"={cell}*{cell2}";
+                                worksheet.Cells[rowIndex, col1].Formula = formula;
+                                //worksheet.Columns[col1].Cells[row.Index, col1].Formula = $"{worksheet.Cells[row.Index, col]}*{worksheet.Cells[row.Index, col2]}";
+                            }
+                        }
+                    }
+                }
+                if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
+                }
+                if (worksheet.Cells.FindText("Дата приобретения", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "dd-MM-yyyy";
+                }
+                if (worksheet.Cells.FindText("Диагональ", false, out _, out col) ||
+                    worksheet.Cells.FindText("Диагональ экрана", false, out _, out col) ||
+                    worksheet.Cells.FindText("Максимальная диагональ", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat =
+                        NumberFormatBuilder.Accounting(2, true, false, "\u2033", false);
+                }
+                if (worksheet.Cells.FindText("Базовая частота", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГГц";
+                }
+                if (worksheet.Cells.FindText("Максимальная частота", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГГц";
+                }
+                if (worksheet.Cells.FindText("Частота обновления", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГГц";
+                }
+                if (worksheet.Cells.FindText("ОЗУ", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                }
+                if (worksheet.Cells.FindText("Видеопамять", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                }
+                if (worksheet.Cells.FindText("Объем SSD", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                }
+                if (worksheet.Cells.FindText("Объем HDD", false, out _, out col))
+                {
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
                 }
 
                 //foreach (ExcelColumn column in worksheet.Columns)
@@ -183,7 +244,7 @@ namespace AccountingPC.AccountingReport
 
                 int columnCount = worksheet.CalculateMaxUsedColumns();
                 for (int i = 0; i < columnCount; i++)
-                    worksheet.Columns[i].AutoFit(1, worksheet.Rows[1], worksheet.Rows[worksheet.Rows.Count - 1]);
+                    worksheet.Columns[i].AutoFit(1, worksheet.Rows[0], worksheet.Rows[worksheet.Rows.Count - 1]);
             }
 
             return book;

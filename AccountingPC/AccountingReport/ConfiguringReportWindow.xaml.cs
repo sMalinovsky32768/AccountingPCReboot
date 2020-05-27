@@ -238,17 +238,19 @@ namespace AccountingPC.AccountingReport
 
         private void CreateReport_Click(object sender, RoutedEventArgs e)
         {
-            //CurrentReport.CreateReport().Save();
             switch (CurrentReport.Options.CreateOptions)
             {
                 case CreateReportOptions.SaveToFile:
-                    SaveReport();
+                    Thread save = new Thread(new ParameterizedThreadStart(SaveReport));
+                    save.IsBackground = true;
+                    save.Start(GetFileName());
+                    //SaveReport();
                     break;
                 case CreateReportOptions.OpenExcel:
                     //OpenReport();
-                    Thread thread = new Thread(new ThreadStart(OpenReport));
-                    thread.IsBackground = true;
-                    thread.Start();
+                    Thread open = new Thread(new ThreadStart(OpenReport));
+                    open.IsBackground = true;
+                    open.Start();
                     break;
                 case CreateReportOptions.Print:
                     break;
@@ -282,19 +284,15 @@ namespace AccountingPC.AccountingReport
             CurrentReport.Options.CreateOptions = CreateReportOptions.Preview;
         }
 
-        private void SaveReport()
+        private string GetFileName()
         {
             Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
             dialog.Filter = "Excel | *.xlsx;*.xls";
             dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             dialog.FileName = $"Report_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
             if (dialog.ShowDialog(this) == false)
-                return;
-            //CurrentReport.CreateReport().Save(dialog.FileName);
-            Thread thread = new Thread(new ParameterizedThreadStart(SaveReport));
-            thread.IsBackground = true;
-            thread.Start(dialog.FileName);
-            //SaveReport(dialog.FileName);
+                return null;
+            return dialog.FileName;
         }
 
         private void OpenReport()
@@ -305,20 +303,19 @@ namespace AccountingPC.AccountingReport
             {
                 Dispatcher.Invoke(() =>
                 {
-                    //CurrentReport.CreateReport().Save(fileName);
                     SaveReport(fileName);
                     Process.Start("excel.exe", fileName);
                 });
             });
             task.Start();
-            //await task.Start();
         }
 
         private void SaveReport(string fileName)
         {
             try
             {
-                CurrentReport.CreateReport().Save(fileName);
+                if (!string.IsNullOrEmpty(fileName))
+                    CurrentReport.CreateReport().Save(fileName);
             }
             catch
             {
@@ -330,7 +327,14 @@ namespace AccountingPC.AccountingReport
         {
             try
             {
-                CurrentReport.CreateReport().Save((String)fileName);
+                Task task = new Task(() =>
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        SaveReport(fileName as String);
+                    });
+                });
+                task.Start();
             }
             catch
             {
