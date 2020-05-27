@@ -16,8 +16,12 @@
         <ResourceDictionary Source="DataGrid.xaml"/>
         <ResourceDictionary Source="Menu.xaml"/>
         <ResourceDictionary Source="ListBox.xaml"/>
+        <ResourceDictionary Source="ListBoxNoSelected.xaml"/>
+        <ResourceDictionary Source="ListView.xaml"/>
         <ResourceDictionary Source="Scroll.xaml"/>
         <ResourceDictionary Source="StatusBar.xaml"/>
         <ResourceDictionary Source="ContextMenu.xaml"/>
+        <ResourceDictionary Source="RadioButton.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+</ResourceDictionary>
 </ResourceDictionary>

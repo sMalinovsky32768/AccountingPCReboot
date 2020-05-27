@@ -13,26 +13,9 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        private String GetVideoConnectors(Int32 value)
+        public static String GetVideoConnectors(Int32 value)
         {
-            List<String> arr = new List<String>();
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-                SqlDataReader reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection).ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        Int32 connectorValue = Convert.ToInt32(reader["Value"]);
-                        if (value >= connectorValue)
-                        {
-                            value -= connectorValue;
-                            arr.Add(reader["Name"].ToString());
-                        }
-                    }
-                }
-            }
+            List<String> arr = GetListVideoConnectors(value);
             String res = String.Empty;
             for (int i = 0; i < arr.Count; i++)
             {
@@ -43,7 +26,7 @@ namespace AccountingPC
             return res;
         }
 
-        private List<String> GetListVideoConnectors(Int32 value)
+        private static List<String> GetListVideoConnectors(Int32 value)
         {
             List<String> arr = new List<String>();
             using (SqlConnection connection = new SqlConnection(ConnectionString))

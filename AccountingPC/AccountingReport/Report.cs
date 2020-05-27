@@ -573,13 +573,48 @@ namespace AccountingPC.AccountingReport
                 //new SqlDataAdapter($"Select * From dbo.{Relation[options.TypeReport].Function}(){options.SortingString}", ConnectionString).Fill(set, Relation[options.TypeReport].TableName);
             }
 
+            //foreach(DataTable table in set.Tables)
+            //{
+            //    if (table.Columns.Contains("Видеоразъемы"))
+            //    {
+            //        table.Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
+            //        table.Columns.Add("Видеоразъемы");
+            //        foreach (DataRow row in table.Rows)
+            //        {
+            //            row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
+            //        }
+            //    }
+            //}
+
             return set;
         }
 
         private void FillDataSet(DataSet set, bool isFull = false)
         {
-            set.Tables.Add(Relation[Options.TypeReport].TableName);
-            new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, Relation[Options.TypeReport].TableName);
+            string tableName = Relation[Options.TypeReport].TableName;
+
+            set.Tables.Add(tableName);
+            new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
+
+            if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
+            {
+                set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
+                set.Tables[tableName].Columns.Add("Видеоразъемы");
+                foreach (DataRow row in set.Tables[tableName].Rows)
+                {
+                    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
+                }
+            }
+
+            int i = 0;
+            foreach (ColumnRelation column in UsedReportColumns)
+            {
+                if (set.Tables[tableName].Columns.Contains(column.Name))
+                {
+                    set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
+                    i++;
+                }
+            }
         }
 
         public ExcelFile CreateReport()

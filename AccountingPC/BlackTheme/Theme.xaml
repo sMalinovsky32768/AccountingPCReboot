@@ -21,5 +21,6 @@
         <ResourceDictionary Source="Scroll.xaml"/>
         <ResourceDictionary Source="StatusBar.xaml"/>
         <ResourceDictionary Source="ContextMenu.xaml"/>
+        <ResourceDictionary Source="RadioButton.xaml"/>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

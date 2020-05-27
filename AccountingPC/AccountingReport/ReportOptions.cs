@@ -207,7 +207,7 @@ namespace AccountingPC.AccountingReport
             return temp;
         }
 
-        public ReportOptions() { SortingParamList.CollectionChanged += SortingParamList_CollectionChanged; }
+        public ReportOptions() { }
 
         public ReportOptions(TypeReport typeReport)
         {

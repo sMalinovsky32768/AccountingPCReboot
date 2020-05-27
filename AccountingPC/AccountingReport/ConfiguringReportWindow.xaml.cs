@@ -37,9 +37,9 @@ namespace AccountingPC.AccountingReport
             CurrentReport.Options.CreateOptionsChangedEvent += Options_CreateOptionsChangedEvent;
             CurrentReport.UnusedColumnUpdateEvent += CurrentReport_UnusedColumnUpdateEvent;
             CurrentReport.Options.TypeReport = typeReport;
-            typeReportBox.SelectedItem = CurrentReport.Options.ReportName;
             //typeReportBox.SetBinding(ComboBox.SelectedItemProperty, "CurrentReport.Options.ReportName");
             sortingParamsList.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+            typeReportBox.SelectedItem = CurrentReport.Options.ReportName;
         }
 
         private void CurrentReport_UnusedColumnUpdateEvent()
@@ -204,7 +204,7 @@ namespace AccountingPC.AccountingReport
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (ReportName reportName in typeReportBox.ItemsSource)
+            foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
             {
                 if (CurrentReport.Options.TypeReport == reportName.Type)
                 {
