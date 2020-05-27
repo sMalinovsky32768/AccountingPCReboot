@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace AccountingPC.AccountingReport
 {
@@ -31,106 +26,12 @@ namespace AccountingPC.AccountingReport
 
     }
 
-    internal enum SortOrder
-    {
-        Asc,
-        Desc,
-        //Default,
-    }
-
     internal enum CreateReportOptions
     {
         SaveToFile,
         OpenExcel,
         Print,
         Preview,
-    }
-
-    internal class OrderName
-    {
-        public SortOrder Order { get; set; }
-        public string Name { get; set; }
-    }
-
-    internal static class SortOrderRelation
-    {
-        public static ObservableCollection<OrderName> OrderNames { get; private set; } = new ObservableCollection<OrderName>()
-        {
-            new OrderName()
-            {
-                Order=SortOrder.Asc,
-                Name="По возрастанию",
-            },
-            new OrderName(){
-                Order=SortOrder.Desc,
-                Name="По убыванию",
-            },
-            //new OrderName(){
-            //    Order=SortOrder.Default,
-            //    Name="По умолчанию",
-            //},
-        };
-
-        public static string GetOrderName(SortOrder order)
-        {
-            foreach (OrderName orderName in OrderNames)
-            {
-                if (orderName.Order == order)
-                {
-                    return orderName.Name;
-                }
-            }
-            return String.Empty;
-        }
-    }
-
-    /// <summary>
-    /// Параметр сортировки. Если IsAscending = true, сортировка выполняется по возрастанию, иначе по убыванию
-    /// </summary>
-    internal class SortingParam
-    {
-        private ReportColumn column;
-        private SortOrder order;
-        private ColumnRelation columnRelation;
-        private OrderName orderName;
-
-        public ReportColumn Column
-        {
-            get => column;
-            set
-            {
-                column = value;
-                columnRelation = new ColumnRelation(value, ReportColumnRelation.GetColumnName(value));
-            }
-        }
-        public SortOrder Order
-        {
-            get => order;
-            set
-            {
-                order = value;
-                orderName = new OrderName() { Order = value, Name = SortOrderRelation.GetOrderName(value) };
-            }
-        }
-
-        public ColumnRelation ColumnRelation 
-        {
-            get => columnRelation;
-            set
-            {
-                columnRelation = value;
-                column = value.Column;
-            }
-        }
-        public OrderName OrderName
-        {
-            get => orderName;
-            set
-            {
-                orderName = value;
-                order = value.Order;
-            }
-        }
     }
 
     internal class ReportOptions
@@ -195,7 +96,7 @@ namespace AccountingPC.AccountingReport
                 List<ReportColumn> columns = ReportRelationCollection.Collection[TypeReport].Columns;
                 if (columns.Contains(param.Column))
                 {
-                    temp += $"[{ReportColumnRelation.GetColumnName(param.Column)}] ";
+                    temp += $"[{ReportColumnRelation.GetColumnName(param.Column).Name}] ";
                     if (param.Order == SortOrder.Asc)
                         temp += "asc";
                     else
@@ -214,14 +115,17 @@ namespace AccountingPC.AccountingReport
         public ReportOptions(TypeReport typeReport)
         {
             TypeReport = TypeReport;
-            SortingParamList = new ObservableCollection<SortingParam>()
+            if (typeReport != TypeReport.Full)
             {
-                new SortingParam()
+                SortingParamList = new ObservableCollection<SortingParam>()
                 {
-                    Column = ReportColumn.InventoryNumber,
-                    Order = SortOrder.Asc,
-                }
-            };
+                    new SortingParam()
+                    {
+                        Column = ReportColumn.InventoryNumber,
+                        Order = SortOrder.Asc,
+                    }
+                };
+            }
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using AccountingPC.Properties;
 using System;
+using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using System.Security.Cryptography;
 
 namespace AccountingPC
 {

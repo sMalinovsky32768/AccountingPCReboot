@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 
 namespace AccountingPC.AccountingReport
 {
@@ -102,16 +97,16 @@ namespace AccountingPC.AccountingReport
             ColumnRelationships.Add(new ColumnRelation(ReportColumn.Count, "Количество"));
         }
 
-        public static string GetColumnName(ReportColumn column)
+        public static ColumnRelation GetColumnName(ReportColumn column)
         {
             foreach (ColumnRelation relation in ColumnRelationships)
             {
                 if (relation.Column == column)
                 {
-                    return relation.Name;
+                    return relation;
                 }
             }
-            return String.Empty;
+            return null;
         }
     }
 }

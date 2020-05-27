@@ -5,8 +5,6 @@ using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Reflection;
-using System.Security.RightsManagement;
 
 namespace AccountingPC.AccountingReport
 {
@@ -79,14 +77,14 @@ namespace AccountingPC.AccountingReport
             {
                 foreach (ReportColumn column in relation.Columns)
                 {
-                    vs.Add(ReportColumnRelation.GetColumnName(column));
+                    vs.Add(ReportColumnRelation.GetColumnName(column).Name);
                 }
             }
             else
             {
                 foreach (ColumnRelation columnRelation in UsedReportColumns)
                 {
-                    vs.Add(ReportColumnRelation.GetColumnName(columnRelation.Column));
+                    vs.Add(ReportColumnRelation.GetColumnName(columnRelation.Column).Name);
                 }
             }
 

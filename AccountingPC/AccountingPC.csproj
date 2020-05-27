@@ -107,6 +107,8 @@
     <Compile Include="AccountingReport\ReportNames.cs" />
     <Compile Include="AccountingReport\ReportRelation.cs" />
     <Compile Include="AccountingReport\ReportRelationCollection.cs" />
+    <Compile Include="AccountingReport\SortingParam.cs" />
+    <Compile Include="AccountingReport\SortOrderRelation.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="Devices.cs" />
