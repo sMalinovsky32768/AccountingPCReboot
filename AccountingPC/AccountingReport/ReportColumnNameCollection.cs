@@ -73,6 +73,7 @@ namespace AccountingPC.AccountingReport
         private static readonly ObservableCollection<ReportColumnName> collection = new ObservableCollection<ReportColumnName>()
         {
             new ReportColumnName(ReportColumn.InventoryNumber, "Инвентарный номер"),
+            new ReportColumnName(ReportColumn.Type, "Тип"),
             new ReportColumnName(ReportColumn.Name, "Наименование"),
             new ReportColumnName(ReportColumn.Cost, "Цена"),
             new ReportColumnName(ReportColumn.InvoiceNumber, "Номер накладной"),
@@ -87,7 +88,6 @@ namespace AccountingPC.AccountingReport
             new ReportColumnName(ReportColumn.ProjectorTechnology, "Технология проецирования"),
             new ReportColumnName(ReportColumn.ScreenResolution, "Максимальное разрешение"),
             new ReportColumnName(ReportColumn.VideoConnectors, "Видеоразъемы"),
-            new ReportColumnName(ReportColumn.Type, "Тип"),
             new ReportColumnName(ReportColumn.PaperSize, "Максимальный формат"),
             new ReportColumnName(ReportColumn.Motherboard, "Материнская плата"),
             new ReportColumnName(ReportColumn.CPU, "Процессор"),

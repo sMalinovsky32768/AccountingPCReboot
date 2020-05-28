@@ -144,10 +144,8 @@ namespace AccountingPC.AccountingReport
 
         public bool IsPeriod { get; set; }
 
-        public DateTime FromDate { get; set; } = DateTime.Parse($"01.01.{DateTime.Today.Year}");
-        public DateTime ToDate { get; set; } = DateTime.Parse($"31.12.{DateTime.Today.Year}");
-
-        //private Grouping Grouping { get; set; }
+        public DateTime? FromDate { get; set; } //= DateTime.Parse($"01.01.{DateTime.Today.Year}");
+        public DateTime? ToDate { get; set; } //= DateTime.Parse($"31.12.{DateTime.Today.Year}");
 
         public ObservableCollection<SortingParam> SortingParamList
         {

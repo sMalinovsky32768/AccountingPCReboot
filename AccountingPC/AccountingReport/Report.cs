@@ -116,6 +116,17 @@ namespace AccountingPC.AccountingReport
                                     UsedReportColumns[UsedReportColumns.IndexOf(columnName) < UsedReportColumns.Count - 1 ?
                                     UsedReportColumns.IndexOf(columnName) + 1 : 0];
                             }
+                            SortingParam sortingParam = null;
+                            foreach (SortingParam param in Options.SortingParamList) 
+                            {
+                                if (param.ColumnName.Column == columnName.Column)
+                                {
+                                    sortingParam = param;
+                                    break;
+                                }
+                            }
+                            if (sortingParam != null)
+                                Options.SortingParamList.Remove(sortingParam);
                             UnusedReportColumns.Add(columnName);
                             UsedReportColumns.Remove(columnName);
                         }
@@ -193,7 +204,19 @@ namespace AccountingPC.AccountingReport
                     commandText += ", ";
             }
 
-            commandText += $" FROM dbo.{relation.Function}()";
+            commandText += $" FROM dbo.{relation.Function}(";
+            if (Options.IsPeriod)
+            {
+                if (Options.FromDate != null)
+                {
+                    commandText += $"'{Options.FromDate.Value:yyyy-MM-dd}'";
+                    if (Options.ToDate != null)
+                        commandText += $", ";
+                }
+                if (Options.FromDate!=null)
+                    commandText += $"'{Options.ToDate.Value:yyyy-MM-dd}'";
+            }
+            commandText += $")";
             commandText += Options.GetSortingString(isFull);
 
             return commandText;

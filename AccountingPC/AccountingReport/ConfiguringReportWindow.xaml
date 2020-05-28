@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
-        Title="Настройка отчета" Height="800" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
+        Title="Настройка отчета" Height="850" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
     <Grid>
         <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
             <Grid x:Name="windowGrid">
@@ -189,8 +189,7 @@
                                         </Grid>
                                     </Button>
                                 </StackPanel>
-                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single" Height="300"
-                                         SourceUpdated="SortingParamsList_SourceUpdated" VerticalAlignment="Top" 
+                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single" Height="300" VerticalAlignment="Top" 
                                          ItemsSource="{Binding Path=Options.SortingParamList}" SelectedItem="{Binding Path=Options.SelectedSortingParam}">
                                     <ListBox.Style>
                                         <Style TargetType="ListBox" BasedOn="{StaticResource list-box-no-selected}">
@@ -249,17 +248,18 @@
                             <Separator DockPanel.Dock="Top"/>
                             <Grid DockPanel.Dock="Top" Margin="10,0">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto"/>
                                 </Grid.RowDefinitions>
-                                <CheckBox Content="Выбрать период" Margin="0,0,0,5" x:Name="isPeriod" 
-                                          IsChecked="{Binding Path=Options.IsPeriod}"/>
+                                <Grid>
+                                    <CheckBox Content="Выбрать период" Margin="0,0,0,5" x:Name="isPeriod" 
+                                          IsChecked="{Binding Path=Options.IsPeriod}" VerticalAlignment="Center"/>
+                                </Grid>
                                 <Grid Grid.Row="1" x:Name="dateGrid">
                                     <Grid.Style>
                                         <Style TargetType="Grid">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding Path=IsChecked, ElementName=isPeriod}" Value="False">
-                                                    <Setter Property="IsEnabled" Value="False"/>
                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -277,7 +277,7 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="Начало: "/>
                                         <DatePicker Grid.Column="1" x:Name="fromDate" VerticalAlignment="Center"
-                                                    SelectedDate="{Binding Path=Options.FromDate}"/>
+                                                    SelectedDate="{Binding Path=Options.FromDate}" SelectedDateChanged="FromDate_SelectedDateChanged"/>
                                     </Grid>
                                     <Grid Grid.Column="2">
                                         <Grid.ColumnDefinitions>
@@ -286,7 +286,7 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Text="Конец: "/>
                                         <DatePicker Grid.Column="1" x:Name="toDate" VerticalAlignment="Center"
-                                                    SelectedDate="{Binding Path=Options.ToDate}"/>
+                                                    SelectedDate="{Binding Path=Options.ToDate}" SelectedDateChanged="ToDate_SelectedDateChanged"/>
                                     </Grid>
                                 </Grid>
                             </Grid>

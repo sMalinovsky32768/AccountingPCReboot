@@ -22,25 +22,16 @@ namespace AccountingPC.AccountingReport
         public ConfiguringReportWindow(TypeReport typeReport = TypeReport.Simple)
         {
             InitializeComponent();
-            //typeReportBox.ItemsSource = Report.ReportNames;
-            //typeReportBox.DisplayMemberPath = "Value";
             typeReportBox.ItemsSource = ReportNameCollection.Collection;
             typeReportBox.DisplayMemberPath = "Name";
             CurrentReport = new Report();
-            CurrentReport.Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
             CurrentReport.Options.CreateOptionsChangedEvent += Options_CreateOptionsChangedEvent;
-            CurrentReport.UnusedColumnUpdateEvent += CurrentReport_UnusedColumnUpdateEvent;
+            CurrentReport.Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
             CurrentReport.Options.TypeReport = typeReport;
             sortingParamsList.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
             typeReportBox.SelectedItem = CurrentReport.Options.ReportName;
 
             configureGrid.DataContext = CurrentReport;
-        }
-
-        private void CurrentReport_UnusedColumnUpdateEvent()
-        {
-            if (unusedColumn.Items.Count > 0)
-                unusedColumn.SelectedIndex = 0;
         }
 
         private void Options_CreateOptionsChangedEvent()
@@ -166,26 +157,8 @@ namespace AccountingPC.AccountingReport
             DragMove();// Для перемещение окна
         }
 
-        private void TypeReportBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (typeReportBox.SelectedItem != null)
-                CurrentReport.Options.TypeReport = ((ReportName)typeReportBox.SelectedItem).Type;
-        }
-
         private void TypeReportChangedEventHandler()
         {
-            //foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
-            //{
-            //    if (reportName.Type == CurrentReport.Options.TypeReport)
-            //    {
-            //        typeReportBox.SelectedItem = reportName;
-            //        break;
-            //    }
-            //}
-
-            //sortingParamsList.ItemsSource = CurrentReport.Options.SortingParamList;
-            //UpdateReportConfig();
-
             if (CurrentReport.Options.TypeReport == TypeReport.Full)
             {
                 selectionSortingParamGrid.Visibility = Visibility.Collapsed;
@@ -196,22 +169,6 @@ namespace AccountingPC.AccountingReport
                 selectionSortingParamGrid.Visibility = Visibility.Visible;
                 selectionColumnGrid.Visibility = Visibility.Visible;
             }
-        }
-
-        private void UseColumnButton_Click(object sender, RoutedEventArgs e)
-        {
-            int i = unusedColumn.SelectedIndex;
-            CurrentReport.UsedReportColumns.Add((ReportColumnName)unusedColumn.SelectedItem);
-            CurrentReport.UnusedReportColumns.Remove((ReportColumnName)unusedColumn.SelectedItem);
-            unusedColumn.SelectedIndex = i < unusedColumn.Items.Count ? i : 0;
-        }
-
-        private void NotUseColumnButton_Click(object sender, RoutedEventArgs e)
-        {
-            int i = usedColumn.SelectedIndex;
-            CurrentReport.UnusedReportColumns.Add((ReportColumnName)usedColumn.SelectedItem);
-            CurrentReport.UsedReportColumns.Remove((ReportColumnName)usedColumn.SelectedItem);
-            usedColumn.SelectedIndex = i < usedColumn.Items.Count ? i : 0;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -226,23 +183,6 @@ namespace AccountingPC.AccountingReport
             }
 
             UpdateReportConfig();
-        }
-
-        private void DelSortingParamButton_Click(object sender, RoutedEventArgs e)
-        {
-            CurrentReport.Options.SortingParamList.Remove((SortingParam)sortingParamsList.SelectedItem);
-            //SetSourceForSorting();
-        }
-
-        private void AddSortingParamButton_Click(object sender, RoutedEventArgs e)
-        {
-            CurrentReport.Options.SortingParamList.Add(new SortingParam());
-            //SetSourceForSorting();
-        }
-
-        private void SortingParamsList_SourceUpdated(object sender, DataTransferEventArgs e)
-        {
-            //SetSourceForSorting();
         }
 
         private void CreateReport_Click(object sender, RoutedEventArgs e)
@@ -349,6 +289,20 @@ namespace AccountingPC.AccountingReport
             {
 
             }
+        }
+
+        private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.Parse("01.01.2000"), (DateTime)e.AddedItems[0]));
+            toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, (DateTime)e.AddedItems[0]));
+            toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddDays(1), DateTime.MaxValue));
+        }
+
+        private void ToDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.Today));
+            fromDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, DateTime.Parse("31.12.1999")));
+            fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.MaxValue));
         }
     }
 }
