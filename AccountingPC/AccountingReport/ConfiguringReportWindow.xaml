@@ -140,7 +140,7 @@
                             </Separator>
                             <Grid x:Name="selectionSortingParamGrid" Margin="10,5" DockPanel.Dock="Top">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="auto"/>
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,0">
