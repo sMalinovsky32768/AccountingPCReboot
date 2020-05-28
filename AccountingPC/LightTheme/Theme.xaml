@@ -11,6 +11,8 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Color.xaml"/>
         <ResourceDictionary Source="ComboBox.xaml"/>
+        <ResourceDictionary Source="CheckBox.xaml"/>
+        <ResourceDictionary Source="Calendar.xaml"/>
         <ResourceDictionary Source="Button.xaml"/>
         <ResourceDictionary Source="Box.xaml"/>
         <ResourceDictionary Source="DataGrid.xaml"/>

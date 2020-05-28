@@ -2,13 +2,15 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 
 namespace AccountingPC.AccountingReport
 {
-    internal class Report
+    internal class Report : INotifyPropertyChanged
     {
         public static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -17,39 +19,135 @@ namespace AccountingPC.AccountingReport
         public event ColumnUpdate UsedColumnUpdateEvent;
         public event ColumnUpdate UnusedColumnUpdateEvent;
 
-        private ObservableCollection<ColumnRelation> usedReportColumns;
-        private ObservableCollection<ColumnRelation> unusedReportColumns;
+        private ObservableCollection<ReportColumnName> usedReportColumns;
+        private ObservableCollection<ReportColumnName> unusedReportColumns;
 
-        public ReportOptions Options { get; private set; } = new ReportOptions();
+        private ReportColumnName selectedUnusedColumn;
+        private ReportColumnName selectedUsedColumn;
 
-        public ObservableCollection<ColumnRelation> UsedReportColumns
+        public ObservableCollection<ReportColumnName> UsedReportColumns
         {
             get => usedReportColumns;
             set
             {
                 usedReportColumns = value;
                 UsedColumnUpdateEvent?.Invoke();
+                OnPropertyChanged("UsedReportColumns");
             }
         }
-        public ObservableCollection<ColumnRelation> UnusedReportColumns 
+        public ObservableCollection<ReportColumnName> UnusedReportColumns
         {
             get => unusedReportColumns;
             set
             {
                 unusedReportColumns = value;
                 UnusedColumnUpdateEvent?.Invoke();
+                OnPropertyChanged("UnusedReportColumns");
             }
         }
 
-        public Report() { Options.TypeReportChangedEvent += TypeChangedEventHandler; }
+        public ReportColumnName SelectedUsedColumn
+        {
+            get => selectedUsedColumn;
+            set
+            {
+                selectedUsedColumn = value;
+                OnPropertyChanged("SelectedUsedColumn");
+            }
+        }
+        public ReportColumnName SelectedUnusedColumn
+        {
+            get => selectedUnusedColumn;
+            set
+            {
+                selectedUnusedColumn = value;
+                OnPropertyChanged("SelectedUnusedColumn");
+            }
+        }
+
+        private ReportCommand addUsedReportColumns;
+        public ReportCommand AddUsedReportColumns
+        {
+            get
+            {
+                return addUsedReportColumns ??
+                    (addUsedReportColumns = new ReportCommand(obj =>
+                    {
+                        if (obj != null)
+                        {
+                            ReportColumnName columnName = obj as ReportColumnName;
+                            foreach (ReportColumnName reportColumnName in UnusedReportColumns)
+                            {
+                                if (reportColumnName == columnName) SelectedUnusedColumn =
+                                    UnusedReportColumns[UnusedReportColumns.IndexOf(columnName) < UnusedReportColumns.Count - 1 ?
+                                    UnusedReportColumns.IndexOf(columnName) + 1 : 0];
+                            }
+                            UsedReportColumns.Add(columnName);
+                            UnusedReportColumns.Remove(columnName);
+                        }
+                    },
+                    (obj) =>
+                    {
+                        if (UnusedReportColumns.Count > 0)
+                            if (SelectedUnusedColumn != null)
+                                return true;
+                            else
+                                return false;
+                        else
+                            return false;
+                    }));
+            }
+        }
+
+        private ReportCommand delUsedReportColumns;
+        public ReportCommand DelUsedReportColumns
+        {
+            get
+            {
+                return delUsedReportColumns ??
+                    (delUsedReportColumns = new ReportCommand(obj =>
+                    {
+                        if (obj != null)
+                        {
+                            ReportColumnName columnName = obj as ReportColumnName;
+                            foreach (ReportColumnName reportColumnName in UsedReportColumns)
+                            {
+                                if (reportColumnName == columnName) SelectedUsedColumn =
+                                    UsedReportColumns[UsedReportColumns.IndexOf(columnName) < UsedReportColumns.Count - 1 ?
+                                    UsedReportColumns.IndexOf(columnName) + 1 : 0];
+                            }
+                            UnusedReportColumns.Add(columnName);
+                            UsedReportColumns.Remove(columnName);
+                        }
+                    },
+                    (obj) =>
+                    {
+                        if (UsedReportColumns.Count > 0)
+                            if (SelectedUsedColumn != null)
+                                return true;
+                            else
+                                return false;
+                        else
+                            return false;
+                    }));
+            }
+        }
+
+        public ReportOptions Options { get; private set; }
+
+        public Report()
+        {
+            Options = new ReportOptions(this);
+            Options.TypeReportChangedEvent += TypeChangedEventHandler;
+        }
 
         private void InitializeColumn()
         {
-            UsedReportColumns = new ObservableCollection<ColumnRelation>();
-            UnusedReportColumns = new ObservableCollection<ColumnRelation>();
+            UsedReportColumns = new ObservableCollection<ReportColumnName>();
+            UnusedReportColumns = new ObservableCollection<ReportColumnName>();
             if (Options.TypeReport != TypeReport.Full)
             {
-                foreach (ColumnRelation relation in ReportColumnRelation.ColumnRelationships)
+                foreach (ReportColumnName relation in ReportColumnNameCollection.Collection)
                 {
                     if (ReportRelationCollection.Collection[Options.TypeReport].Columns.Contains(relation.Column))
                     {
@@ -57,6 +155,10 @@ namespace AccountingPC.AccountingReport
                     }
                 }
             }
+            if (UsedReportColumns.Count > 0)
+                SelectedUsedColumn = UsedReportColumns?[0];
+            if (UnusedReportColumns.Count > 0)
+                SelectedUnusedColumn = UnusedReportColumns?[0];
         }
 
         private string CommandTextBuilder(bool isFull = false)
@@ -71,14 +173,14 @@ namespace AccountingPC.AccountingReport
             {
                 foreach (ReportColumn column in relation.Columns)
                 {
-                    vs.Add(ReportColumnRelation.GetColumnName(column).Name);
+                    vs.Add(ReportColumnNameCollection.GetColumnName(column).Name);
                 }
             }
             else
             {
-                foreach (ColumnRelation columnRelation in UsedReportColumns)
+                foreach (ReportColumnName columnRelation in UsedReportColumns)
                 {
-                    vs.Add(ReportColumnRelation.GetColumnName(columnRelation.Column).Name);
+                    vs.Add(ReportColumnNameCollection.GetColumnName(columnRelation.Column).Name);
                 }
             }
 
@@ -137,7 +239,7 @@ namespace AccountingPC.AccountingReport
             }
 
             int i = 0;
-            foreach (ColumnRelation column in UsedReportColumns)
+            foreach (ReportColumnName column in UsedReportColumns)
             {
                 if (set.Tables[tableName].Columns.Contains(column.Name))
                 {
@@ -253,6 +355,12 @@ namespace AccountingPC.AccountingReport
         private void TypeChangedEventHandler()
         {
             InitializeColumn();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

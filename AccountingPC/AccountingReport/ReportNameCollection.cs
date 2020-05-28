@@ -22,9 +22,9 @@ namespace AccountingPC.AccountingReport
         //}
     }
 
-    internal static class ReportNames
+    internal static class ReportNameCollection
     {
-        private static readonly ObservableCollection<ReportName> reportNamesCollection = new ObservableCollection<ReportName>()
+        private static readonly ObservableCollection<ReportName> collection = new ObservableCollection<ReportName>()
         {
             new ReportName() {Type = TypeReport.Simple,             Name = "Общий (оборудование)" },
             new ReportName() {Type = TypeReport.Full,               Name = "Полный" },
@@ -42,11 +42,11 @@ namespace AccountingPC.AccountingReport
             new ReportName() {Type = TypeReport.SoftAndOS,          Name = "Общий (ПО&ОС)" },
         };
 
-        public static ObservableCollection<ReportName> ReportNamesCollection => reportNamesCollection;
+        public static ObservableCollection<ReportName> Collection => collection;
 
         public static ReportName GetReportName(TypeReport typeReport)
         {
-            foreach (ReportName reportName in ReportNames.ReportNamesCollection)
+            foreach (ReportName reportName in ReportNameCollection.Collection)
             {
                 if (reportName.Type == typeReport)
                 {

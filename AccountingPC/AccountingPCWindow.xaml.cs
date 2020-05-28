@@ -167,8 +167,9 @@ namespace AccountingPC
             //equipmentCategoryList.SelectedIndex = 0;
             IsPreOpenEquipmentPopup = false;
             NowView = View.Equipment;
+            // Создание меню отчетов
             reportMenu.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
-            reportMenu.ItemsSource = ReportNames.ReportNamesCollection;
+            reportMenu.ItemsSource = ReportNameCollection.Collection;
             reportMenu.DisplayMemberPath = "Name";
             //if (reportMenu.ItemContainerGenerator.Status ==
             //    System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
@@ -200,11 +201,6 @@ namespace AccountingPC
         {
             ChangePopupPreClose();
             ChangePopupPostClose();
-        }
-
-        private void OpenParameters(object sender, RoutedEventArgs e)
-        {
-            new ParametersWindow().ShowDialog();
         }
 
         private void ExitApp(object sender, RoutedEventArgs e)
@@ -745,10 +741,26 @@ namespace AccountingPC
             //    return;
             //Report.SaveReport(dialog.FileName);
             ReportName reportName = ((sender as MenuItem).Header as ReportName);
-            if (reportName!=null)
-                new ConfiguringReportWindow(reportName.Type).ShowDialog();
+            ConfiguringReportWindow reportWindow;
+            if (reportName != null)
+            {
+                reportWindow = new ConfiguringReportWindow(reportName.Type);
+                reportWindow.Owner = this;
+            }
             else
-                new ConfiguringReportWindow().ShowDialog();
+            {
+                reportWindow = new ConfiguringReportWindow(reportName.Type);
+                reportWindow.Owner = this;
+            }
+            reportWindow?.ShowDialog();
+        }
+
+        private void OpenParameters(object sender, ExecutedRoutedEventArgs e)
+        {
+            //new ParametersWindow().ShowDialog();
+            ParametersWindow parametersWindow = new ParametersWindow();
+            parametersWindow.Owner = this;
+            parametersWindow.ShowDialog();
         }
     }
 }

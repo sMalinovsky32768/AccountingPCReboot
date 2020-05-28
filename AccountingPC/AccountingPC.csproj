@@ -103,12 +103,13 @@
     <Compile Include="AccountingReport\ConfiguringReportWindow.xaml.cs">
       <DependentUpon>ConfiguringReportWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AccountingReport\ReportColumnRelation.cs" />
-    <Compile Include="AccountingReport\ReportNames.cs" />
+    <Compile Include="AccountingReport\ReportColumnNameCollection.cs" />
+    <Compile Include="AccountingReport\ReportCommand.cs" />
+    <Compile Include="AccountingReport\ReportNameCollection.cs" />
     <Compile Include="AccountingReport\ReportRelation.cs" />
     <Compile Include="AccountingReport\ReportRelationCollection.cs" />
     <Compile Include="AccountingReport\SortingParam.cs" />
-    <Compile Include="AccountingReport\SortOrderRelation.cs" />
+    <Compile Include="AccountingReport\OrderNameCollection.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="Devices.cs" />
@@ -145,6 +146,14 @@
     <Page Include="BlackTheme\Button.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BlackTheme\Calendar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="BlackTheme\CheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="BlackTheme\Color.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -201,6 +210,14 @@
     <Page Include="LightTheme\Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LightTheme\Calendar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="LightTheme\CheckBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="LightTheme\Color.xaml">
       <SubType>Designer</SubType>

@@ -3,9 +3,9 @@ using System.Collections.ObjectModel;
 
 namespace AccountingPC.AccountingReport
 {
-    internal static class SortOrderRelation
+    internal static class OrderNameCollection
     {
-        public static ObservableCollection<OrderName> OrderNames { get; private set; } = new ObservableCollection<OrderName>()
+        private static readonly ObservableCollection<OrderName> collection = new ObservableCollection<OrderName>()
         {
             new OrderName()
             {
@@ -22,16 +22,17 @@ namespace AccountingPC.AccountingReport
             //},
         };
 
-        public static string GetOrderName(SortOrder order)
+        public static ObservableCollection<OrderName> Collection => collection;
+        public static OrderName GetOrderName(SortOrder order)
         {
-            foreach (OrderName orderName in OrderNames)
+            foreach (OrderName orderName in Collection)
             {
                 if (orderName.Order == order)
                 {
-                    return orderName.Name;
+                    return orderName;
                 }
             }
-            return String.Empty;
+            return null;
         }
     }
 }

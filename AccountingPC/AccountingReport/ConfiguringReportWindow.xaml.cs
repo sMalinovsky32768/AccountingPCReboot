@@ -24,16 +24,17 @@ namespace AccountingPC.AccountingReport
             InitializeComponent();
             //typeReportBox.ItemsSource = Report.ReportNames;
             //typeReportBox.DisplayMemberPath = "Value";
-            typeReportBox.ItemsSource = ReportNames.ReportNamesCollection;
+            typeReportBox.ItemsSource = ReportNameCollection.Collection;
             typeReportBox.DisplayMemberPath = "Name";
             CurrentReport = new Report();
             CurrentReport.Options.TypeReportChangedEvent += TypeReportChangedEventHandler;
             CurrentReport.Options.CreateOptionsChangedEvent += Options_CreateOptionsChangedEvent;
             CurrentReport.UnusedColumnUpdateEvent += CurrentReport_UnusedColumnUpdateEvent;
             CurrentReport.Options.TypeReport = typeReport;
-            //typeReportBox.SetBinding(ComboBox.SelectedItemProperty, "CurrentReport.Options.ReportName");
             sortingParamsList.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
             typeReportBox.SelectedItem = CurrentReport.Options.ReportName;
+
+            configureGrid.DataContext = CurrentReport;
         }
 
         private void CurrentReport_UnusedColumnUpdateEvent()
@@ -92,22 +93,22 @@ namespace AccountingPC.AccountingReport
                 selectionColumnGrid.IsEnabled = true;
                 selectionSortingParamGrid.IsEnabled = true;
 
-                unusedColumn.ItemsSource = CurrentReport.UnusedReportColumns;
-                unusedColumn.DisplayMemberPath = "Name";
+                //unusedColumn.ItemsSource = CurrentReport.UnusedReportColumns;
+                //unusedColumn.DisplayMemberPath = "Name";
 
-                usedColumn.ItemsSource = CurrentReport.UsedReportColumns;
-                usedColumn.DisplayMemberPath = "Name";
+                //usedColumn.ItemsSource = CurrentReport.UsedReportColumns;
+                //usedColumn.DisplayMemberPath = "Name";
 
                 //SetSourceForSorting();
             }
             else
             {
-                unusedColumn.ItemsSource = null;
-                usedColumn.ItemsSource = null;
-                sortingParamsList.ItemsSource = null;
+                //unusedColumn.ItemsSource = null;
+                //usedColumn.ItemsSource = null;
+                //sortingParamsList.ItemsSource = null;
 
-                selectionColumnGrid.IsEnabled = false;
-                selectionSortingParamGrid.IsEnabled = false;
+                //selectionColumnGrid.IsEnabled = false;
+                //selectionSortingParamGrid.IsEnabled = false;
             }
         }
 
@@ -133,7 +134,7 @@ namespace AccountingPC.AccountingReport
 
         private void SetSourceForSorting()
         {
-            ObservableCollection<ColumnRelation> relations = new ObservableCollection<ColumnRelation>();
+            ObservableCollection<ReportColumnName> relations = new ObservableCollection<ReportColumnName>();
             ObservableCollection<OrderName> orderNames = new ObservableCollection<OrderName>();
             foreach (var item in sortingParamsList.Items)
             {
@@ -146,9 +147,10 @@ namespace AccountingPC.AccountingReport
                     ComboBox orderBox = (ComboBox)template?.FindName("order", contentPresenter);
 
                     colBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
-                    orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
+                    orderBox.ItemsSource = OrderNameCollection.Collection;
+                    //orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
                     if (colBox.SelectedItem != null)
-                        relations.Add((ColumnRelation)colBox.SelectedItem);
+                        relations.Add((ReportColumnName)colBox.SelectedItem);
                     if (orderBox.SelectedItem != null)
                         orderNames.Add((OrderName)orderBox.SelectedItem);
                 }
@@ -156,10 +158,6 @@ namespace AccountingPC.AccountingReport
                 {
                     //listBoxItem.Visibility = Visibility.Collapsed;
                 }
-            }
-            if (sortingParamsList.Items.Count > 0)
-            {
-                //_ = sortingParamsList.Items[sortingParamsList.Items.Count - 1].GetType;
             }
         }
 
@@ -176,32 +174,43 @@ namespace AccountingPC.AccountingReport
 
         private void TypeReportChangedEventHandler()
         {
-            foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
-            {
-                if (reportName.Type == CurrentReport.Options.TypeReport)
-                {
-                    typeReportBox.SelectedItem = reportName;
-                    break;
-                }
-            }
+            //foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
+            //{
+            //    if (reportName.Type == CurrentReport.Options.TypeReport)
+            //    {
+            //        typeReportBox.SelectedItem = reportName;
+            //        break;
+            //    }
+            //}
 
-            sortingParamsList.ItemsSource = CurrentReport.Options.SortingParamList;
-            UpdateReportConfig();
+            //sortingParamsList.ItemsSource = CurrentReport.Options.SortingParamList;
+            //UpdateReportConfig();
+
+            if (CurrentReport.Options.TypeReport == TypeReport.Full)
+            {
+                selectionSortingParamGrid.Visibility = Visibility.Collapsed;
+                selectionColumnGrid.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                selectionSortingParamGrid.Visibility = Visibility.Visible;
+                selectionColumnGrid.Visibility = Visibility.Visible;
+            }
         }
 
         private void UseColumnButton_Click(object sender, RoutedEventArgs e)
         {
             int i = unusedColumn.SelectedIndex;
-            CurrentReport.UsedReportColumns.Add((ColumnRelation)unusedColumn.SelectedItem);
-            CurrentReport.UnusedReportColumns.Remove((ColumnRelation)unusedColumn.SelectedItem);
+            CurrentReport.UsedReportColumns.Add((ReportColumnName)unusedColumn.SelectedItem);
+            CurrentReport.UnusedReportColumns.Remove((ReportColumnName)unusedColumn.SelectedItem);
             unusedColumn.SelectedIndex = i < unusedColumn.Items.Count ? i : 0;
         }
 
         private void NotUseColumnButton_Click(object sender, RoutedEventArgs e)
         {
             int i = usedColumn.SelectedIndex;
-            CurrentReport.UnusedReportColumns.Add((ColumnRelation)usedColumn.SelectedItem);
-            CurrentReport.UsedReportColumns.Remove((ColumnRelation)usedColumn.SelectedItem);
+            CurrentReport.UnusedReportColumns.Add((ReportColumnName)usedColumn.SelectedItem);
+            CurrentReport.UsedReportColumns.Remove((ReportColumnName)usedColumn.SelectedItem);
             usedColumn.SelectedIndex = i < usedColumn.Items.Count ? i : 0;
         }
 

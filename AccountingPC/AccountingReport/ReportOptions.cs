@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using GemBox.Spreadsheet.Charts;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace AccountingPC.AccountingReport
 {
@@ -34,8 +38,65 @@ namespace AccountingPC.AccountingReport
         Preview,
     }
 
-    internal class ReportOptions
+    internal class ReportOptions : INotifyPropertyChanged
     {
+        private ReportCommand addSortingParam;
+        public ReportCommand AddSortingParam
+        {
+            get
+            {
+                return addSortingParam ??
+                    (addSortingParam = new ReportCommand(obj =>
+                    {
+                        SortingParamList.Add(new SortingParam());
+                        SelectedSortingParam = SortingParamList[SortingParamList.Count - 1];
+                    },
+                    (obj) =>
+                    {
+                        foreach (SortingParam param in SortingParamList)
+                        {
+                            if (param.ColumnName == null) return false;
+                        }
+                        if (Report.UsedReportColumns.Count <= SortingParamList.Count) return false;
+                        if (SortingParamList.Count > 5) return false;
+                        return true;
+                    }));
+            }
+        }
+
+        private ReportCommand delSortingParam;
+        public ReportCommand DelSortingParam
+        {
+            get
+            {
+                return delSortingParam ??
+                    (delSortingParam = new ReportCommand(obj =>
+                    {
+                        SortingParam param = obj as SortingParam;
+                        if (param != null)
+                        {
+                            foreach (SortingParam sortingParam in SortingParamList)
+                            {
+                                if (param == sortingParam) SelectedSortingParam =
+                                            SortingParamList[SortingParamList.IndexOf(param) < SortingParamList.Count - 2 ?
+                                            SortingParamList.IndexOf(param) + 1 : 0];
+                            }
+                            sortingParamList.Remove(param);
+                        }
+                    },
+                    (obj) =>
+                    {
+                        if (SortingParamList.Count > 0)
+                            if (SelectedSortingParam != null)
+                                return true;
+                            else
+                                return false;
+                        else
+                            return false;
+                    }));
+            }
+        }
+
         public delegate void ReportChanged();
 
         public event ReportChanged TypeReportChangedEvent;
@@ -44,6 +105,8 @@ namespace AccountingPC.AccountingReport
         private TypeReport typeReport;
         private ReportName reportName;
         private CreateReportOptions createOptions = CreateReportOptions.SaveToFile;
+        private ObservableCollection<SortingParam> sortingParamList = new ObservableCollection<SortingParam>();
+        private SortingParam selectedSortingParam;
 
         public TypeReport TypeReport
         {
@@ -51,8 +114,9 @@ namespace AccountingPC.AccountingReport
             set
             {
                 typeReport = value;
-                reportName = ReportNames.GetReportName(TypeReport);
+                reportName = ReportNameCollection.GetReportName(TypeReport);
                 TypeReportChangedEvent?.Invoke();
+                OnPropertyChanged("TypeReport");
             }
         }
         public ReportName ReportName
@@ -63,23 +127,47 @@ namespace AccountingPC.AccountingReport
                 reportName = value;
                 typeReport = value.Type;
                 TypeReportChangedEvent?.Invoke();
+                OnPropertyChanged("ReportName");
             }
         }
 
-        public CreateReportOptions CreateOptions 
+        public CreateReportOptions CreateOptions
         {
             get => createOptions;
             set
             {
                 createOptions = value;
                 CreateOptionsChangedEvent?.Invoke();
-            } 
+                OnPropertyChanged("CreateOptions");
+            }
         }
+
+        public bool IsPeriod { get; set; }
+
+        public DateTime FromDate { get; set; } = DateTime.Parse($"01.01.{DateTime.Today.Year}");
+        public DateTime ToDate { get; set; } = DateTime.Parse($"31.12.{DateTime.Today.Year}");
 
         //private Grouping Grouping { get; set; }
 
-        public ObservableCollection<SortingParam> SortingParamList { get; set; } = new ObservableCollection<SortingParam>();
+        public ObservableCollection<SortingParam> SortingParamList
+        {
+            get => sortingParamList;
+            set
+            {
+                sortingParamList = value;
+                OnPropertyChanged("SortingParamList");
+            }
+        }
 
+        public SortingParam SelectedSortingParam 
+        {
+            get => selectedSortingParam;
+            set
+            {
+                selectedSortingParam = value;
+                OnPropertyChanged("SelectedSortingParam");
+            }
+        }
         public string GetSortingString(bool isFull = false)
         {
             string temp = string.Empty;
@@ -94,10 +182,10 @@ namespace AccountingPC.AccountingReport
             foreach (SortingParam param in SortingParamList)
             {
                 List<ReportColumn> columns = ReportRelationCollection.Collection[TypeReport].Columns;
-                if (columns.Contains(param.Column))
+                if (columns.Contains(param.ColumnName.Column))
                 {
-                    temp += $"[{ReportColumnRelation.GetColumnName(param.Column).Name}] ";
-                    if (param.Order == SortOrder.Asc)
+                    temp += $"[{ReportColumnNameCollection.GetColumnName(param.ColumnName.Column).Name}] ";
+                    if (param.OrderName.Order == SortOrder.Asc)
                         temp += "asc";
                     else
                         temp += "desc";
@@ -110,22 +198,14 @@ namespace AccountingPC.AccountingReport
             return temp;
         }
 
-        public ReportOptions() { }
+        private Report Report { get; set; }
 
-        public ReportOptions(TypeReport typeReport)
+        public ReportOptions(Report report) { Report = report; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            TypeReport = TypeReport;
-            if (typeReport != TypeReport.Full)
-            {
-                SortingParamList = new ObservableCollection<SortingParam>()
-                {
-                    new SortingParam()
-                    {
-                        Column = ReportColumn.InventoryNumber,
-                        Order = SortOrder.Asc,
-                    }
-                };
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

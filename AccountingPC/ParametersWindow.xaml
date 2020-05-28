@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
         Title="Параметры" Height="450" Width="800" Topmost="True" ResizeMode="NoResize" 
-        WindowStartupLocation="CenterScreen" WindowStyle="None">
+        WindowStartupLocation="CenterOwner" WindowStyle="None">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:ParametersWindow.ExitCommand}" Executed="ExitApp"/>
     </Window.CommandBindings>

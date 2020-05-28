@@ -32,37 +32,15 @@
     /// </summary>
     internal class SortingParam
     {
-        private ReportColumn column;
-        private SortOrder order;
-        private ColumnRelation columnRelation;
-        private OrderName orderName;
+        private ReportColumnName columnName;
+        private OrderName orderName = OrderNameCollection.GetOrderName(SortOrder.Asc);
 
-        public ReportColumn Column
+        public ReportColumnName ColumnName
         {
-            get => column;
+            get => columnName;
             set
             {
-                column = value;
-                columnRelation = ReportColumnRelation.GetColumnName(value);
-            }
-        }
-        public SortOrder Order
-        {
-            get => order;
-            set
-            {
-                order = value;
-                orderName = new OrderName() { Order = value, Name = SortOrderRelation.GetOrderName(value) };
-            }
-        }
-
-        public ColumnRelation ColumnRelation
-        {
-            get => columnRelation;
-            set
-            {
-                columnRelation = value;
-                column = value.Column;
+                columnName = value;
             }
         }
         public OrderName OrderName
@@ -71,7 +49,6 @@
             set
             {
                 orderName = value;
-                order = value.Order;
             }
         }
 
