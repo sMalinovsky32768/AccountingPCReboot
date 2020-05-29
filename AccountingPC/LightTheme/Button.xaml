@@ -2,23 +2,25 @@
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AccountingPC.LightTheme">
-    <!--<CommandBinding x:Key="command" Command="{x:Static local:ForButton.CloseCommand}" Executed="CloseWindow"/> Margin="{TemplateBinding Margin}" -->
     <Style x:Key="default-button" TargetType="Button">
         <Setter Property="Margin" Value="5"/>
+        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}"/>
+        <Setter Property="Background" Value="{DynamicResource surface-brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource surface-brush}"/>
         <Setter Property="Button.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid>
                         <Border CornerRadius="5" BorderThickness="0" Name="btnBorder" 
                                 Padding="{TemplateBinding Padding}" 
-                                Background="{DynamicResource surface-brush}"
-                                BorderBrush="{DynamicResource surface-brush}">
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
                             </Border.Effect>
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
                                               TextElement.FontWeight="Bold" Name="btnContent" 
-                                              TextElement.Foreground="{DynamicResource on-surface-brush}">
+                                              TextElement.Foreground="{TemplateBinding Foreground}">
                             </ContentPresenter>
                         </Border>
                     </Grid>

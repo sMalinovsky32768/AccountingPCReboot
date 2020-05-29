@@ -26,11 +26,7 @@ namespace AccountingPC
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
         private AccountingPCWindow accounting;
 
-        private View NowView { get; set; }
         private bool IsChangeAnalog { get; set; }
-        private TypeDevice TypeDevice { get; set; }
-        private TypeSoft TypeSoft { get; set; }
-        private TypeChange TypeChange { get; set; }
         public AccountingPCWindow Accounting { get => accounting; private set => accounting = value; }
 
         internal List<ListBoxItem> videoConnectorsItems;
@@ -56,6 +52,7 @@ namespace AccountingPC
         SqlDataAdapter motherboardDataAdapter;
         SqlDataAdapter vCardDataAdapter;
         SqlDataAdapter typeLicenseDataAdapter;
+        SqlDataAdapter invoiceDataAdapter;
 
         DataSet aspectRatioDataSet;
         DataSet cpuDataSet;
@@ -76,19 +73,17 @@ namespace AccountingPC
         DataSet motherboardDataSet;
         DataSet vCardDataSet;
         DataSet typeLicenseDataSet;
+        DataSet invoiceDataSet;
 
         public ChangeWindow(AccountingPCWindow window)
         {
             InitializeComponent();
-            //Owner = window;
+            Owner = window;
             Accounting = window;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //Owner = Accounting;
-            //Accounting.viewGrid.IsEnabled = false;
-            //Accounting.menu.IsEnabled = false;
             switch (Accounting.NowView)
             {
                 case View.Equipment:
@@ -97,10 +92,10 @@ namespace AccountingPC
                     if (!Accounting.IsPreOpenEquipmentPopup)
                     {
                         Initialize();
-                        switch (TypeChange)
+                        switch (Accounting.TypeChange)
                         {
                             case TypeChange.Change:
-                                switch (TypeDevice)
+                                switch (Accounting.TypeDevice)
                                 {
                                     case TypeDevice.PC:
                                         GetPC(device, Accounting.DeviceID);
@@ -133,7 +128,7 @@ namespace AccountingPC
                                 SetDeviceLocationAndInvoice(device);
                                 break;
                             case TypeChange.Add:
-                                switch (TypeDevice)
+                                switch (Accounting.TypeDevice)
                                 {
                                     case TypeDevice.PC:
                                         device = new PC();
@@ -173,10 +168,10 @@ namespace AccountingPC
                     if (!Accounting.IsPreOpenSoftwarePopup)
                     {
                         Initialize();
-                        switch (TypeChange)
+                        switch (Accounting.TypeChange)
                         {
                             case TypeChange.Add:
-                                switch (TypeSoft)
+                                switch (Accounting.TypeSoft)
                                 {
                                     case TypeSoft.LicenseSoftware:
                                         soft = new LicenseSoftware();
@@ -189,7 +184,7 @@ namespace AccountingPC
                                 }
                                 break;
                             case TypeChange.Change:
-                                switch (TypeSoft)
+                                switch (Accounting.TypeSoft)
                                 {
                                     case TypeSoft.LicenseSoftware:
                                         GetLicenseSoftware(soft, Accounting.SoftwareID);
@@ -209,11 +204,11 @@ namespace AccountingPC
 
         private void Initialize()
         {
-            switch (NowView)
+            switch (Accounting.NowView)
             {
                 case View.Equipment:
                     ResetEquipmentGrid();
-                    switch (TypeDevice)
+                    switch (Accounting.TypeDevice)
                     {
                         case TypeDevice.InteractiveWhiteboard:
                             InitializeForInteractiveWhiteboard();
@@ -245,7 +240,7 @@ namespace AccountingPC
                     }
                     break;
                 case View.Software:
-                    switch (TypeSoft)
+                    switch (Accounting.TypeSoft)
                     {
                         case TypeSoft.LicenseSoftware:
                             InitializeForSoftware();
@@ -865,7 +860,7 @@ namespace AccountingPC
         private void ResetEquipmentGrid()
         {
             imageFilename.Text = string.Empty;
-            if (TypeChange == TypeChange.Add)
+            if (Accounting.TypeChange == TypeChange.Add)
             {
                 autoInvN.Visibility = Visibility.Visible;
                 if (disabledRepeatInvN.IsChecked == true)
@@ -877,7 +872,7 @@ namespace AccountingPC
                     DisabledRepeatInvN_Unchecked();
                 }
             }
-            else if (TypeChange == TypeChange.Change)
+            else if (Accounting.TypeChange == TypeChange.Change)
             {
                 autoInvN.Visibility = Visibility.Collapsed;
                 autoInvN.IsChecked = false;
@@ -1206,7 +1201,7 @@ namespace AccountingPC
 
         private void UpdateSource()
         {
-            switch (NowView)
+            switch (Accounting.NowView)
             {
                 case View.Equipment:
                     UpdateSourceForAspectRatio();
@@ -1225,6 +1220,7 @@ namespace AccountingPC
                     UpdateSourceForVideoConnectors();
                     UpdateSourceForWifiFrequency();
                     UpdateSourceForMotherboard();
+                    UpdateSourceForInvoice();
                     break;
                 case View.Software:
                     UpdateSourceForTypeLicense();
@@ -1235,10 +1231,10 @@ namespace AccountingPC
         private void SaveOrUpdateEquipmentDB()
         {
             Task task;
-            switch (TypeChange)
+            switch (Accounting.TypeChange)
             {
                 case TypeChange.Add:
-                    switch (TypeDevice)
+                    switch (Accounting.TypeDevice)
                     {
                         case TypeDevice.PC:
                             AddPC();
@@ -1269,6 +1265,7 @@ namespace AccountingPC
                             break;
                     }
                     Accounting.statusItem1.Content = "Успешно добавлено";
+                    statusItem1.Content = "Успешно добавлено";
                     task = new Task(() =>
                     {
                         try
@@ -1278,7 +1275,11 @@ namespace AccountingPC
                                 i++;
                                 Thread.Sleep(1000);
                             }
-                            Dispatcher.Invoke(() => Accounting.statusItem1.Content = string.Empty);
+                            Dispatcher.Invoke(() =>
+                            {
+                                Accounting.statusItem1.Content = string.Empty;
+                                statusItem1.Content = string.Empty;
+                            });
 
                         }
                         catch { }
@@ -1286,7 +1287,7 @@ namespace AccountingPC
                     task.Start();
                     break;
                 case TypeChange.Change:
-                    switch (TypeDevice)
+                    switch (Accounting.TypeDevice)
                     {
                         case TypeDevice.PC:
                             UpdatePC();
@@ -1317,6 +1318,7 @@ namespace AccountingPC
                             break;
                     }
                     Accounting.statusItem1.Content = "Успешно изменено";
+                    statusItem1.Content = "Успешно изменено";
                     task = new Task(() =>
                     {
                         try
@@ -1326,7 +1328,11 @@ namespace AccountingPC
                                 i++;
                                 Thread.Sleep(1000);
                             }
-                            Dispatcher.Invoke(() => Accounting.statusItem1.Content = string.Empty);
+                            Dispatcher.Invoke(() =>
+                            {
+                                Accounting.statusItem1.Content = string.Empty;
+                                statusItem1.Content = string.Empty;
+                            });
 
                         }
                         catch { }
@@ -1343,10 +1349,10 @@ namespace AccountingPC
         private void SaveOrUpdateSoftwareDB()
         {
             Task task;
-            switch (TypeChange)
+            switch (Accounting.TypeChange)
             {
                 case TypeChange.Add:
-                    switch (TypeSoft)
+                    switch (Accounting.TypeSoft)
                     {
                         case TypeSoft.LicenseSoftware:
                             AddSoftware();
@@ -1356,6 +1362,7 @@ namespace AccountingPC
                             break;
                     }
                     Accounting.statusItem1.Content = "Успешно добавлено";
+                    statusItem1.Content = "Успешно добавлено";
                     task = new Task(() =>
                     {
                         try
@@ -1365,7 +1372,11 @@ namespace AccountingPC
                                 i++;
                                 Thread.Sleep(1000);
                             }
-                            Dispatcher.Invoke(() => Accounting.statusItem1.Content = string.Empty);
+                            Dispatcher.Invoke(() =>
+                            {
+                                Accounting.statusItem1.Content = string.Empty;
+                                statusItem1.Content = string.Empty;
+                            });
 
                         }
                         catch { }
@@ -1373,7 +1384,7 @@ namespace AccountingPC
                     task.Start();
                     break;
                 case TypeChange.Change:
-                    switch (TypeSoft)
+                    switch (Accounting.TypeSoft)
                     {
                         case TypeSoft.LicenseSoftware:
                             UpdateSoftware();
@@ -1383,6 +1394,7 @@ namespace AccountingPC
                             break;
                     }
                     Accounting.statusItem1.Content = "Успешно изменено";
+                    statusItem1.Content = "Успешно изменено";
                     task = new Task(() =>
                     {
                         try
@@ -1392,7 +1404,11 @@ namespace AccountingPC
                                 i++;
                                 Thread.Sleep(1000);
                             }
-                            Dispatcher.Invoke(() => Accounting.statusItem1.Content = string.Empty);
+                            Dispatcher.Invoke(() =>
+                            {
+                                Accounting.statusItem1.Content = string.Empty;
+                                statusItem1.Content = string.Empty;
+                            });
 
                         }
                         catch { }
@@ -1435,7 +1451,7 @@ namespace AccountingPC
 
         private void UpdateSourceForName()
         {
-            switch (TypeDevice)
+            switch (Accounting.TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
                     nameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllBoardName()", ConnectionString);
@@ -1474,34 +1490,34 @@ namespace AccountingPC
 
         private void UpdateSourceForLocation()
         {
-            switch (TypeDevice)
+            switch (Accounting.TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(4)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](4)", ConnectionString);
                     break;
                 case TypeDevice.Monitor:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(6)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](6)", ConnectionString);
                     break;
                 case TypeDevice.NetworkSwitch:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(5)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](5)", ConnectionString);
                     break;
                 case TypeDevice.Notebook:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(2)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](2)", ConnectionString);
                     break;
                 case TypeDevice.OtherEquipment:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(9)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](9)", ConnectionString);
                     break;
                 case TypeDevice.PC:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(1)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](1)", ConnectionString);
                     break;
                 case TypeDevice.PrinterScanner:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(3)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](3)", ConnectionString);
                     break;
                 case TypeDevice.Projector:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(7)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](7)", ConnectionString);
                     break;
                 case TypeDevice.ProjectorScreen:
-                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllLocationByTypeDeviceID(8)", ConnectionString);
+                    locationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](8)", ConnectionString);
                     break;
             }
 
@@ -1513,7 +1529,7 @@ namespace AccountingPC
 
         private void UpdateSourceForCPU()
         {
-            switch (TypeDevice)
+            switch (Accounting.TypeDevice)
             {
                 case TypeDevice.Notebook:
                     cpuDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString);
@@ -1534,7 +1550,7 @@ namespace AccountingPC
 
         private void UpdateSourceForVideoCard()
         {
-            switch (TypeDevice)
+            switch (Accounting.TypeDevice)
             {
                 case TypeDevice.Notebook:
                     vCardDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString);
@@ -1555,7 +1571,7 @@ namespace AccountingPC
 
         private void UpdateSourceForType()
         {
-            switch (TypeDevice)
+            switch (Accounting.TypeDevice)
             {
                 case TypeDevice.NetworkSwitch:
                     typeNetworkSwitchDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString);
@@ -1646,13 +1662,24 @@ namespace AccountingPC
             wifiFrequency.DisplayMemberPath = "Name";
         }
 
+        private void UpdateSourceForInvoice()
+        {
+            invoiceDataAdapter = new SqlDataAdapter($"SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString);
+            invoiceDataSet = new DataSet();
+            invoiceDataAdapter.Fill(invoiceDataSet);
+            invoice.ItemsSource = invoiceDataSet.Tables[0].DefaultView;
+            invoice.DisplayMemberPath = "Number";
+            softwareInvoice.ItemsSource = invoiceDataSet.Tables[0].DefaultView;
+            softwareInvoice.DisplayMemberPath = "Number";
+        }
+
         private void UpdateSourceForMotherboard()
         {
             motherboardDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", ConnectionString);
             motherboardDataSet = new DataSet();
             motherboardDataAdapter.Fill(motherboardDataSet);
             motherboard.ItemsSource = motherboardDataSet.Tables[0].DefaultView;
-            motherboard.DisplayMemberPath = "Name";
+            motherboard.DisplayMemberPath = "Motherboard";
         }
 
         private void UpdateSourceForTypeLicense()
@@ -1709,7 +1736,11 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
+                else
+                    command.Parameters.Add(new SqlParameter("@Image", SqlDbType.VarBinary) { SqlValue = null });
                 command.ExecuteNonQuery();
             }
         }
@@ -1763,7 +1794,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1788,7 +1821,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1814,7 +1849,9 @@ namespace AccountingPC
                     command.Parameters.Add(new SqlParameter("@Ports", temp));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1835,7 +1872,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1857,7 +1896,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1881,7 +1922,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1905,7 +1948,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@IsElectronic", Convert.ToBoolean(isEDrive.IsChecked)));
                 command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1926,7 +1971,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
                 //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.ExecuteNonQuery();
             }
         }
@@ -1961,7 +2008,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2001,7 +2050,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2029,7 +2080,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2055,7 +2108,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2079,7 +2134,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
                 //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2104,7 +2161,9 @@ namespace AccountingPC
                 //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2131,7 +2190,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2158,7 +2219,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@IsEDrive", Convert.ToBoolean(isEDrive.IsChecked)));
                 command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2181,7 +2244,9 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == String.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
                 //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Image", LoadImage(imageFilename.Text)));
+                byte[] bytes = LoadImage(imageFilename.Text);
+                if (bytes != null)
+                    command.Parameters.Add(new SqlParameter("@Image", bytes));
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
             }
@@ -2206,10 +2271,10 @@ namespace AccountingPC
                     return null;
                 }
             }
-            else
+            else if (Accounting.TypeChange==TypeChange.Change)
             {
                 int col;
-                switch (TypeDevice)
+                switch (Accounting.TypeDevice)
                 {
                     case TypeDevice.PC:
                     case TypeDevice.Notebook:
@@ -2229,6 +2294,7 @@ namespace AccountingPC
                 }
                 return null;
             }
+            return null;
         }
 
         private void AddSoftware()
@@ -2241,7 +2307,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
                 command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceID", softwareInvoice.Text));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)typeLicense.SelectedItem).Row[0]));
                 command?.ExecuteNonQuery();
             }
@@ -2257,7 +2323,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
                 command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceID", softwareInvoice.Text));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command?.ExecuteNonQuery();
             }
         }
@@ -2273,7 +2339,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
                 command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceID", softwareInvoice.Text));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)typeLicense.SelectedItem).Row[0]));
                 command?.ExecuteNonQuery();
             }
@@ -2290,7 +2356,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
                 command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceID", softwareInvoice.Text));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command?.ExecuteNonQuery();
             }
         }
@@ -2403,7 +2469,7 @@ namespace AccountingPC
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            switch (NowView)
+            switch (Accounting.NowView)
             {
                 case View.Equipment:
                     //changeEquipmentPopup.IsOpen = false;

@@ -6,7 +6,7 @@
         xmlns:Data="clr-namespace:System.Data;assembly=System.Data"
         xmlns:System="clr-namespace:System;assembly=mscorlib" 
         x:Name="window" x:Class="AccountingPC.AccountingPCWindow" mc:Ignorable="d"
-        Title="AccountingPC" Height="768" Width="1366" MinWidth="1366" MinHeight="768"
+        Title="AccountingPC" Height="768" Width="1366" MinWidth="960" MinHeight="768"
         WindowStartupLocation="CenterScreen" Icon="images/icon.ico" WindowStyle="None" 
         Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged"
         LostFocus="Window_LostFocus" GotFocus="Window_GotFocus" 
@@ -77,7 +77,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="viewGrid">
-                    <Grid x:Name="equipmentGrid" Visibility="Collapsed">
+                    <Grid x:Name="equipmentGrid" Visibility="Visible">
                         <Grid.Style>
                             <Style>
                                 <Style.Triggers>
@@ -125,8 +125,8 @@
                                     <Grid Grid.Column="1">
                                         <Grid.Resources>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
-                                                <Setter Property="Padding" Value="10 5"/>
-                                                <Setter Property="Margin" Value="0 5 5 5"/>
+                                                <Setter Property="Padding" Value="30 10"/>
+                                                <Setter Property="Margin" Value="10 15 5 5"/>
                                                 <Setter Property="IsEnabled" Value="True"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentCategoryList}" Value="-1">
@@ -143,6 +143,8 @@
                                                 </Style.Triggers>
                                             </Style>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
+                                                <Setter Property="Background" Value="{DynamicResource error-brush}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource on-error-brush}"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
@@ -168,14 +170,14 @@
                             <Grid Grid.Row="3">
                                 <!--Information Device Grid-->
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="0.5*" MinWidth="400"/>
-                                    <ColumnDefinition x:Name="softwareColumn"/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition x:Name="softwareColumn" Width="auto"/>
                                 </Grid.ColumnDefinitions>
-                                <Grid Height="300" Width="400" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <Image x:Name="deviceImage" Margin="10"/>
+                                <Grid Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Image x:Name="deviceImage" Margin="10" Width="400"/>
                                 </Grid>
                                 <Grid Grid.Column="1">
-                                    <Grid x:Name="installedSoftware">
+                                    <Grid x:Name="installedSoftware" Visibility="Collapsed" MinWidth="350">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto"/>
                                             <RowDefinition/>
@@ -203,8 +205,8 @@
                                                     </Style.Triggers>
                                                 </Style>
                                             </Grid.Resources>
-                                            <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}" 
-                                                   FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}"  TextWrapping="WrapWithOverflow"
+                                                   FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                             <Button Grid.Column="1" x:Name="addSoftware" Content="+" Style="{DynamicResource soft-button}" Click="AddSoftware_Click">
                                                 <Button.ContextMenu>
                                                     <ContextMenu>
@@ -234,7 +236,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid x:Name="softwareGrid" Visibility="Visible">
+                    <Grid x:Name="softwareGrid" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MaxWidth="400" MinWidth="200"/>
                             <ColumnDefinition Width="auto"/>
@@ -284,8 +286,10 @@
                                                 </Style.Triggers>
                                             </Style>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
+                                                <Setter Property="Background" Value="{DynamicResource error-brush}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource on-error-brush}"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareView}" Value="-1">
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>

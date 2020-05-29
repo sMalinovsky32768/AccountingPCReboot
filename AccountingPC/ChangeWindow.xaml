@@ -14,7 +14,11 @@
     <Border Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}" BorderThickness="1"
             RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MoveWindow" >
         <Grid>
-            <Grid x:Name="changeEquipmentGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid x:Name="changeEquipmentGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed" Grid.Row="0">
                 <Grid>
                     <Border Margin="5">
                         <Border.Effect>
@@ -185,7 +189,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Базовая частота"/>
+                                        <TextBlock Text="Базовая частота (МГц)"/>
                                         <TextBox Grid.Row="1" x:Name="frequency">
                                             <TextBox.Text>
                                                 <Binding Path="Frequency">
@@ -201,7 +205,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Максимальная частота"/>
+                                        <TextBlock Text="Максимальная частота (МГц)"/>
                                         <TextBox Grid.Row="1" x:Name="maxFrequency">
                                             <TextBox.Text>
                                                 <Binding Path="MaxFrequency">
@@ -235,7 +239,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Объем видеопамяти"/>
+                                        <TextBlock Text="Объем видеопамяти (Гб)"/>
                                         <TextBox Grid.Row="1" x:Name="videoram">
                                             <TextBox.Text>
                                                 <Binding Path="VideoRAM">
@@ -251,7 +255,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Объем ОЗУ"/>
+                                        <TextBlock Text="Объем ОЗУ (Гб)"/>
                                         <TextBox Grid.Row="1" x:Name="ram">
                                             <TextBox.Text>
                                                 <Binding Path="RAM">
@@ -267,7 +271,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Частота памяти"/>
+                                        <TextBlock Text="Частота памяти (МГц)"/>
                                         <TextBox Grid.Row="1" x:Name="ramFrequency">
                                             <TextBox.Text>
                                                 <Binding Path="FrequencyRAM">
@@ -284,7 +288,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Объем SSD"/>
+                                        <TextBlock Text="Объем SSD (Гб)"/>
                                         <TextBox Grid.Row="1" x:Name="ssd">
                                             <TextBox.Text>
                                                 <Binding Path="SSD">
@@ -300,7 +304,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Объем HDD"/>
+                                        <TextBlock Text="Объем HDD (Гб)"/>
                                         <TextBox Grid.Row="1" x:Name="hdd">
                                             <TextBox.Text>
                                                 <Binding Path="HDD">
@@ -400,7 +404,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Диагональ"/>
+                                        <TextBlock Text="Диагональ (дюймы)"/>
                                         <TextBox Grid.Row="1" x:Name="diagonal">
                                             <TextBox.Text>
                                                 <Binding Path="Diagonal">
@@ -608,7 +612,8 @@
                                 </Grid.ColumnDefinitions>
                                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
-                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" Checked="AutoInvN_Checked" Unchecked="autoInvN_Unchecked"/>
+                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" 
+                                              Checked="AutoInvN_Checked" Unchecked="autoInvN_Unchecked"/>
                                     <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
                                               VerticalAlignment="Center" IsChecked="True" Checked="DisabledRepeatInvN_Checked" Unchecked="DisabledRepeatInvN_Unchecked"/>
                                     <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" VerticalAlignment="Center"
@@ -623,7 +628,7 @@
                     </Border>
                 </Grid>
             </Grid>
-            <Grid x:Name="changeSoftwareGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed">
+            <Grid x:Name="changeSoftwareGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed" Grid.Row="0">
                 <Grid>
                     <Border Margin="5">
                         <Border.Effect>
@@ -769,6 +774,9 @@
                     </Border>
                 </Grid>
             </Grid>
+            <StatusBar Grid.Row="1">
+                <StatusBarItem x:Name="statusItem1"/>
+            </StatusBar>
         </Grid>
     </Border>
 </Window>

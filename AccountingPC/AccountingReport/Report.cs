@@ -340,15 +340,15 @@ namespace AccountingPC.AccountingReport
                 }
                 if (worksheet.Cells.FindText("Базовая частота", false, out _, out col))
                 {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГГц";
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
                 }
                 if (worksheet.Cells.FindText("Максимальная частота", false, out _, out col))
                 {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГГц";
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
                 }
                 if (worksheet.Cells.FindText("Частота обновления", false, out _, out col))
                 {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГГц";
+                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
                 }
                 if (worksheet.Cells.FindText("ОЗУ", false, out _, out col))
                 {

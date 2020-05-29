@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Windows;
 using System.Data;
 using System.Data.SqlClient;
+using System.Windows.Controls;
 
 namespace AccountingPC
 {
@@ -12,10 +14,20 @@ namespace AccountingPC
             {
                 case 0:
                     softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
+
+                    softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+                    ((DataGridTextColumn)softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.
+                        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+
                     TypeSoft = TypeSoft.LicenseSoftware;
                     break;
                 case 1:
                     softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
+
+                    softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+                    ((DataGridTextColumn)softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.
+                        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+
                     TypeSoft = TypeSoft.OS;
                     break;
             }
