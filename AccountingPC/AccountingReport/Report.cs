@@ -208,13 +208,18 @@ namespace AccountingPC.AccountingReport
             if (Options.IsPeriod)
             {
                 if (Options.FromDate != null)
-                {
                     commandText += $"'{Options.FromDate.Value:yyyy-MM-dd}'";
-                    if (Options.ToDate != null)
-                        commandText += $", ";
-                }
+                else
+                    commandText += $"default";
+                commandText += $", ";
                 if (Options.FromDate!=null)
                     commandText += $"'{Options.ToDate.Value:yyyy-MM-dd}'";
+                else
+                    commandText += $"default";
+            }
+            else
+            {
+                commandText += $"default, default";
             }
             commandText += $")";
             commandText += Options.GetSortingString(isFull);

@@ -49,94 +49,15 @@ namespace AccountingPC
             return arr;
         }
 
-        private Int32 GetValueVideoConnectors(ListBox list)
-        {
-            Int32 value = 0;
-            foreach (var obj in list.SelectedItems)
-            {
-                foreach (DataRowView row in videoConnectorsDataSet.Tables[0].DefaultView)
-                {
-                    string s = (obj as ListBoxItem).Content.ToString();
-                    if (row.Row[1].ToString() == s)
-                        value += Convert.ToInt32(row.Row[2]);
-                }
-            }
-            return value;
-        }
-
-        private void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 1)
-        {
-            Grid.SetColumn(element, column);
-            Grid.SetRow(element, row);
-            Grid.SetColumnSpan(element, colSpan);
-            Grid.SetRowSpan(element, rowSpan);
-        }
-
-        public CustomPopupPlacement[] ChangePopupPlacement(Size popupSize, Size targetSize, Point offset)
-        {
-            CustomPopupPlacement placement1 =
-               new CustomPopupPlacement(new Point(0, 0), PopupPrimaryAxis.Vertical);
-
-            CustomPopupPlacement[] ttplaces =
-                    new CustomPopupPlacement[] { placement1 };
-            return ttplaces;
-        }
-
         private void ChangePopupPreClose()
         {
-            if (changeEquipmentPopup.IsOpen)
-            {
-                IsPreOpenEquipmentPopup = true;
-                changeEquipmentPopup.IsOpen = false;
-            }
-            if (changeSoftwarePopup.IsOpen)
-            {
-                IsPreOpenSoftwarePopup = true;
-                changeSoftwarePopup.IsOpen = false;
-            }
+            
         }
 
         private void ChangePopupPostClose()
         {
-            if (IsPreOpenEquipmentPopup)
-            {
-                changeEquipmentPopup.Height = Height - 200;
-                changeEquipmentPopup.Width = Width - 400;
-                changeEquipmentPopup.IsOpen = true;
-                IsPreOpenEquipmentPopup = false;
-            }
-            if (IsPreOpenSoftwarePopup)
-            {
-                changeSoftwarePopup.Height = Height - 200;
-                changeSoftwarePopup.Width = Width - 400;
-                changeSoftwarePopup.IsOpen = true;
-                IsPreOpenSoftwarePopup = false;
-            }
+            
         }
-
-        /*private int saveImage(string filename)
-        {
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = "AddImage";
-                command.Parameters.Add("@Image", SqlDbType.VarBinary);
-                command.Parameters.Add("@ID", SqlDbType.Int).Direction = ParameterDirection.Output;
-
-                byte[] imageData;
-                using (FileStream fs = new FileStream(filename, FileMode.Open))
-                {
-                    imageData = new byte[fs.Length];
-                    fs.Read(imageData, 0, imageData.Length);
-                }
-                command.Parameters["@Image"].Value = imageData;
-
-                command.ExecuteNonQuery();
-                return Convert.ToInt32(command.Parameters["@ID"].Value);
-            }
-        }*/
 
         private Dictionary<int, byte[]> GetImages()
         {
@@ -154,69 +75,6 @@ namespace AccountingPC
             }
 
             return temp;
-        }
-
-        private byte[] LoadImage(string path)
-        {
-            if (path != "")
-            {
-                byte[] data;
-                try
-                {
-                    using (FileStream fs = new FileStream(path, FileMode.Open))
-                    {
-                        data = new byte[fs.Length];
-                        fs.Read(data, 0, data.Length);
-                    }
-                    return data;
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-            else
-            {
-                int col;
-                switch (TypeDevice)
-                {
-                    case TypeDevice.PC:
-                    case TypeDevice.Notebook:
-                    case TypeDevice.Monitor:
-                    case TypeDevice.Projector:
-                        col = equipmentView.Columns.Count - 2;
-                        break;
-                    default:
-                        col = equipmentView.Columns.Count - 1;
-                        break;
-                }
-                object obj = ((DataRowView)equipmentView.SelectedItems?[0]).Row[col];
-                int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? null : obj);
-                if (id != 0)
-                {
-                    return images[id];
-                }
-                return null;
-            }
-        }
-
-        private void DisabledRepeatInvN_Checked()
-        {
-            invNBinding = new Binding();
-            invNBinding.Path = new PropertyPath("InventoryNumber");
-            invNBinding.ValidationRules.Clear();
-            invNBinding.ValidationRules.Add(new DataErrorValidationRule());
-            invNBinding.ValidationRules.Add(new InventoryNumberValidationRule());
-            inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
-        }
-
-        private void DisabledRepeatInvN_Unchecked()
-        {
-            invNBinding = new Binding();
-            invNBinding.Path = new PropertyPath("InventoryNumber");
-            invNBinding.ValidationRules.Clear();
-            invNBinding.ValidationRules.Add(new DataErrorValidationRule());
-            inventoryNumber.SetBinding(TextBox.TextProperty, invNBinding);
         }
 
         private void LoadFromSettings()

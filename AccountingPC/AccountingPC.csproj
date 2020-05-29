@@ -66,6 +66,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -87,11 +88,6 @@
     </ApplicationDefinition>
     <Compile Include="AccountingPCWindow.SoftwareManagement.cs" />
     <Compile Include="AccountingPCWindow.UpdateSoftwareOnDevice.cs" />
-    <Compile Include="AccountingPCWindow.UpdateSource.cs" />
-    <Compile Include="AccountingPCWindow.InitializePopup.cs" />
-    <Compile Include="AccountingPCWindow.UpdateEquipments.cs" />
-    <Compile Include="AccountingPCWindow.GetEquipments.cs" />
-    <Compile Include="AccountingPCWindow.AddEquipments.cs" />
     <Compile Include="AccountingPCWindow.UpdateData.cs" />
     <Compile Include="AccountingPCWindow.Part2.cs" />
     <Compile Include="AccountingPCWindow.Part1.cs" />
@@ -112,6 +108,9 @@
     <Compile Include="AccountingReport\OrderNameCollection.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
+    <Compile Include="ChangeWindow.xaml.cs">
+      <DependentUpon>ChangeWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Devices.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="LightTheme\ForButton.cs" />
@@ -202,6 +201,10 @@
     <Page Include="BlackTheme\Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChangeWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LightTheme\Box.xaml">
       <SubType>Designer</SubType>

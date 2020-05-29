@@ -1,9 +1,14 @@
-﻿using System;
+﻿using GemBox.Spreadsheet;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,6 +23,7 @@ namespace AccountingPC.AccountingReport
     public partial class ConfiguringReportWindow : Window
     {
         internal Report CurrentReport { get; set; }
+        string fileName;
 
         public ConfiguringReportWindow(TypeReport typeReport = TypeReport.Simple)
         {
@@ -190,15 +196,19 @@ namespace AccountingPC.AccountingReport
             switch (CurrentReport.Options.CreateOptions)
             {
                 case CreateReportOptions.SaveToFile:
-                    Thread save = new Thread(new ParameterizedThreadStart(SaveReport));
-                    save.IsBackground = true;
+                    Thread save = new Thread(new ParameterizedThreadStart(SaveReport))
+                    {
+                        IsBackground = false,
+                    };
                     save.Start(GetFileName());
                     //SaveReport();
                     break;
                 case CreateReportOptions.OpenExcel:
                     //OpenReport();
-                    Thread open = new Thread(new ThreadStart(OpenReport));
-                    open.IsBackground = true;
+                    Thread open = new Thread(new ThreadStart(OpenReport))
+                    {
+                        IsBackground = false,
+                    };
                     open.Start();
                     break;
                 case CreateReportOptions.Print:
@@ -246,14 +256,17 @@ namespace AccountingPC.AccountingReport
 
         private void OpenReport()
         {
-            string fileName = $@"{System.IO.Path.GetTempPath()}Report" +
+            fileName = $@"{System.IO.Path.GetTempPath()}Report" +
                 $@"_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
             Task task = new Task(() =>
             {
                 Dispatcher.Invoke(() =>
                 {
                     SaveReport(fileName);
-                    Process.Start("excel.exe", fileName);
+                    //Process process = Process.Start("excel.exe", $"/t {fileName}");
+                    //process.Exited += (sender, e) => new FileInfo(fileName).Delete();
+                    //process.WaitForExit();
+                    OpenExcel.Open(fileName);
                 });
             });
             task.Start();
@@ -303,6 +316,23 @@ namespace AccountingPC.AccountingReport
             //fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.Today));
             fromDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, DateTime.Parse("31.12.1999")));
             fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.MaxValue));
+        }
+    }
+
+    internal static class OpenExcel
+    {
+        private static Process excel = new Process();
+        private static string fileName;
+
+        public static void Open(string fName)
+        {
+            fileName = fName;
+            //excel = Process.Start("excel.exe", $"/n {fileName}");
+            excel.StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}");
+            excel.EnableRaisingEvents = true;
+            excel.Exited += (sender, e) => new FileInfo(fileName)?.Delete();
+            excel.Start();
+            //excel.WaitForExit();
         }
     }
 }

@@ -58,21 +58,18 @@ namespace AccountingPC
             "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
 
-        private View NowView { get; set; }
-        private bool IsChangeAnalog { get; set; }
-        private TypeDevice TypeDevice { get; set; }
-        private TypeSoft TypeSoft { get; set; }
-        private TypeChange TypeChange { get; set; }
-        private int DeviceID { get; set; }
-        private int SoftwareID { get; set; }
-        private bool IsPreOpenEquipmentPopup { get; set; }
-        private bool IsPreOpenSoftwarePopup { get; set; }
+        public ChangeWindow changeWindow;
 
-        private Binding invNBinding;
+        internal View NowView { get; set; }
+        internal TypeDevice TypeDevice { get; set; }
+        internal TypeSoft TypeSoft { get; set; }
+        internal TypeChange TypeChange { get; set; }
+        internal int DeviceID { get; set; }
+        internal int SoftwareID { get; set; }
+        public bool IsPreOpenEquipmentPopup { get; set; } = false;
+        public bool IsPreOpenSoftwarePopup { get; set; } = false;
 
-        private Dictionary<int, byte[]> images;
-
-        List<ListBoxItem> videoConnectorsItems;
+        internal Dictionary<int, byte[]> images;
 
         List<InstalledSoftware> pcSoftware;
         List<InstalledSoftware> notebookSoftware;
@@ -82,75 +79,39 @@ namespace AccountingPC
         public double lastHeight;
         public double lastWidth;
 
-        SqlDataAdapter aspectRatioDataAdapter;
-        SqlDataAdapter cpuDataAdapter;
         SqlDataAdapter softwareDataAdapter;
         SqlDataAdapter pcNotInstalledSoftwareDataAdapter;
         SqlDataAdapter pcSoftwareDataAdapter;
         SqlDataAdapter notebookNotInstalledSoftwareDataAdapter;
         SqlDataAdapter notebookSoftwareDataAdapter;
         SqlDataAdapter osDataAdapter;
-        SqlDataAdapter screenInstalledDataAdapter;
         SqlDataAdapter boardDataAdapter;
-        SqlDataAdapter frequencyDataAdapter;
-        SqlDataAdapter locationDataAdapter;
-        SqlDataAdapter matrixTechnologyDataAdapter;
         SqlDataAdapter monitorDataAdapter;
         SqlDataAdapter networkSwitchDataAdapter;
         SqlDataAdapter notebookDataAdapter;
         SqlDataAdapter otherEquipmentDataAdapter;
-        SqlDataAdapter paperSizeDataAdapter;
         SqlDataAdapter pcDataAdapter;
         SqlDataAdapter printerScannerDataAdapter;
         SqlDataAdapter projectorDataAdapter;
         SqlDataAdapter projectorScreenDataAdapter;
-        SqlDataAdapter projectorTechnologyDataAdapter;
-        SqlDataAdapter resolutionDataAdapter;
-        SqlDataAdapter typeNetworkSwitchDataAdapter;
-        SqlDataAdapter typeNotebookDataAdapter;
-        SqlDataAdapter typePrinterDataAdapter;
-        SqlDataAdapter videoConnectorsDataAdapter;
-        SqlDataAdapter wifiFrequencyDataAdapter;
-        SqlDataAdapter nameDataAdapter;
-        SqlDataAdapter motherboardDataAdapter;
-        SqlDataAdapter vCardDataAdapter;
-        SqlDataAdapter typeDeviceDataAdapter;
-        SqlDataAdapter typeLicenseDataAdapter;
+        //SqlDataAdapter typeDeviceDataAdapter;
 
-        DataSet aspectRatioDataSet;
-        DataSet cpuDataSet;
         DataSet softwareDataSet;
         DataSet pcNotInstalledSoftwareDataSet;
         DataSet pcSoftwareDataSet;
         DataSet notebookNotInstalledSoftwareDataSet;
         DataSet notebookSoftwareDataSet;
         DataSet osDataSet;
-        DataSet screenInstalledDataSet;
         DataSet boardDataSet;
-        DataSet frequencyDataSet;
-        DataSet locationDataSet;
-        DataSet matrixTechnologyDataSet;
         DataSet monitorDataSet;
         DataSet networkSwitchDataSet;
         DataSet notebookDataSet;
         DataSet otherEquipmentDataSet;
-        DataSet paperSizeDataSet;
         DataSet pcDataSet;
         DataSet printerScannerDataSet;
         DataSet projectorDataSet;
         DataSet projectorScreenDataSet;
-        DataSet projectorTechnologyDataSet;
-        DataSet resolutionDataSet;
-        DataSet typeNetworkSwitchDataSet;
-        DataSet typeNotebookDataSet;
-        DataSet typePrinterDataSet;
-        DataSet videoConnectorsDataSet;
-        DataSet wifiFrequencyDataSet;
-        DataSet nameDataSet;
-        DataSet motherboardDataSet;
-        DataSet vCardDataSet;
-        DataSet typeDeviceDataSet;
-        DataSet typeLicenseDataSet;
+        //DataSet typeDeviceDataSet;
 
         static AccountingPCWindow()
         {
@@ -159,6 +120,7 @@ namespace AccountingPC
         public AccountingPCWindow()
         {
             InitializeComponent();
+            changeWindow = new ChangeWindow(this);
             lastHeight = Height;
             lastWidth = Width;
             UpdateAllEquipmentData();
@@ -199,8 +161,13 @@ namespace AccountingPC
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            ChangePopupPreClose();
-            ChangePopupPostClose();
+            //ChangePopupPreClose();
+            //ChangePopupPostClose();
+            if (changeWindow != null)
+            {
+                changeWindow.Left = Left - (changeWindow.Width - Width) / 2;
+                changeWindow.Top = Top - (changeWindow.Height - Height) / 2;
+            }
         }
 
         private void ExitApp(object sender, RoutedEventArgs e)
@@ -222,10 +189,13 @@ namespace AccountingPC
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            ChangePopupPreClose();
-            DragMove();// Для перемещение окна
-            ChangePopupPostClose();
-            ChangeWindowState();
+            DragMove();
+
+            if (changeWindow != null)
+            {
+                changeWindow.Left = Left - (changeWindow.Width - Width) / 2;
+                changeWindow.Top = Top - (changeWindow.Height - Height) / 2;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -233,8 +203,6 @@ namespace AccountingPC
             LoadFromSettings();
             ChangeWindowState();
             SelectViewEquipment();
-            changeEquipmentPopup.Height = Height - 200;
-            changeEquipmentPopup.Width = Width - 400;
         }
 
         private void Window_Closed(object sender, EventArgs e)
@@ -265,7 +233,8 @@ namespace AccountingPC
         private void AddDevice(object sender, RoutedEventArgs e)
         {
             TypeChange = TypeChange.Add;
-            changeEquipmentPopup.IsOpen = true;
+            //changeEquipmentPopup.IsOpen = true;
+            OpenChangeWindow();
         }
 
         private void ChangeDevice(object sender, RoutedEventArgs e)
@@ -273,7 +242,8 @@ namespace AccountingPC
             DataRow row = ((DataRowView)equipmentView.SelectedItem).Row;
             DeviceID = Convert.ToInt32(row[0]);
             TypeChange = TypeChange.Change;
-            changeEquipmentPopup.IsOpen = true;
+            //changeEquipmentPopup.IsOpen = true;
+            OpenChangeWindow();
         }
 
         private void DeleteDevice(object sender, RoutedEventArgs e)
@@ -311,116 +281,6 @@ namespace AccountingPC
             UpdateEquipmentData();
         }
 
-        /* Управление изменением устройств */
-
-        private void SaveChanges(object sender, RoutedEventArgs e)
-        {
-            SaveOrUpdateEquipmentDB();
-            UpdateEquipmentData();
-            UpdateImages();
-            ChangeEquipmentView();
-        }
-
-        private void ChangeEquipmentPopup_Opened(object sender, EventArgs e)
-        {
-            viewGrid.IsEnabled = false;
-            menu.IsEnabled = false;
-            if (!IsPreOpenEquipmentPopup)
-            {
-                InitializePopup();
-                switch (TypeChange)
-                {
-                    case TypeChange.Change:
-                        switch (TypeDevice)
-                        {
-                            case TypeDevice.PC:
-                                GetPC(device, DeviceID);
-                                break;
-                            case TypeDevice.Notebook:
-                                GetNotebook(device, DeviceID);
-                                break;
-                            case TypeDevice.Monitor:
-                                GetMonitor(device, DeviceID);
-                                break;
-                            case TypeDevice.Projector:
-                                GetProjector(device, DeviceID);
-                                break;
-                            case TypeDevice.InteractiveWhiteboard:
-                                GetInteractiveWhiteboard(device, DeviceID);
-                                break;
-                            case TypeDevice.ProjectorScreen:
-                                GetProjectorScreen(device, DeviceID);
-                                break;
-                            case TypeDevice.PrinterScanner:
-                                GetPrinterScanner(device, DeviceID);
-                                break;
-                            case TypeDevice.NetworkSwitch:
-                                GetNetworkSwitch(device, DeviceID);
-                                break;
-                            case TypeDevice.OtherEquipment:
-                                GetOtherEquipment(device, DeviceID);
-                                break;
-                        }
-                        SetDeviceLocationAndInvoice(device);
-                        break;
-                    case TypeChange.Add:
-                        switch (TypeDevice)
-                        {
-                            case TypeDevice.PC:
-                                device = new PC();
-                                break;
-                            case TypeDevice.Notebook:
-                                device = new Notebook();
-                                break;
-                            case TypeDevice.Monitor:
-                                device = new Monitor();
-                                break;
-                            case TypeDevice.Projector:
-                                device = new Projector();
-                                break;
-                            case TypeDevice.InteractiveWhiteboard:
-                                device = new InteractiveWhiteboard();
-                                break;
-                            case TypeDevice.ProjectorScreen:
-                                device = new ProjectorScreen();
-                                break;
-                            case TypeDevice.PrinterScanner:
-                                device = new PrinterScanner();
-                                break;
-                            case TypeDevice.NetworkSwitch:
-                                device = new NetworkSwitch();
-                                break;
-                            case TypeDevice.OtherEquipment:
-                                device = new OtherEquipment();
-                                break;
-                        }
-                        break;
-                }
-            }
-        }
-
-        private void PopupClose(object sender, ExecutedRoutedEventArgs e)
-        {
-            switch (NowView)
-            {
-                case View.Equipment:
-                    changeEquipmentPopup.IsOpen = false;
-                    IsPreOpenEquipmentPopup = false;
-                    UpdateEquipmentData();
-                    UpdateImages();
-                    ChangeEquipmentView();
-                    break;
-                case View.Software:
-                    changeSoftwarePopup.IsOpen = false;
-                    IsPreOpenSoftwarePopup = false;
-                    UpdateSoftwareData();
-                    ChangeSoftwareView();
-                    break;
-            }
-            viewGrid.IsEnabled = true;
-            menu.IsEnabled = true;
-        }
-
         private void Window_LostFocus(object sender, RoutedEventArgs e)
         {
             //changePopupPreClose();
@@ -439,29 +299,6 @@ namespace AccountingPC
         private void Window_Activated(object sender, EventArgs e)
         {
             ChangePopupPostClose();
-        }
-
-        private void AutoInvN_Checked(object sender, RoutedEventArgs e)
-        {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
-            {
-                connection.Open();
-                inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar().ToString();
-                inventoryNumber.IsEnabled = false;
-            }
-        }
-
-        private void autoInvN_Unchecked(object sender, RoutedEventArgs e)
-        {
-            inventoryNumber.IsEnabled = true;
-        }
-
-        private void Cpu_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            DataRow row = ((DataRowView)cpu.SelectedItem)?.Row;
-            frequency.Text = row?[1].ToString();
-            maxFrequency.Text = row?[2].ToString();
-            cores.Text = row?[3].ToString();
         }
 
         private void SelectViewEquipment(object sender, ExecutedRoutedEventArgs e)
@@ -487,7 +324,8 @@ namespace AccountingPC
         private void AddSoftware(object sender, RoutedEventArgs e)
         {
             TypeChange = TypeChange.Add;
-            changeSoftwarePopup.IsOpen = true;
+            //changeSoftwarePopup.IsOpen = true;
+            OpenChangeWindow();
         }
 
         private void ChangeSoftware(object sender, RoutedEventArgs e)
@@ -495,7 +333,8 @@ namespace AccountingPC
             DataRow row = ((DataRowView)softwareView.SelectedItem).Row;
             DeviceID = Convert.ToInt32(row[0]);
             TypeChange = TypeChange.Change;
-            changeSoftwarePopup.IsOpen = true;
+            //changeSoftwarePopup.IsOpen = true;
+            OpenChangeWindow();
         }
 
         private void DeleteSoftware(object sender, RoutedEventArgs e)
@@ -564,19 +403,6 @@ namespace AccountingPC
             UpdateSoftwareOnDevice();
         }
 
-        private void ImageLoad_Click(object sender, RoutedEventArgs e)
-        {
-            ChangePopupPreClose();
-            //changePopup.Opacity = 1;
-            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog();
-            dialog.Filter = "Image Files(*.BMP;*.PNG;*.JPG;*.GIF)|*.BMP;*.PNG;*.JPG;*.GIF";
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
-                return;
-            ChangePopupPostClose();
-            //changePopup.Opacity = 0;
-            imageFilename.Text = dialog.FileName;
-        }
-
         private void UpdateView_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             switch (NowView)
@@ -593,36 +419,6 @@ namespace AccountingPC
                 case View.Location:
                     break;
             }
-        }
-
-        private void InventoryNumber_MouseEnter(object sender, MouseEventArgs e)
-        {
-
-        }
-
-        private void InventoryNumber_Error(object sender, ValidationErrorEventArgs e)
-        {
-            return;
-        }
-
-        private void ChangeAnalog_Checked(object sender, RoutedEventArgs e)
-        {
-            IsChangeAnalog = true;
-        }
-
-        private void ChangeAnalog_Unchecked(object sender, RoutedEventArgs e)
-        {
-            IsChangeAnalog = false;
-        }
-
-        private void DisabledRepeatInvN_Checked(object sender, RoutedEventArgs e)
-        {
-            DisabledRepeatInvN_Checked();
-        }
-
-        private void DisabledRepeatInvN_Unchecked(object sender, RoutedEventArgs e)
-        {
-            DisabledRepeatInvN_Unchecked();
         }
 
         private void AddSoftware_Click(object sender, RoutedEventArgs e)
@@ -684,51 +480,9 @@ namespace AccountingPC
             UpdateSoftwareOnDevice();
         }
 
-        private void ChangeSoftwarePopup_Opened(object sender, EventArgs e)
-        {
-            viewGrid.IsEnabled = false;
-            menu.IsEnabled = false;
-            switch (TypeChange)
-            {
-                case TypeChange.Add:
-                    switch (TypeSoft)
-                    {
-                        case TypeSoft.LicenseSoftware:
-                            soft = new LicenseSoftware();
-                            //AddSoftware();
-                            break;
-                        case TypeSoft.OS:
-                            soft = new OS();
-                            //AddOS();
-                            break;
-                    }
-                    break;
-                case TypeChange.Change:
-                    switch (TypeSoft)
-                    {
-                        case TypeSoft.LicenseSoftware:
-                            GetLicenseSoftware(soft, SoftwareID);
-                            //AddSoftware();
-                            break;
-                        case TypeSoft.OS:
-                            GetOS(soft, SoftwareID);
-                            //AddOS();
-                            break;
-                    }
-                    break;
-            }
-        }
-
         private void SoftwareView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             SoftwareID = Convert.ToInt32(((DataRowView)softwareView?.SelectedItem)?.Row?[0]);
-        }
-
-        private void SaveChangesForSoftware(object sender, RoutedEventArgs e)
-        {
-            SaveOrUpdateSoftwareDB();
-            UpdateSoftwareData();
-            ChangeSoftwareView();
         }
 
         private void CreateReport_Click(object sender, RoutedEventArgs e)
@@ -761,6 +515,22 @@ namespace AccountingPC
             ParametersWindow parametersWindow = new ParametersWindow();
             parametersWindow.Owner = this;
             parametersWindow.ShowDialog();
+        }
+
+        private void OpenChangeWindow()
+        {
+            changeWindow = new ChangeWindow(this);
+            changeWindow.Owner = this;
+            changeWindow.Show();
+        }
+
+        private void Window_DragOver(object sender, DragEventArgs e)
+        {
+            if (changeWindow != null)
+            {
+                changeWindow.Left = Left - (changeWindow.Width - Width) / 2;
+                changeWindow.Top = Top - (changeWindow.Height - Height) / 2;
+            }
         }
     }
 }
