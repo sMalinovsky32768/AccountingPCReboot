@@ -2273,20 +2273,7 @@ namespace AccountingPC
             }
             else if (Accounting.TypeChange==TypeChange.Change)
             {
-                int col;
-                switch (Accounting.TypeDevice)
-                {
-                    case TypeDevice.PC:
-                    case TypeDevice.Notebook:
-                    case TypeDevice.Monitor:
-                    case TypeDevice.Projector:
-                        col = Accounting.equipmentView.Columns.Count - 2;
-                        break;
-                    default:
-                        col = Accounting.equipmentView.Columns.Count - 1;
-                        break;
-                }
-                object obj = ((DataRowView)Accounting.equipmentView.SelectedItems?[0]).Row[col];
+                object obj = ((DataRowView)Accounting.equipmentView.SelectedItems?[0]).Row["ImageID"];
                 int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? null : obj);
                 if (id != 0)
                 {

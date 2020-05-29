@@ -404,7 +404,7 @@
                                             <RowDefinition/>
                                             <RowDefinition/>
                                         </Grid.RowDefinitions>
-                                        <TextBlock Text="Диагональ (дюймы)"/>
+                                        <TextBlock Text="Диагональ (&#x2033;)"/>
                                         <TextBox Grid.Row="1" x:Name="diagonal">
                                             <TextBox.Text>
                                                 <Binding Path="Diagonal">

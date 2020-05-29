@@ -375,21 +375,6 @@ namespace AccountingPC
         {
             DeviceID = Convert.ToInt32(((DataRowView)equipmentView?.SelectedItem)?.Row?[0]);
             BitmapFrame frame = null;
-            //deviceImage.Source = BitmapFrame.Create();
-
-            //int col;
-            //switch (TypeDevice)
-            //{
-            //    case TypeDevice.PC:
-            //    case TypeDevice.Notebook:
-            //    case TypeDevice.Monitor:
-            //    case TypeDevice.Projector:
-            //        col = equipmentView.Columns.Count - 2;
-            //        break;
-            //    default:
-            //        col = equipmentView.Columns.Count - 1;
-            //        break;
-            //}
             object obj = equipmentView.SelectedItems.Count > 0 ? (((DataRowView)equipmentView.SelectedItems?[0])?.Row["ImageID"]) : 0;
             int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
             if (id != 0)
