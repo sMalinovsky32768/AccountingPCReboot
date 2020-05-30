@@ -58,7 +58,7 @@ namespace AccountingPC
             UpdateNetworkSwitchData();
             UpdateOtherEquipmentData();
         }
-
+        
         internal void ChangeEquipmentView()
         {
             switch (equipmentCategoryList.SelectedIndex)

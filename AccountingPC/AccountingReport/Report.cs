@@ -298,27 +298,54 @@ namespace AccountingPC.AccountingReport
                 worksheet.InsertDataTable(dataTable, new InsertDataTableOptions()
                 {
                     ColumnHeaders = true,
+                    StartColumn = 2,
+                    StartRow = 1
                 });
-
+                int rowCount = worksheet.Rows.Count;
+                worksheet.Cells[rowCount + 1, 0].Value = "Итого:";
                 int col;
                 // Установка денежного типа для Цены
                 if (worksheet.Cells.FindText("Цена", false, out _, out col))
                 {
                     worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                    string begin = worksheet.Cells[0, col].Name;
+                    string end = worksheet.Cells[rowCount, col].Name;
+                    worksheet.Cells[rowCount + 1, col].Formula = $"=SUM({begin}:{end})";
+                    worksheet.Cells[rowCount + 1, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+
+                    worksheet.Cells[rowCount + 2, col - 1].Value = "Минимальная цена";
+                    worksheet.Cells[rowCount + 2, col].Formula = $"=MIN({begin}:{end})";
+                    worksheet.Cells[rowCount + 2, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+
+                    worksheet.Cells[rowCount + 3, col - 1].Value = "Средняя цена";
+                    worksheet.Cells[rowCount + 3, col].Formula = $"=AVERAGE({begin}:{end})";
+                    worksheet.Cells[rowCount + 3, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+
+                    worksheet.Cells[rowCount + 4, col - 1].Value = "Максимальная цена";
+                    worksheet.Cells[rowCount + 4, col].Formula = $"=MAX({begin}:{end})";
+                    worksheet.Cells[rowCount + 4, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+
                     if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
                     {
+                        begin = worksheet.Cells[0, col1].Name;
+                        end = worksheet.Cells[rowCount, col1].Name;
+                        worksheet.Cells[rowCount + 1, col1].Formula = $"=SUM({begin}:{end})";
                         worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
                         if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
                         {
+                            begin = worksheet.Cells[0, col2].Name;
+                            end = worksheet.Cells[rowCount, col2].Name;
+                            worksheet.Cells[rowCount + 1, col2].Formula = $"=SUM({begin}:{end})";
+
+                            int rowIndex;
                             foreach (ExcelRow row in worksheet.Rows)
                             {
-                                int rowIndex = row.Index;
+                                rowIndex = row.Index;
                                 if (rowIndex == 0) continue;
                                 string cell = worksheet.Cells[rowIndex, col].Name;
                                 string cell2 = worksheet.Cells[rowIndex, col2].Name;
                                 string formula = $"={cell}*{cell2}";
                                 worksheet.Cells[rowIndex, col1].Formula = formula;
-                                //worksheet.Columns[col1].Cells[row.Index, col1].Formula = $"{worksheet.Cells[row.Index, col]}*{worksheet.Cells[row.Index, col2]}";
                             }
                         }
                     }
@@ -326,6 +353,10 @@ namespace AccountingPC.AccountingReport
                 if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
                 {
                     worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
+                    string begin = worksheet.Cells[0, col].Name;
+                    string end = worksheet.Cells[rowCount, col].Name;
+                    worksheet.Cells[rowCount + 1, col].Formula = $"=COUNT({begin}:{end})";
+                    worksheet.Cells[rowCount + 1, col].Style.NumberFormat = "0__Устройств";
                 }
                 if (worksheet.Cells.FindText("Дата приобретения", false, out _, out col))
                 {

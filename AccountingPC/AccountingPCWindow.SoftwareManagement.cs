@@ -13,24 +13,38 @@ namespace AccountingPC
             switch (softwareCategoryList.SelectedIndex)
             {
                 case 0:
-                    softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
-
-                    softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-                    ((DataGridTextColumn)softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.
-                        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
-
-                    TypeSoft = TypeSoft.LicenseSoftware;
+                    SetViewToLicenseSoftware();
                     break;
                 case 1:
-                    softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
-
-                    softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-                    ((DataGridTextColumn)softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.
-                        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
-
-                    TypeSoft = TypeSoft.OS;
+                    SetViewToOS();
                     break;
             }
+        }
+
+        internal void SetViewToLicenseSoftware()
+        {
+            softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
+            //while (softwareView.Columns.Count == 0) continue;
+
+            //if (softwareView.Columns.Count > 0)
+            //{
+            //    softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+            //    ((DataGridTextColumn)softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.
+            //        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            //}
+
+            TypeSoft = TypeSoft.LicenseSoftware;
+        }
+
+        internal void SetViewToOS()
+        {
+            softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
+
+            //softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+            //((DataGridTextColumn)softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.
+            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+
+            TypeSoft = TypeSoft.OS;
         }
 
         internal void UpdateSoftwareData()
@@ -38,24 +52,29 @@ namespace AccountingPC
             switch (TypeSoft)
             {
                 case TypeSoft.LicenseSoftware:
-                    softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
-                    softwareDataSet = new DataSet();
-                    softwareDataAdapter.Fill(softwareDataSet);
+                    UpdateLicenseSoftwareData();
                     break;
                 case TypeSoft.OS:
-                    osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
-                    osDataSet = new DataSet();
-                    osDataAdapter.Fill(osDataSet);
+                    UpdateOSData();
                     break;
             }
         }
 
         private void UpdateAllSoftwareData()
         {
+            UpdateLicenseSoftwareData();
+            UpdateOSData();
+        }
+
+        private void UpdateLicenseSoftwareData()
+        {
             softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
             softwareDataSet = new DataSet();
             softwareDataAdapter.Fill(softwareDataSet);
+        }
 
+        private void UpdateOSData()
+        {
             osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
             osDataSet = new DataSet();
             osDataAdapter.Fill(osDataSet);

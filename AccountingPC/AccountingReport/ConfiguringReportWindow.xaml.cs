@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace AccountingPC.AccountingReport
 {
@@ -266,7 +267,13 @@ namespace AccountingPC.AccountingReport
                     //Process process = Process.Start("excel.exe", $"/t {fileName}");
                     //process.Exited += (sender, e) => new FileInfo(fileName).Delete();
                     //process.WaitForExit();
-                    OpenExcel.Open(fileName);
+                    //OpenExcel.Open(fileName);
+
+                    Process excel = new Process();
+                    excel.StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}");
+                    excel.EnableRaisingEvents = true;
+                    excel.Exited += (sender, e) => new FileInfo(fileName)?.Delete();
+                    excel.Start();
                 });
             });
             task.Start();
@@ -327,11 +334,12 @@ namespace AccountingPC.AccountingReport
         public static void Open(string fName)
         {
             fileName = fName;
-            //excel = Process.Start("excel.exe", $"/n {fileName}");
             excel.StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}");
             excel.EnableRaisingEvents = true;
             excel.Exited += (sender, e) => new FileInfo(fileName)?.Delete();
             excel.Start();
+
+            //excel = Process.Start("excel.exe", $"/n {fileName}");
             //excel.WaitForExit();
         }
     }
