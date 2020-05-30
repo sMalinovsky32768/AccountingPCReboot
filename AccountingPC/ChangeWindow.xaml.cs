@@ -84,9 +84,17 @@ namespace AccountingPC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Accounting.Hide();
+            ChangeView();
+        }
+
+        private void ChangeView()
+        {
             switch (Accounting.NowView)
             {
                 case View.Equipment:
+                    //Width = 1100;
+                    //Height = 700;
                     changeSoftwareGrid.Visibility = Visibility.Collapsed;
                     changeEquipmentGrid.Visibility = Visibility.Visible;
                     if (!Accounting.IsPreOpenEquipmentPopup)
@@ -163,6 +171,8 @@ namespace AccountingPC
                     }
                     break;
                 case View.Software:
+                    //Width = 600;
+                    //Height = 300;
                     changeEquipmentGrid.Visibility = Visibility.Collapsed;
                     changeSoftwareGrid.Visibility = Visibility.Visible;
                     if (!Accounting.IsPreOpenSoftwarePopup)
@@ -2456,6 +2466,7 @@ namespace AccountingPC
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            Accounting.Show();
             switch (Accounting.NowView)
             {
                 case View.Equipment:
@@ -2494,50 +2505,6 @@ namespace AccountingPC
                 return;
             //PostClose();
             imageFilename.Text = dialog.FileName;
-        }
-
-        private void PreClose()
-        {
-            Hide();
-            switch (Accounting.NowView)
-            {
-                case View.Equipment:
-                    Accounting.IsPreOpenEquipmentPopup = true;
-                    break;
-                case View.Software:
-                    Accounting.IsPreOpenSoftwarePopup = true;
-                    break;
-            }
-            //if (Accounting.changeEquipmentPopup.IsOpen)
-            //{
-            //    IsPreOpenEquipmentPopup = true;
-            //    changeEquipmentPopup.IsOpen = false;
-            //}
-            //if (changeSoftwarePopup.IsOpen)
-            //{
-            //    IsPreOpenSoftwarePopup = true;
-            //    changeSoftwarePopup.IsOpen = false;
-            //}
-        }
-
-        private void PostClose()
-        {
-            Show();
-            //ShowDialog();
-            //if (IsPreOpenEquipmentPopup)
-            //{
-            //    changeEquipmentPopup.Height = Height - 200;
-            //    changeEquipmentPopup.Width = Width - 400;
-            //    changeEquipmentPopup.IsOpen = true;
-            //    IsPreOpenEquipmentPopup = false;
-            //}
-            //if (IsPreOpenSoftwarePopup)
-            //{
-            //    changeSoftwarePopup.Height = Height - 200;
-            //    changeSoftwarePopup.Width = Width - 400;
-            //    changeSoftwarePopup.IsOpen = true;
-            //    IsPreOpenSoftwarePopup = false;
-            //}
         }
 
         private void SaveChangesForSoftware(object sender, RoutedEventArgs e)
@@ -2592,6 +2559,18 @@ namespace AccountingPC
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
                 Accounting.Top = Top - (Accounting.Height - Height) / 2;
             }
+        }
+
+        private void CheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            Accounting.menu.IsEnabled = false;
+            Accounting.viewGrid.IsEnabled = false;
+        }
+
+        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            Accounting.menu.IsEnabled = true;
+            Accounting.viewGrid.IsEnabled = true;
         }
     }
 }

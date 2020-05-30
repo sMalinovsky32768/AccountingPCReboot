@@ -17,6 +17,7 @@
         Equipment,
         Software,
         Location,
+        Invoice,
     }
 
     internal enum TypeDevice

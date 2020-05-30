@@ -66,6 +66,7 @@ namespace AccountingPC
         internal TypeChange TypeChange { get; set; }
         internal int DeviceID { get; set; }
         internal int SoftwareID { get; set; }
+        internal int InvoiceID { get; set; }
         public bool IsPreOpenEquipmentPopup { get; set; } = false;
         public bool IsPreOpenSoftwarePopup { get; set; } = false;
 
@@ -94,6 +95,7 @@ namespace AccountingPC
         SqlDataAdapter printerScannerDataAdapter;
         SqlDataAdapter projectorDataAdapter;
         SqlDataAdapter projectorScreenDataAdapter;
+        SqlDataAdapter invoiceDataAdapter;
         //SqlDataAdapter typeDeviceDataAdapter;
 
         DataSet softwareDataSet;
@@ -111,6 +113,8 @@ namespace AccountingPC
         DataSet printerScannerDataSet;
         DataSet projectorDataSet;
         DataSet projectorScreenDataSet;
+        DataSet invoiceDataSet;
+        DataSet invoiceSoftwareAndEquipmentDataSet;
         //DataSet typeDeviceDataSet;
 
         static AccountingPCWindow()
@@ -125,26 +129,14 @@ namespace AccountingPC
             UpdateAllEquipmentData();
             UpdateAllSoftwareData();
             UpdateImages();
-            //equipmentCategoryList.SelectedIndex = 0;
+
             IsPreOpenEquipmentPopup = false;
             NowView = View.Equipment;
+
             // Создание меню отчетов
             reportMenu.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
             reportMenu.ItemsSource = ReportNameCollection.Collection;
             reportMenu.DisplayMemberPath = "Name";
-            //if (reportMenu.ItemContainerGenerator.Status ==
-            //    System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
-            //{
-            //    var containers = reportMenu.Items.Cast<object>().Select(
-            //        item => (FrameworkElement)reportMenu.ItemContainerGenerator.ContainerFromItem(item));
-            //    foreach (var container in containers)
-            //    {
-            //        (container as MenuItem).Click += CreateReport_Click;
-            //    }
-            //}
-
-            //softwareCategoryList.SelectedIndex = 0;
-            //equipmentCategoryList.SelectedIndex = 0;
         }
 
         private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
@@ -163,8 +155,6 @@ namespace AccountingPC
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //ChangePopupPreClose();
-            //ChangePopupPostClose();
             if (changeWindow != null)
             {
                 changeWindow.Left = Left - (changeWindow.Width - Width) / 2;
@@ -229,6 +219,10 @@ namespace AccountingPC
                     break;
                 case View.Location:
                     break;
+                case View.Invoice:
+                    InvoiceID = Convert.ToInt32(((DataRowView)invoiceList?.SelectedItem)?.Row?["ID"]);
+                    ChangeInvoiceView();
+                    break;
             }
         }
 
@@ -241,8 +235,8 @@ namespace AccountingPC
 
         private void ChangeDevice(object sender, RoutedEventArgs e)
         {
-            DataRow row = ((DataRowView)equipmentView.SelectedItem).Row;
-            DeviceID = Convert.ToInt32(row[0]);
+            //DataRow row = ((DataRowView)equipmentView.SelectedItem).Row;
+            //DeviceID = Convert.ToInt32(row[0]);
             TypeChange = TypeChange.Change;
             //changeEquipmentPopup.IsOpen = true;
             OpenChangeWindow();
@@ -283,26 +277,6 @@ namespace AccountingPC
             UpdateEquipmentData();
         }
 
-        private void Window_LostFocus(object sender, RoutedEventArgs e)
-        {
-            //changePopupPreClose();
-        }
-
-        private void Window_GotFocus(object sender, RoutedEventArgs e)
-        {
-            //changePopupPostClose();
-        }
-
-        private void Window_Deactivated(object sender, EventArgs e)
-        {
-            ChangePopupPreClose();
-        }
-
-        private void Window_Activated(object sender, EventArgs e)
-        {
-            ChangePopupPostClose();
-        }
-
         private void SelectViewEquipment(object sender, ExecutedRoutedEventArgs e)
         {
             SelectViewEquipment();
@@ -332,8 +306,8 @@ namespace AccountingPC
 
         private void ChangeSoftware(object sender, RoutedEventArgs e)
         {
-            DataRow row = ((DataRowView)softwareView.SelectedItem).Row;
-            DeviceID = Convert.ToInt32(row[0]);
+            //DataRow row = ((DataRowView)softwareView.SelectedItem).Row;
+            //DeviceID = Convert.ToInt32(row[0]);
             TypeChange = TypeChange.Change;
             //changeSoftwarePopup.IsOpen = true;
             OpenChangeWindow();
@@ -475,13 +449,6 @@ namespace AccountingPC
 
         private void CreateReport_Click(object sender, RoutedEventArgs e)
         {
-            //System.Windows.Forms.SaveFileDialog dialog = new System.Windows.Forms.SaveFileDialog();
-            //dialog.Filter = "Excel | *.xlsx;*.xls";
-            //dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            //dialog.FileName = $"Report_{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
-            //if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
-            //    return;
-            //Report.SaveReport(dialog.FileName);
             ReportName reportName = ((sender as MenuItem).Header as ReportName);
             ConfiguringReportWindow reportWindow;
             if (reportName != null)
@@ -491,7 +458,7 @@ namespace AccountingPC
             }
             else
             {
-                reportWindow = new ConfiguringReportWindow(reportName.Type);
+                reportWindow = new ConfiguringReportWindow();
                 reportWindow.Owner = this;
             }
             reportWindow?.ShowDialog();
@@ -521,21 +488,54 @@ namespace AccountingPC
             }
         }
 
-        private void softwareView_AutoGeneratedColumns(object sender, EventArgs e)
+        private void SoftwareView_AutoGeneratedColumns(object sender, EventArgs e)
         {
             softwareView.Columns[((DataView)softwareView.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+
+            softwareView.Columns[((DataView)softwareView.ItemsSource).Table.Columns.IndexOf("InvoiceID")].Visibility = Visibility.Collapsed;
+
             ((DataGridTextColumn)softwareView.Columns[((DataView)softwareView.ItemsSource).Table.
                 Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
         }
 
-        private void equipmentView_AutoGeneratedColumns(object sender, EventArgs e)
+        private void EquipmentView_AutoGeneratedColumns(object sender, EventArgs e)
         {
             equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+
+            equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("InvoiceID")].Visibility = Visibility.Collapsed;
+
             if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("VideoConnectors"))
                 equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
+
             equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
+
             ((DataGridTextColumn)equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.
                 Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+        }
+
+        private void InvoiceView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void InvoiceView_AutoGeneratedColumns(object sender, EventArgs e)
+        {
+            DataGrid grid = sender as DataGrid;
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("ID"))
+                grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("InvoiceID"))
+                grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("InvoiceID")].Visibility = Visibility.Collapsed;
+
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("VideoConnectors"))
+                grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
+
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("ImageID"))
+                grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
+
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("Дата приобретения"))
+                ((DataGridTextColumn)grid.Columns[((DataView)grid.ItemsSource).Table.
+                    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
         }
     }
 }

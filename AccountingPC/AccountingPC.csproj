@@ -111,6 +111,7 @@
     <Compile Include="ChangeWindow.xaml.cs">
       <DependentUpon>ChangeWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AccountingPCWindow.InvoiceManagement.cs" />
     <Compile Include="Devices.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="LightTheme\ForButton.cs" />

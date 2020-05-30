@@ -49,16 +49,6 @@ namespace AccountingPC
             return arr;
         }
 
-        private void ChangePopupPreClose()
-        {
-            
-        }
-
-        private void ChangePopupPostClose()
-        {
-            
-        }
-
         private Dictionary<int, byte[]> GetImages()
         {
             Dictionary<int, byte[]> temp = new Dictionary<int, byte[]>();
@@ -107,6 +97,7 @@ namespace AccountingPC
             equipmentGrid.Visibility = Visibility.Visible;
             softwareGrid.Visibility = Visibility.Collapsed;
             locationManagementGrid.Visibility = Visibility.Collapsed;
+            invoiceManagementGrid.Visibility = Visibility.Collapsed;
             equipmentCategoryList.SelectedIndex = 0;
         }
 
@@ -116,15 +107,18 @@ namespace AccountingPC
             equipmentGrid.Visibility = Visibility.Collapsed;
             softwareGrid.Visibility = Visibility.Visible;
             locationManagementGrid.Visibility = Visibility.Collapsed;
+            invoiceManagementGrid.Visibility = Visibility.Collapsed;
             softwareCategoryList.SelectedIndex = 0;
         }
 
         private void SelectViewInvoice()
         {
-            //NowView = View.Location;
-            //equipmentGrid.Visibility = Visibility.Collapsed;
-            //softwareGrid.Visibility = Visibility.Collapsed;
-            //locationManagementGrid.Visibility = Visibility.Visible;
+            NowView = View.Invoice;
+            equipmentGrid.Visibility = Visibility.Collapsed;
+            softwareGrid.Visibility = Visibility.Collapsed;
+            locationManagementGrid.Visibility = Visibility.Collapsed;
+            invoiceManagementGrid.Visibility = Visibility.Visible;
+            LoadInvoiceList();
         }
 
         private void SelectViewLocation()
@@ -133,6 +127,7 @@ namespace AccountingPC
             equipmentGrid.Visibility = Visibility.Collapsed;
             softwareGrid.Visibility = Visibility.Collapsed;
             locationManagementGrid.Visibility = Visibility.Visible;
+            invoiceManagementGrid.Visibility = Visibility.Collapsed;
         }
     }
 }
