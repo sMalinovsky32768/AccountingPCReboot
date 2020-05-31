@@ -36,7 +36,7 @@ namespace AccountingPC.BlackTheme
             if (((Window)sender).WindowState == WindowState.Maximized)
             {
                 ((Window)sender).WindowState = WindowState.Normal;
-                if (sender.GetType()==typeof(AccountingPCWindow))
+                if (sender.GetType() == typeof(AccountingPCWindow))
                 {
                     ((Window)sender).Height = ((AccountingPCWindow)sender).lastHeight;
                     ((Window)sender).Width = ((AccountingPCWindow)sender).lastWidth;
@@ -55,6 +55,27 @@ namespace AccountingPC.BlackTheme
                 ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;
                 ((Path)((Button)e.OriginalSource).Template.FindName("Restore", (Button)e.OriginalSource)).Visibility = Visibility.Visible;
             }
+
+            //if (sender.GetType() == typeof(AccountingPCWindow))
+            //{
+            //    AccountingPCWindow window = sender as AccountingPCWindow;
+            //    if (window.CustomWindowState == WindowState.Maximized)
+            //    {
+            //        window.CustomWindowState = WindowState.Normal;
+            //        window.Height = window.lastHeight;
+            //        window.Width = window.lastWidth;
+            //        ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Visible;
+            //        ((Path)((Button)e.OriginalSource).Template.FindName("Restore", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;
+            //    }
+            //    else if (window.CustomWindowState == WindowState.Normal)
+            //    {
+            //        window.lastHeight = window.Height;
+            //        window.lastWidth = window.Width;
+            //        window.CustomWindowState = WindowState.Maximized;
+            //        ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;
+            //        ((Path)((Button)e.OriginalSource).Template.FindName("Restore", (Button)e.OriginalSource)).Visibility = Visibility.Visible;
+            //    }
+            //}
         }
 
         private void MinimizeWindow(object sender, RoutedEventArgs e)

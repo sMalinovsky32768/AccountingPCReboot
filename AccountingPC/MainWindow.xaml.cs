@@ -1,4 +1,5 @@
 ﻿using AccountingPC.Properties;
+using Microsoft.Windows.Shell;
 using System;
 using System.Security.Cryptography;
 using System.Text;
@@ -37,6 +38,7 @@ namespace AccountingPC
             {
                 Hide();
                 //new AccountingPCWindow().Show();
+                accounting = new AccountingPCWindow();
                 accounting.Show();
                 Close();
             }
@@ -48,6 +50,7 @@ namespace AccountingPC
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
+            accounting = null;
             Close();
         }
 
@@ -58,7 +61,7 @@ namespace AccountingPC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            accounting = new AccountingPCWindow();
+            //accounting = new AccountingPCWindow();
         }
     }
 }

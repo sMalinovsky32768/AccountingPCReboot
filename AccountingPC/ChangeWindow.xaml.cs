@@ -84,7 +84,8 @@ namespace AccountingPC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Accounting.Hide();
+            //Accounting.Hide();
+            Accounting.IsHitTestVisible = false;
             ChangeView();
         }
 
@@ -2466,7 +2467,8 @@ namespace AccountingPC
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Accounting.Show();
+            //Accounting.Show();
+            Accounting.IsHitTestVisible = true;
             switch (Accounting.NowView)
             {
                 case View.Equipment:

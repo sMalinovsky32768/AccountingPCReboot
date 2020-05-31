@@ -22,7 +22,6 @@ namespace AccountingPC
     /// </summary>
     public partial class AccountingPCWindow : Window
     {
-
         public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static readonly RoutedCommand ParametersCommand = new RoutedUICommand(
@@ -117,10 +116,6 @@ namespace AccountingPC
         DataSet invoiceSoftwareAndEquipmentDataSet;
         //DataSet typeDeviceDataSet;
 
-        static AccountingPCWindow()
-        {
-            //AvailableInvNProperty = DependencyProperty.Register("AvailableInvN", typeof(bool), typeof(AccountingPCWindow));
-        }
         public AccountingPCWindow()
         {
             InitializeComponent();
@@ -155,6 +150,7 @@ namespace AccountingPC
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            ChangeWindowState();
             if (changeWindow != null)
             {
                 changeWindow.Left = Left - (changeWindow.Width - Width) / 2;
@@ -182,7 +178,7 @@ namespace AccountingPC
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             DragMove();
-
+            ChangeWindowState();
             if (changeWindow != null)
             {
                 changeWindow.Left = Left - (changeWindow.Width - Width) / 2;
@@ -193,7 +189,7 @@ namespace AccountingPC
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             LoadFromSettings();
-            ChangeWindowState();
+            //ChangeWindowState();
             SelectViewEquipment();
         }
 

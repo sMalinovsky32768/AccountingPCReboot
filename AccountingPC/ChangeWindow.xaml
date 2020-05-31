@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
-        Title="ChangeWindow" WindowStartupLocation="CenterOwner" MinHeight="300" MinWidth="600" SizeToContent="WidthAndHeight"
+        Title="ChangeWindow" WindowStartupLocation="CenterOwner" 
+        MinHeight="300" MinWidth="600" SizeToContent="WidthAndHeight"
         ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" 
-        DragOver="Window_DragOver"><!--Height="500" Width="900"-->
+        DragOver="Window_DragOver">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed"/>
     </Window.CommandBindings>

@@ -8,8 +8,11 @@
         x:Name="window" x:Class="AccountingPC.AccountingPCWindow" mc:Ignorable="d"
         Title="AccountingPC" Height="768" Width="1366" MinWidth="960" MinHeight="768"
         WindowStartupLocation="CenterScreen" Icon="images/icon.ico" WindowStyle="None" 
-        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged"
-        DragOver="Window_DragOver">
+        Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged" SourceInitialized="Window_SourceInitialized"
+        DragOver="Window_DragOver" MaxHeight="{Binding SystemParameters.MaximizedPrimaryScreenHeight}" MaxWidth="{Binding SystemParameters.MaximizedPrimaryScreenWidth}">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
+    </WindowChrome.WindowChrome>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ParametersCommand}" Executed="OpenParameters"/>
         <CommandBinding Command="{x:Static local:AccountingPCWindow.ExitCommand}" Executed="ExitApp"/>
@@ -66,8 +69,9 @@
                             <MenuItem Header="Прочее оборудование" Click="CreateReport_Click"/>-->
                         </MenuItem>
                     </Menu>
-                    <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
-                                Background="{DynamicResource background-brush}"/>
+                    <StackPanel Grid.Column="1" PreviewMouseLeftButtonDown="rctHeader_PreviewMouseLeftButtonDown" 
+                                PreviewMouseLeftButtonUp="rctHeader_PreviewMouseLeftButtonUp" PreviewMouseMove="rctHeader_PreviewMouseMove"
+                                Background="{DynamicResource background-brush}"/><!--MouseLeftButtonDown="Border_MouseLeftButtonDown"--> 
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
                         <Button x:Name="buttonMinimized" Style="{DynamicResource minimizeButton}"/>
                         <Button x:Name="buttonMaximized" Style="{DynamicResource maximizeButton}"/>
