@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -25,75 +24,83 @@ namespace AccountingPC
 
         private void UpdateSoftwareOnPC()
         {
-            pcSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString);
-            pcSoftwareDataSet = new DataSet();
-            pcSoftwareDataAdapter.Fill(pcSoftwareDataSet);
-            softwareOnDevice.ItemsSource = pcSoftwareDataSet.Tables[0].DefaultView;
-            pcSoftware = new List<InstalledSoftware>();
-            foreach (DataRow row in pcSoftwareDataSet.Tables[0].Rows)
+            PcSoftwareDataSet = new DataSet();
+            new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(PcSoftwareDataSet);
+            softwareOnDevice.ItemsSource = PcSoftwareDataSet.Tables[0].DefaultView;
+            PcSoftware = new List<InstalledSoftware>
             {
-                pcSoftware.Add(new InstalledSoftware()
+                Capacity = 128
+            };
+            foreach (DataRow row in PcSoftwareDataSet.Tables[0].Rows)
+            {
+                PcSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
                     CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
                 });
             }
-            softwareOnDevice.ItemsSource = pcSoftware;
+            softwareOnDevice.ItemsSource = PcSoftware;
         }
 
         private void UpdateSoftwareOnNotebook()
         {
-            notebookSoftwareDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString);
-            notebookSoftwareDataSet = new DataSet();
-            notebookSoftwareDataAdapter.Fill(notebookSoftwareDataSet);
-            notebookSoftware = new List<InstalledSoftware>();
-            foreach (DataRow row in notebookSoftwareDataSet.Tables[0].Rows)
+            NotebookSoftwareDataSet = new DataSet();
+            new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(NotebookSoftwareDataSet);
+            NotebookSoftware = new List<InstalledSoftware>
             {
-                notebookSoftware.Add(new InstalledSoftware()
+                Capacity = 128
+            };
+            foreach (DataRow row in NotebookSoftwareDataSet.Tables[0].Rows)
+            {
+                NotebookSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
                     CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
                 });
             }
-            softwareOnDevice.ItemsSource = notebookSoftware;
+            softwareOnDevice.ItemsSource = NotebookSoftware;
         }
 
         private void UpdateNotInstalledSoftwareOnPC()
         {
-            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString);
-            pcNotInstalledSoftwareDataSet = new DataSet();
-            pcNotInstalledSoftwareDataAdapter.Fill(pcNotInstalledSoftwareDataSet);
-            pcNotInstalledSoftware = new List<InstalledSoftware>();
-            foreach (DataRow row in pcNotInstalledSoftwareDataSet.Tables[0].Rows)
+            PcNotInstalledSoftwareDataSet = new DataSet();
+            new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(PcNotInstalledSoftwareDataSet);
+            PcNotInstalledSoftware = new List<InstalledSoftware>
             {
-                pcNotInstalledSoftware.Add(new InstalledSoftware()
+                Capacity = 128
+            };
+            foreach (DataRow row in PcNotInstalledSoftwareDataSet.Tables[0].Rows)
+            {
+                PcNotInstalledSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
                     CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
                 });
             }
-            addSoftware.ContextMenu.ItemsSource = pcNotInstalledSoftware;
+            addSoftware.ContextMenu.ItemsSource = PcNotInstalledSoftware;
         }
 
         private void UpdateNotInstalledSoftwareOnNotebook()
         {
-            notebookNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString);
-            notebookNotInstalledSoftwareDataSet = new DataSet();
-            notebookNotInstalledSoftwareDataAdapter.Fill(notebookNotInstalledSoftwareDataSet);
-            notebookNotInstalledSoftware = new List<InstalledSoftware>();
-            foreach (DataRow row in notebookNotInstalledSoftwareDataSet.Tables[0].Rows)
+            NotebookNotInstalledSoftwareDataSet = new DataSet();
+            new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(NotebookNotInstalledSoftwareDataSet);
+            NotebookNotInstalledSoftware = new List<InstalledSoftware>
             {
-                notebookNotInstalledSoftware.Add(new InstalledSoftware()
+                Capacity = 128
+            };
+            foreach (DataRow row in NotebookNotInstalledSoftwareDataSet.Tables[0].Rows)
+            {
+                NotebookNotInstalledSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
                     CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
                 });
             }
-            addSoftware.ContextMenu.ItemsSource = notebookNotInstalledSoftware;
+            addSoftware.ContextMenu.ItemsSource = NotebookNotInstalledSoftware;
         }
     }
 }

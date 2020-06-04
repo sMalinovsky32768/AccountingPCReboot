@@ -27,10 +27,10 @@ namespace AccountingPC
 
         private void LoginClick(object sender, RoutedEventArgs e)
         {
-            String login = loginTextBox.Text;
-            String uName = Settings.Default.USER_NAME;
-            String enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
-            String setPass = Settings.Default.PASSWORD_HASH;
+            string login = loginTextBox.Text;
+            string uName = Settings.Default.USER_NAME;
+            string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
+            string setPass = Settings.Default.PASSWORD_HASH;
             bool isTrueLogin = login == uName;
             bool isTruePassword = enPass == setPass;
             if (isTrueLogin && isTruePassword)
@@ -55,7 +55,7 @@ namespace AccountingPC
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            this.DragMove();// Для перемещение ока
+            DragMove();// Для перемещение ока
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountingPC.Properties;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using AccountingPC.Properties;
 
 namespace AccountingPC.ParametersPages
 {
@@ -37,7 +37,7 @@ namespace AccountingPC.ParametersPages
                             Thread.Sleep(1000);
                         }
                         Dispatcher.Invoke(() => changeStatus.Content = string.Empty);
-                        
+
                     }
                     catch { }
                 });
@@ -60,8 +60,8 @@ namespace AccountingPC.ParametersPages
         /// </returns>
         public KeyValuePair<bool, string> ChangePassword()
         {
-            String enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(oldPass.Password)));
-            String setPass = Settings.Default.PASSWORD_HASH;
+            string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(oldPass.Password)));
+            string setPass = Settings.Default.PASSWORD_HASH;
             if (enPass == setPass)
             {
                 if (newPass.Password == repeatPass.Password)

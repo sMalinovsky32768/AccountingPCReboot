@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace AccountingPC
@@ -12,14 +8,10 @@ namespace AccountingPC
     public partial class AccountingPCWindow
     {
         private AccountingCommand addAudience;
-        internal AccountingCommand AddAudience
-        {
-            get
-            {
-                return addAudience ??
+        internal AccountingCommand AddAudience => addAudience ??
                     (addAudience = new AccountingCommand(obj =>
                     {
-                        String name = obj.ToString();
+                        string name = obj.ToString();
                         using (SqlConnection connection = new SqlConnection(ConnectionString))
                         {
                             SqlCommand command = new SqlCommand("Insert Into Audience (Name) Values (@Name)", connection);
@@ -31,18 +23,16 @@ namespace AccountingPC
                     },
                     (obj) =>
                     {
-                        if (string.IsNullOrEmpty(obj.ToString())) return false;
+                        if (string.IsNullOrEmpty(obj.ToString()))
+                        {
+                            return false;
+                        }
+
                         return true;
                     }));
-            }
-        }
 
         private AccountingCommand delAudience;
-        internal AccountingCommand DelAudience
-        {
-            get
-            {
-                return delAudience ??
+        internal AccountingCommand DelAudience => delAudience ??
                     (delAudience = new AccountingCommand(obj =>
                     {
                         DataRow row = ((DataRowView)obj).Row;
@@ -55,31 +45,32 @@ namespace AccountingPC
                     },
                     (obj) =>
                     {
-                        if (obj == null) return false;
+                        if (obj == null)
+                        {
+                            return false;
+                        }
+
                         return true;
                     }));
-            }
-        }
 
         private void UpdateAudienceList()
         {
-            audienceDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString);
-            audienceDataSet = new DataSet();
-            audienceDataAdapter.Fill(audienceDataSet);
-            audienceList.ItemsSource = audienceDataSet.Tables[0].DefaultView;
+            AudienceDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString).Fill(AudienceDataSet);
+            audienceList.ItemsSource = AudienceDataSet.Tables[0].DefaultView;
             audienceList.DisplayMemberPath = "Name";
         }
 
         private void UpdateLocationData()
         {
-            audiencePlaceDataSet = new DataSet();
-            new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(audiencePlaceDataSet);
+            AudiencePlaceDataSet = new DataSet();
+            new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(AudiencePlaceDataSet);
         }
 
         private void ChangeLocationView()
         {
             UpdateLocationData();
-            audienceTableView.ItemsSource = audiencePlaceDataSet.Tables[0].DefaultView;
+            audienceTableView.ItemsSource = AudiencePlaceDataSet.Tables[0].DefaultView;
             //invoiceItemsControl.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables;
 
             //invoiceNumberManager.Text = ((DataRowView)invoiceList?.SelectedItem)?.Row?["Number"].ToString();

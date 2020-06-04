@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AccountingPC
 {
     internal class AccountingCommand : ICommand
     {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
+        private readonly Action<object> execute;
+        private readonly Func<object, bool> canExecute;
 
         public event EventHandler CanExecuteChanged
         {

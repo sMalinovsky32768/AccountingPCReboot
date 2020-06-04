@@ -2,7 +2,6 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace AccountingPC
 {
@@ -10,130 +9,102 @@ namespace AccountingPC
     {
         private void UpdatePCData()
         {
-            pcDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", ConnectionString);
-            pcDataSet = new DataSet();
-            pcDataAdapter.Fill(pcDataSet);
-            pcDataSet.Tables[0].Columns.Add("Видеоразъемы");
-            //foreach (DataRow row in pcDataSet.Tables[0].Rows)
-            //{
-            //    row[20] = row[16].GetType() == typeof(int) ? GetVideoConnectors(Convert.ToInt32(row[16])) : row[16];
-            //}
-            foreach (DataRow row in pcDataSet.Tables[0].Rows)
+            PcDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", ConnectionString).Fill(PcDataSet);
+            PcDataSet.Tables[0].Columns.Add("Видеоразъемы");
+            foreach (DataRow row in PcDataSet.Tables[0].Rows)
             {
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ? 
+                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
-            //int i = pcDataSet.Tables[0].Columns.IndexOf("VideoConnectors");
-            //int ii = pcDataSet.Tables[0].Columns.IndexOf("Видеоразъемы");
-            //pcDataSet.Tables[0].Columns["Видеоразъемы"].SetOrdinal(i);
-            //pcDataSet.Tables[0].Columns["VideoConnectors"].SetOrdinal(ii);
-            int i = pcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = pcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
-            pcDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
-            pcDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
+            int i = PcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            int ii = PcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+            PcDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
+            PcDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
 
         private void UpdateNotebookData()
         {
-            notebookDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", ConnectionString);
-            notebookDataSet = new DataSet();
-            notebookDataAdapter.Fill(notebookDataSet);
-            notebookDataSet.Tables[0].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in notebookDataSet.Tables[0].Rows)
+            NotebookDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", ConnectionString).Fill(NotebookDataSet);
+            NotebookDataSet.Tables[0].Columns.Add("Видеоразъемы");
+            foreach (DataRow row in NotebookDataSet.Tables[0].Rows)
             {
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ? 
+                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
-            //int i = pcDataSet.Tables[0].Columns.IndexOf("VideoConnectors");
-            //int ii = pcDataSet.Tables[0].Columns.IndexOf("Видеоразъемы");
-            //pcDataSet.Tables[0].Columns["Видеоразъемы"].SetOrdinal(i);
-            //pcDataSet.Tables[0].Columns["VideoConnectors"].SetOrdinal(ii);
-            int i = notebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = notebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
-            notebookDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
-            notebookDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
+            int i = NotebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            int ii = NotebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+            NotebookDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
+            NotebookDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
 
         private void UpdateMonitorData()
         {
-            monitorDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", ConnectionString);
-            monitorDataSet = new DataSet();
-            monitorDataAdapter.Fill(monitorDataSet);
-            monitorDataSet.Tables[0].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in monitorDataSet.Tables[0].Rows)
+            MonitorDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", ConnectionString).Fill(MonitorDataSet);
+            MonitorDataSet.Tables[0].Columns.Add("Видеоразъемы");
+            foreach (DataRow row in MonitorDataSet.Tables[0].Rows)
             {
                 row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
-            int i = monitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = monitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
-            monitorDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
-            monitorDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
+            int i = MonitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            int ii = MonitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+            MonitorDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
+            MonitorDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
 
         private void UpdateProjectorData()
         {
-            projectorDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString);
-            projectorDataSet = new DataSet();
-            projectorDataAdapter.Fill(projectorDataSet);
-            projectorDataSet.Tables[0].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in projectorDataSet.Tables[0].Rows)
+            ProjectorDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString).Fill(ProjectorDataSet);
+            ProjectorDataSet.Tables[0].Columns.Add("Видеоразъемы");
+            foreach (DataRow row in ProjectorDataSet.Tables[0].Rows)
             {
                 row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
-            int i = projectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = projectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
-            projectorDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
-            projectorDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
+            int i = ProjectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            int ii = ProjectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+            ProjectorDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
+            ProjectorDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
 
         private void UpdateInteractiveWhiteboardData()
         {
-            boardDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllBoard()", ConnectionString);
-            boardDataSet = new DataSet();
-            boardDataAdapter.Fill(boardDataSet);
+            BoardDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllBoard()", ConnectionString).Fill(BoardDataSet);
         }
 
         private void UpdateProjectorScreenData()
         {
-            projectorScreenDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString);
-            projectorScreenDataSet = new DataSet();
-            projectorScreenDataAdapter.Fill(projectorScreenDataSet);
+            ProjectorScreenDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString).Fill(ProjectorScreenDataSet);
         }
 
         private void UpdatePrinterScannerData()
         {
-            printerScannerDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString);
-            printerScannerDataSet = new DataSet();
-            printerScannerDataAdapter.Fill(printerScannerDataSet);
+            PrinterScannerDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString).Fill(PrinterScannerDataSet);
         }
 
         private void UpdateNetworkSwitchData()
         {
-            networkSwitchDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString);
-            networkSwitchDataSet = new DataSet();
-            networkSwitchDataAdapter.Fill(networkSwitchDataSet);
+            NetworkSwitchDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString).Fill(NetworkSwitchDataSet);
         }
 
         private void UpdateOtherEquipmentData()
         {
-            otherEquipmentDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString);
-            otherEquipmentDataSet = new DataSet();
-            otherEquipmentDataAdapter.Fill(otherEquipmentDataSet);
+            OtherEquipmentDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString).Fill(OtherEquipmentDataSet);
         }
 
         private void SetViewToPC()
         {
-            equipmentView.ItemsSource = pcDataSet.Tables[0].DefaultView;
-            //if (equipmentView.Columns.Count > 0)
-            //{
-            //    equipmentView.Columns[pcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //    equipmentView.Columns[pcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
-            //    equipmentView.Columns[pcDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //    ((DataGridTextColumn)equipmentView.Columns[pcDataSet.Tables[0].DefaultView.Table.
-            //        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
-            //}
+            equipmentView.ItemsSource = PcDataSet.Tables[0].DefaultView;
+
             installedSoftware.Visibility = Visibility.Visible;
             softwareColumn.Width = new GridLength(1, GridUnitType.Star);
             TypeDevice = TypeDevice.PC;
@@ -141,13 +112,7 @@ namespace AccountingPC
 
         private void SetViewToNotebook()
         {
-            equipmentView.ItemsSource = notebookDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[notebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[notebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[notebookDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[notebookDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = NotebookDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.Notebook;
             installedSoftware.Visibility = Visibility.Visible;
@@ -156,13 +121,7 @@ namespace AccountingPC
 
         private void SetViewToMonitor()
         {
-            equipmentView.ItemsSource = monitorDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[monitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[monitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[monitorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[monitorDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = MonitorDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.Monitor;
             installedSoftware.Visibility = Visibility.Collapsed;
@@ -171,13 +130,7 @@ namespace AccountingPC
 
         private void SetViewToProjector()
         {
-            equipmentView.ItemsSource = projectorDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[projectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[projectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[projectorDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[projectorDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = ProjectorDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.Projector;
             installedSoftware.Visibility = Visibility.Collapsed;
@@ -186,12 +139,7 @@ namespace AccountingPC
 
         private void SetViewToInteractiveWhiteboard()
         {
-            equipmentView.ItemsSource = boardDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[boardDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[boardDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[boardDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = BoardDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.InteractiveWhiteboard;
             installedSoftware.Visibility = Visibility.Collapsed;
@@ -200,12 +148,7 @@ namespace AccountingPC
 
         private void SetViewToProjectorScreen()
         {
-            equipmentView.ItemsSource = projectorScreenDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[projectorScreenDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[projectorScreenDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[projectorScreenDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = ProjectorScreenDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.ProjectorScreen;
             installedSoftware.Visibility = Visibility.Collapsed;
@@ -214,12 +157,7 @@ namespace AccountingPC
 
         private void SetViewToPrinterScanner()
         {
-            equipmentView.ItemsSource = printerScannerDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[printerScannerDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[printerScannerDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[printerScannerDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = PrinterScannerDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.PrinterScanner;
             installedSoftware.Visibility = Visibility.Collapsed;
@@ -228,12 +166,7 @@ namespace AccountingPC
 
         private void SetViewToNetworkSwitch()
         {
-            equipmentView.ItemsSource = networkSwitchDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[networkSwitchDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[networkSwitchDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[networkSwitchDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = NetworkSwitchDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.NetworkSwitch;
             installedSoftware.Visibility = Visibility.Collapsed;
@@ -242,12 +175,7 @@ namespace AccountingPC
 
         private void SetViewToOtherEquipment()
         {
-            equipmentView.ItemsSource = otherEquipmentDataSet.Tables[0].DefaultView;
-
-            //equipmentView.Columns[otherEquipmentDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //equipmentView.Columns[otherEquipmentDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)equipmentView.Columns[otherEquipmentDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            equipmentView.ItemsSource = OtherEquipmentDataSet.Tables[0].DefaultView;
 
             TypeDevice = TypeDevice.OtherEquipment;
             installedSoftware.Visibility = Visibility.Collapsed;

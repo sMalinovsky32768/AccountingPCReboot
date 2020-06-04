@@ -1,18 +1,18 @@
 ﻿namespace AccountingPC
 {
-    internal enum TypeChange
+    internal enum TypeChange : byte
     {
         Add,
         Change,
     }
 
-    internal enum TypeSoft
+    internal enum TypeSoft : byte
     {
         LicenseSoftware,
         OS,
     }
 
-    internal enum View
+    internal enum View : byte
     {
         Equipment,
         Software,
@@ -20,7 +20,7 @@
         Invoice,
     }
 
-    internal enum TypeDevice
+    internal enum TypeDevice : byte
     {
         PC,
         Notebook,

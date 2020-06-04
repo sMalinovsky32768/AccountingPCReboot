@@ -2,7 +2,7 @@
 
 namespace AccountingPC.AccountingReport
 {
-    internal enum ReportColumn
+    internal enum ReportColumn : byte
     {
         InventoryNumber,
         Name,

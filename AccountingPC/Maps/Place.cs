@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AccountingPC.Maps
 {
-    public enum TypeOfPlace
+    public enum TypeOfPlace : byte
     {
         table,
         systemUnit,
@@ -17,7 +13,7 @@ namespace AccountingPC.Maps
     }
     public class Place
     {
-        public Int32 Number { get; set; }
+        public int Number { get; set; }
         public TypeOfPlace TypeOf { get; set; }
 
         public Place(string[] place)
@@ -26,7 +22,7 @@ namespace AccountingPC.Maps
             Number = Convert.ToInt32(place[1]);
         }
 
-        public Place(int num, String type)
+        public Place(int num, string type)
         {
             Number = num;
             TypeOf = (TypeOfPlace)Enum.Parse(TypeOf.GetType(), type);

@@ -66,11 +66,7 @@ namespace AccountingPC.AccountingReport
         }
 
         private ReportCommand addUsedReportColumns;
-        public ReportCommand AddUsedReportColumns
-        {
-            get
-            {
-                return addUsedReportColumns ??
+        public ReportCommand AddUsedReportColumns => addUsedReportColumns ??
                     (addUsedReportColumns = new ReportCommand(obj =>
                     {
                         if (obj != null)
@@ -78,9 +74,12 @@ namespace AccountingPC.AccountingReport
                             ReportColumnName columnName = obj as ReportColumnName;
                             foreach (ReportColumnName reportColumnName in UnusedReportColumns)
                             {
-                                if (reportColumnName == columnName) SelectedUnusedColumn =
+                                if (reportColumnName == columnName)
+                                {
+                                    SelectedUnusedColumn =
                                     UnusedReportColumns[UnusedReportColumns.IndexOf(columnName) < UnusedReportColumns.Count - 1 ?
                                     UnusedReportColumns.IndexOf(columnName) + 1 : 0];
+                                }
                             }
                             UsedReportColumns.Add(columnName);
                             UnusedReportColumns.Remove(columnName);
@@ -89,22 +88,24 @@ namespace AccountingPC.AccountingReport
                     (obj) =>
                     {
                         if (UnusedReportColumns.Count > 0)
+                        {
                             if (SelectedUnusedColumn != null)
+                            {
                                 return true;
+                            }
                             else
+                            {
                                 return false;
+                            }
+                        }
                         else
+                        {
                             return false;
+                        }
                     }));
-            }
-        }
 
         private ReportCommand delUsedReportColumns;
-        public ReportCommand DelUsedReportColumns
-        {
-            get
-            {
-                return delUsedReportColumns ??
+        public ReportCommand DelUsedReportColumns => delUsedReportColumns ??
                     (delUsedReportColumns = new ReportCommand(obj =>
                     {
                         if (obj != null)
@@ -112,12 +113,15 @@ namespace AccountingPC.AccountingReport
                             ReportColumnName columnName = obj as ReportColumnName;
                             foreach (ReportColumnName reportColumnName in UsedReportColumns)
                             {
-                                if (reportColumnName == columnName) SelectedUsedColumn =
+                                if (reportColumnName == columnName)
+                                {
+                                    SelectedUsedColumn =
                                     UsedReportColumns[UsedReportColumns.IndexOf(columnName) < UsedReportColumns.Count - 1 ?
                                     UsedReportColumns.IndexOf(columnName) + 1 : 0];
+                                }
                             }
                             SortingParam sortingParam = null;
-                            foreach (SortingParam param in Options.SortingParamList) 
+                            foreach (SortingParam param in Options.SortingParamList)
                             {
                                 if (param.ColumnName.Column == columnName.Column)
                                 {
@@ -126,7 +130,10 @@ namespace AccountingPC.AccountingReport
                                 }
                             }
                             if (sortingParam != null)
+                            {
                                 Options.SortingParamList.Remove(sortingParam);
+                            }
+
                             UnusedReportColumns.Add(columnName);
                             UsedReportColumns.Remove(columnName);
                         }
@@ -134,15 +141,21 @@ namespace AccountingPC.AccountingReport
                     (obj) =>
                     {
                         if (UsedReportColumns.Count > 0)
+                        {
                             if (SelectedUsedColumn != null)
+                            {
                                 return true;
+                            }
                             else
+                            {
                                 return false;
+                            }
+                        }
                         else
+                        {
                             return false;
+                        }
                     }));
-            }
-        }
 
         public ReportOptions Options { get; private set; }
 
@@ -167,14 +180,22 @@ namespace AccountingPC.AccountingReport
                 }
             }
             if (UsedReportColumns.Count > 0)
+            {
                 SelectedUsedColumn = UsedReportColumns?[0];
+            }
+
             if (UnusedReportColumns.Count > 0)
+            {
                 SelectedUnusedColumn = UnusedReportColumns?[0];
+            }
         }
 
         private string CommandTextBuilder(bool isFull = false)
         {
-            List<string> vs = new List<string>();
+            List<string> vs = new List<string>
+            {
+                Capacity = 32
+            };
 
             ReportRelation relation = ReportRelationCollection.Collection[Options.TypeReport];
 
@@ -201,21 +222,32 @@ namespace AccountingPC.AccountingReport
                 commandText += $"[{str}]";
                 i++;
                 if (i < vs.Count)
+                {
                     commandText += ", ";
+                }
             }
 
             commandText += $" FROM dbo.{relation.Function}(";
             if (Options.IsPeriod)
             {
                 if (Options.FromDate != null)
+                {
                     commandText += $"'{Options.FromDate.Value:yyyy-MM-dd}'";
+                }
                 else
+                {
                     commandText += $"default";
+                }
+
                 commandText += $", ";
-                if (Options.FromDate!=null)
+                if (Options.FromDate != null)
+                {
                     commandText += $"'{Options.ToDate.Value:yyyy-MM-dd}'";
+                }
                 else
+                {
                     commandText += $"default";
+                }
             }
             else
             {
@@ -289,7 +321,7 @@ namespace AccountingPC.AccountingReport
             SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
             SpreadsheetInfo.FreeLimitReached += (sender, e) => e.FreeLimitReachedAction = FreeLimitReachedAction.ContinueAsTrial;
 
-            var book = new ExcelFile();
+            ExcelFile book = new ExcelFile();
 
             foreach (DataTable dataTable in dataSet.Tables)
             {
@@ -341,7 +373,11 @@ namespace AccountingPC.AccountingReport
                             foreach (ExcelRow row in worksheet.Rows)
                             {
                                 rowIndex = row.Index;
-                                if (rowIndex == 0) continue;
+                                if (rowIndex == 0)
+                                {
+                                    continue;
+                                }
+
                                 string cell = worksheet.Cells[rowIndex, col].Name;
                                 string cell2 = worksheet.Cells[rowIndex, col2].Name;
                                 string formula = $"={cell}*{cell2}";
@@ -405,7 +441,9 @@ namespace AccountingPC.AccountingReport
 
                 int columnCount = worksheet.CalculateMaxUsedColumns();
                 for (int i = 0; i < columnCount; i++)
+                {
                     worksheet.Columns[i].AutoFit(1, worksheet.Rows[0], worksheet.Rows[worksheet.Rows.Count - 1]);
+                }
             }
 
             return book;

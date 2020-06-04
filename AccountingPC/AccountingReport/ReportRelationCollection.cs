@@ -2,7 +2,7 @@
 
 namespace AccountingPC.AccountingReport
 {
-    class ReportRelationCollection
+    internal class ReportRelationCollection
     {
 
         private static readonly Dictionary<TypeReport, ReportRelation> collection = new Dictionary<TypeReport, ReportRelation>()

@@ -1,34 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 
 namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
-        public static String GetVideoConnectors(Int32 value)
+        public static string GetVideoConnectors(int value)
         {
-            List<String> arr = GetListVideoConnectors(value);
-            String res = String.Empty;
+            List<string> arr = GetListVideoConnectors(value);
+            string res = string.Empty;
             for (int i = 0; i < arr.Count; i++)
             {
                 res += $"{arr[i]}";
                 if (i < arr.Count - 1)
+                {
                     res += ", ";
+                }
             }
             return res;
         }
 
-        private static List<String> GetListVideoConnectors(Int32 value)
+        private static List<string> GetListVideoConnectors(int value)
         {
-            List<String> arr = new List<String>();
+            List<string> arr = new List<string>
+            {
+                Capacity = 20
+            };
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
@@ -37,7 +36,7 @@ namespace AccountingPC
                 {
                     while (reader.Read())
                     {
-                        Int32 connectorValue = Convert.ToInt32(reader["Value"]);
+                        int connectorValue = Convert.ToInt32(reader["Value"]);
                         if (value >= connectorValue)
                         {
                             value -= connectorValue;

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Controls;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,52 +8,51 @@ namespace AccountingPC
     {
         private void LoadInvoiceList()
         {
-            invoiceDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString);
-            invoiceDataSet = new DataSet();
-            invoiceDataAdapter.Fill(invoiceDataSet);
-            invoiceList.ItemsSource = invoiceDataSet.Tables[0].DefaultView;
+            InvoiceDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(InvoiceDataSet);
+            invoiceList.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
             invoiceList.DisplayMemberPath = "Number";
         }
 
         private void UpdateInvoiceData()
         {
-            invoiceSoftwareAndEquipmentDataSet = new DataSet();
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Компьютеры");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Ноутбуки и Моноблоки");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Мониторы");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Проекторы");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Интерактивные доски");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Экраны для проекторов");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Принтеры и сканеры");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Сетевое оборудование");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Другое оборудование");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Программное обеспечение");
-            invoiceSoftwareAndEquipmentDataSet.Tables.Add("Операционные системы");
+            InvoiceSoftwareAndEquipmentDataSet = new DataSet();
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Компьютеры");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Ноутбуки и Моноблоки");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Мониторы");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Проекторы");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Интерактивные доски");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Экраны для проекторов");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Принтеры и сканеры");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Сетевое оборудование");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Другое оборудование");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Программное обеспечение");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Операционные системы");
 
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllPC() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Компьютеры");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Компьютеры");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebook() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Ноутбуки и Моноблоки");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Ноутбуки и Моноблоки");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllMonitor() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Мониторы");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Мониторы");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjector() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Проекторы");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Проекторы");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllBoard() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Интерактивные доски");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Интерактивные доски");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreen() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Экраны для проекторов");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Экраны для проекторов");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllPrinterScanner() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Принтеры и сканеры");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Принтеры и сканеры");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllNetworkSwitch() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Сетевое оборудование");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Сетевое оборудование");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllOtherEquipment() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Другое оборудование");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Другое оборудование");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllSoftware() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Программное обеспечение");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Программное обеспечение");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(invoiceSoftwareAndEquipmentDataSet, "Операционные системы");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Операционные системы");
 
-            foreach (DataTable table in invoiceSoftwareAndEquipmentDataSet.Tables)
+            foreach (DataTable table in InvoiceSoftwareAndEquipmentDataSet.Tables)
             {
                 if (table.Columns.Contains("VideoConnectors"))
                 {
@@ -79,7 +77,7 @@ namespace AccountingPC
         private void ChangeInvoiceView()
         {
             UpdateInvoiceData();
-            invoiceItemsControl.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables;
+            invoiceItemsControl.ItemsSource = InvoiceSoftwareAndEquipmentDataSet.Tables;
             //changeInvoicePanel.DataContext = invoiceList.SelectedItem;
             invoiceNumberManager.Text = ((DataRowView)invoiceList?.SelectedItem)?.Row?["Number"].ToString();
             dateManager.SelectedDate = Convert.ToDateTime(((DataRowView)invoiceList?.SelectedItem)?.Row?["Date"]);

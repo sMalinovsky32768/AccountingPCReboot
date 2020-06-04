@@ -1,8 +1,5 @@
-﻿using System;
-using System.Windows;
-using System.Data;
+﻿using System.Data;
 using System.Data.SqlClient;
-using System.Windows.Controls;
 
 namespace AccountingPC
 {
@@ -23,7 +20,7 @@ namespace AccountingPC
 
         internal void SetViewToLicenseSoftware()
         {
-            softwareView.ItemsSource = softwareDataSet.Tables[0].DefaultView;
+            softwareView.ItemsSource = SoftwareDataSet.Tables[0].DefaultView;
             //while (softwareView.Columns.Count == 0) continue;
 
             //if (softwareView.Columns.Count > 0)
@@ -38,7 +35,7 @@ namespace AccountingPC
 
         internal void SetViewToOS()
         {
-            softwareView.ItemsSource = osDataSet.Tables[0].DefaultView;
+            softwareView.ItemsSource = OsDataSet.Tables[0].DefaultView;
 
             //softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
             //((DataGridTextColumn)softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.
@@ -68,16 +65,14 @@ namespace AccountingPC
 
         private void UpdateLicenseSoftwareData()
         {
-            softwareDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString);
-            softwareDataSet = new DataSet();
-            softwareDataAdapter.Fill(softwareDataSet);
+            SoftwareDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(SoftwareDataSet);
         }
 
         private void UpdateOSData()
         {
-            osDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString);
-            osDataSet = new DataSet();
-            osDataAdapter.Fill(osDataSet);
+            OsDataSet = new DataSet();
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
         }
     }
 }

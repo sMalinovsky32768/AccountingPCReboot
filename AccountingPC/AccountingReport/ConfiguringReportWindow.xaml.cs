@@ -1,17 +1,12 @@
-﻿using GemBox.Spreadsheet;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -24,7 +19,8 @@ namespace AccountingPC.AccountingReport
     public partial class ConfiguringReportWindow : Window
     {
         internal Report CurrentReport { get; set; }
-        string fileName;
+
+        private string fileName;
 
         public ConfiguringReportWindow(TypeReport typeReport = TypeReport.Simple)
         {
@@ -62,12 +58,12 @@ namespace AccountingPC.AccountingReport
 
         private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (sortingParamsList.ItemContainerGenerator.Status == 
+            if (sortingParamsList.ItemContainerGenerator.Status ==
                 System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
             {
-                var containers = sortingParamsList.Items.Cast<object>().Select(
+                System.Collections.Generic.IEnumerable<FrameworkElement> containers = sortingParamsList.Items.Cast<object>().Select(
                     item => (FrameworkElement)sortingParamsList.ItemContainerGenerator.ContainerFromItem(item));
-                foreach(var container in containers)
+                foreach (FrameworkElement container in containers)
                 {
                     container.Loaded += Container_Loaded;
                 }
@@ -76,10 +72,10 @@ namespace AccountingPC.AccountingReport
 
         private void Container_Loaded(object sender, RoutedEventArgs e)
         {
-            var element = (FrameworkElement)sender;
+            FrameworkElement element = (FrameworkElement)sender;
             element.Loaded -= Container_Loaded;
 
-            var grid = VisualTreeHelper.GetChild(element, 0) as Grid;
+            Grid grid = VisualTreeHelper.GetChild(element, 0) as Grid;
 
             SetSourceForSorting();
         }
@@ -112,7 +108,8 @@ namespace AccountingPC.AccountingReport
 
         private childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
         {
-            if (obj!=null)
+            if (obj != null)
+            {
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(obj, i);
@@ -124,9 +121,13 @@ namespace AccountingPC.AccountingReport
                     {
                         childItem childOfChild = FindVisualChild<childItem>(child);
                         if (childOfChild != null)
+                        {
                             return childOfChild;
+                        }
                     }
                 }
+            }
+
             return null;
         }
 
@@ -134,7 +135,7 @@ namespace AccountingPC.AccountingReport
         {
             ObservableCollection<ReportColumnName> relations = new ObservableCollection<ReportColumnName>();
             ObservableCollection<OrderName> orderNames = new ObservableCollection<OrderName>();
-            foreach (var item in sortingParamsList.Items)
+            foreach (object item in sortingParamsList.Items)
             {
                 ListBoxItem listBoxItem = (ListBoxItem)(sortingParamsList?.ItemContainerGenerator?.ContainerFromItem(item));
                 ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
@@ -148,9 +149,14 @@ namespace AccountingPC.AccountingReport
                     orderBox.ItemsSource = OrderNameCollection.Collection;
                     //orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
                     if (colBox.SelectedItem != null)
+                    {
                         relations.Add((ReportColumnName)colBox.SelectedItem);
+                    }
+
                     if (orderBox.SelectedItem != null)
+                    {
                         orderNames.Add((OrderName)orderBox.SelectedItem);
+                    }
                 }
                 else
                 {
@@ -246,12 +252,17 @@ namespace AccountingPC.AccountingReport
 
         private string GetFileName()
         {
-            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog();
-            dialog.Filter = "Excel | *.xlsx;*.xls";
-            dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            dialog.FileName = $"Report_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Excel | *.xlsx;*.xls",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                FileName = $"Report_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx"
+            };
             if (dialog.ShowDialog(this) == false)
+            {
                 return null;
+            }
+
             return dialog.FileName;
         }
 
@@ -265,9 +276,11 @@ namespace AccountingPC.AccountingReport
                 {
                     SaveReport(fileName);
 
-                    Process excel = new Process();
-                    excel.StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}");
-                    excel.EnableRaisingEvents = true;
+                    Process excel = new Process
+                    {
+                        StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}"),
+                        EnableRaisingEvents = true
+                    };
                     excel.Exited += (sender, e) => new FileInfo(fileName)?.Delete();
                     excel.Start();
                 });
@@ -280,7 +293,9 @@ namespace AccountingPC.AccountingReport
             try
             {
                 if (!string.IsNullOrEmpty(fileName))
+                {
                     CurrentReport.CreateReport().Save(fileName);
+                }
             }
             catch
             {
@@ -296,7 +311,7 @@ namespace AccountingPC.AccountingReport
                 {
                     Dispatcher.Invoke(() =>
                     {
-                        SaveReport(fileName as String);
+                        SaveReport(fileName as string);
                     });
                 });
                 task.Start();
@@ -324,7 +339,7 @@ namespace AccountingPC.AccountingReport
 
     internal static class OpenExcel
     {
-        private static Process excel = new Process();
+        private static readonly Process excel = new Process();
         private static string fileName;
 
         public static void Open(string fName)

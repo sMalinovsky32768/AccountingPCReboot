@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
@@ -14,7 +10,7 @@ namespace AccountingPC
     {
         private bool mRestoreIfMove = false;
 
-        void Window_SourceInitialized(object sender, EventArgs e)
+        private void Window_SourceInitialized(object sender, EventArgs e)
         {
             IntPtr mWindowHandle = (new WindowInteropHelper(this)).Handle;
             HwndSource.FromHwnd(mWindowHandle).AddHook(new HwndSourceHook(WindowProc));
@@ -141,13 +137,13 @@ namespace AccountingPC
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetCursorPos(out POINT lpPoint);
+        private static bool GetCursorPos(out POINT lpPoint);
 
 
         [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
+        private static IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
 
-        enum MonitorOptions : uint
+        private enum MonitorOptions : uint
         {
             MONITOR_DEFAULTTONULL = 0x00000000,
             MONITOR_DEFAULTTOPRIMARY = 0x00000001,
@@ -156,7 +152,7 @@ namespace AccountingPC
 
 
         [DllImport("user32.dll")]
-        static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+        private static bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
 
         [StructLayout(LayoutKind.Sequential)]
@@ -167,8 +163,8 @@ namespace AccountingPC
 
             public POINT(int x, int y)
             {
-                this.X = x;
-                this.Y = y;
+                X = x;
+                Y = y;
             }
         }
 
@@ -201,10 +197,10 @@ namespace AccountingPC
 
             public RECT(int left, int top, int right, int bottom)
             {
-                this.Left = left;
-                this.Top = top;
-                this.Right = right;
-                this.Bottom = bottom;
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
             }
         }
     }

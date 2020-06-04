@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace AccountingPC
 {
     internal class Device
     {
-        public UInt32 ID { get; set; }
+        public uint ID { get; set; }
         [Required(ErrorMessage = "Поле является обязательным")]
-        public UInt32 InventoryNumber { get; set; }
+        public uint InventoryNumber { get; set; }
         [Required(ErrorMessage = "Поле является обязательным")]
         [StringLength(200, ErrorMessage = "Максимальная длина - 200")]
-        public String Name { get; set; }
+        public string Name { get; set; }
         public float Cost { get; set; }
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public string InvoiceNumber { get; set; }
@@ -21,21 +20,21 @@ namespace AccountingPC
     internal class PC : Device
     {
         [StringLength(30, ErrorMessage = "Максимальная длина - 30")]
-        public String Motherboard { get; set; }
+        public string Motherboard { get; set; }
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
-        public String CPU { get; set; }
+        public string CPU { get; set; }
         public uint Cores { get; set; }
         public uint Frequency { get; set; }
         public uint MaxFrequency { get; set; }
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
-        public String VCard { get; set; }
-        public UInt32 VideoRAM { get; set; }
-        public UInt32 RAM { get; set; }
-        public UInt32 FrequencyRAM { get; set; }
-        public UInt32 SSD { get; set; }
-        public UInt32 HDD { get; set; }
+        public string VCard { get; set; }
+        public uint VideoRAM { get; set; }
+        public uint RAM { get; set; }
+        public uint FrequencyRAM { get; set; }
+        public uint SSD { get; set; }
+        public uint HDD { get; set; }
         public uint OSID { get; set; }
-        public List<String> VideoConnectors { get; set; }
+        public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
 
         public PC() { }
@@ -44,20 +43,20 @@ namespace AccountingPC
     internal class Notebook : Device
     {
         [StringLength(20, ErrorMessage = "Максимальная длина - 20")]
-        public String CPU { get; set; }
+        public string CPU { get; set; }
         public uint Cores { get; set; }
         public uint Frequency { get; set; }
         public uint MaxFrequency { get; set; }
         [StringLength(30, ErrorMessage = "Максимальная длина - 30")]
-        public String VCard { get; set; }
-        public UInt32 VideoRAM { get; set; }
-        public UInt32 RAM { get; set; }
-        public UInt32 FrequencyRAM { get; set; }
-        public UInt32 SSD { get; set; }
-        public UInt32 HDD { get; set; }
+        public string VCard { get; set; }
+        public uint VideoRAM { get; set; }
+        public uint RAM { get; set; }
+        public uint FrequencyRAM { get; set; }
+        public uint SSD { get; set; }
+        public uint HDD { get; set; }
         public uint OSID { get; set; }
         public float Diagonal { get; set; }
-        public List<String> VideoConnectors { get; set; }
+        public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
         public uint ResolutionID { get; set; }
         public uint FrequencyID { get; set; }
@@ -69,15 +68,15 @@ namespace AccountingPC
 
     internal class InteractiveWhiteboard : Device
     {
-        public Single Diagonal { get; set; }
+        public float Diagonal { get; set; }
 
         public InteractiveWhiteboard() { }
     }
 
     internal class Projector : Device
     {
-        public Single Diagonal { get; set; }
-        public List<String> VideoConnectors { get; set; }
+        public float Diagonal { get; set; }
+        public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
         public uint ResolutionID { get; set; }
         public uint ProjectorTechnologyID { get; set; }
@@ -87,7 +86,7 @@ namespace AccountingPC
 
     internal class ProjectorScreen : Device
     {
-        public Single Diagonal { get; set; }
+        public float Diagonal { get; set; }
         public bool IsElectronicDrive { get; set; }
         public uint AspectRatioID { get; set; }
         public uint ScreenInstalledID { get; set; }
@@ -105,8 +104,8 @@ namespace AccountingPC
 
     internal class Monitor : Device
     {
-        public Single Diagonal { get; set; }
-        public List<String> VideoConnectors { get; set; }
+        public float Diagonal { get; set; }
+        public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
         public uint ResolutionID { get; set; }
         public uint FrequencyID { get; set; }
@@ -117,8 +116,8 @@ namespace AccountingPC
 
     internal class NetworkSwitch : Device
     {
-        public UInt32 TypeID { get; set; }
-        public UInt32 Ports { get; set; }
+        public uint TypeID { get; set; }
+        public uint Ports { get; set; }
         public uint WiFiFrequencyID { get; set; }
 
         public NetworkSwitch() { }

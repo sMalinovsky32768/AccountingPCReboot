@@ -3,10 +3,10 @@ using System.Windows.Input;
 
 namespace AccountingPC.AccountingReport
 {
-    class ReportCommand : ICommand
+    internal class ReportCommand : ICommand
     {
-        private Action<object> execute;
-        private Func<object, bool> canExecute;
+        private readonly Action<object> execute;
+        private readonly Func<object, bool> canExecute;
 
         public event EventHandler CanExecuteChanged
         {

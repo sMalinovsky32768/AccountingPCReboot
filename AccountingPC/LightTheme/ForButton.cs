@@ -36,7 +36,7 @@ namespace AccountingPC.LightTheme
             if (((Window)sender).WindowState == WindowState.Maximized)
             {
                 ((Window)sender).WindowState = WindowState.Normal;
-                if (sender.GetType()==typeof(AccountingPCWindow))
+                if (sender.GetType() == typeof(AccountingPCWindow))
                 {
                     ((Window)sender).Height = ((AccountingPCWindow)sender).lastHeight;
                     ((Window)sender).Width = ((AccountingPCWindow)sender).lastWidth;

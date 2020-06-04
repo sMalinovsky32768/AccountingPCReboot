@@ -39,7 +39,7 @@ namespace AccountingPC
                     break;
             }
             notify = new System.Windows.Forms.NotifyIcon(new System.ComponentModel.Container());
-            notifyContextMenu = new System.Windows.Forms.ContextMenu( new System.Windows.Forms.MenuItem[] 
+            notifyContextMenu = new System.Windows.Forms.ContextMenu(new System.Windows.Forms.MenuItem[]
             { new System.Windows.Forms.MenuItem("Выход", new EventHandler(ShutdownCurrentApp)) });
             notify.Icon = new System.Drawing.Icon("images/icon.ico");
             notify.ContextMenu = notifyContextMenu;
@@ -96,12 +96,18 @@ namespace AccountingPC
         /// </summary>
         /// <param name="login">Логин</param>
         /// <param name="pass">Пароль</param>
-        private void SetUserCredentials(string login, String pass)
+        private void SetUserCredentials(string login, string pass)
         {
             if (Settings.Default.USER_NAME == null || Settings.Default.USER_NAME == "")
+            {
                 Settings.Default.USER_NAME = login;
+            }
+
             if (Settings.Default.PASSWORD_HASH == null || Settings.Default.PASSWORD_HASH == "")
+            {
                 Settings.Default.PASSWORD_HASH = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(pass)));
+            }
+
             Settings.Default.Save();
         }
         /// <summary>
@@ -124,7 +130,7 @@ namespace AccountingPC
         /// </summary>
         private void CreateDB()
         {
-            String str;
+            string str;
             SqlConnection myConn = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True");
             str = "if not exists (select * from sys.databases where name=N'Accounting')"
                   + "begin"

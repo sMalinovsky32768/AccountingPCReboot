@@ -1,15 +1,10 @@
-﻿using System;
-using System.Configuration;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace AccountingPC
+﻿namespace AccountingPC
 {
     public partial class AccountingPCWindow
     {
         public void UpdateImages()
         {
-            images = GetImages();
+            Images = GetImages();
         }
 
         internal void UpdateEquipmentData()
@@ -58,7 +53,7 @@ namespace AccountingPC
             UpdateNetworkSwitchData();
             UpdateOtherEquipmentData();
         }
-        
+
         internal void ChangeEquipmentView()
         {
             switch (equipmentCategoryList.SelectedIndex)

@@ -1,10 +1,9 @@
 ﻿namespace AccountingPC.AccountingReport
 {
-    internal enum SortOrder
+    internal enum SortOrder : byte
     {
         Asc,
         Desc,
-        //Default,
     }
 
     internal class OrderName
@@ -38,18 +37,12 @@
         public ReportColumnName ColumnName
         {
             get => columnName;
-            set
-            {
-                columnName = value;
-            }
+            set => columnName = value;
         }
         public OrderName OrderName
         {
             get => orderName;
-            set
-            {
-                orderName = value;
-            }
+            set => orderName = value;
         }
 
         //public static bool operator ==(SortingParam value1, SortingParam value2) => (value1.Order == value2.Order) && (value1.Column == value2.Column);

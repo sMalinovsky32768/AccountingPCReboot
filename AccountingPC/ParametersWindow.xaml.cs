@@ -24,7 +24,10 @@ namespace AccountingPC
         {
             ListBoxItem item = (ListBoxItem)sender;
             if (frameSettings == null)
+            {
                 frameSettings = new Frame();
+            }
+
             switch (item.Content)
             {
                 case "Основное":
@@ -45,7 +48,10 @@ namespace AccountingPC
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
             if (((Button)sender).IsDefault)
+            {
                 Settings.Default.Save();
+            }
+
             Close();
         }
 

@@ -1,19 +1,18 @@
-﻿using AccountingPC.Properties;
+﻿using AccountingPC.AccountingReport;
+using AccountingPC.Properties;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System.IO;
-using System.Threading.Tasks;
-using System.Threading;
-using System.Windows.Data;
-using AccountingPC.AccountingReport;
-using System.Linq;
 
 namespace AccountingPC
 {
@@ -22,7 +21,7 @@ namespace AccountingPC
     /// </summary>
     public partial class AccountingPCWindow : Window
     {
-        public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        public static string ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static readonly RoutedUICommand ParametersCommand;
 
@@ -76,9 +75,9 @@ namespace AccountingPC
             "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
 
-    }
+        }
 
-    public ChangeWindow changeWindow;
+        public ChangeWindow changeWindow;
 
         internal View NowView { get; set; }
         internal TypeDevice TypeDevice { get; set; }
@@ -92,56 +91,35 @@ namespace AccountingPC
         public bool IsPreOpenEquipmentPopup { get; set; } = false;
         public bool IsPreOpenSoftwarePopup { get; set; } = false;
 
-        internal Dictionary<int, byte[]> images;
+        internal List<InstalledSoftware> PcSoftware { get; set; }
+        internal List<InstalledSoftware> NotebookSoftware { get; set; }
+        internal List<InstalledSoftware> PcNotInstalledSoftware { get; set; }
+        internal List<InstalledSoftware> NotebookNotInstalledSoftware { get; set; }
 
-        List<InstalledSoftware> pcSoftware;
-        List<InstalledSoftware> notebookSoftware;
-        List<InstalledSoftware> pcNotInstalledSoftware;
-        List<InstalledSoftware> notebookNotInstalledSoftware;
+        public DataSet SoftwareDataSet { get; set; }
+        public DataSet PcNotInstalledSoftwareDataSet { get; set; }
+        public DataSet PcSoftwareDataSet { get; set; }
+        public DataSet NotebookNotInstalledSoftwareDataSet { get; set; }
+        public DataSet NotebookSoftwareDataSet { get; set; }
+        public DataSet OsDataSet { get; set; }
+        public DataSet BoardDataSet { get; set; }
+        public DataSet MonitorDataSet { get; set; }
+        public DataSet NetworkSwitchDataSet { get; set; }
+        public DataSet NotebookDataSet { get; set; }
+        public DataSet OtherEquipmentDataSet { get; set; }
+        public DataSet PcDataSet { get; set; }
+        public DataSet PrinterScannerDataSet { get; set; }
+        public DataSet ProjectorDataSet { get; set; }
+        public DataSet ProjectorScreenDataSet { get; set; }
+        public DataSet InvoiceDataSet { get; set; }
+        public DataSet InvoiceSoftwareAndEquipmentDataSet { get; set; }
+        public DataSet AudienceDataSet { get; set; }
+        public DataSet AudiencePlaceDataSet { get; set; }
+        public DataSet DeviceOnPlaceDataSet { get; set; }
+        internal Dictionary<int, byte[]> Images { get; set; }
 
         public double lastHeight;
         public double lastWidth;
-
-        SqlDataAdapter softwareDataAdapter;
-        SqlDataAdapter pcNotInstalledSoftwareDataAdapter;
-        SqlDataAdapter pcSoftwareDataAdapter;
-        SqlDataAdapter notebookNotInstalledSoftwareDataAdapter;
-        SqlDataAdapter notebookSoftwareDataAdapter;
-        SqlDataAdapter osDataAdapter;
-        SqlDataAdapter boardDataAdapter;
-        SqlDataAdapter monitorDataAdapter;
-        SqlDataAdapter networkSwitchDataAdapter;
-        SqlDataAdapter notebookDataAdapter;
-        SqlDataAdapter otherEquipmentDataAdapter;
-        SqlDataAdapter pcDataAdapter;
-        SqlDataAdapter printerScannerDataAdapter;
-        SqlDataAdapter projectorDataAdapter;
-        SqlDataAdapter projectorScreenDataAdapter;
-        SqlDataAdapter invoiceDataAdapter;
-        SqlDataAdapter audienceDataAdapter;
-        //SqlDataAdapter typeDeviceDataAdapter;
-
-        DataSet softwareDataSet;
-        DataSet pcNotInstalledSoftwareDataSet;
-        DataSet pcSoftwareDataSet;
-        DataSet notebookNotInstalledSoftwareDataSet;
-        DataSet notebookSoftwareDataSet;
-        DataSet osDataSet;
-        DataSet boardDataSet;
-        DataSet monitorDataSet;
-        DataSet networkSwitchDataSet;
-        DataSet notebookDataSet;
-        DataSet otherEquipmentDataSet;
-        DataSet pcDataSet;
-        DataSet printerScannerDataSet;
-        DataSet projectorDataSet;
-        DataSet projectorScreenDataSet;
-        DataSet invoiceDataSet;
-        DataSet invoiceSoftwareAndEquipmentDataSet;
-        DataSet audienceDataSet;
-        DataSet audiencePlaceDataSet;
-        DataSet deviceOnPlaceDataSet;
-        //DataSet typeDeviceDataSet;
 
         public AccountingPCWindow()
         {
@@ -166,9 +144,9 @@ namespace AccountingPC
             if (reportMenu.ItemContainerGenerator.Status ==
                 System.Windows.Controls.Primitives.GeneratorStatus.ContainersGenerated)
             {
-                var containers = reportMenu.Items.Cast<object>().Select(
+                IEnumerable<FrameworkElement> containers = reportMenu.Items.Cast<object>().Select(
                     item => (FrameworkElement)reportMenu.ItemContainerGenerator.ContainerFromItem(item));
-                foreach (var container in containers)
+                foreach (FrameworkElement container in containers)
                 {
                     (container as MenuItem).Click += CreateReport_Click;
                 }
@@ -188,18 +166,32 @@ namespace AccountingPC
         private void ExitApp(object sender, RoutedEventArgs e)
         {
             if (e.OriginalSource.GetType() == typeof(MenuItem))
+            {
                 if (((MenuItem)e.OriginalSource).Name == "menuExit")
+                {
                     if (Settings.Default.SHUTDOWN_ON_EXPLICIT)
+                    {
                         App.Current.Shutdown();
+                    }
                     else
+                    {
                         Close();
+                    }
+                }
                 else { }
+            }
             else if (e.OriginalSource.GetType() == typeof(Button))
+            {
                 if (((Button)e.OriginalSource).Name == "buttonExit")
+                {
                     Close();
+                }
                 else { }
+            }
             else
+            {
                 Close();
+            }
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -275,11 +267,13 @@ namespace AccountingPC
                 foreach (object obj in equipmentView.SelectedItems)
                 {
                     DataRow row = ((DataRowView)obj).Row;
-                    Int32 id = Convert.ToInt32(row[0]);
-                    SqlCommand command = new SqlCommand($"Delete{TypeDevice.ToString()}ByID", connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    int id = Convert.ToInt32(row[0]);
+                    SqlCommand command = new SqlCommand($"Delete{TypeDevice.ToString()}ByID", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
                     command.Parameters.Add(new SqlParameter("@ID", id));
-                    Int32 res = command.ExecuteNonQuery();
+                    int res = command.ExecuteNonQuery();
                 }
             }
             statusItem1.Content = "Успешно удалено";
@@ -346,11 +340,13 @@ namespace AccountingPC
                 foreach (object obj in softwareView.SelectedItems)
                 {
                     DataRow row = ((DataRowView)obj).Row;
-                    Int32 id = Convert.ToInt32(row[0]);
-                    SqlCommand command = new SqlCommand($"Delete{TypeSoft.ToString()}", connection);
-                    command.CommandType = CommandType.StoredProcedure;
+                    int id = Convert.ToInt32(row[0]);
+                    SqlCommand command = new SqlCommand($"Delete{TypeSoft.ToString()}", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure
+                    };
                     command.Parameters.Add(new SqlParameter("@ID", id));
-                    Int32 res = command.ExecuteNonQuery();
+                    int res = command.ExecuteNonQuery();
                 }
             }
             statusItem1.Content = "Успешно удалено";
@@ -381,7 +377,7 @@ namespace AccountingPC
             int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
             if (id != 0)
             {
-                using (MemoryStream stream = new MemoryStream(images[id]))
+                using (MemoryStream stream = new MemoryStream(Images[id]))
                 {
                     frame = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
                 }
@@ -422,14 +418,18 @@ namespace AccountingPC
                 switch (TypeDevice)
                 {
                     case TypeDevice.PC:
-                        command = new SqlCommand($"DeleteInstalledSoftwarePC", connection);
-                        command.CommandType = CommandType.StoredProcedure;
+                        command = new SqlCommand($"DeleteInstalledSoftwarePC", connection)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                        };
                         command.Parameters.Add(new SqlParameter("@PCID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                     case TypeDevice.Notebook:
-                        command = new SqlCommand($"DeleteInstalledSoftwareNotebook", connection);
-                        command.CommandType = CommandType.StoredProcedure;
+                        command = new SqlCommand($"DeleteInstalledSoftwareNotebook", connection)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                        };
                         command.Parameters.Add(new SqlParameter("@NotebookID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
@@ -451,14 +451,18 @@ namespace AccountingPC
                 switch (TypeDevice)
                 {
                     case TypeDevice.PC:
-                        command = new SqlCommand($"AddInstalledSoftwarePC", connection);
-                        command.CommandType = CommandType.StoredProcedure;
+                        command = new SqlCommand($"AddInstalledSoftwarePC", connection)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                        };
                         command.Parameters.Add(new SqlParameter("@PCID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
                     case TypeDevice.Notebook:
-                        command = new SqlCommand($"AddInstalledSoftwareNotebook", connection);
-                        command.CommandType = CommandType.StoredProcedure;
+                        command = new SqlCommand($"AddInstalledSoftwareNotebook", connection)
+                        {
+                            CommandType = CommandType.StoredProcedure
+                        };
                         command.Parameters.Add(new SqlParameter("@NotebookID", DeviceID));
                         command.Parameters.Add(new SqlParameter("@LicenseID", licenseID));
                         break;
@@ -479,13 +483,17 @@ namespace AccountingPC
             ConfiguringReportWindow reportWindow;
             if (reportName != null)
             {
-                reportWindow = new ConfiguringReportWindow(reportName.Type);
-                reportWindow.Owner = this;
+                reportWindow = new ConfiguringReportWindow(reportName.Type)
+                {
+                    Owner = this
+                };
             }
             else
             {
-                reportWindow = new ConfiguringReportWindow();
-                reportWindow.Owner = this;
+                reportWindow = new ConfiguringReportWindow
+                {
+                    Owner = this
+                };
             }
             reportWindow?.ShowDialog();
         }
@@ -493,8 +501,10 @@ namespace AccountingPC
         private void OpenParameters(object sender, ExecutedRoutedEventArgs e)
         {
             //new ParametersWindow().ShowDialog();
-            ParametersWindow parametersWindow = new ParametersWindow();
-            parametersWindow.Owner = this;
+            ParametersWindow parametersWindow = new ParametersWindow
+            {
+                Owner = this
+            };
             parametersWindow.ShowDialog();
         }
 
@@ -531,7 +541,9 @@ namespace AccountingPC
             equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("InvoiceID")].Visibility = Visibility.Collapsed;
 
             if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("VideoConnectors"))
+            {
                 equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
+            }
 
             equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
 
@@ -549,20 +561,30 @@ namespace AccountingPC
         {
             DataGrid grid = sender as DataGrid;
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("ID"))
+            {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+            }
 
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("InvoiceID"))
+            {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("InvoiceID")].Visibility = Visibility.Collapsed;
+            }
 
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("VideoConnectors"))
+            {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
+            }
 
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("ImageID"))
+            {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
+            }
 
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("Дата приобретения"))
+            {
                 ((DataGridTextColumn)grid.Columns[((DataView)grid.ItemsSource).Table.
                     Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            }
         }
 
         private void ChangeInvoice_Click(object sender, RoutedEventArgs e)
@@ -587,9 +609,9 @@ namespace AccountingPC
         {
             DataRow row = ((DataRowView)audienceTableView?.SelectedItem)?.Row;
             AudienceTableID = Convert.ToInt32(row?["ID"]);
-            deviceOnPlaceDataSet = new DataSet();
-            new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(deviceOnPlaceDataSet);
-            devicesOnPlace.ItemsSource = deviceOnPlaceDataSet.Tables[0].DefaultView;
+            DeviceOnPlaceDataSet = new DataSet();
+            new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DeviceOnPlaceDataSet);
+            devicesOnPlace.ItemsSource = DeviceOnPlaceDataSet.Tables[0].DefaultView;
             devicesOnPlace.SelectedIndex = 0;
         }
 
@@ -597,7 +619,9 @@ namespace AccountingPC
         {
             DataGrid grid = sender as DataGrid;
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("ID"))
+            {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+            }
         }
 
         private void DevicesOnPlace_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -607,7 +631,7 @@ namespace AccountingPC
             int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
             if (id != 0)
             {
-                using (MemoryStream stream = new MemoryStream(images[id]))
+                using (MemoryStream stream = new MemoryStream(Images[id]))
                 {
                     frame = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
                 }
