@@ -128,6 +128,7 @@ namespace AccountingPC
             softwareGrid.Visibility = Visibility.Collapsed;
             locationManagementGrid.Visibility = Visibility.Visible;
             invoiceManagementGrid.Visibility = Visibility.Collapsed;
+            UpdateAudienceList();
         }
     }
 }

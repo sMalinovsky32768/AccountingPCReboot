@@ -156,12 +156,14 @@
                                 <RowDefinition Height="Auto"/>
                             </SelectiveScrollingGrid.RowDefinitions>
                             <DataGridCellsPresenter Grid.Column="1" ItemsPanel="{TemplateBinding ItemsPanel}"
-                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                    TextElement.Foreground="{TemplateBinding Foreground}"/>
                             <DataGridDetailsPresenter Grid.Column="1" Grid.Row="1" Visibility="{TemplateBinding DetailsVisibility}"
                                                       SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding AreRowDetailsFrozen, 
                                 ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}, 
                                 Converter={x:Static DataGrid.RowDetailsScrollingConverter}, 
-                                RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                                RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"
+                                                    TextElement.Foreground="{TemplateBinding Foreground}"/>
                             <DataGridRowHeader Grid.RowSpan="2" SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
                                                Visibility="{Binding HeadersVisibility, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, 
                                 Converter={x:Static DataGrid.HeadersVisibilityConverter}, 
@@ -215,7 +217,8 @@
                                 BorderBrush="{DynamicResource surface-background-gradient}"
                                 Background="{DynamicResource surface-background-gradient}">
                             <StackPanel Orientation="Horizontal">
-                                <ContentPresenter VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                <ContentPresenter VerticalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                                  TextElement.Foreground="{TemplateBinding Foreground}"/>
                                 <Control SnapsToDevicePixels="false" Template="{Binding ValidationErrorTemplate, 
                                     RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}"
                                          Visibility="{Binding (Validation.HasError), Converter={StaticResource bool2VisibilityConverter},

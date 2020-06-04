@@ -21,7 +21,7 @@ namespace AccountingPC
         }
 
 
-        private static System.IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             switch (msg)
             {
@@ -34,7 +34,7 @@ namespace AccountingPC
         }
 
 
-        private static void WmGetMinMaxInfo(System.IntPtr hwnd, System.IntPtr lParam)
+        private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
         {
             POINT lMousePosition;
             GetCursorPos(out lMousePosition);

@@ -14,14 +14,14 @@
         <WindowChrome CaptionHeight="0" ResizeBorderThickness="5"/>
     </WindowChrome.WindowChrome>
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.ParametersCommand}" Executed="OpenParameters"/>
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.ExitCommand}" Executed="ExitApp"/>
+        <CommandBinding Command="local:AccountingPCWindow.ParametersCommand" Executed="OpenParameters"/>
+        <CommandBinding Command="local:AccountingPCWindow.ExitCommand" Executed="ExitApp"/>
 
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewEquipmentCommand}" Executed="SelectViewEquipment"/>
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewSoftwareCommand}" Executed="SelectViewSoftware"/>
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewInvoiceCommand}" Executed="SelectViewInvoice"/>
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.SelectViewLocationCommand}" Executed="SelectViewLocation"/>
-        <CommandBinding Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}" Executed="UpdateView_Executed"/>
+        <CommandBinding Command="local:AccountingPCWindow.SelectViewEquipmentCommand" Executed="SelectViewEquipment"/>
+        <CommandBinding Command="local:AccountingPCWindow.SelectViewSoftwareCommand" Executed="SelectViewSoftware"/>
+        <CommandBinding Command="local:AccountingPCWindow.SelectViewInvoiceCommand" Executed="SelectViewInvoice"/>
+        <CommandBinding Command="local:AccountingPCWindow.SelectViewLocationCommand" Executed="SelectViewLocation"/>
+        <CommandBinding Command="local:AccountingPCWindow.UpdateViewCommand" Executed="UpdateView_Executed"/>
     </Window.CommandBindings>
     <!---->
     <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
@@ -55,23 +55,11 @@
                             <Separator/>
                             <MenuItem Header="Обновить" InputGestureText="Ctrl+R, F5" Command="{x:Static local:AccountingPCWindow.UpdateViewCommand}"/>
                         </MenuItem>
-                        <MenuItem Header="Отчет" x:Name="reportMenu">
-                            <!--<MenuItem Header="Простой" Click="CreateReport_Click"/>
-                            <MenuItem Header="Полный" Click="CreateReport_Click"/>
-                            <MenuItem Header="Компьютеры" Click="CreateReport_Click"/>
-                            <MenuItem Header="Ноутбуки и Моноблоки" Click="CreateReport_Click"/>
-                            <MenuItem Header="Мониторы" Click="CreateReport_Click"/>
-                            <MenuItem Header="Проекторы" Click="CreateReport_Click"/>
-                            <MenuItem Header="Интерактивные доски" Click="CreateReport_Click"/>
-                            <MenuItem Header="Экраны для проекторов" Click="CreateReport_Click"/>
-                            <MenuItem Header="Принтеры и сканеры" Click="CreateReport_Click"/>
-                            <MenuItem Header="Сетевое оборудование" Click="CreateReport_Click"/>
-                            <MenuItem Header="Прочее оборудование" Click="CreateReport_Click"/>-->
-                        </MenuItem>
+                        <MenuItem Header="Отчет" x:Name="reportMenu"/>
                     </Menu>
                     <StackPanel Grid.Column="1" PreviewMouseLeftButtonDown="rctHeader_PreviewMouseLeftButtonDown" 
                                 PreviewMouseLeftButtonUp="rctHeader_PreviewMouseLeftButtonUp" PreviewMouseMove="rctHeader_PreviewMouseMove"
-                                Background="{DynamicResource background-brush}"/><!--MouseLeftButtonDown="Border_MouseLeftButtonDown"--> 
+                                Background="{DynamicResource background-brush}"/>
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
                         <Button x:Name="buttonMinimized" Style="{DynamicResource minimizeButton}"/>
                         <Button x:Name="buttonMaximized" Style="{DynamicResource maximizeButton}"/>
@@ -79,7 +67,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="viewGrid">
-                    <Grid x:Name="equipmentGrid" Visibility="Collapsed">
+                    <Grid x:Name="equipmentGrid" Visibility="Collapsed" Margin="0,5,0,0">
                         <Grid.Style>
                             <Style>
                                 <Style.Triggers>
@@ -201,6 +189,11 @@
                                                     <Setter Property="Width" Value="30"/>
                                                     <Setter Property="Height" Value="30"/>
                                                     <Setter Property="Margin" Value="2"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
                                                 </Style>
                                                 <Style x:Key="soft-del-button" TargetType="Button" BasedOn="{StaticResource soft-button}">
                                                     <Style.Triggers>
@@ -212,22 +205,96 @@
                                             </Grid.Resources>
                                             <TextBlock Text="Установленное программное обеспечение" Foreground="{DynamicResource on-background-brush}"  TextWrapping="WrapWithOverflow"
                                                    FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                                            <Button Grid.Column="1" x:Name="addSoftware" Content="+" Style="{DynamicResource soft-button}" Click="AddSoftware_Click">
+                                            <Button Grid.Column="1" x:Name="addSoftware" Style="{DynamicResource soft-button}" Click="AddSoftware_Click">
+                                                <Grid>
+                                                    <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                                          3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
+                                                          20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
+                                                          C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
+                                                    <Path Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
+                                                          18.277344 13.296875 L 13.554688 13.296875 L 13.554688 17.429688 C 13.554688 
+                                                          17.726562 13.277344 17.96875 12.9375 17.96875 L 10.0625 17.96875 C 9.722656 
+                                                          17.96875 9.445312 17.726562 9.445312 17.429688 L 9.445312 13.296875 L 
+                                                          4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 12.757812 
+                                                          L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 9.703125 
+                                                          L 9.445312 9.703125 L 9.445312 5.570312 C 9.445312 5.273438 9.722656 5.03125 
+                                                          10.0625 5.03125 L 12.9375 5.03125 C 13.277344 5.03125 13.554688 5.273438 
+                                                          13.554688 5.570312 L 13.554688 9.703125 L 18.277344 9.703125 C 18.617188 
+                                                          9.703125 18.894531 9.945312 18.894531 10.242188 Z" 
+                                                          Fill="{DynamicResource on-background-brush}"/>
+                                                </Grid>
                                                 <Button.ContextMenu>
-                                                    <ContextMenu>
+                                                    <ContextMenu Margin="0">
                                                         <ContextMenu.ItemTemplate>
                                                             <DataTemplate>
                                                                 <Button Content="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}" 
                                                                         Click="AddSoftwareItem" BorderBrush="Transparent" Background="Transparent" 
-                                                                        Foreground="{DynamicResource on-background-brush}"/>
+                                                                        Foreground="{DynamicResource on-background-brush}" Margin="0">
+                                                                    <Button.Style>
+                                                                        <Style TargetType="Button">
+                                                                            <Setter Property="Margin" Value="0"/>
+                                                                            <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}"/>
+                                                                            <Setter Property="Background" Value="{DynamicResource surface-brush}"/>
+                                                                            <Setter Property="BorderBrush" Value="{DynamicResource surface-brush}"/>
+                                                                            <Setter Property="Button.Template">
+                                                                                <Setter.Value>
+                                                                                    <ControlTemplate TargetType="Button">
+                                                                                        <Grid>
+                                                                                            <Border CornerRadius="0" BorderThickness="0" Name="btnBorder" 
+                                                                                                    Padding="{TemplateBinding Padding}" 
+                                                                                                    Background="{TemplateBinding Background}"
+                                                                                                    BorderBrush="{TemplateBinding BorderBrush}">
+                                                                                                <Border.Effect>
+                                                                                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                                                                                </Border.Effect>
+                                                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                                                                                                  TextElement.FontWeight="Bold" Name="btnContent" 
+                                                                                                                  TextElement.Foreground="{TemplateBinding Foreground}">
+                                                                                                </ContentPresenter>
+                                                                                            </Border>
+                                                                                        </Grid>
+                                                                                        <ControlTemplate.Triggers>
+                                                                                            <Trigger Property="IsMouseOver" Value="true">
+                                                                                                <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
+                                                                                                <Setter TargetName="btnBorder" Property="Effect">
+                                                                                                    <Setter.Value>
+                                                                                                        <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                                                                                    </Setter.Value>
+                                                                                                </Setter>
+                                                                                            </Trigger>
+                                                                                        </ControlTemplate.Triggers>
+                                                                                    </ControlTemplate>
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                            <Style.Triggers>
+                                                                                <Trigger Property="IsMouseOver" Value="True">
+                                                                                    <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}"/>
+                                                                                </Trigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </Button.Style>
+                                                                </Button>
                                                             </DataTemplate>
                                                         </ContextMenu.ItemTemplate>
                                                     </ContextMenu>
                                                 </Button.ContextMenu>
                                             </Button>
-                                            <Button Grid.Column="2" x:Name="delSoftware" Content="-" Style="{DynamicResource soft-del-button}" Click="DelSoftware_Click"/>
+                                            <Button Grid.Column="2" x:Name="delSoftware" Style="{DynamicResource soft-del-button}" Click="DelSoftware_Click">
+                                                <Grid>
+                                                    <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                                          3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
+                                                          20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
+                                                          C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
+                                                    <Path Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
+                                                          12.757812 L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 
+                                                          9.703125 L 18.277344 9.703125 C 18.617188 9.703125 18.894531 9.945312 
+                                                          18.894531 10.242188 L 18.894531 12.757812 C 18.894531 13.054688 18.617188 
+                                                          13.296875 18.277344 13.296875 Z " 
+                                                          Fill="{DynamicResource on-background-brush}"/>
+                                                </Grid>
+                                            </Button>
                                         </Grid>
-                                        <ListBox Grid.Row="1" Margin="10,5" x:Name="softwareOnDevice" Style="{DynamicResource list-box-no-selected}">
+                                        <ListBox Grid.Row="1" Margin="10,5" x:Name="softwareOnDevice">
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
@@ -241,7 +308,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid x:Name="softwareGrid" Visibility="Collapsed">
+                    <Grid x:Name="softwareGrid" Visibility="Collapsed" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MaxWidth="400" MinWidth="250"/>
                             <ColumnDefinition Width="auto"/>
@@ -323,18 +390,76 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid x:Name="locationManagementGrid" Visibility="Collapsed">
-
-                    </Grid>
-                    <Grid x:Name="invoiceManagementGrid" Visibility="Visible">
+                    <Grid x:Name="locationManagementGrid" Visibility="Visible" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MaxWidth="400" MinWidth="250"/>
                             <ColumnDefinition Width="auto"/>
                             <ColumnDefinition Width="4*"/>
                         </Grid.ColumnDefinitions>
                         <Grid>
-                            <!--Selecting a category Grid-->
-                            <ListBox x:Name="invoiceList" SelectionChanged="ListBox_SelectionChanged"/>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <!-- Кнопки добавить/удалить аудиторию/офис -->
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="5,0">
+                                    <Button Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                            Margin="0,0,10,0" Click="Button_Click" Style="{DynamicResource default-button}">
+                                        <Grid>
+                                            <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                                  3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
+                                                  20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
+                                            <Path Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
+                                                  18.277344 13.296875 L 13.554688 13.296875 L 13.554688 17.429688 C 13.554688 
+                                                  17.726562 13.277344 17.96875 12.9375 17.96875 L 10.0625 17.96875 C 9.722656 
+                                                  17.96875 9.445312 17.726562 9.445312 17.429688 L 9.445312 13.296875 L 
+                                                  4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 12.757812 
+                                                  L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 9.703125 
+                                                  L 9.445312 9.703125 L 9.445312 5.570312 C 9.445312 5.273438 9.722656 5.03125 
+                                                  10.0625 5.03125 L 12.9375 5.03125 C 13.277344 5.03125 13.554688 5.273438 
+                                                  13.554688 5.570312 L 13.554688 9.703125 L 18.277344 9.703125 C 18.617188 
+                                                  9.703125 18.894531 9.945312 18.894531 10.242188 Z" 
+                                                  Fill="{DynamicResource on-background-brush}"/>
+                                        </Grid>
+                                    </Button>
+                                    <Button x:Name="delAudienceButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                                            Margin="0" Command="{Binding DelAudience}" CommandParameter="{Binding Path=SelectedItem, ElementName=audienceList}"
+                                             Style="{DynamicResource default-button}">
+                                        <Grid>
+                                            <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                                  3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
+                                                  20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
+                                            <Path Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
+                                                  12.757812 L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 
+                                                  9.703125 L 18.277344 9.703125 C 18.617188 9.703125 18.894531 9.945312 
+                                                  18.894531 10.242188 L 18.894531 12.757812 C 18.894531 13.054688 18.617188 
+                                                  13.296875 18.277344 13.296875 Z " 
+                                                  Fill="{DynamicResource on-background-brush}"/>
+                                        </Grid>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="1" Margin="5,0" x:Name="addAudienceGrid" Visibility="Collapsed">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Text="Введите название аудитории" Style="{DynamicResource textBlock}" Margin="0,0,0,5"/>
+                                <TextBox x:Name="audienceName" Style="{DynamicResource text-box}" Grid.Row="1"/>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="2">
+                                    <Button x:Name="addAudienceButton" Style="{DynamicResource default-button}" Content="Добавить" Width="100" Height="25" Margin="0,10,0,0"
+                                            Command="{Binding AddAudience}" CommandParameter="{Binding Path=Text, ElementName=audienceName}"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <!--Selecting a category Grid-->
+                                <ListBox x:Name="audienceList" SelectionChanged="ListBox_SelectionChanged"/>
+                            </Grid>
                         </Grid>
                         <GridSplitter Grid.Column="1" Width="2" ResizeBehavior="PreviousAndNext"/>
                         <Grid Grid.Column="2">
@@ -395,52 +520,176 @@
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
-                                <!--<StackPanel Orientation="Vertical" Margin="10" Visibility="Collapsed">
-                                    <Expander x:Name="invoicePC_Expander" Header="Компьютеры">
-                                        <DataGrid x:Name="invoicePCView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceNotebook_Expander" Header="Ноутбуки и Моноблоки">
-                                        <DataGrid x:Name="invoiceNotebookView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceMonitor_Expander" Header="Мониторы">
-                                        <DataGrid x:Name="invoiceMonitorView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceProjector_Expander" Header="Проекторы">
-                                        <DataGrid x:Name="invoiceProjectorView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceBoard_Expander" Header="Интерактивные доски">
-                                        <DataGrid x:Name="invoiceBoardView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceScreen_Expander" Header="Экраны для проекторов">
-                                        <DataGrid x:Name="invoiceScreenView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoicePrinterScanner_Expander" Header="Принтеры и сканеры">
-                                        <DataGrid x:Name="invoicePrinterScannerView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceNetworkSwitch_Expander" Header="Сетевое оборудование">
-                                        <DataGrid x:Name="invoiceNetworkSwitchView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceOtherEquipment_Expander" Header="Другое оборудование">
-                                        <DataGrid x:Name="invoiceOtherEquipmentView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceSoftware_Expander" Header="Программное обеспечение">
-                                        <DataGrid x:Name="invoiceSoftwareView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                    <Expander x:Name="invoiceOS_Expander" Header="Операционные системы">
-                                        <DataGrid x:Name="invoiceOSView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
-                                          AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
-                                    </Expander>
-                                </StackPanel>-->
+                                <DataGrid x:Name="audienceTableView" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="AudienceTableView_SelectionChanged"
+                                          AutoGeneratedColumns="AudienceTableView_AutoGeneratedColumns"  AutoGenerateColumns="True"/>
+                            </Grid>
+                            <GridSplitter Grid.Row="2" Height="2" ResizeBehavior="PreviousAndNext"/>
+                            <Grid Grid.Row="3">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition x:Name="devicesColumn" Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid Grid.Column="1" Height="300" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Image x:Name="deviceImageOnPlace" Margin="10" Width="400"/>
+                                </Grid>
+                                <Grid>
+                                    <Grid x:Name="devicesGrid" MinWidth="350">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid Margin="20,0">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="auto"/>
+                                                <ColumnDefinition Width="auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <!--<Grid.Resources>
+                                                <Style x:Key="soft-button" TargetType="Button" BasedOn="{StaticResource default-button}">
+                                                    <Setter Property="FontSize" Value="18"/>
+                                                    <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                    <Setter Property="Width" Value="30"/>
+                                                    <Setter Property="Height" Value="30"/>
+                                                    <Setter Property="Margin" Value="2"/>
+                                                </Style>
+                                                <Style x:Key="soft-del-button" TargetType="Button" BasedOn="{StaticResource soft-button}">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareOnDevice}" Value="-1">
+                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Resources>-->
+                                            <TextBlock Text="Список вычислительной техники" Foreground="{DynamicResource on-background-brush}"  TextWrapping="WrapWithOverflow"
+                                                   FontSize="16" FontWeight="Bold" FontStyle="Italic" TextDecorations="{x:Null}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                            <!--<Button Grid.Column="1" x:Name="addSoftware" Content="+" Style="{DynamicResource soft-button}" Click="AddSoftware_Click">
+                                                <Button.ContextMenu>
+                                                    <ContextMenu>
+                                                        <ContextMenu.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Button Content="{Binding Path=Name}" ToolTip="{Binding Path=CountInstalledString}" 
+                                                                        Click="AddSoftwareItem" BorderBrush="Transparent" Background="Transparent" 
+                                                                        Foreground="{DynamicResource on-background-brush}"/>
+                                                            </DataTemplate>
+                                                        </ContextMenu.ItemTemplate>
+                                                    </ContextMenu>
+                                                </Button.ContextMenu>
+                                            </Button>
+                                            <Button Grid.Column="2" x:Name="delSoftware" Content="-" Style="{DynamicResource soft-del-button}" Click="DelSoftware_Click"/>-->
+                                        </Grid>
+                                        <ListBox Grid.Row="1" Margin="10,5" x:Name="devicesOnPlace" SelectionChanged="DevicesOnPlace_SelectionChanged">
+                                            <ListBox.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding Path=FullName}"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListBox.ItemTemplate>
+                                        </ListBox>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                    <Grid x:Name="invoiceManagementGrid" Visibility="Collapsed" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MaxWidth="400" MinWidth="250"/>
+                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <!--Selecting a category Grid-->
+                            <ListBox x:Name="invoiceList" SelectionChanged="ListBox_SelectionChanged"/>
+                        </Grid>
+                        <GridSplitter Grid.Column="1" Width="2" ResizeBehavior="PreviousAndNext"/>
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition MinHeight="40" Height="auto"/>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition MaxHeight="300" Height="auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid>
+                                <!--Information Category Grid-->
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5" x:Name="changeInvoicePanel">
+                                            <Grid Margin="0,0,10,0" Width="200">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Номер накладной" Style="{DynamicResource textBlock}" Margin="0,0,0,5"/>
+                                                <TextBox x:Name="invoiceNumberManager" Grid.Row="1" Style="{DynamicResource text-box}" Height="20" 
+                                                         Text="{Binding Path=Number}"/>
+                                            </Grid>
+                                            <Grid Margin="0,0,10,0" Width="200">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Text="Дата" Style="{DynamicResource textBlock}" Margin="0,0,0,5"/>
+                                                <DatePicker x:Name="dateManager" Grid.Row="1"
+                                                            SelectedDate="{Binding Path=Date}"/>
+                                            </Grid>
+                                            <Grid Margin="0,0,10,0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition/>
+                                                    <RowDefinition/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Margin="0,0,0,5"/>
+                                                <Button x:Name="changeInvoice" Content="Изменить" Style="{DynamicResource default-button}" Width="120" Grid.Row="1" Margin="0" Height="20" Click="ChangeInvoice_Click"/>
+                                            </Grid>
+                                        </StackPanel>
+                                    </Grid>
+                                    <!--<Grid Grid.Column="1">
+                                        <Grid.Resources>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
+                                                <Setter Property="Height" Value="35"/>
+                                                <Setter Property="Width" Value="120"/>
+                                                <Setter Property="Margin" Value="10 10 5 10"/>
+                                                <Setter Property="IsEnabled" Value="True"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareCategoryList}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=softwareView}" Value="1">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style TargetType="{x:Type Button}" x:Key="btn-del" BasedOn="{StaticResource btn-view}">
+                                                <Setter Property="Background" Value="{DynamicResource error-brush}"/>
+                                                <Setter Property="Foreground" Value="{DynamicResource on-error-brush}"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Grid.Resources>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Content="Добавить" Click="AddSoftware" Style="{DynamicResource btn-view}"/>
+                                        <Button Grid.Column="1" Content="Изменить" Click="ChangeSoftware" Style="{DynamicResource btn-edit}"/>
+                                        <Button Grid.Column="2" Content="Удалить" Click="DeleteSoftware" Style="{DynamicResource btn-del}"/>
+                                    </Grid>-->
+                                </Grid>
+                            </Grid>
+                            <Grid Grid.Row="1">
                                 <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Auto">
                                     <ItemsControl x:Name="invoiceItemsControl">
                                         <ItemsControl.ItemTemplate>
@@ -458,7 +707,8 @@
                                                     </Expander.Style>
                                                     <DataGrid x:Name="__View" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 
                                                           AutoGeneratedColumns="InvoiceView_AutoGeneratedColumns" AutoGenerateColumns="True" 
-                                                              ItemsSource="{Binding Path=DefaultView}" ScrollViewer.CanContentScroll="True"/>
+                                                              ItemsSource="{Binding Path=DefaultView}" ScrollViewer.CanContentScroll="True" 
+                                                              HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"/>
                                                 </Expander>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>

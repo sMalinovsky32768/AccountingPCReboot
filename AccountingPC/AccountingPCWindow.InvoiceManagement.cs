@@ -80,6 +80,9 @@ namespace AccountingPC
         {
             UpdateInvoiceData();
             invoiceItemsControl.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables;
+            //changeInvoicePanel.DataContext = invoiceList.SelectedItem;
+            invoiceNumberManager.Text = ((DataRowView)invoiceList?.SelectedItem)?.Row?["Number"].ToString();
+            dateManager.SelectedDate = Convert.ToDateTime(((DataRowView)invoiceList?.SelectedItem)?.Row?["Date"]);
             //invoicePCView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Компьютеры"].DefaultView;
             //invoiceNotebookView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Ноутбуки и Моноблоки"].DefaultView;
             //invoiceMonitorView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Мониторы"].DefaultView;

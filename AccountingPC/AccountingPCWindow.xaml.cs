@@ -24,40 +24,61 @@ namespace AccountingPC
     {
         public static String ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
-        public static readonly RoutedCommand ParametersCommand = new RoutedUICommand(
+        public static readonly RoutedUICommand ParametersCommand;
+
+        public static readonly RoutedUICommand ExitCommand;
+
+        public static readonly RoutedUICommand PopupCloseCommand;
+
+        public static readonly RoutedUICommand SelectViewEquipmentCommand;
+
+        public static readonly RoutedUICommand SelectViewSoftwareCommand;
+
+        public static readonly RoutedUICommand SelectViewInvoiceCommand;
+
+        public static readonly RoutedUICommand SelectViewLocationCommand;
+
+
+        public static readonly RoutedUICommand UpdateViewCommand;
+
+        static AccountingPCWindow()
+        {
+            ParametersCommand = new RoutedUICommand(
             "Parameters", "ParametersCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F12) }));
 
-        public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
+            ExitCommand = new RoutedUICommand(
             "Exit", "ExitCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F4, ModifierKeys.Alt) }));
 
-        public static readonly RoutedCommand PopupCloseCommand = new RoutedUICommand(
+            PopupCloseCommand = new RoutedUICommand(
             "PopupClose", "PopupCloseCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
 
-        public static readonly RoutedCommand SelectViewEquipmentCommand = new RoutedUICommand(
+            SelectViewEquipmentCommand = new RoutedUICommand(
             "SelectViewEquipment", "SelectViewEquipmentCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.E, ModifierKeys.Alt) }));
 
-        public static readonly RoutedCommand SelectViewSoftwareCommand = new RoutedUICommand(
+            SelectViewSoftwareCommand = new RoutedUICommand(
             "SelectViewSoftware", "SelectViewSoftwareCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.S, ModifierKeys.Alt) }));
 
-        public static readonly RoutedCommand SelectViewInvoiceCommand = new RoutedUICommand(
+            SelectViewInvoiceCommand = new RoutedUICommand(
             "SelectViewInvoice", "SelectViewInvoiceCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.I, ModifierKeys.Alt) }));
 
-        public static readonly RoutedCommand SelectViewLocationCommand = new RoutedUICommand(
+            SelectViewLocationCommand = new RoutedUICommand(
             "SelectViewLocation", "SelectViewLocationCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.L, ModifierKeys.Alt) }));
 
 
-        public static readonly RoutedCommand UpdateViewCommand = new RoutedUICommand(
+            UpdateViewCommand = new RoutedUICommand(
             "UpdateView", "UpdateViewCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.F5), new KeyGesture(Key.R, ModifierKeys.Control) }));
 
-        public ChangeWindow changeWindow;
+    }
+
+    public ChangeWindow changeWindow;
 
         internal View NowView { get; set; }
         internal TypeDevice TypeDevice { get; set; }
@@ -66,6 +87,8 @@ namespace AccountingPC
         internal int DeviceID { get; set; }
         internal int SoftwareID { get; set; }
         internal int InvoiceID { get; set; }
+        internal int AudienceID { get; set; }
+        internal int AudienceTableID { get; set; }
         public bool IsPreOpenEquipmentPopup { get; set; } = false;
         public bool IsPreOpenSoftwarePopup { get; set; } = false;
 
@@ -95,6 +118,7 @@ namespace AccountingPC
         SqlDataAdapter projectorDataAdapter;
         SqlDataAdapter projectorScreenDataAdapter;
         SqlDataAdapter invoiceDataAdapter;
+        SqlDataAdapter audienceDataAdapter;
         //SqlDataAdapter typeDeviceDataAdapter;
 
         DataSet softwareDataSet;
@@ -114,6 +138,9 @@ namespace AccountingPC
         DataSet projectorScreenDataSet;
         DataSet invoiceDataSet;
         DataSet invoiceSoftwareAndEquipmentDataSet;
+        DataSet audienceDataSet;
+        DataSet audiencePlaceDataSet;
+        DataSet deviceOnPlaceDataSet;
         //DataSet typeDeviceDataSet;
 
         public AccountingPCWindow()
@@ -214,6 +241,8 @@ namespace AccountingPC
                     ChangeSoftwareView();
                     break;
                 case View.Location:
+                    AudienceID = Convert.ToInt32(((DataRowView)audienceList?.SelectedItem)?.Row?["ID"]);
+                    ChangeLocationView();
                     break;
                 case View.Invoice:
                     InvoiceID = Convert.ToInt32(((DataRowView)invoiceList?.SelectedItem)?.Row?["ID"]);
@@ -417,6 +446,7 @@ namespace AccountingPC
             int licenseID = software.ID;
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
+                connection.Open();
                 SqlCommand command = null;
                 switch (TypeDevice)
                 {
@@ -511,7 +541,8 @@ namespace AccountingPC
 
         private void InvoiceView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            DataGrid grid = (DataGrid)e.OriginalSource;
+            string tableName = ((DataView)grid.ItemsSource).Table.TableName;
         }
 
         private void InvoiceView_AutoGeneratedColumns(object sender, EventArgs e)
@@ -532,6 +563,56 @@ namespace AccountingPC
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("Дата приобретения"))
                 ((DataGridTextColumn)grid.Columns[((DataView)grid.ItemsSource).Table.
                     Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+        }
+
+        private void ChangeInvoice_Click(object sender, RoutedEventArgs e)
+        {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                SqlCommand command = new SqlCommand("Update Invoice set Number=@Number, Date=@Date Where ID=@ID", connection);
+                command.Parameters.AddWithValue("@Number", invoiceNumberManager.Text);
+                command.Parameters.AddWithValue("@Date", $"{dateManager.Text:yyyy-MM-dd}");
+                command.Parameters.AddWithValue("@ID", InvoiceID);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            addAudienceGrid.Visibility = addAudienceGrid.Visibility == Visibility.Collapsed ? Visibility.Visible : Visibility.Collapsed;
+            audienceName.Text = string.Empty;
+        }
+
+        private void AudienceTableView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataRow row = ((DataRowView)audienceTableView?.SelectedItem)?.Row;
+            AudienceTableID = Convert.ToInt32(row?["ID"]);
+            deviceOnPlaceDataSet = new DataSet();
+            new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(deviceOnPlaceDataSet);
+            devicesOnPlace.ItemsSource = deviceOnPlaceDataSet.Tables[0].DefaultView;
+            devicesOnPlace.SelectedIndex = 0;
+        }
+
+        private void AudienceTableView_AutoGeneratedColumns(object sender, EventArgs e)
+        {
+            DataGrid grid = sender as DataGrid;
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("ID"))
+                grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
+        }
+
+        private void DevicesOnPlace_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            BitmapFrame frame = null;
+            object obj = (((DataRowView)devicesOnPlace.SelectedItems?[0])?.Row["ImageID"]);
+            int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
+            if (id != 0)
+            {
+                using (MemoryStream stream = new MemoryStream(images[id]))
+                {
+                    frame = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                }
+            }
+            deviceImageOnPlace.Source = frame;
         }
     }
 }

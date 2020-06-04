@@ -62,7 +62,7 @@ namespace AccountingPC
 
         private void UpdateNotInstalledSoftwareOnPC()
         {
-            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString);
+            pcNotInstalledSoftwareDataAdapter = new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString);
             pcNotInstalledSoftwareDataSet = new DataSet();
             pcNotInstalledSoftwareDataAdapter.Fill(pcNotInstalledSoftwareDataSet);
             pcNotInstalledSoftware = new List<InstalledSoftware>();

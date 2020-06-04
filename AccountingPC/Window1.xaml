@@ -1,8 +1,0 @@
-﻿<Window x:Class="AccountingPC.Window1"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Background="AliceBlue" WindowStyle="None" Height="350" Width="525" SourceInitialized="Window_SourceInitialized">
-    <Grid>
-        <Rectangle Name="rctHeader" Height="40" VerticalAlignment="Top" Fill="CadetBlue" PreviewMouseLeftButtonDown="rctHeader_PreviewMouseLeftButtonDown" PreviewMouseLeftButtonUp="rctHeader_PreviewMouseLeftButtonUp" PreviewMouseMove="rctHeader_PreviewMouseMove"/>
-    </Grid>
-</Window>

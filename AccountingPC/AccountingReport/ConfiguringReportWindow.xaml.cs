@@ -264,10 +264,6 @@ namespace AccountingPC.AccountingReport
                 Dispatcher.Invoke(() =>
                 {
                     SaveReport(fileName);
-                    //Process process = Process.Start("excel.exe", $"/t {fileName}");
-                    //process.Exited += (sender, e) => new FileInfo(fileName).Delete();
-                    //process.WaitForExit();
-                    //OpenExcel.Open(fileName);
 
                     Process excel = new Process();
                     excel.StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}");

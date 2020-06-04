@@ -1,5 +1,4 @@
 ﻿using AccountingPC.Properties;
-using Microsoft.Windows.Shell;
 using System;
 using System.Security.Cryptography;
 using System.Text;
