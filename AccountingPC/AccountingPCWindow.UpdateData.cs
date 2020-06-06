@@ -22,6 +22,7 @@ namespace AccountingPC
             //PcDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             //PcDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
 
+            DefaultDataSet.Tables["PC"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", ConnectionString).Fill(DefaultDataSet, "PC");
             if (!DefaultDataSet.Tables["PC"].Columns.Contains("Видеоразъемы"))
                 DefaultDataSet.Tables["PC"].Columns.Add("Видеоразъемы");
@@ -51,6 +52,7 @@ namespace AccountingPC
             //NotebookDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             //NotebookDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
 
+            DefaultDataSet.Tables["Notebook"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", ConnectionString).Fill(DefaultDataSet, "Notebook");
             DefaultDataSet.Tables["Notebook"].Columns.Add("Видеоразъемы");
             foreach (DataRow row in DefaultDataSet.Tables["Notebook"].Rows)
@@ -79,6 +81,7 @@ namespace AccountingPC
             //MonitorDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             //MonitorDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
 
+            DefaultDataSet.Tables["Monitor"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", ConnectionString).Fill(DefaultDataSet, "Monitor");
             DefaultDataSet.Tables["Monitor"].Columns.Add("Видеоразъемы");
             foreach (DataRow row in DefaultDataSet.Tables["Monitor"].Rows)
@@ -107,6 +110,7 @@ namespace AccountingPC
             //ProjectorDataSet.Tables[0].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             //ProjectorDataSet.Tables[0].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
 
+            DefaultDataSet.Tables["Projector"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString).Fill(DefaultDataSet, "Projector");
             DefaultDataSet.Tables["Projector"].Columns.Add("Видеоразъемы");
             foreach (DataRow row in DefaultDataSet.Tables["Projector"].Rows)
@@ -124,6 +128,7 @@ namespace AccountingPC
         {
             //BoardDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllBoard()", ConnectionString).Fill(BoardDataSet);
+            DefaultDataSet.Tables["Board"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllBoard()", ConnectionString).Fill(DefaultDataSet, "Board");
         }
 
@@ -131,6 +136,7 @@ namespace AccountingPC
         {
             //ProjectorScreenDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString).Fill(ProjectorScreenDataSet);
+            DefaultDataSet.Tables["ProjectorScreen"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString).Fill(DefaultDataSet, "ProjectorScreen");
         }
 
@@ -138,6 +144,7 @@ namespace AccountingPC
         {
             //PrinterScannerDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString).Fill(PrinterScannerDataSet);
+            DefaultDataSet.Tables["PrinterScanner"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString).Fill(DefaultDataSet, "PrinterScanner");
         }
 
@@ -145,6 +152,7 @@ namespace AccountingPC
         {
             //NetworkSwitchDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString).Fill(NetworkSwitchDataSet);
+            DefaultDataSet.Tables["NetworkSwitch"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString).Fill(DefaultDataSet, "NetworkSwitch");
         }
 
@@ -152,6 +160,7 @@ namespace AccountingPC
         {
             //OtherEquipmentDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString).Fill(OtherEquipmentDataSet);
+            DefaultDataSet.Tables["OtherEquipment"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString).Fill(DefaultDataSet, "OtherEquipment");
         }
 

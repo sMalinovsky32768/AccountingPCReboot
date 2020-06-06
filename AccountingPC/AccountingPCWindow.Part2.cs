@@ -76,7 +76,7 @@ namespace AccountingPC
                 (WindowState)Enum.Parse(typeof(WindowState), AccountingPCWindowSettings.Default.WindowState) : WindowState.Normal;
         }
 
-        private void ChangeWindowState()
+        internal void ChangeWindowState()
         {
             if (WindowState == WindowState.Maximized)
             {

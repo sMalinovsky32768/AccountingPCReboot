@@ -12,10 +12,13 @@
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
                             <Grid Width="13" Height="13">
-                                <Ellipse x:Name="Border" StrokeThickness="1" Stroke="{DynamicResource mouse-over-brush}" Fill="{DynamicResource on-surface-brush}"/>
+                                <Grid.Effect>
+                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                </Grid.Effect>
+                                <Ellipse x:Name="Border" StrokeThickness="1" Stroke="{DynamicResource mouse-over-brush}" Fill="{DynamicResource surface-brush}"/>
                                 <Ellipse x:Name="CheckMark" Margin="3" Visibility="Collapsed">
                                     <Ellipse.Fill>
-                                        <SolidColorBrush Color="{DynamicResource background}"/>
+                                        <SolidColorBrush Color="{DynamicResource on-background}"/>
                                     </Ellipse.Fill>
                                 </Ellipse>
                             </Grid>

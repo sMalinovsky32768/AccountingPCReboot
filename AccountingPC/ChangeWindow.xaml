@@ -9,6 +9,9 @@
         MinHeight="300" MinWidth="600" SizeToContent="WidthAndHeight"
         ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" 
         DragOver="Window_DragOver">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"/>
+    </WindowChrome.WindowChrome>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed"/>
     </Window.CommandBindings>

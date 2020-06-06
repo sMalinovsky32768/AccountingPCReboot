@@ -58,6 +58,7 @@ namespace AccountingPC
             //AudienceDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString).Fill(AudienceDataSet);
             //audienceList.ItemsSource = AudienceDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Audience"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", 
                 ConnectionString).Fill(DefaultDataSet, "Audience");
             audienceList.ItemsSource = DefaultDataSet.Tables["Audience"].DefaultView;
@@ -69,6 +70,7 @@ namespace AccountingPC
             //AudiencePlaceDataSet = new DataSet();
             //new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(AudiencePlaceDataSet);
             //audienceTableView.ItemsSource = AudiencePlaceDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["AudiencePlace"].Clear();
             new SqlDataAdapter($"Select * From dbo.[GetAllLocationInAudience]({AudienceID})",
                 ConnectionString).Fill(DefaultDataSet, "AudiencePlace");
             audienceTableView.ItemsSource = DefaultDataSet.Tables["AudiencePlace"].DefaultView;

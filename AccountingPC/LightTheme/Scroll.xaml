@@ -20,7 +20,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
                                                                       Storyboard.TargetProperty="(Panel.Background).
                                                                       (GradientBrush.GradientStops)[1].(GradientStop.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}"/>
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource mouse-over}"/>
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -29,7 +29,7 @@
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Arrow"
                                                                       Storyboard.TargetProperty="(Shape.Fill).
                                                                       (SolidColorBrush.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}"/>
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource on-mouse-over}"/>
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -80,10 +80,13 @@
                 <RowDefinition Height="0.00001*"/>
                 <RowDefinition MaxHeight="18"/>
             </Grid.RowDefinitions>
-            <Border Grid.RowSpan="3" CornerRadius="2" Background="{DynamicResource shadow-brush}"/>
+            <Border Grid.RowSpan="3" CornerRadius="2" Background="{DynamicResource background-brush}"/>
             <RepeatButton Grid.Row="0" Style="{StaticResource ScrollBarLineButton}" Height="18"
                           Command="ScrollBar.LineUpCommand" Content="M 0 4 L 8 4 L 4 0 Z"/>
             <Track x:Name="PART_Track" Grid.Row="1" IsDirectionReversed="true">
+                <Track.Effect>
+                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                </Track.Effect>
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageUpCommand"/>
                 </Track.DecreaseRepeatButton>
@@ -108,10 +111,13 @@
                 <ColumnDefinition Width="0.00001*"/>
                 <ColumnDefinition MaxWidth="18"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.ColumnSpan="3" CornerRadius="2" Background="{DynamicResource shadow-brush}"/>
+            <Border Grid.ColumnSpan="3" CornerRadius="2" Background="{DynamicResource background-brush}"/>
             <RepeatButton Grid.Column="0" Style="{StaticResource ScrollBarLineButton}" Width="18"
                           Command="ScrollBar.LineLeftCommand" Content="M 4 0 L 4 8 L 0 4 Z"/>
             <Track x:Name="PART_Track" Grid.Column="1" IsDirectionReversed="False">
+                <Track.Effect>
+                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                </Track.Effect>
                 <Track.DecreaseRepeatButton>
                     <RepeatButton Style="{StaticResource ScrollBarPageButton}" Command="ScrollBar.PageLeftCommand"/>
                 </Track.DecreaseRepeatButton>

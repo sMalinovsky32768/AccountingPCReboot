@@ -520,7 +520,8 @@ namespace AccountingPC
             {
                 Owner = this
             };
-            parametersWindow.ShowDialog();
+            bool? q = parametersWindow.ShowDialog();
+            //if (q == true) ChangeWindowState();
         }
 
         private void OpenChangeWindow()
@@ -627,6 +628,7 @@ namespace AccountingPC
             //DeviceOnPlaceDataSet = new DataSet();
             //new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DeviceOnPlaceDataSet);
             //devicesOnPlace.ItemsSource = DeviceOnPlaceDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["DeviceOnPlace"].Clear();
             new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DefaultDataSet, "DeviceOnPlace");
             devicesOnPlace.ItemsSource = DefaultDataSet.Tables["DeviceOnPlace"].DefaultView;
             devicesOnPlace.SelectedIndex = 0;

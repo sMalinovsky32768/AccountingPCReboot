@@ -57,6 +57,7 @@ namespace AccountingPC
         {
             //SoftwareDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(SoftwareDataSet);
+            DefaultDataSet.Tables["Software"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(DefaultDataSet, "Software");
         }
 
@@ -64,6 +65,7 @@ namespace AccountingPC
         {
             //OsDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
+            DefaultDataSet.Tables["OS"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
         }
     }

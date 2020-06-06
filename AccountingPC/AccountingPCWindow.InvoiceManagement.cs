@@ -11,6 +11,7 @@ namespace AccountingPC
             //InvoiceDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(InvoiceDataSet);
             //invoiceList.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Invoice"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(DefaultDataSet, "Invoice");
             invoiceList.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
             invoiceList.DisplayMemberPath = "Number";

@@ -51,8 +51,20 @@ namespace AccountingPC
             {
                 Settings.Default.Save();
             }
-
+            switch (Settings.Default.THEME)
+            {
+                case 0:
+                    Application.Current.Resources = new ResourceDictionary();
+                    Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml") });
+                    break;
+                case 1:
+                    Application.Current.Resources = new ResourceDictionary();
+                    Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary() { Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml") });
+                    break;
+            }
+            DialogResult = true;
             Close();
+            //((AccountingPCWindow)Owner).ChangeWindowState();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

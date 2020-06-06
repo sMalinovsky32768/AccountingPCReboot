@@ -1472,6 +1472,7 @@ namespace AccountingPC
             //AspectRatioDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllAspectRatio()", ConnectionString).Fill(AspectRatioDataSet);
             //aspectRatio.ItemsSource = AspectRatioDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["AspectRatio"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllAspectRatio()", ConnectionString).Fill(DefaultDataSet, "AspectRatio");
             aspectRatio.ItemsSource = DefaultDataSet.Tables["AspectRatio"].DefaultView;
             aspectRatio.DisplayMemberPath = "Name";
@@ -1482,6 +1483,7 @@ namespace AccountingPC
             //OsDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
             //os.ItemsSource = OsDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["OS"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
             os.ItemsSource = DefaultDataSet.Tables["OS"].DefaultView;
             os.DisplayMemberPath = "Наименование";
@@ -1492,6 +1494,7 @@ namespace AccountingPC
             //ScreenInstalledDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", ConnectionString).Fill(ScreenInstalledDataSet);
             //screenInstalled.ItemsSource = ScreenInstalledDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["ScreenInstalled"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", ConnectionString).Fill(DefaultDataSet, "ScreenInstalled");
             screenInstalled.ItemsSource = DefaultDataSet.Tables["ScreenInstalled"].DefaultView;
             screenInstalled.DisplayMemberPath = "Name";
@@ -1534,6 +1537,7 @@ namespace AccountingPC
             //NameDataSet = new DataSet();
             //NameDataAdapter.Fill(NameDataSet);
             //name.ItemsSource = NameDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Name"].Clear();
             NameDataAdapter?.Fill(DefaultDataSet, "Name");
             name.ItemsSource = DefaultDataSet.Tables["Name"].DefaultView;
             name.DisplayMemberPath = "Name";
@@ -1576,6 +1580,7 @@ namespace AccountingPC
             //LocationDataSet = new DataSet();
             //LocationDataAdapter.Fill(LocationDataSet);
             //location.ItemsSource = LocationDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Location"].Clear();
             LocationDataAdapter?.Fill(DefaultDataSet, "Location");
             location.ItemsSource = DefaultDataSet.Tables["Location"].DefaultView;
             location.DisplayMemberPath = "Place";
@@ -1589,6 +1594,7 @@ namespace AccountingPC
                     //CpuDataSet = new DataSet();
                     //new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString).Fill(CpuDataSet);
                     //cpu.ItemsSource = CpuDataSet.Tables[0].DefaultView;
+                    DefaultDataSet.Tables["CPU"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
                     cpu.ItemsSource = DefaultDataSet.Tables["CPU"].DefaultView;
                     cpu.DisplayMemberPath = "CPUModel";
@@ -1597,6 +1603,7 @@ namespace AccountingPC
                     //CpuDataSet = new DataSet();
                     //new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", ConnectionString).Fill(CpuDataSet);
                     //cpu.ItemsSource = CpuDataSet.Tables[0].DefaultView;
+                    DefaultDataSet.Tables["CPU"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
                     cpu.ItemsSource = DefaultDataSet.Tables["CPU"].DefaultView;
                     cpu.DisplayMemberPath = "CPUModel";
@@ -1612,6 +1619,7 @@ namespace AccountingPC
                     //VCardDataSet = new DataSet();
                     //new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString).Fill(VCardDataSet);
                     //vCard.ItemsSource = VCardDataSet.Tables[0].DefaultView;
+                    DefaultDataSet.Tables["VCard"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString).Fill(DefaultDataSet, "VCard");
                     vCard.ItemsSource = DefaultDataSet.Tables["VCard"].DefaultView;
                     vCard.DisplayMemberPath = "VideoCard";
@@ -1620,6 +1628,7 @@ namespace AccountingPC
                     //VCardDataSet = new DataSet();
                     //new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCvCard()", ConnectionString).Fill(VCardDataSet);
                     //vCard.ItemsSource = VCardDataSet.Tables[0].DefaultView;
+                    DefaultDataSet.Tables["VCard"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCvCard()", ConnectionString).Fill(DefaultDataSet, "VCard");
                     vCard.ItemsSource = DefaultDataSet.Tables["VCard"].DefaultView;
                     vCard.DisplayMemberPath = "VideoCard";
@@ -1635,6 +1644,7 @@ namespace AccountingPC
                     //TypeNetworkSwitchDataSet = new DataSet();
                     //new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString).Fill(TypeNetworkSwitchDataSet);
                     //type.ItemsSource = TypeNetworkSwitchDataSet.Tables[0].DefaultView;
+                    DefaultDataSet.Tables["TypeNetworkSwitch"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString).Fill(DefaultDataSet, "TypeNetworkSwitch");
                     type.ItemsSource = DefaultDataSet.Tables["TypeNetworkSwitch"].DefaultView;
                     type.DisplayMemberPath = "Name";
@@ -1643,12 +1653,14 @@ namespace AccountingPC
                     //TypeNotebookDataSet = new DataSet();
                     //new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", ConnectionString).Fill(TypeNotebookDataSet);
                     //type.ItemsSource = TypeNotebookDataSet.Tables[0].DefaultView;
+                    DefaultDataSet.Tables["TypeNotebook"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", ConnectionString).Fill(DefaultDataSet, "TypeNotebook");
                     type.ItemsSource = DefaultDataSet.Tables["TypeNotebook"].DefaultView;
                     type.DisplayMemberPath = "Name";
                     break;
                 case TypeDevice.PrinterScanner:
                     //TypePrinterDataSet = new DataSet();
+                    DefaultDataSet.Tables["TypePrinter"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypePrinter()", ConnectionString).Fill(DefaultDataSet, "TypePrinter");
                     type.ItemsSource = DefaultDataSet.Tables["TypePrinter"].DefaultView;
                     type.DisplayMemberPath = "Name";
@@ -1661,6 +1673,7 @@ namespace AccountingPC
             //FrequencyDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", ConnectionString).Fill(FrequencyDataSet);
             //screenFrequency.ItemsSource = FrequencyDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Frequency"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", ConnectionString).Fill(DefaultDataSet, "Frequency");
             screenFrequency.ItemsSource = DefaultDataSet.Tables["Frequency"].DefaultView;
             screenFrequency.DisplayMemberPath = "Name";
@@ -1671,6 +1684,7 @@ namespace AccountingPC
             //MatrixTechnologyDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(MatrixTechnologyDataSet);
             //matrixTechnology.ItemsSource = MatrixTechnologyDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["MatrixTechnology"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(DefaultDataSet, "MatrixTechnology");
             matrixTechnology.ItemsSource = DefaultDataSet.Tables["MatrixTechnology"].DefaultView;
             matrixTechnology.DisplayMemberPath = "Name";
@@ -1681,6 +1695,7 @@ namespace AccountingPC
             //PaperSizeDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllPaperSize()", ConnectionString).Fill(PaperSizeDataSet);
             //paperSize.ItemsSource = PaperSizeDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["PaperSize"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllPaperSize()", ConnectionString).Fill(DefaultDataSet, "PaperSize");
             paperSize.ItemsSource = DefaultDataSet.Tables["PaperSize"].DefaultView;
             paperSize.DisplayMemberPath = "Name";
@@ -1691,6 +1706,7 @@ namespace AccountingPC
             //ProjectorTechnologyDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorTechnology()", ConnectionString).Fill(ProjectorTechnologyDataSet);
             //projectorTechnology.ItemsSource = ProjectorTechnologyDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["ProjectorTechnology"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorTechnology()", ConnectionString).Fill(DefaultDataSet, "ProjectorTechnology");
             projectorTechnology.ItemsSource = DefaultDataSet.Tables["ProjectorTechnology"].DefaultView;
             projectorTechnology.DisplayMemberPath = "Name";
@@ -1701,6 +1717,7 @@ namespace AccountingPC
             //ResolutionDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllResolution()", ConnectionString).Fill(ResolutionDataSet);
             //resolution.ItemsSource = ResolutionDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Resolution"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllResolution()", ConnectionString).Fill(DefaultDataSet, "Resolution");
             resolution.ItemsSource = DefaultDataSet.Tables["Resolution"].DefaultView;
             resolution.DisplayMemberPath = "Name";
@@ -1710,6 +1727,7 @@ namespace AccountingPC
         {
             //VideoConnectorsDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllVideoConnector()", ConnectionString).Fill(VideoConnectorsDataSet);
+            DefaultDataSet.Tables["VideoConnectors"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllVideoConnector()", ConnectionString).Fill(DefaultDataSet, "VideoConnectors");
             videoConnectorsItems = new List<ListBoxItem>
             {
@@ -1729,6 +1747,7 @@ namespace AccountingPC
             //WifiFrequencyDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllWiFiFrequency()", ConnectionString).Fill(WifiFrequencyDataSet);
             //wifiFrequency.ItemsSource = WifiFrequencyDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["WifiFrequency"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllWiFiFrequency()", ConnectionString).Fill(DefaultDataSet, "WifiFrequency");
             wifiFrequency.ItemsSource = DefaultDataSet.Tables["WifiFrequency"].DefaultView;
             wifiFrequency.DisplayMemberPath = "Name";
@@ -1740,6 +1759,7 @@ namespace AccountingPC
             //new SqlDataAdapter($"SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString).Fill(InvoiceDataSet);
             //invoice.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
             //softwareInvoice.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Invoice"].Clear();
             new SqlDataAdapter($"SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString).Fill(DefaultDataSet, "Invoice");
             invoice.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
             softwareInvoice.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
@@ -1752,6 +1772,7 @@ namespace AccountingPC
             //MotherboardDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", ConnectionString).Fill(MotherboardDataSet);
             //motherboard.ItemsSource = MotherboardDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["Motherboard"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", ConnectionString).Fill(DefaultDataSet, "Motherboard");
             motherboard.ItemsSource = DefaultDataSet.Tables["Motherboard"].DefaultView;
             motherboard.DisplayMemberPath = "Motherboard";
@@ -1762,6 +1783,7 @@ namespace AccountingPC
             //TypeLicenseDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString).Fill(TypeLicenseDataSet);
             //typeLicense.ItemsSource = TypeLicenseDataSet.Tables[0].DefaultView;
+            DefaultDataSet.Tables["TypeLicense"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString).Fill(DefaultDataSet, "TypeLicense");
             typeLicense.ItemsSource = DefaultDataSet.Tables["TypeLicense"].DefaultView;
             typeLicense.DisplayMemberPath = "Name";

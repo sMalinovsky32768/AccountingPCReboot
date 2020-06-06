@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
         Title="Настройка отчета" Height="850" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"/>
+    </WindowChrome.WindowChrome>
     <Grid>
         <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
             <Grid x:Name="windowGrid">

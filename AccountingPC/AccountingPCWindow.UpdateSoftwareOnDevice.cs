@@ -28,6 +28,7 @@ namespace AccountingPC
             //new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(PcSoftwareDataSet);
             //softwareOnDevice.ItemsSource = PcSoftwareDataSet.Tables[0].DefaultView;
 
+            DefaultDataSet.Tables["PCSoftware"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(DefaultDataSet, "PCSoftware");
             //softwareOnDevice.ItemsSource = DefaultDataSet.Tables["PCSoftware"].DefaultView;
             PcSoftware = new List<InstalledSoftware>
@@ -50,6 +51,7 @@ namespace AccountingPC
         {
             //NotebookSoftwareDataSet = new DataSet();
             //new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(NotebookSoftwareDataSet);
+            DefaultDataSet.Tables["NotebookSoftware"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(DefaultDataSet, "NotebookSoftware");
             NotebookSoftware = new List<InstalledSoftware>
             {
@@ -71,6 +73,7 @@ namespace AccountingPC
         {
             //PcNotInstalledSoftwareDataSet = new DataSet();
             //new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(PcNotInstalledSoftwareDataSet);
+            DefaultDataSet.Tables["PCNotInstalledSoftware"].Clear();
             new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(DefaultDataSet, "PCNotInstalledSoftware");
             PcNotInstalledSoftware = new List<InstalledSoftware>
             {
@@ -92,6 +95,7 @@ namespace AccountingPC
         {
             //NotebookNotInstalledSoftwareDataSet = new DataSet();
             //new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(NotebookNotInstalledSoftwareDataSet);
+            DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Clear();
             new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(DefaultDataSet, "NotebookNotInstalledSoftware");
             NotebookNotInstalledSoftware = new List<InstalledSoftware>
             {
