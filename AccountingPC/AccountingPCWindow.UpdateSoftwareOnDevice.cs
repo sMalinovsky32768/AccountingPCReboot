@@ -24,14 +24,17 @@ namespace AccountingPC
 
         private void UpdateSoftwareOnPC()
         {
-            PcSoftwareDataSet = new DataSet();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(PcSoftwareDataSet);
-            softwareOnDevice.ItemsSource = PcSoftwareDataSet.Tables[0].DefaultView;
+            //PcSoftwareDataSet = new DataSet();
+            //new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(PcSoftwareDataSet);
+            //softwareOnDevice.ItemsSource = PcSoftwareDataSet.Tables[0].DefaultView;
+
+            new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(DefaultDataSet, "PCSoftware");
+            //softwareOnDevice.ItemsSource = DefaultDataSet.Tables["PCSoftware"].DefaultView;
             PcSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            foreach (DataRow row in PcSoftwareDataSet.Tables[0].Rows)
+            foreach (DataRow row in DefaultDataSet.Tables["PCSoftware"].Rows)
             {
                 PcSoftware.Add(new InstalledSoftware()
                 {
@@ -45,13 +48,14 @@ namespace AccountingPC
 
         private void UpdateSoftwareOnNotebook()
         {
-            NotebookSoftwareDataSet = new DataSet();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(NotebookSoftwareDataSet);
+            //NotebookSoftwareDataSet = new DataSet();
+            //new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(NotebookSoftwareDataSet);
+            new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(DefaultDataSet, "NotebookSoftware");
             NotebookSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            foreach (DataRow row in NotebookSoftwareDataSet.Tables[0].Rows)
+            foreach (DataRow row in DefaultDataSet.Tables["NotebookSoftware"].Rows)
             {
                 NotebookSoftware.Add(new InstalledSoftware()
                 {
@@ -65,13 +69,14 @@ namespace AccountingPC
 
         private void UpdateNotInstalledSoftwareOnPC()
         {
-            PcNotInstalledSoftwareDataSet = new DataSet();
-            new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(PcNotInstalledSoftwareDataSet);
+            //PcNotInstalledSoftwareDataSet = new DataSet();
+            //new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(PcNotInstalledSoftwareDataSet);
+            new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(DefaultDataSet, "PCNotInstalledSoftware");
             PcNotInstalledSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            foreach (DataRow row in PcNotInstalledSoftwareDataSet.Tables[0].Rows)
+            foreach (DataRow row in DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows)
             {
                 PcNotInstalledSoftware.Add(new InstalledSoftware()
                 {
@@ -85,13 +90,14 @@ namespace AccountingPC
 
         private void UpdateNotInstalledSoftwareOnNotebook()
         {
-            NotebookNotInstalledSoftwareDataSet = new DataSet();
-            new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(NotebookNotInstalledSoftwareDataSet);
+            //NotebookNotInstalledSoftwareDataSet = new DataSet();
+            //new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(NotebookNotInstalledSoftwareDataSet);
+            new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(DefaultDataSet, "NotebookNotInstalledSoftware");
             NotebookNotInstalledSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            foreach (DataRow row in NotebookNotInstalledSoftwareDataSet.Tables[0].Rows)
+            foreach (DataRow row in DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows)
             {
                 NotebookNotInstalledSoftware.Add(new InstalledSoftware()
                 {

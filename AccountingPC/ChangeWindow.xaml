@@ -20,7 +20,7 @@
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
             <Grid x:Name="mainGrid">
-                <Grid x:Name="changeEquipmentGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed" Grid.Row="0">
+                <Grid x:Name="changeEquipmentGrid" ScrollViewer.CanContentScroll="True" Visibility="Visible" Grid.Row="0">
                     <Grid>
                         <Border Margin="5">
                             <Border.Effect>

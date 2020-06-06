@@ -20,26 +20,16 @@ namespace AccountingPC
 
         internal void SetViewToLicenseSoftware()
         {
-            softwareView.ItemsSource = SoftwareDataSet.Tables[0].DefaultView;
-            //while (softwareView.Columns.Count == 0) continue;
-
-            //if (softwareView.Columns.Count > 0)
-            //{
-            //    softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //    ((DataGridTextColumn)softwareView.Columns[softwareDataSet.Tables[0].DefaultView.Table.
-            //        Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
-            //}
+            //softwareView.ItemsSource = SoftwareDataSet.Tables[0].DefaultView;
+            softwareView.ItemsSource = DefaultDataSet.Tables["Software"].DefaultView;
 
             TypeSoft = TypeSoft.LicenseSoftware;
         }
 
         internal void SetViewToOS()
         {
-            softwareView.ItemsSource = OsDataSet.Tables[0].DefaultView;
-
-            //softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
-            //((DataGridTextColumn)softwareView.Columns[osDataSet.Tables[0].DefaultView.Table.
-            //    Columns.IndexOf("Дата приобретения")]).Binding.StringFormat = "dd.MM.yyyy";
+            //softwareView.ItemsSource = OsDataSet.Tables[0].DefaultView;
+            softwareView.ItemsSource = DefaultDataSet.Tables["OS"].DefaultView;
 
             TypeSoft = TypeSoft.OS;
         }
@@ -65,14 +55,16 @@ namespace AccountingPC
 
         private void UpdateLicenseSoftwareData()
         {
-            SoftwareDataSet = new DataSet();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(SoftwareDataSet);
+            //SoftwareDataSet = new DataSet();
+            //new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(SoftwareDataSet);
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(DefaultDataSet, "Software");
         }
 
         private void UpdateOSData()
         {
-            OsDataSet = new DataSet();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
+            //OsDataSet = new DataSet();
+            //new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
         }
     }
 }

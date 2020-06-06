@@ -24,20 +24,12 @@ namespace AccountingPC
         public static string ConnectionString { get; private set; } = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public static readonly RoutedUICommand ParametersCommand;
-
         public static readonly RoutedUICommand ExitCommand;
-
         public static readonly RoutedUICommand PopupCloseCommand;
-
         public static readonly RoutedUICommand SelectViewEquipmentCommand;
-
         public static readonly RoutedUICommand SelectViewSoftwareCommand;
-
         public static readonly RoutedUICommand SelectViewInvoiceCommand;
-
         public static readonly RoutedUICommand SelectViewLocationCommand;
-
-
         public static readonly RoutedUICommand UpdateViewCommand;
 
         static AccountingPCWindow()
@@ -96,26 +88,28 @@ namespace AccountingPC
         internal List<InstalledSoftware> PcNotInstalledSoftware { get; set; }
         internal List<InstalledSoftware> NotebookNotInstalledSoftware { get; set; }
 
-        public DataSet SoftwareDataSet { get; set; }
-        public DataSet PcNotInstalledSoftwareDataSet { get; set; }
-        public DataSet PcSoftwareDataSet { get; set; }
-        public DataSet NotebookNotInstalledSoftwareDataSet { get; set; }
-        public DataSet NotebookSoftwareDataSet { get; set; }
-        public DataSet OsDataSet { get; set; }
-        public DataSet BoardDataSet { get; set; }
-        public DataSet MonitorDataSet { get; set; }
-        public DataSet NetworkSwitchDataSet { get; set; }
-        public DataSet NotebookDataSet { get; set; }
-        public DataSet OtherEquipmentDataSet { get; set; }
-        public DataSet PcDataSet { get; set; }
-        public DataSet PrinterScannerDataSet { get; set; }
-        public DataSet ProjectorDataSet { get; set; }
-        public DataSet ProjectorScreenDataSet { get; set; }
-        public DataSet InvoiceDataSet { get; set; }
-        public DataSet InvoiceSoftwareAndEquipmentDataSet { get; set; }
-        public DataSet AudienceDataSet { get; set; }
-        public DataSet AudiencePlaceDataSet { get; set; }
-        public DataSet DeviceOnPlaceDataSet { get; set; }
+        public DataSet DefaultDataSet { get; private set; }
+
+        //public DataSet SoftwareDataSet { get; set; }
+        //public DataSet PcNotInstalledSoftwareDataSet { get; set; }
+        //public DataSet PcSoftwareDataSet { get; set; }
+        //public DataSet NotebookNotInstalledSoftwareDataSet { get; set; }
+        //public DataSet NotebookSoftwareDataSet { get; set; }
+        //public DataSet OsDataSet { get; set; }
+        //public DataSet BoardDataSet { get; set; }
+        //public DataSet MonitorDataSet { get; set; }
+        //public DataSet NetworkSwitchDataSet { get; set; }
+        //public DataSet NotebookDataSet { get; set; }
+        //public DataSet OtherEquipmentDataSet { get; set; }
+        //public DataSet PcDataSet { get; set; }
+        //public DataSet PrinterScannerDataSet { get; set; }
+        //public DataSet ProjectorDataSet { get; set; }
+        //public DataSet ProjectorScreenDataSet { get; set; }
+        //public DataSet InvoiceDataSet { get; set; }
+        //public DataSet AudienceDataSet { get; set; }
+        //public DataSet AudiencePlaceDataSet { get; set; }
+        //public DataSet DeviceOnPlaceDataSet { get; set; }
+        public DataSet InvoiceSoftwareAndEquipmentDataSet { get; set; } // Независимый DataSet для накладных
         internal Dictionary<int, byte[]> Images { get; set; }
 
         public double lastHeight;
@@ -123,6 +117,27 @@ namespace AccountingPC
 
         public AccountingPCWindow()
         {
+            DefaultDataSet = new DataSet("Default DataSet");
+            DefaultDataSet.Tables.Add("Software");
+            DefaultDataSet.Tables.Add("PCNotInstalledSoftware");
+            DefaultDataSet.Tables.Add("PCSoftware");
+            DefaultDataSet.Tables.Add("NotebookNotInstalledSoftware");
+            DefaultDataSet.Tables.Add("NotebookSoftware");
+            DefaultDataSet.Tables.Add("OS");
+            DefaultDataSet.Tables.Add("Board");
+            DefaultDataSet.Tables.Add("Monitor");
+            DefaultDataSet.Tables.Add("NetworkSwitch");
+            DefaultDataSet.Tables.Add("Notebook");
+            DefaultDataSet.Tables.Add("OtherEquipment");
+            DefaultDataSet.Tables.Add("PC");
+            DefaultDataSet.Tables.Add("PrinterScanner");
+            DefaultDataSet.Tables.Add("Projector");
+            DefaultDataSet.Tables.Add("ProjectorScreen");
+            DefaultDataSet.Tables.Add("Invoice");
+            DefaultDataSet.Tables.Add("Audience");
+            DefaultDataSet.Tables.Add("AudiencePlace");
+            DefaultDataSet.Tables.Add("DeviceOnPlace");
+
             InitializeComponent();
             lastHeight = Height;
             lastWidth = Width;
@@ -609,9 +624,11 @@ namespace AccountingPC
         {
             DataRow row = ((DataRowView)audienceTableView?.SelectedItem)?.Row;
             AudienceTableID = Convert.ToInt32(row?["ID"]);
-            DeviceOnPlaceDataSet = new DataSet();
-            new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DeviceOnPlaceDataSet);
-            devicesOnPlace.ItemsSource = DeviceOnPlaceDataSet.Tables[0].DefaultView;
+            //DeviceOnPlaceDataSet = new DataSet();
+            //new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DeviceOnPlaceDataSet);
+            //devicesOnPlace.ItemsSource = DeviceOnPlaceDataSet.Tables[0].DefaultView;
+            new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DefaultDataSet, "DeviceOnPlace");
+            devicesOnPlace.ItemsSource = DefaultDataSet.Tables["DeviceOnPlace"].DefaultView;
             devicesOnPlace.SelectedIndex = 0;
         }
 

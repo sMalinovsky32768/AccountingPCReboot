@@ -55,26 +55,23 @@ namespace AccountingPC
 
         private void UpdateAudienceList()
         {
-            AudienceDataSet = new DataSet();
-            new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString).Fill(AudienceDataSet);
-            audienceList.ItemsSource = AudienceDataSet.Tables[0].DefaultView;
+            //AudienceDataSet = new DataSet();
+            //new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString).Fill(AudienceDataSet);
+            //audienceList.ItemsSource = AudienceDataSet.Tables[0].DefaultView;
+            new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", 
+                ConnectionString).Fill(DefaultDataSet, "Audience");
+            audienceList.ItemsSource = DefaultDataSet.Tables["Audience"].DefaultView;
             audienceList.DisplayMemberPath = "Name";
-        }
-
-        private void UpdateLocationData()
-        {
-            AudiencePlaceDataSet = new DataSet();
-            new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(AudiencePlaceDataSet);
         }
 
         private void ChangeLocationView()
         {
-            UpdateLocationData();
-            audienceTableView.ItemsSource = AudiencePlaceDataSet.Tables[0].DefaultView;
-            //invoiceItemsControl.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables;
-
-            //invoiceNumberManager.Text = ((DataRowView)invoiceList?.SelectedItem)?.Row?["Number"].ToString();
-            //dateManager.SelectedDate = Convert.ToDateTime(((DataRowView)invoiceList?.SelectedItem)?.Row?["Date"]);
+            //AudiencePlaceDataSet = new DataSet();
+            //new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(AudiencePlaceDataSet);
+            //audienceTableView.ItemsSource = AudiencePlaceDataSet.Tables[0].DefaultView;
+            new SqlDataAdapter($"Select * From dbo.[GetAllLocationInAudience]({AudienceID})",
+                ConnectionString).Fill(DefaultDataSet, "AudiencePlace");
+            audienceTableView.ItemsSource = DefaultDataSet.Tables["AudiencePlace"].DefaultView;
         }
     }
 }

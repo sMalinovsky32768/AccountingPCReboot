@@ -8,9 +8,11 @@ namespace AccountingPC
     {
         private void LoadInvoiceList()
         {
-            InvoiceDataSet = new DataSet();
-            new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(InvoiceDataSet);
-            invoiceList.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
+            //InvoiceDataSet = new DataSet();
+            //new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(InvoiceDataSet);
+            //invoiceList.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
+            new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(DefaultDataSet, "Invoice");
+            invoiceList.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
             invoiceList.DisplayMemberPath = "Number";
         }
 
@@ -78,20 +80,8 @@ namespace AccountingPC
         {
             UpdateInvoiceData();
             invoiceItemsControl.ItemsSource = InvoiceSoftwareAndEquipmentDataSet.Tables;
-            //changeInvoicePanel.DataContext = invoiceList.SelectedItem;
             invoiceNumberManager.Text = ((DataRowView)invoiceList?.SelectedItem)?.Row?["Number"].ToString();
             dateManager.SelectedDate = Convert.ToDateTime(((DataRowView)invoiceList?.SelectedItem)?.Row?["Date"]);
-            //invoicePCView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Компьютеры"].DefaultView;
-            //invoiceNotebookView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Ноутбуки и Моноблоки"].DefaultView;
-            //invoiceMonitorView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Мониторы"].DefaultView;
-            //invoiceProjectorView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Проекторы"].DefaultView;
-            //invoiceBoardView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Интерактивные доски"].DefaultView;
-            //invoiceScreenView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Экраны для проекторов"].DefaultView;
-            //invoicePrinterScannerView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Принтеры и сканеры"].DefaultView;
-            //invoiceNetworkSwitchView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Сетевое оборудование"].DefaultView;
-            //invoiceOtherEquipmentView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Другое оборудование"].DefaultView;
-            //invoiceSoftwareView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Программное обеспечение"].DefaultView;
-            //invoiceOSView.ItemsSource = invoiceSoftwareAndEquipmentDataSet.Tables["Операционные системы"].DefaultView;
         }
     }
 }

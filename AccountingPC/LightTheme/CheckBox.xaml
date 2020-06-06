@@ -12,13 +12,16 @@
                 <ControlTemplate TargetType="{x:Type CheckBox}">
                     <BulletDecorator Background="Transparent">
                         <BulletDecorator.Bullet>
-                            <Border x:Name="Border" Width="13" Height="13" CornerRadius="0" BorderThickness="1">
+                            <Border x:Name="Border" Width="15" Height="15" CornerRadius="0" BorderThickness="1">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                </Border.Effect>
                                 <Border.BorderBrush>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <LinearGradientBrush.GradientStops>
                                             <GradientStopCollection>
-                                                <GradientStop Color="{DynamicResource surface}" Offset="0.0"/>
-                                                <GradientStop Color="{DynamicResource background}" Offset="1.0"/>
+                                                <GradientStop Color="{DynamicResource on-surface}" Offset="0.0"/>
+                                                <GradientStop Color="{DynamicResource on-background}" Offset="1.0"/>
                                             </GradientStopCollection>
                                         </LinearGradientBrush.GradientStops>
                                     </LinearGradientBrush>
@@ -27,24 +30,29 @@
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <LinearGradientBrush.GradientStops>
                                             <GradientStopCollection>
-                                                <GradientStop Color="{DynamicResource on-surface}"/>
-                                                <GradientStop Color="{DynamicResource on-background}" Offset="1.0"/>
+                                                <GradientStop Color="{DynamicResource surface}"/>
+                                                <GradientStop Color="{DynamicResource background}" Offset="1.0"/>
                                             </GradientStopCollection>
                                         </LinearGradientBrush.GradientStops>
                                     </LinearGradientBrush>
                                 </Border.Background>
                                 <Grid>
-                                    <Path Visibility="Collapsed" Width="7" Height="7" x:Name="CheckMark" SnapsToDevicePixels="False"
-                                          StrokeThickness="2" Data="M 0 0 L 7 7 M 0 7 L 7 0">
-                                        <Path.Stroke>
-                                            <SolidColorBrush Color="{DynamicResource background}"/>
-                                        </Path.Stroke>
+                                    <Path Visibility="Collapsed" Width="11" Height="11" x:Name="CheckMark"
+                                          SnapsToDevicePixels="False" StrokeThickness="0.5" 
+                                          Fill="{DynamicResource on-surface-brush}"
+                                          Stroke="{DynamicResource on-surface-brush}" 
+                                          Data="M 3.734375 9.441406 L 0.160156 5.867188 
+                                          C -0.0546875 5.652344 -0.0546875 5.300781 0.160156 5.085938 
+                                          L 0.9375 4.308594 C 1.152344 4.09375 1.5 4.09375 1.714844 4.308594 
+                                          L 4.125 6.71875 L 9.285156 1.558594 C 9.5 1.34375 9.847656 1.34375 
+                                          10.0625 1.558594 L 10.839844 2.335938 C 11.054688 2.550781 11.054688 
+                                          2.902344 10.839844 3.117188 L 4.515625 9.441406 C 4.300781 9.65625 
+                                          3.949219 9.65625 3.734375 9.441406 Z M 3.734375 9.441406 ">
                                     </Path>
-                                    <Path Visibility="Collapsed" Width="7" Height="7" x:Name="InderminateMark"
-                                          SnapsToDevicePixels="False" StrokeThickness="2" Data="M 0 7 L 7 0">
-                                        <Path.Stroke>
-                                            <SolidColorBrush Color="{DynamicResource background}"/>
-                                        </Path.Stroke>
+                                    <Path Visibility="Collapsed" Width="11" Height="11" x:Name="InderminateMark" 
+                                          Fill="{DynamicResource on-surface-brush}" 
+                                          Stroke="{DynamicResource on-surface-brush}" StrokeThickness="3" 
+                                          SnapsToDevicePixels="False" Data="M 0 0 H 11 V 11 H -11 V -11 Z">
                                     </Path>
                                 </Grid>
                             </Border>

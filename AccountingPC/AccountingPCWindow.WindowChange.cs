@@ -10,7 +10,7 @@ namespace AccountingPC
     {
         private bool mRestoreIfMove = false;
 
-        private void Window_SourceInitialized(object sender, EventArgs e)
+        void Window_SourceInitialized(object sender, EventArgs e)
         {
             IntPtr mWindowHandle = (new WindowInteropHelper(this)).Handle;
             HwndSource.FromHwnd(mWindowHandle).AddHook(new HwndSourceHook(WindowProc));
@@ -137,13 +137,13 @@ namespace AccountingPC
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static bool GetCursorPos(out POINT lpPoint);
+        static extern bool GetCursorPos(out POINT lpPoint);
 
 
         [DllImport("user32.dll", SetLastError = true)]
-        private static IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
+        static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
 
-        private enum MonitorOptions : uint
+        enum MonitorOptions : uint
         {
             MONITOR_DEFAULTTONULL = 0x00000000,
             MONITOR_DEFAULTTOPRIMARY = 0x00000001,
@@ -152,7 +152,7 @@ namespace AccountingPC
 
 
         [DllImport("user32.dll")]
-        private static bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+        static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
 
         [StructLayout(LayoutKind.Sequential)]
@@ -163,8 +163,8 @@ namespace AccountingPC
 
             public POINT(int x, int y)
             {
-                X = x;
-                Y = y;
+                this.X = x;
+                this.Y = y;
             }
         }
 
@@ -197,10 +197,10 @@ namespace AccountingPC
 
             public RECT(int left, int top, int right, int bottom)
             {
-                Left = left;
-                Top = top;
-                Right = right;
-                Bottom = bottom;
+                this.Left = left;
+                this.Top = top;
+                this.Right = right;
+                this.Bottom = bottom;
             }
         }
     }
