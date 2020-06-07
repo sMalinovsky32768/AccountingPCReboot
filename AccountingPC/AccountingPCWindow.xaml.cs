@@ -646,16 +646,34 @@ namespace AccountingPC
         private void DevicesOnPlace_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             BitmapFrame frame = null;
-            object obj = (((DataRowView)devicesOnPlace.SelectedItems?[0])?.Row["ImageID"]);
-            int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
-            if (id != 0)
+            if (devicesOnPlace.SelectedItems.Count > 0)
             {
-                using (MemoryStream stream = new MemoryStream(Images[id]))
+                object obj = (((DataRowView)devicesOnPlace.SelectedItems?[0])?.Row["ImageID"]);
+                int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
+                if (id != 0)
                 {
-                    frame = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                    using (MemoryStream stream = new MemoryStream(Images[id]))
+                    {
+                        frame = BitmapFrame.Create(stream, BitmapCreateOptions.None, BitmapCacheOption.OnLoad);
+                    }
                 }
             }
             deviceImageOnPlace.Source = frame;
+        }
+
+        private void AddPlace(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void DeletePlace(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ChangePlace(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

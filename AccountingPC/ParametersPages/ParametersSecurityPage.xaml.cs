@@ -18,35 +18,51 @@ namespace AccountingPC.ParametersPages
         public ParametersSecurityPage()
         {
             InitializeComponent();
+            login.Text = Settings.Default.USER_NAME;
+            switch (Settings.Default.USE_AUTH)
+            {
+                case true:
+                    useAuth.SelectedIndex = 0;
+                    break;
+                case false:
+                    useAuth.SelectedIndex = 1;
+                    break;
+            }
         }
 
-        private void ChangePasswordClick(object sender, RoutedEventArgs e)
+        private void ChangeClick(object sender, RoutedEventArgs e)
         {
-            KeyValuePair<bool, string> res = ChangePassword();
-            if (res.Key)
+            if (!(string.IsNullOrWhiteSpace(oldPass.Password) 
+                || string.IsNullOrWhiteSpace(newPass.Password) 
+                || string.IsNullOrWhiteSpace(repeatPass.Password)))
             {
-                changeStatus.Content = res.Value;
-                Task task;
-                task = new Task(() =>
+                KeyValuePair<bool, string> res = ChangePassword();
+                if (res.Key)
                 {
-                    try
+                    changeStatus.Content = res.Value;
+                    Task task;
+                    task = new Task(() =>
                     {
-                        for (int i = 0; i < 10; i++)
+                        try
                         {
-                            i++;
-                            Thread.Sleep(1000);
-                        }
-                        Dispatcher.Invoke(() => changeStatus.Content = string.Empty);
+                            for (int i = 0; i < 10; i++)
+                            {
+                                i++;
+                                Thread.Sleep(1000);
+                            }
+                            Dispatcher.Invoke(() => changeStatus.Content = string.Empty);
 
-                    }
-                    catch { }
-                });
-                task.Start();
+                        }
+                        catch { }
+                    });
+                    task.Start();
+                }
+                else
+                {
+                    MessageBox.Show(res.Value);
+                }
             }
-            else
-            {
-                MessageBox.Show(res.Value);
-            }
+            Settings.Default.USER_NAME = login.Text;
         }
 
         /// <summary>
@@ -78,6 +94,19 @@ namespace AccountingPC.ParametersPages
             else
             {
                 return new KeyValuePair<bool, string>(false, "Неверный пароль");
+            }
+        }
+
+        private void UseAuth_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (useAuth.SelectedIndex)
+            {
+                case 0:
+                    Settings.Default.USE_AUTH = true;
+                    break;
+                case 1:
+                    Settings.Default.USE_AUTH = false;
+                    break;
             }
         }
     }

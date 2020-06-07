@@ -22,7 +22,7 @@ namespace AccountingPC.ParametersPages
             }
         }
 
-        private void isOnExplicitShutdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void IsOnExplicitShutdown_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (isOnExplicitShutdown.SelectedIndex)
             {

@@ -115,9 +115,8 @@
                                     <Grid Grid.Column="1">
                                         <Grid.Resources>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
-                                                <Setter Property="Height" Value="35"/>
-                                                <Setter Property="Width" Value="120"/>
-                                                <!--<Setter Property="Padding" Value="25 7"/>-->
+                                                <Setter Property="Height" Value="30"/>
+                                                <Setter Property="Width" Value="100"/>
                                                 <Setter Property="Margin" Value="10 10 5 10"/>
                                                 <Setter Property="IsEnabled" Value="True"/>
                                                 <Style.Triggers>
@@ -340,9 +339,8 @@
                                     <Grid Grid.Column="1">
                                         <Grid.Resources>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
-                                                <Setter Property="Height" Value="35"/>
-                                                <Setter Property="Width" Value="120"/>
-                                                <!--<Setter Property="Padding" Value="25 7"/>-->
+                                                <Setter Property="Height" Value="30"/>
+                                                <Setter Property="Width" Value="100"/>
                                                 <Setter Property="Margin" Value="10 10 5 10"/>
                                                 <Setter Property="IsEnabled" Value="True"/>
                                                 <Style.Triggers>
@@ -477,11 +475,11 @@
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
                                     <Grid></Grid>
-                                    <!--<Grid Grid.Column="1">
+                                    <Grid Grid.Column="1">
                                         <Grid.Resources>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
-                                                <Setter Property="Height" Value="35"/>
-                                                <Setter Property="Width" Value="120"/>
+                                                <Setter Property="Height" Value="30"/>
+                                                <Setter Property="Width" Value="100"/>
                                                 <Setter Property="Margin" Value="10 10 5 10"/>
                                                 <Setter Property="IsEnabled" Value="True"/>
                                                 <Style.Triggers>
@@ -513,10 +511,10 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        <Button Content="Добавить" Click="AddSoftware" Style="{DynamicResource btn-view}"/>
-                                        <Button Grid.Column="1" Content="Изменить" Click="ChangeSoftware" Style="{DynamicResource btn-edit}"/>
-                                        <Button Grid.Column="2" Content="Удалить" Click="DeleteSoftware" Style="{DynamicResource btn-del}"/>
-                                    </Grid>-->
+                                        <Button Content="Добавить" Click="AddPlace" Style="{DynamicResource btn-view}"/>
+                                        <Button Grid.Column="1" Content="Изменить" Click="ChangePlace" Style="{DynamicResource btn-edit}"/>
+                                        <Button Grid.Column="2" Content="Удалить" Click="DeletePlace" Style="{DynamicResource btn-del}"/>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                             <Grid Grid.Row="1">
