@@ -26,8 +26,14 @@ namespace AccountingPC
             new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", ConnectionString).Fill(DefaultDataSet, "PC");
             if (!DefaultDataSet.Tables["PC"].Columns.Contains("Видеоразъемы"))
                 DefaultDataSet.Tables["PC"].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in DefaultDataSet.Tables["PC"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["PC"].Rows)
+            //{
+            //    row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
+            //        GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+            //}
+            for (int j = 0; j < DefaultDataSet.Tables["PC"].Rows.Count; j++) 
             {
+                DataRow row = DefaultDataSet.Tables["PC"].Rows[j];
                 row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
@@ -55,8 +61,14 @@ namespace AccountingPC
             DefaultDataSet.Tables["Notebook"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", ConnectionString).Fill(DefaultDataSet, "Notebook");
             DefaultDataSet.Tables["Notebook"].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in DefaultDataSet.Tables["Notebook"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["Notebook"].Rows)
+            //{
+            //    row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
+            //        GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+            //}
+            for (int j = 0; j < DefaultDataSet.Tables["Notebook"].Rows.Count; j++)
             {
+                DataRow row = DefaultDataSet.Tables["Notebook"].Rows[j];
                 row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
@@ -84,8 +96,14 @@ namespace AccountingPC
             DefaultDataSet.Tables["Monitor"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", ConnectionString).Fill(DefaultDataSet, "Monitor");
             DefaultDataSet.Tables["Monitor"].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in DefaultDataSet.Tables["Monitor"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["Monitor"].Rows)
+            //{
+            //    row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
+            //        GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+            //}
+            for (int j = 0; j < DefaultDataSet.Tables["Monitor"].Rows.Count; j++)
             {
+                DataRow row = DefaultDataSet.Tables["Monitor"].Rows[j];
                 row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }
@@ -113,8 +131,14 @@ namespace AccountingPC
             DefaultDataSet.Tables["Projector"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString).Fill(DefaultDataSet, "Projector");
             DefaultDataSet.Tables["Projector"].Columns.Add("Видеоразъемы");
-            foreach (DataRow row in DefaultDataSet.Tables["Projector"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["Projector"].Rows)
+            //{
+            //    row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
+            //        GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+            //}
+            for (int j = 0; j < DefaultDataSet.Tables["Projector"].Rows.Count; j++)
             {
+                DataRow row = DefaultDataSet.Tables["Projector"].Rows[j];
                 row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                     GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
             }

@@ -43,9 +43,16 @@ namespace AccountingPC.AccountingReport
                     },
                     (obj) =>
                     {
-                        foreach (SortingParam param in SortingParamList)
+                        //foreach (SortingParam param in SortingParamList)
+                        //{
+                        //    if (param.ColumnName == null)
+                        //    {
+                        //        return false;
+                        //    }
+                        //}
+                        for (int i = 0; i < SortingParamList.Count; i++)
                         {
-                            if (param.ColumnName == null)
+                            if (SortingParamList[i].ColumnName == null)
                             {
                                 return false;
                             }
@@ -70,9 +77,18 @@ namespace AccountingPC.AccountingReport
                         SortingParam param = obj as SortingParam;
                         if (param != null)
                         {
-                            foreach (SortingParam sortingParam in SortingParamList)
+                            //foreach (SortingParam sortingParam in SortingParamList)
+                            //{
+                            //    if (param == sortingParam)
+                            //    {
+                            //        SelectedSortingParam =
+                            //                SortingParamList[SortingParamList.IndexOf(param) < SortingParamList.Count - 2 ?
+                            //                SortingParamList.IndexOf(param) + 1 : 0];
+                            //    }
+                            //}
+                            for (int i = 0; i < SortingParamList.Count; i++)
                             {
-                                if (param == sortingParam)
+                                if (param == SortingParamList[i])
                                 {
                                     SelectedSortingParam =
                                             SortingParamList[SortingParamList.IndexOf(param) < SortingParamList.Count - 2 ?
@@ -105,6 +121,9 @@ namespace AccountingPC.AccountingReport
 
         public event ReportChanged TypeReportChangedEvent;
         public event ReportChanged CreateOptionsChangedEvent;
+
+        public bool IsShowUnitOfMeasurement { get; set; } = true;
+        public bool IsCountMaxMinAverageSum { get; set; } = true;
 
         private TypeReport typeReport;
         private ReportName reportName;
@@ -187,8 +206,10 @@ namespace AccountingPC.AccountingReport
             temp += " order by ";
 
             int i = 0;
-            foreach (SortingParam param in SortingParamList)
+            //foreach (SortingParam param in SortingParamList)
+            for (int j = 0; j < SortingParamList.Count; j++)
             {
+                SortingParam param = SortingParamList[j];
                 List<ReportColumn> columns = ReportRelationCollection.Collection[TypeReport].Columns;
                 if (columns.Contains(param.ColumnName.Column))
                 {

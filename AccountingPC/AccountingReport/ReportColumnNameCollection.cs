@@ -114,11 +114,18 @@ namespace AccountingPC.AccountingReport
 
         public static ReportColumnName GetColumnName(ReportColumn column)
         {
-            foreach (ReportColumnName relation in Collection)
+            //foreach (ReportColumnName relation in Collection)
+            //{
+            //    if (relation.Column == column)
+            //    {
+            //        return relation;
+            //    }
+            //}
+            for (int i = 0; i < Collection.Count; i++)
             {
-                if (relation.Column == column)
+                if (Collection[i].Column == column)
                 {
-                    return relation;
+                    return Collection[i];
                 }
             }
             return null;

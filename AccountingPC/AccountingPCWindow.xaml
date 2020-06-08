@@ -692,15 +692,20 @@
                                     <ItemsControl x:Name="invoiceItemsControl">
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
+                                                <DataTemplate.Triggers>
+                                                    <DataTrigger Binding="{Binding ElementName=__View, Path=Items}" Value="0">
+                                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                                    </DataTrigger>
+                                                </DataTemplate.Triggers>
                                                 <Expander x:Name="__Expander" Header="{Binding Path=TableName}">
                                                     <Expander.Style>
                                                         <Style TargetType="Expander">
                                                             <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
-                                                            <Style.Triggers>
+                                                            <!--<Style.Triggers>
                                                                 <DataTrigger Binding="{Binding ElementName=__View, Path=Items}" Value="0">
                                                                     <Setter Property="Visibility" Value="Collapsed"/>
                                                                 </DataTrigger>
-                                                            </Style.Triggers>
+                                                            </Style.Triggers>-->
                                                         </Style>
                                                     </Expander.Style>
                                                     <DataGrid x:Name="__View" IsReadOnly="True" SelectionMode="Extended" SelectionChanged="InvoiceView_SelectionChanged" 

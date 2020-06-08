@@ -150,7 +150,7 @@
                                                 <ComboBox.Text>
                                                     <Binding Path="Motherboard">
                                                         <Binding.ValidationRules>
-                                                            <local:ComboBoxValidationRule MaxLength="30"/>
+                                                            <ExceptionValidationRule/>
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>

@@ -24,13 +24,23 @@ namespace AccountingPC.AccountingReport
         public static ObservableCollection<OrderName> Collection => collection;
         public static OrderName GetOrderName(SortOrder order)
         {
-            foreach (OrderName orderName in Collection)
+            //foreach (OrderName orderName in Collection)
+            //{
+            //    if (orderName.Order == order)
+            //    {
+            //        return orderName;
+            //    }
+            //}
+
+            for (int i = 0; i < Collection.Count; i++)
             {
+                OrderName orderName = Collection[i];
                 if (orderName.Order == order)
                 {
                     return orderName;
                 }
             }
+
             return null;
         }
     }

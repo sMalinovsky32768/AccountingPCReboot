@@ -17,6 +17,18 @@ namespace AccountingPC
         public System.Windows.Forms.NotifyIcon notify;
         private System.Windows.Forms.ContextMenu notifyContextMenu;
 
+        public App()
+        {
+            if (Settings.Default.USE_AUTH)
+            {
+                StartupUri = new Uri("pack://application:,,,/MainWindow.xaml");
+            }
+            else
+            {
+                StartupUri = new Uri("pack://application:,,,/AccountingPCWindow.xaml");
+            }
+        }
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             if (Settings.Default.SHUTDOWN_ON_EXPLICIT)
@@ -56,19 +68,14 @@ namespace AccountingPC
             }
             SetUserCredentials();
             // CreateDB();
-        }
-
-        private void ClearSources(ResourceDictionary dictionary)
-        {
-            dictionary.Clear();
-            if (dictionary.MergedDictionaries.Count > 0)
-            {
-                foreach (ResourceDictionary innerDictionary in dictionary.MergedDictionaries)
-                {
-                    ClearSources(innerDictionary);
-                    dictionary.Remove(innerDictionary);
-                }
-            }
+            //if (Settings.Default.USE_AUTH)
+            //{
+            //    new MainWindow().Show();
+            //}
+            //else
+            //{
+            //    new AccountingPCWindow().Show();
+            //}
         }
 
         private void ShutdownCurrentApp(object sender, EventArgs e)
@@ -88,7 +95,10 @@ namespace AccountingPC
             }
             if (!isOpenWindow)
             {
-                new MainWindow().Show();
+                if (Settings.Default.USE_AUTH)
+                    new MainWindow().Show();
+                else
+                    new AccountingPCWindow().Show();
             }
         }
         /// <summary>
@@ -98,12 +108,12 @@ namespace AccountingPC
         /// <param name="pass">Пароль</param>
         private void SetUserCredentials(string login, string pass)
         {
-            if (Settings.Default.USER_NAME == null || Settings.Default.USER_NAME == "")
+            if (string.IsNullOrWhiteSpace(Settings.Default.USER_NAME))
             {
                 Settings.Default.USER_NAME = login;
             }
 
-            if (Settings.Default.PASSWORD_HASH == null || Settings.Default.PASSWORD_HASH == "")
+            if (string.IsNullOrWhiteSpace(Settings.Default.PASSWORD_HASH))
             {
                 Settings.Default.PASSWORD_HASH = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(pass)));
             }

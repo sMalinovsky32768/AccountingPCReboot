@@ -61,6 +61,7 @@
       <HintPath>..\packages\GemBox.Spreadsheet.45.0.1176\lib\net35\GemBox.Spreadsheet.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="ReachFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
@@ -102,6 +103,9 @@
     <Compile Include="AccountingReport\ConfiguringReportWindow.xaml.cs">
       <DependentUpon>ConfiguringReportWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AccountingReport\PreviewReportWindow.xaml.cs">
+      <DependentUpon>PreviewReportWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AccountingReport\ReportColumnNameCollection.cs" />
     <Compile Include="AccountingReport\ReportCommand.cs" />
     <Compile Include="AccountingReport\ReportNameCollection.cs" />
@@ -111,6 +115,9 @@
     <Compile Include="AccountingReport\OrderNameCollection.cs" />
     <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
+    <Compile Include="ChangePlaceWindow.xaml.cs">
+      <DependentUpon>ChangePlaceWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ChangeWindow.xaml.cs">
       <DependentUpon>ChangeWindow.xaml</DependentUpon>
     </Compile>
@@ -133,12 +140,18 @@
     <Compile Include="AccountingPCValidationRules.cs" />
     <Compile Include="AccountingReport\Report.cs" />
     <Compile Include="AccountingReport\ReportOptions.cs" />
+    <Compile Include="Place.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="Software.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="AccountingReport\ConfiguringReportWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AccountingReport\PreviewReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -205,6 +218,10 @@
     <Page Include="BlackTheme\Theme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ChangePlaceWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ChangeWindow.xaml">
       <SubType>Designer</SubType>

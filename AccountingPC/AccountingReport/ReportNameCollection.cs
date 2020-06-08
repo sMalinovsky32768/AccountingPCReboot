@@ -46,11 +46,18 @@ namespace AccountingPC.AccountingReport
 
         public static ReportName GetReportName(TypeReport typeReport)
         {
-            foreach (ReportName reportName in ReportNameCollection.Collection)
+            //foreach (ReportName reportName in Collection)
+            //{
+            //    if (reportName.Type == typeReport)
+            //    {
+            //        return reportName;
+            //    }
+            //}
+            for (int i = 0; i < Collection.Count; i++)
             {
-                if (reportName.Type == typeReport)
+                if (Collection[i].Type == typeReport)
                 {
-                    return reportName;
+                    return Collection[i];
                 }
             }
             return null;

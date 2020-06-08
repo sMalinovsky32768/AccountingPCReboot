@@ -35,8 +35,18 @@ namespace AccountingPC
             {
                 Capacity = 128
             };
-            foreach (DataRow row in DefaultDataSet.Tables["PCSoftware"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["PCSoftware"].Rows)
+            //{
+            //    PcSoftware.Add(new InstalledSoftware()
+            //    {
+            //        ID = Convert.ToInt32(row[0]),
+            //        Name = row[1].ToString(),
+            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+            //    });
+            //}
+            for (int i = 0; i < DefaultDataSet.Tables["PCSoftware"].Rows.Count; i++)
             {
+                DataRow row = DefaultDataSet.Tables["PCSoftware"].Rows[i];
                 PcSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
@@ -57,9 +67,19 @@ namespace AccountingPC
             {
                 Capacity = 128
             };
-            foreach (DataRow row in DefaultDataSet.Tables["NotebookSoftware"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["NotebookSoftware"].Rows)
+            //{
+            //    NotebookSoftware.Add(new InstalledSoftware()
+            //    {
+            //        ID = Convert.ToInt32(row[0]),
+            //        Name = row[1].ToString(),
+            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+            //    });
+            //}
+            for (int i = 0; i < DefaultDataSet.Tables["NotebookSoftware"].Rows.Count; i++)
             {
-                NotebookSoftware.Add(new InstalledSoftware()
+                DataRow row = DefaultDataSet.Tables["NotebookSoftware"].Rows[i];
+                PcSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -79,9 +99,19 @@ namespace AccountingPC
             {
                 Capacity = 128
             };
-            foreach (DataRow row in DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows)
+            //{
+            //    PcNotInstalledSoftware.Add(new InstalledSoftware()
+            //    {
+            //        ID = Convert.ToInt32(row[0]),
+            //        Name = row[1].ToString(),
+            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+            //    });
+            //}
+            for (int i = 0; i < DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows.Count; i++)
             {
-                PcNotInstalledSoftware.Add(new InstalledSoftware()
+                DataRow row = DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows[i];
+                PcSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -101,9 +131,19 @@ namespace AccountingPC
             {
                 Capacity = 128
             };
-            foreach (DataRow row in DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows)
+            //foreach (DataRow row in DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows)
+            //{
+            //    NotebookNotInstalledSoftware.Add(new InstalledSoftware()
+            //    {
+            //        ID = Convert.ToInt32(row[0]),
+            //        Name = row[1].ToString(),
+            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+            //    });
+            //}
+            for (int i = 0; i < DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows.Count; i++)
             {
-                NotebookNotInstalledSoftware.Add(new InstalledSoftware()
+                DataRow row = DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows[i];
+                PcSoftware.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),

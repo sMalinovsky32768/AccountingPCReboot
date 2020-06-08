@@ -279,11 +279,23 @@ namespace AccountingPC
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                foreach (object obj in equipmentView.SelectedItems)
+                //foreach (object obj in equipmentView.SelectedItems)
+                //{
+                //    DataRow row = ((DataRowView)obj).Row;
+                //    int id = Convert.ToInt32(row[0]);
+                //    SqlCommand command = new SqlCommand($"Delete{TypeDevice.ToString()}ByID", connection)
+                //    {
+                //        CommandType = CommandType.StoredProcedure
+                //    };
+                //    command.Parameters.Add(new SqlParameter("@ID", id));
+                //    int res = command.ExecuteNonQuery();
+                //}
+                for (int i = 0; i < equipmentView.SelectedItems.Count; i++)
                 {
+                    object obj = equipmentView.SelectedItems[i];
                     DataRow row = ((DataRowView)obj).Row;
                     int id = Convert.ToInt32(row[0]);
-                    SqlCommand command = new SqlCommand($"Delete{TypeDevice.ToString()}ByID", connection)
+                    SqlCommand command = new SqlCommand($"Delete{TypeDevice}ByID", connection)
                     {
                         CommandType = CommandType.StoredProcedure
                     };
@@ -352,11 +364,23 @@ namespace AccountingPC
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                foreach (object obj in softwareView.SelectedItems)
+                //foreach (object obj in softwareView.SelectedItems)
+                //{
+                //    DataRow row = ((DataRowView)obj).Row;
+                //    int id = Convert.ToInt32(row[0]);
+                //    SqlCommand command = new SqlCommand($"Delete{TypeSoft.ToString()}", connection)
+                //    {
+                //        CommandType = CommandType.StoredProcedure
+                //    };
+                //    command.Parameters.Add(new SqlParameter("@ID", id));
+                //    int res = command.ExecuteNonQuery();
+                //}
+                for (int i = 0; i < equipmentView.SelectedItems.Count; i++)
                 {
+                    object obj = equipmentView.SelectedItems[i];
                     DataRow row = ((DataRowView)obj).Row;
                     int id = Convert.ToInt32(row[0]);
-                    SqlCommand command = new SqlCommand($"Delete{TypeSoft.ToString()}", connection)
+                    SqlCommand command = new SqlCommand($"Delete{TypeSoft}", connection)
                     {
                         CommandType = CommandType.StoredProcedure
                     };
@@ -631,6 +655,7 @@ namespace AccountingPC
             DefaultDataSet.Tables["DeviceOnPlace"].Clear();
             new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DefaultDataSet, "DeviceOnPlace");
             devicesOnPlace.ItemsSource = DefaultDataSet.Tables["DeviceOnPlace"].DefaultView;
+            devicesOnPlace.DisplayMemberPath = "FullName";
             devicesOnPlace.SelectedIndex = 0;
         }
 

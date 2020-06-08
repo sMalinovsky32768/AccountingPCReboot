@@ -72,8 +72,18 @@ namespace AccountingPC.AccountingReport
                         if (obj != null)
                         {
                             ReportColumnName columnName = obj as ReportColumnName;
-                            foreach (ReportColumnName reportColumnName in UnusedReportColumns)
+                            //foreach (ReportColumnName reportColumnName in UnusedReportColumns)
+                            //{
+                            //    if (reportColumnName == columnName)
+                            //    {
+                            //        SelectedUnusedColumn =
+                            //        UnusedReportColumns[UnusedReportColumns.IndexOf(columnName) < UnusedReportColumns.Count - 1 ?
+                            //        UnusedReportColumns.IndexOf(columnName) + 1 : 0];
+                            //    }
+                            //}
+                            for (int i = 0; i < UnusedReportColumns.Count; i++)
                             {
+                                ReportColumnName reportColumnName = UnusedReportColumns[i];
                                 if (reportColumnName == columnName)
                                 {
                                     SelectedUnusedColumn =
@@ -111,8 +121,18 @@ namespace AccountingPC.AccountingReport
                         if (obj != null)
                         {
                             ReportColumnName columnName = obj as ReportColumnName;
-                            foreach (ReportColumnName reportColumnName in UsedReportColumns)
+                            //foreach (ReportColumnName reportColumnName in UsedReportColumns)
+                            //{
+                            //    if (reportColumnName == columnName)
+                            //    {
+                            //        SelectedUsedColumn =
+                            //        UsedReportColumns[UsedReportColumns.IndexOf(columnName) < UsedReportColumns.Count - 1 ?
+                            //        UsedReportColumns.IndexOf(columnName) + 1 : 0];
+                            //    }
+                            //}
+                            for (int i = 0; i < UsedReportColumns.Count; i++)
                             {
+                                ReportColumnName reportColumnName = UsedReportColumns[i];
                                 if (reportColumnName == columnName)
                                 {
                                     SelectedUsedColumn =
@@ -121,8 +141,17 @@ namespace AccountingPC.AccountingReport
                                 }
                             }
                             SortingParam sortingParam = null;
-                            foreach (SortingParam param in Options.SortingParamList)
+                            //foreach (SortingParam param in Options.SortingParamList)
+                            //{
+                            //    if (param.ColumnName.Column == columnName.Column)
+                            //    {
+                            //        sortingParam = param;
+                            //        break;
+                            //    }
+                            //}
+                            for (int i = 0; i < Options.SortingParamList.Count; i++)
                             {
+                                SortingParam param = Options.SortingParamList[i];
                                 if (param.ColumnName.Column == columnName.Column)
                                 {
                                     sortingParam = param;
@@ -171,8 +200,16 @@ namespace AccountingPC.AccountingReport
             UnusedReportColumns = new ObservableCollection<ReportColumnName>();
             if (Options.TypeReport != TypeReport.Full)
             {
-                foreach (ReportColumnName relation in ReportColumnNameCollection.Collection)
+                //foreach (ReportColumnName relation in ReportColumnNameCollection.Collection)
+                //{
+                //    if (ReportRelationCollection.Collection[Options.TypeReport].Columns.Contains(relation.Column))
+                //    {
+                //        UnusedReportColumns.Add(relation);
+                //    }
+                //}
+                for (int i = 0; i < ReportColumnNameCollection.Collection.Count; i++)
                 {
+                    ReportColumnName relation = ReportColumnNameCollection.Collection[i];
                     if (ReportRelationCollection.Collection[Options.TypeReport].Columns.Contains(relation.Column))
                     {
                         UnusedReportColumns.Add(relation);
@@ -203,23 +240,40 @@ namespace AccountingPC.AccountingReport
 
             if (isFull)
             {
-                foreach (ReportColumn column in relation.Columns)
+                //foreach (ReportColumn column in relation.Columns)
+                //{
+                //    vs.Add(ReportColumnNameCollection.GetColumnName(column).Name);
+                //}
+                for (int j = 0; j < relation.Columns.Count; j++)
                 {
-                    vs.Add(ReportColumnNameCollection.GetColumnName(column).Name);
+                    vs.Add(ReportColumnNameCollection.GetColumnName(relation.Columns[j]).Name);
                 }
             }
             else
             {
-                foreach (ReportColumnName columnRelation in UsedReportColumns)
+                //foreach (ReportColumnName columnRelation in UsedReportColumns)
+                //{
+                //    vs.Add(ReportColumnNameCollection.GetColumnName(columnRelation.Column).Name);
+                //}
+                for (int j = 0; j < UsedReportColumns.Count; j++)
                 {
-                    vs.Add(ReportColumnNameCollection.GetColumnName(columnRelation.Column).Name);
+                    vs.Add(ReportColumnNameCollection.GetColumnName(UsedReportColumns[j].Column).Name);
                 }
             }
 
             int i = 0;
-            foreach (string str in vs)
+            //foreach (string str in vs)
+            //{
+            //    commandText += $"[{str}]";
+            //    i++;
+            //    if (i < vs.Count)
+            //    {
+            //        commandText += ", ";
+            //    }
+            //}
+            for (int j = 0; j < vs.Count; j++)
             {
-                commandText += $"[{str}]";
+                commandText += $"[{vs[i]}]";
                 i++;
                 if (i < vs.Count)
                 {
@@ -292,21 +346,36 @@ namespace AccountingPC.AccountingReport
                 set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
                 set.Tables[tableName].Columns.Add("Видеоразъемы");
 
-                foreach (DataRow row in set.Tables[tableName].Rows)
+                //foreach (DataRow row in set.Tables[tableName].Rows)
+                //{
+                //    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
+                //}
+                for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
                 {
-                    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
+                    set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
                 }
             }
 
             int i = 0;
-            foreach (ReportColumnName column in UsedReportColumns)
+            //foreach (ReportColumnName column in UsedReportColumns)
+            //{
+            //    if (set.Tables[tableName].Columns.Contains(column.Name))
+            //    {
+            //        set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
+            //        i++;
+            //    }
+            //}
+
+            int colCount = UsedReportColumns.Count;
+            for (int j=0; j < colCount; j++)
             {
-                if (set.Tables[tableName].Columns.Contains(column.Name))
+                if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
                 {
-                    set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
+                    set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
                     i++;
                 }
             }
+
 
             if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
             {
@@ -323,8 +392,10 @@ namespace AccountingPC.AccountingReport
 
             ExcelFile book = new ExcelFile();
 
-            foreach (DataTable dataTable in dataSet.Tables)
+            //foreach (DataTable dataTable in dataSet.Tables)
+            for (int q = 0; q < dataSet.Tables.Count; q++)
             {
+                DataTable dataTable = dataSet.Tables[q];
                 ExcelWorksheet worksheet = book.Worksheets.Add(dataTable.TableName);
 
                 worksheet.InsertDataTable(dataTable, new InsertDataTableOptions()
@@ -336,104 +407,158 @@ namespace AccountingPC.AccountingReport
                 int rowCount = worksheet.Rows.Count;
                 worksheet.Cells[rowCount + 1, 0].Value = "Итого:";
                 int col;
-                // Установка денежного типа для Цены
-                if (worksheet.Cells.FindText("Цена", false, out _, out col))
+                if (Options.IsShowUnitOfMeasurement)
                 {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                    string begin = worksheet.Cells[0, col].Name;
-                    string end = worksheet.Cells[rowCount, col].Name;
-                    worksheet.Cells[rowCount + 1, col].Formula = $"=SUM({begin}:{end})";
-                    worksheet.Cells[rowCount + 1, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-
-                    worksheet.Cells[rowCount + 2, col - 1].Value = "Минимальная цена";
-                    worksheet.Cells[rowCount + 2, col].Formula = $"=MIN({begin}:{end})";
-                    worksheet.Cells[rowCount + 2, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-
-                    worksheet.Cells[rowCount + 3, col - 1].Value = "Средняя цена";
-                    worksheet.Cells[rowCount + 3, col].Formula = $"=AVERAGE({begin}:{end})";
-                    worksheet.Cells[rowCount + 3, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-
-                    worksheet.Cells[rowCount + 4, col - 1].Value = "Максимальная цена";
-                    worksheet.Cells[rowCount + 4, col].Formula = $"=MAX({begin}:{end})";
-                    worksheet.Cells[rowCount + 4, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-
-                    if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
+                    // Установка денежного типа для Цены
+                    if (worksheet.Cells.FindText("Цена", false, out _, out col))
                     {
-                        begin = worksheet.Cells[0, col1].Name;
-                        end = worksheet.Cells[rowCount, col1].Name;
-                        worksheet.Cells[rowCount + 1, col1].Formula = $"=SUM({begin}:{end})";
                         worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                        if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
+
+                        if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
                         {
-                            begin = worksheet.Cells[0, col2].Name;
-                            end = worksheet.Cells[rowCount, col2].Name;
-                            worksheet.Cells[rowCount + 1, col2].Formula = $"=SUM({begin}:{end})";
-
-                            int rowIndex;
-                            foreach (ExcelRow row in worksheet.Rows)
+                            worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                            if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
                             {
-                                rowIndex = row.Index;
-                                if (rowIndex == 0)
-                                {
-                                    continue;
-                                }
+                                //int rowIndex;
+                                //foreach (ExcelRow row in worksheet.Rows)
+                                //{
+                                //    rowIndex = row.Index;
+                                //    if (rowIndex == 0)
+                                //    {
+                                //        continue;
+                                //    }
 
-                                string cell = worksheet.Cells[rowIndex, col].Name;
-                                string cell2 = worksheet.Cells[rowIndex, col2].Name;
-                                string formula = $"={cell}*{cell2}";
-                                worksheet.Cells[rowIndex, col1].Formula = formula;
+                                //    string cell = worksheet.Cells[rowIndex, col].Name;
+                                //    string cell2 = worksheet.Cells[rowIndex, col2].Name;
+                                //    string formula = $"={cell}*{cell2}";
+                                //    worksheet.Cells[rowIndex, col1].Formula = formula;
+                                //}
+                                string totalCostName = worksheet.Columns[col1].Name;
+                                string countName = worksheet.Columns[col2].Name;
+                                for (int i = 1; i < rowCount; i++)
+                                {
+                                    worksheet.Cells[i, col1].Formula = $"={totalCostName}{i}*{countName}{i}";
+                                }
                             }
                         }
                     }
-                }
-                if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
-                    string begin = worksheet.Cells[0, col].Name;
-                    string end = worksheet.Cells[rowCount, col].Name;
-                    worksheet.Cells[rowCount + 1, col].Formula = $"=COUNT({begin}:{end})";
-                    worksheet.Cells[rowCount + 1, col].Style.NumberFormat = "0__Устройств";
-                }
-                if (worksheet.Cells.FindText("Дата приобретения", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "dd-MM-yyyy";
-                }
-                if (worksheet.Cells.FindText("Диагональ", false, out _, out col) ||
-                    worksheet.Cells.FindText("Диагональ экрана", false, out _, out col) ||
-                    worksheet.Cells.FindText("Максимальная диагональ", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat =
-                        NumberFormatBuilder.Accounting(2, true, false, "\u2033", false);
-                }
-                if (worksheet.Cells.FindText("Базовая частота", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
-                }
-                if (worksheet.Cells.FindText("Максимальная частота", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
-                }
-                if (worksheet.Cells.FindText("Частота обновления", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
-                }
-                if (worksheet.Cells.FindText("ОЗУ", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                }
-                if (worksheet.Cells.FindText("Видеопамять", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                }
-                if (worksheet.Cells.FindText("Объем SSD", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                }
-                if (worksheet.Cells.FindText("Объем HDD", false, out _, out col))
-                {
-                    worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                    if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
+                    }
+                    if (worksheet.Cells.FindText("Дата приобретения", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "dd-MM-yyyy";
+                    }
+                    if (worksheet.Cells.FindText("Диагональ", false, out _, out col) ||
+                        worksheet.Cells.FindText("Диагональ экрана", false, out _, out col) ||
+                        worksheet.Cells.FindText("Максимальная диагональ", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat =
+                            NumberFormatBuilder.Accounting(2, true, false, "\u2033", false);
+                    }
+                    if (worksheet.Cells.FindText("Базовая частота", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
+                    }
+                    if (worksheet.Cells.FindText("Максимальная частота", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
+                    }
+                    if (worksheet.Cells.FindText("Частота обновления", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
+                    }
+                    if (worksheet.Cells.FindText("ОЗУ", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                    }
+                    if (worksheet.Cells.FindText("Видеопамять", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                    }
+                    if (worksheet.Cells.FindText("Объем SSD", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                    }
+                    if (worksheet.Cells.FindText("Объем HDD", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
+                    }
                 }
 
+                if (Options.IsCountMaxMinAverageSum)
+                {
+                    // Установка денежного типа для Цены
+                    if (worksheet.Cells.FindText("Цена", false, out _, out col))
+                    {
+                        string begin = worksheet.Cells[0, col].Name;
+                        string end = worksheet.Cells[rowCount, col].Name;
+                        worksheet.Cells[rowCount + 1, col].Formula = $"=SUM({begin}:{end})";
+
+                        worksheet.Cells[rowCount + 2, col - 1].Value = "Минимальная цена";
+                        worksheet.Cells[rowCount + 2, col].Formula = $"=MIN({begin}:{end})";
+
+                        worksheet.Cells[rowCount + 3, col - 1].Value = "Средняя цена";
+                        worksheet.Cells[rowCount + 3, col].Formula = $"=AVERAGE({begin}:{end})";
+
+                        worksheet.Cells[rowCount + 4, col - 1].Value = "Максимальная цена";
+                        worksheet.Cells[rowCount + 4, col].Formula = $"=MAX({begin}:{end})";
+
+                        if (Options.IsShowUnitOfMeasurement)
+                        {
+                            worksheet.Cells[rowCount + 1, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                            worksheet.Cells[rowCount + 2, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                            worksheet.Cells[rowCount + 3, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                            worksheet.Cells[rowCount + 4, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                        }
+
+                        if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
+                        {
+                            begin = worksheet.Cells[0, col1].Name;
+                            end = worksheet.Cells[rowCount, col1].Name;
+                            worksheet.Cells[rowCount + 1, col1].Formula = $"=SUM({begin}:{end})";
+                            if (Options.IsShowUnitOfMeasurement)  
+                                worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
+                            if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
+                            {
+                                begin = worksheet.Cells[0, col2].Name;
+                                end = worksheet.Cells[rowCount, col2].Name;
+                                worksheet.Cells[rowCount + 1, col2].Formula = $"=SUM({begin}:{end})";
+
+                                //int rowIndex;
+                                //foreach (ExcelRow row in worksheet.Rows)
+                                //{
+                                //    rowIndex = row.Index;
+                                //    if (rowIndex == 0)
+                                //    {
+                                //        continue;
+                                //    }
+
+                                //    string cell = worksheet.Cells[rowIndex, col].Name;
+                                //    string cell2 = worksheet.Cells[rowIndex, col2].Name;
+                                //    string formula = $"={cell}*{cell2}";
+                                //    worksheet.Cells[rowIndex, col1].Formula = formula;
+                                //}
+                                string totalCostName = worksheet.Columns[col1].Name;
+                                string countName = worksheet.Columns[col2].Name;
+                                for (int i = 1; i < rowCount; i++)
+                                {
+                                    worksheet.Cells[i, col1].Formula = $"={totalCostName}{i}*{countName}{i}";
+                                }
+                            }
+                        }
+                    }
+                    if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
+                    {
+                        worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
+                        string begin = worksheet.Cells[0, col].Name;
+                        string end = worksheet.Cells[rowCount, col].Name;
+                        worksheet.Cells[rowCount + 1, col].Formula = $"=COUNT({begin}:{end})";
+                        if (Options.IsShowUnitOfMeasurement) 
+                            worksheet.Cells[rowCount + 1, col].Style.NumberFormat = "0__Устройств";
+                    }
+                }
                 //foreach (ExcelColumn column in worksheet.Columns)
                 //{
                 //    column.AutoFit();

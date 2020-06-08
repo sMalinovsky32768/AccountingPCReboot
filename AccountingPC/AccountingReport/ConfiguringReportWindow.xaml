@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
-        Title="Настройка отчета" Height="850" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
+        Title="Настройка отчета" Height="900" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
@@ -27,9 +27,11 @@
                         <Grid.Effect>
                             <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.7" Color="{DynamicResource shadow}"/>
                         </Grid.Effect>
-                        <TextBlock Text="{Binding Title, ElementName=window}" Foreground="{DynamicResource on-background-brush}"/>
                         <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
-                                Background="{DynamicResource background-brush}"/>
+                                Background="{DynamicResource background-brush}" Orientation="Horizontal">
+                            <TextBlock Text="{Binding Title, ElementName=window}" Foreground="{DynamicResource on-background-brush}" 
+                                       HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                        </StackPanel>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
                             <!--<Button x:Name="buttonMinimized" Style="{DynamicResource minimizeButton}"/>
                             <Button x:Name="buttonMaximized" Style="{DynamicResource maximizeButton}"/>-->
@@ -246,7 +248,7 @@
                                 <RadioButton x:Name="IsPrintReport" GroupName="CreateReportOption" 
                                              Content="Печать" Checked="IsPrintReport_Checked" Grid.Column="2"/>
                                 <RadioButton x:Name="IsPreviewReport" GroupName="CreateReportOption" Content="Предварительный просмотр"
-                                             Checked="IsPreviewReport_Checked" IsEnabled="False" Grid.Column="3"/>
+                                             Checked="IsPreviewReport_Checked" Grid.Column="3"/>
                             </Grid>
                             <Separator DockPanel.Dock="Top"/>
                             <Grid DockPanel.Dock="Top" Margin="10,0">
@@ -292,6 +294,15 @@
                                                     SelectedDate="{Binding Path=Options.ToDate}" SelectedDateChanged="ToDate_SelectedDateChanged"/>
                                     </Grid>
                                 </Grid>
+                            </Grid>
+                            <Separator DockPanel.Dock="Top"/>
+                            <Grid DockPanel.Dock="Top" Margin="10,0">
+                                <StackPanel>
+                                    <CheckBox Content="Показывать единицы измерения" 
+                                              IsChecked="{Binding Path=Options.IsShowUnitOfMeasurement}" Margin="0,0,0,5"/>
+                                    <CheckBox Content="Посчитать сумму, максимальное, среднее и минимальное значения цены" 
+                                              IsChecked="{Binding Path=Options.IsCountMaxMinAverageSum}" Margin="0,0,0,5"/>
+                                </StackPanel>
                             </Grid>
                             <Separator DockPanel.Dock="Top"/>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 

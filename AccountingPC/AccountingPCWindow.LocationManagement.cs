@@ -53,7 +53,7 @@ namespace AccountingPC
                         return true;
                     }));
 
-        private void UpdateAudienceList()
+        public void UpdateAudienceList()
         {
             //AudienceDataSet = new DataSet();
             //new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString).Fill(AudienceDataSet);
@@ -65,7 +65,7 @@ namespace AccountingPC
             audienceList.DisplayMemberPath = "Name";
         }
 
-        private void ChangeLocationView()
+        public void ChangeLocationView()
         {
             //AudiencePlaceDataSet = new DataSet();
             //new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(AudiencePlaceDataSet);

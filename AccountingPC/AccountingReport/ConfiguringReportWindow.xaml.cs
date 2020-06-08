@@ -135,8 +135,36 @@ namespace AccountingPC.AccountingReport
         {
             ObservableCollection<ReportColumnName> relations = new ObservableCollection<ReportColumnName>();
             ObservableCollection<OrderName> orderNames = new ObservableCollection<OrderName>();
-            foreach (object item in sortingParamsList.Items)
+            //foreach (object item in sortingParamsList.Items)
+            //{
+            //    ListBoxItem listBoxItem = (ListBoxItem)(sortingParamsList?.ItemContainerGenerator?.ContainerFromItem(item));
+            //    ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
+            //    DataTemplate template = contentPresenter?.ContentTemplate;
+            //    if (template != null)
+            //    {
+            //        ComboBox colBox = (ComboBox)template?.FindName("col", contentPresenter);
+            //        ComboBox orderBox = (ComboBox)template?.FindName("order", contentPresenter);
+
+            //        colBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
+            //        orderBox.ItemsSource = OrderNameCollection.Collection;
+            //        //orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
+            //        if (colBox.SelectedItem != null)
+            //        {
+            //            relations.Add((ReportColumnName)colBox.SelectedItem);
+            //        }
+            //        if (orderBox.SelectedItem != null)
+            //        {
+            //            orderNames.Add((OrderName)orderBox.SelectedItem);
+            //        }
+            //    }
+            //    else
+            //    {
+            //        //listBoxItem.Visibility = Visibility.Collapsed;
+            //    }
+            //}
+            for (int i = 0; i < sortingParamsList.Items.Count; i++)
             {
+                object item = sortingParamsList.Items[i];
                 ListBoxItem listBoxItem = (ListBoxItem)(sortingParamsList?.ItemContainerGenerator?.ContainerFromItem(item));
                 ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
                 DataTemplate template = contentPresenter?.ContentTemplate;
@@ -147,7 +175,6 @@ namespace AccountingPC.AccountingReport
 
                     colBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
                     orderBox.ItemsSource = OrderNameCollection.Collection;
-                    //orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
                     if (colBox.SelectedItem != null)
                     {
                         relations.Add((ReportColumnName)colBox.SelectedItem);
@@ -157,10 +184,6 @@ namespace AccountingPC.AccountingReport
                     {
                         orderNames.Add((OrderName)orderBox.SelectedItem);
                     }
-                }
-                else
-                {
-                    //listBoxItem.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -186,8 +209,17 @@ namespace AccountingPC.AccountingReport
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
+            //foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
+            //{
+            //    if (CurrentReport.Options.TypeReport == reportName.Type)
+            //    {
+            //        typeReportBox.SelectedItem = reportName;
+            //        return;
+            //    }
+            //}
+            for (int i = 0; i < ((ObservableCollection<ReportName>)typeReportBox.ItemsSource).Count; i++)
             {
+                ReportName reportName = ((ObservableCollection<ReportName>)typeReportBox.ItemsSource)[i];
                 if (CurrentReport.Options.TypeReport == reportName.Type)
                 {
                     typeReportBox.SelectedItem = reportName;
@@ -219,8 +251,18 @@ namespace AccountingPC.AccountingReport
                     open.Start();
                     break;
                 case CreateReportOptions.Print:
+                    Thread print = new Thread(new ThreadStart(PrintReport))
+                    {
+                        IsBackground = false,
+                    };
+                    print.Start();
                     break;
                 case CreateReportOptions.Preview:
+                    Thread preview = new Thread(new ThreadStart(PreviewReport))
+                    {
+                        IsBackground = false,
+                    };
+                    preview.Start();
                     break;
             }
         }
@@ -254,9 +296,10 @@ namespace AccountingPC.AccountingReport
         {
             Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog
             {
-                Filter = "Excel | *.xlsx;*.xls",
+                Filter = "XLSX files (*.xlsx, *.xlsm, *.xltx, *.xltm)|*.xlsx;*.xlsm;*.xltx;*.xltm|XLS files (*.xls, *.xlt)|*.xls;*.xlt|ODS files (*.ods, *.ots)|*.ods;*.ots|CSV files (*.csv, *.tsv)|*.csv;*.tsv|HTML files (*.html, *.htm)|*.html;*.htm|Portable Document Format|*.pdf",
+                //Filter = "SpreadSheet|*.xlsx;*.xls;*.csv;*.ods|Portable Document Format|*.pdf|HTML|*.html|Image|*.png;*.jpg;*.gif;.*bmp",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                FileName = $"Report_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx"
+                FileName = $"Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx"
             };
             if (dialog.ShowDialog(this) == false)
             {
@@ -268,8 +311,7 @@ namespace AccountingPC.AccountingReport
 
         private void OpenReport()
         {
-            fileName = $@"{System.IO.Path.GetTempPath()}Report" +
-                $@"_{CurrentReport.Options.TypeReport.ToString()}__{DateTime.Now.ToString("dd-MM-yyyy__HH-mm-ss__g")}.xlsx";
+            fileName = $@"{Path.GetTempPath()}Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx";
             Task task = new Task(() =>
             {
                 Dispatcher.Invoke(() =>
@@ -320,6 +362,30 @@ namespace AccountingPC.AccountingReport
             {
 
             }
+        }
+
+        private void PrintReport()
+        {
+            Task task = new Task(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    CurrentReport.CreateReport().Print();
+                });
+            });
+            task.Start();
+        }
+
+        private void PreviewReport()
+        {
+            Task task = new Task(() =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    new PreviewReportWindow(CurrentReport.CreateReport()).ShowDialog();
+                });
+            });
+            task.Start();
         }
 
         private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)

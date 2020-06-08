@@ -55,26 +55,46 @@ namespace AccountingPC
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS() Where InvoiceID={InvoiceID}",
                 ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Операционные системы");
 
-            foreach (DataTable table in InvoiceSoftwareAndEquipmentDataSet.Tables)
+            //foreach (DataTable table in InvoiceSoftwareAndEquipmentDataSet.Tables)
+            //{
+            //    if (table.Columns.Contains("VideoConnectors"))
+            //    {
+            //        if (table.Columns.Contains("VideoConnectors"))
+            //        {
+            //            table.Columns.Add("Видеоразъемы");
+            //            foreach (DataRow row in table.Rows)
+            //            {
+            //                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
+            //                    GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+            //            }
+            //            int i = table.DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            //            int ii = table.DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+            //            table.DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
+            //            table.DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
+            //        }
+            //    }
+            //}
+            for (int i = 0; i < InvoiceSoftwareAndEquipmentDataSet.Tables.Count; i++)
             {
+                DataTable table = InvoiceSoftwareAndEquipmentDataSet.Tables[i];
                 if (table.Columns.Contains("VideoConnectors"))
                 {
                     if (table.Columns.Contains("VideoConnectors"))
                     {
                         table.Columns.Add("Видеоразъемы");
-                        foreach (DataRow row in table.Rows)
+                        for (int j=0; j < table.Rows.Count; j++)
                         {
+                            DataRow row = table.Rows[j];
                             row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
                                 GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
                         }
-                        int i = table.DefaultView.Table.Columns.IndexOf("VideoConnectors");
-                        int ii = table.DefaultView.Table.Columns.IndexOf("Видеоразъемы");
-                        table.DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
-                        table.DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
+                        int i1 = table.DefaultView.Table.Columns.IndexOf("VideoConnectors");
+                        int i2 = table.DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+                        table.DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i1);
+                        table.DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(i2);
                     }
                 }
             }
-
         }
 
         private void ChangeInvoiceView()
