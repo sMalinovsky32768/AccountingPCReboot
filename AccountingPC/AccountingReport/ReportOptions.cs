@@ -22,6 +22,7 @@ namespace AccountingPC.AccountingReport
         Software,
         OS,
         SoftAndOS,
+        UseSoft,
     }
 
     internal enum CreateReportOptions : byte
@@ -124,6 +125,8 @@ namespace AccountingPC.AccountingReport
 
         public bool IsShowUnitOfMeasurement { get; set; } = true;
         public bool IsCountMaxMinAverageSum { get; set; } = true;
+
+        public bool SplitByAudience { get; set; } = false;
 
         private TypeReport typeReport;
         private ReportName reportName;

@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace AccountingPC
 {
-    internal class AccountingCommand : ICommand
+    public class AccountingCommand : ICommand
     {
         private readonly Action<object> execute;
         private readonly Func<object, bool> canExecute;

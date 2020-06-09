@@ -12,6 +12,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllDevices",
+                    SP = "sp_GetAllDevices",
                     TableName = "All Devices",
                     Columns = new List<ReportColumn>()
                     {
@@ -30,6 +31,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllPCForReport",
+                    SP = "sp_GetAllPCForReport",
                     TableName = "PC",
                     Columns = new List<ReportColumn>()
                     {
@@ -60,6 +62,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllNotebookForReport",
+                    SP = "sp_GetAllNotebookForReport",
                     TableName = "Laptops&Monoblocks",
                     Columns = new List<ReportColumn>()
                     {
@@ -94,6 +97,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllMonitorForReport",
+                    SP = "sp_GetAllMonitorForReport",
                     TableName = "Monitors",
                     Columns = new List<ReportColumn>()
                     {
@@ -116,6 +120,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllProjectorForReport",
+                    SP = "sp_GetAllProjectorForReport",
                     TableName = "Projectors",
                     Columns = new List<ReportColumn>()
                     {
@@ -137,6 +142,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllBoardForReport",
+                    SP = "sp_GetAllBoardForReport",
                     TableName = "Interactive whiteboard",
                     Columns = new List<ReportColumn>()
                     {
@@ -155,6 +161,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllScreenForReport",
+                    SP = "sp_GetAllScreenForReport",
                     TableName = "Projector screens",
                     Columns = new List<ReportColumn>()
                     {
@@ -176,6 +183,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllPrinterScannerForReport",
+                    SP = "sp_GetAllPrinterScannerForReport",
                     TableName = "Printers&Scanners",
                     Columns = new List<ReportColumn>()
                     {
@@ -195,6 +203,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllNetworkSwitchForReport",
+                    SP = "sp_GetAllNetworkSwitchForReport",
                     TableName = "Network equipment",
                     Columns = new List<ReportColumn>()
                     {
@@ -215,6 +224,7 @@ namespace AccountingPC.AccountingReport
                 new ReportRelation()
                 {
                     Function = "GetAllOtherEquipmentForReport",
+                    SP = "sp_GetAllOtherEquipmentForReport",
                     TableName = "Other equipment",
                     Columns = new List<ReportColumn>()
                     {
@@ -281,6 +291,24 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.TypeLicense,
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
+                    },
+                }
+            },
+            {
+                TypeReport.UseSoft,
+                new ReportRelation()
+                {
+                    Function = "GetSoftAndOSInstaledList",
+                    TableName = "Software&OS",
+                    Columns = new List<ReportColumn>()
+                    {
+                        ReportColumn.Type,
+                        ReportColumn.Name,
+                        ReportColumn.Cost,
+                        ReportColumn.Count,
+                        ReportColumn.TotalCount,
+                        ReportColumn.IsAvailable,
+
                     },
                 }
             },

@@ -205,6 +205,29 @@ namespace AccountingPC.AccountingReport
                 selectionSortingParamGrid.Visibility = Visibility.Visible;
                 selectionColumnGrid.Visibility = Visibility.Visible;
             }
+
+            if (CurrentReport.Options.TypeReport == TypeReport.UseSoft)
+            {
+                CurrentReport.Options.IsPeriod = false;
+                periodGrid.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                periodGrid.Visibility = Visibility.Visible;
+            }
+
+            if (CurrentReport.Options.TypeReport == TypeReport.UseSoft ||
+                CurrentReport.Options.TypeReport == TypeReport.Software ||
+                CurrentReport.Options.TypeReport == TypeReport.SoftAndOS ||
+                CurrentReport.Options.TypeReport == TypeReport.OS) 
+            {
+                CurrentReport.Options.SplitByAudience = false;
+                split.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                split.Visibility = Visibility.Visible;
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -400,6 +423,16 @@ namespace AccountingPC.AccountingReport
             //fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.Today));
             fromDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, DateTime.Parse("31.12.1999")));
             fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.MaxValue));
+        }
+
+        private void Split_Checked(object sender, RoutedEventArgs e)
+        {
+            selectionColumnGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void Split_Unchecked(object sender, RoutedEventArgs e)
+        {
+            selectionColumnGrid.Visibility = Visibility.Visible;
         }
     }
 

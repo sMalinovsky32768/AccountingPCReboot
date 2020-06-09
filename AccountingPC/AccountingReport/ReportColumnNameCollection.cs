@@ -40,6 +40,8 @@ namespace AccountingPC.AccountingReport
         TotalCost,
         TypeLicense,
         Count,
+        IsAvailable,
+        TotalCount,
     }
 
     internal class ReportColumnName
@@ -108,6 +110,8 @@ namespace AccountingPC.AccountingReport
             new ReportColumnName(ReportColumn.TotalCost, "Общая стоимость"),
             new ReportColumnName(ReportColumn.TypeLicense, "Тип лицензии"),
             new ReportColumnName(ReportColumn.Count, "Количество"),
+            new ReportColumnName(ReportColumn.IsAvailable, "Доступно"),
+            new ReportColumnName(ReportColumn.TotalCount, "Общее количество"),
         };
 
         public static ObservableCollection<ReportColumnName> Collection => collection;

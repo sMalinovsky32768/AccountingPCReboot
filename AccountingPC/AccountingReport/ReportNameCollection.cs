@@ -40,6 +40,7 @@ namespace AccountingPC.AccountingReport
             new ReportName() {Type = TypeReport.Software,           Name = "Программное обеспечение" },
             new ReportName() {Type = TypeReport.OS,                 Name = "Операционные системы" },
             new ReportName() {Type = TypeReport.SoftAndOS,          Name = "Общий (ПО&ОС)" },
+            new ReportName() {Type = TypeReport.UseSoft,            Name = "Использование программного обеспечения" },
         };
 
         public static ObservableCollection<ReportName> Collection => collection;

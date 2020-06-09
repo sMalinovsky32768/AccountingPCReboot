@@ -9,6 +9,9 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type StatusBar}">
                     <Border Padding="1" BorderBrush="{DynamicResource surface-background-gradient}" Background="{DynamicResource surface-gradient}">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                        </Border.Effect>
                         <ItemsPresenter/>
                     </Border>
                 </ControlTemplate>

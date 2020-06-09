@@ -655,7 +655,7 @@ namespace AccountingPC
             DefaultDataSet.Tables["DeviceOnPlace"].Clear();
             new SqlDataAdapter($"select * from dbo.[GetAllDevicesOnPlace]({AudienceTableID})", ConnectionString).Fill(DefaultDataSet, "DeviceOnPlace");
             devicesOnPlace.ItemsSource = DefaultDataSet.Tables["DeviceOnPlace"].DefaultView;
-            devicesOnPlace.DisplayMemberPath = "FullName";
+            //devicesOnPlace.DisplayMemberPath = "FullName";
             devicesOnPlace.SelectedIndex = 0;
         }
 
@@ -698,7 +698,8 @@ namespace AccountingPC
 
         private void ChangePlace(object sender, RoutedEventArgs e)
         {
-
+            TypeChange = TypeChange.Change;
+            new ChangePlaceWindow(this).Show();
         }
     }
 }

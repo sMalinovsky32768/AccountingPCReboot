@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
-        Title="Настройка отчета" Height="900" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
+        Title="Настройка отчета" Height="920" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
@@ -52,15 +52,6 @@
                             </StackPanel>
                             <Separator DockPanel.Dock="Top"/>
                             <Grid x:Name="selectionColumnGrid" Height="200" Margin="10,5" DockPanel.Dock="Top">
-                                <!--<Grid.Style>
-                                    <Style TargetType="Grid">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=typeReportBox, Path=SelectedItem}" Value="ReportNames.GetReportName(TypeReport.Full)">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Grid.Style>-->
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition/>
@@ -251,7 +242,7 @@
                                              Checked="IsPreviewReport_Checked" Grid.Column="3"/>
                             </Grid>
                             <Separator DockPanel.Dock="Top"/>
-                            <Grid DockPanel.Dock="Top" Margin="10,0">
+                            <Grid DockPanel.Dock="Top" Margin="10,0" x:Name="periodGrid">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="auto"/>
                                     <RowDefinition Height="auto"/>
@@ -302,6 +293,8 @@
                                               IsChecked="{Binding Path=Options.IsShowUnitOfMeasurement}" Margin="0,0,0,5"/>
                                     <CheckBox Content="Посчитать сумму, максимальное, среднее и минимальное значения цены" 
                                               IsChecked="{Binding Path=Options.IsCountMaxMinAverageSum}" Margin="0,0,0,5"/>
+                                    <CheckBox Content="Разделить по аудиториям" x:Name="split" Checked="Split_Checked" Unchecked="Split_Unchecked"
+                                              IsChecked="{Binding Path=Options.SplitByAudience}" Margin="0,0,0,5"/>
                                 </StackPanel>
                             </Grid>
                             <Separator DockPanel.Dock="Top"/>

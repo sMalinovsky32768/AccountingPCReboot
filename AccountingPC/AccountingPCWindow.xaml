@@ -361,7 +361,7 @@
                                                 <Setter Property="Background" Value="{DynamicResource error-brush}"/>
                                                 <Setter Property="Foreground" Value="{DynamicResource on-error-brush}"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareView}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -483,7 +483,7 @@
                                                 <Setter Property="Margin" Value="10 10 5 10"/>
                                                 <Setter Property="IsEnabled" Value="True"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=softwareCategoryList}" Value="-1">
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=audienceList}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -491,7 +491,7 @@
                                             <Style TargetType="{x:Type Button}" x:Key="btn-edit" BasedOn="{StaticResource btn-view}">
                                                 <Setter Property="IsEnabled" Value="False"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=softwareView}" Value="1">
+                                                    <DataTrigger Binding="{Binding SelectedItems.Count, ElementName=audienceTableView}" Value="1">
                                                         <Setter Property="IsEnabled" Value="True"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
@@ -500,7 +500,7 @@
                                                 <Setter Property="Background" Value="{DynamicResource error-brush}"/>
                                                 <Setter Property="Foreground" Value="{DynamicResource on-error-brush}"/>
                                                 <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=equipmentView}" Value="-1">
+                                                    <DataTrigger Binding="{Binding SelectedIndex, ElementName=audienceTableView}" Value="-1">
                                                         <Setter Property="IsEnabled" Value="False"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>

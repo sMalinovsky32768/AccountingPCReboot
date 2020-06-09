@@ -227,7 +227,7 @@ namespace AccountingPC.AccountingReport
             }
         }
 
-        private string CommandTextBuilder(bool isFull = false)
+        private string CommandTextBuilder(bool isFull = false, int audience = 0)
         {
             List<string> vs = new List<string>
             {
@@ -235,80 +235,106 @@ namespace AccountingPC.AccountingReport
             };
 
             ReportRelation relation = ReportRelationCollection.Collection[Options.TypeReport];
+            
+            string commandText;
 
-            string commandText = "SELECT ";
+            if (!Options.SplitByAudience)
+            {
+                commandText = "SELECT ";
 
-            if (isFull)
-            {
-                //foreach (ReportColumn column in relation.Columns)
-                //{
-                //    vs.Add(ReportColumnNameCollection.GetColumnName(column).Name);
-                //}
-                for (int j = 0; j < relation.Columns.Count; j++)
+                if (isFull)
                 {
-                    vs.Add(ReportColumnNameCollection.GetColumnName(relation.Columns[j]).Name);
-                }
-            }
-            else
-            {
-                //foreach (ReportColumnName columnRelation in UsedReportColumns)
-                //{
-                //    vs.Add(ReportColumnNameCollection.GetColumnName(columnRelation.Column).Name);
-                //}
-                for (int j = 0; j < UsedReportColumns.Count; j++)
-                {
-                    vs.Add(ReportColumnNameCollection.GetColumnName(UsedReportColumns[j].Column).Name);
-                }
-            }
-
-            int i = 0;
-            //foreach (string str in vs)
-            //{
-            //    commandText += $"[{str}]";
-            //    i++;
-            //    if (i < vs.Count)
-            //    {
-            //        commandText += ", ";
-            //    }
-            //}
-            for (int j = 0; j < vs.Count; j++)
-            {
-                commandText += $"[{vs[i]}]";
-                i++;
-                if (i < vs.Count)
-                {
-                    commandText += ", ";
-                }
-            }
-
-            commandText += $" FROM dbo.{relation.Function}(";
-            if (Options.IsPeriod)
-            {
-                if (Options.FromDate != null)
-                {
-                    commandText += $"'{Options.FromDate.Value:yyyy-MM-dd}'";
+                    //foreach (ReportColumn column in relation.Columns)
+                    //{
+                    //    vs.Add(ReportColumnNameCollection.GetColumnName(column).Name);
+                    //}
+                    for (int j = 0; j < relation.Columns.Count; j++)
+                    {
+                        vs.Add(ReportColumnNameCollection.GetColumnName(relation.Columns[j]).Name);
+                    }
                 }
                 else
                 {
-                    commandText += $"default";
+                    //foreach (ReportColumnName columnRelation in UsedReportColumns)
+                    //{
+                    //    vs.Add(ReportColumnNameCollection.GetColumnName(columnRelation.Column).Name);
+                    //}
+                    for (int j = 0; j < UsedReportColumns.Count; j++)
+                    {
+                        vs.Add(ReportColumnNameCollection.GetColumnName(UsedReportColumns[j].Column).Name);
+                    }
                 }
 
-                commandText += $", ";
-                if (Options.FromDate != null)
+                int i = 0;
+                //foreach (string str in vs)
+                //{
+                //    commandText += $"[{str}]";
+                //    i++;
+                //    if (i < vs.Count)
+                //    {
+                //        commandText += ", ";
+                //    }
+                //}
+                for (int j = 0; j < vs.Count; j++)
                 {
-                    commandText += $"'{Options.ToDate.Value:yyyy-MM-dd}'";
+                    commandText += $"[{vs[i]}]";
+                    i++;
+                    if (i < vs.Count)
+                    {
+                        commandText += ", ";
+                    }
                 }
-                else
+
+                commandText += $" FROM dbo.{relation.Function}(";
+                if (Options.TypeReport != TypeReport.UseSoft)
                 {
-                    commandText += $"default";
+                    if (Options.IsPeriod)
+                    {
+                        if (Options.FromDate != null)
+                        {
+                            commandText += $"'{Options.FromDate.Value:yyyy-MM-dd}'";
+                        }
+                        else
+                        {
+                            commandText += $"default";
+                        }
+
+                        commandText += $", ";
+                        if (Options.FromDate != null)
+                        {
+                            commandText += $"'{Options.ToDate.Value:yyyy-MM-dd}'";
+                        }
+                        else
+                        {
+                            commandText += $"default";
+                        }
+                    }
+                    else
+                    {
+                        commandText += $"default, default";
+                    }
                 }
+                commandText += $")";
+                commandText += Options.GetSortingString(isFull);
             }
             else
             {
-                commandText += $"default, default";
+                commandText = $"EXEC {relation.SP} ";//добавить параметры
+                if (Options.IsPeriod)
+                {
+                    if (Options.FromDate != null)
+                    {
+                        commandText += $"@From='{Options.FromDate.Value:yyyy-MM-dd}', ";
+                    }
+
+                    if (Options.FromDate != null)
+                    {
+                        commandText += $"@To='{Options.ToDate.Value:yyyy-MM-dd}', ";
+                    }
+                }
+                commandText += $"@Audience={audience}";
             }
-            commandText += $")";
-            commandText += Options.GetSortingString(isFull);
+            
 
             return commandText;
         }
@@ -336,51 +362,140 @@ namespace AccountingPC.AccountingReport
 
         private void FillDataSet(DataSet set, bool isFull = false)
         {
-            string tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName;
-
-            set.Tables.Add(tableName);
-            new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
-
-            if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
+            if (Options.SplitByAudience)
             {
-                set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
-                set.Tables[tableName].Columns.Add("Видеоразъемы");
-
-                //foreach (DataRow row in set.Tables[tableName].Rows)
-                //{
-                //    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
-                //}
-                for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
+                DataTable table = new DataTable();
+                new SqlDataAdapter("Select ID, Name From Audience", ConnectionString).Fill(table);
+                for (int z = 0; z < table.Rows.Count; z++)
                 {
-                    set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
+                    string tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName + " " + table.Rows[z]["Name"].ToString();
+
+                    set.Tables.Add(tableName);
+                    new SqlDataAdapter(CommandTextBuilder(isFull, Convert.ToInt32(table.Rows[z]["ID"])), ConnectionString).Fill(set, tableName); // добавить where audience 
+
+                    if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
+                    {
+                        set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
+                        set.Tables[tableName].Columns.Add("Видеоразъемы");
+
+                        for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
+                        {
+                            set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] =
+                                AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
+                        }
+                    }
+
+                    int i = 0;
+                    int colCount = UsedReportColumns.Count;
+                    for (int j = 0; j < colCount; j++)
+                    {
+                        if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
+                        {
+                            set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
+                            i++;
+                        }
+                    }
+
+                    if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
+                    {
+                        set.Tables[tableName].Columns.Remove("VideoConnectors");
+                    }
                 }
             }
+            else
+            {
+                string tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName;
 
-            int i = 0;
-            //foreach (ReportColumnName column in UsedReportColumns)
+                set.Tables.Add(tableName);
+                new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
+
+                if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
+                {
+                    set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
+                    set.Tables[tableName].Columns.Add("Видеоразъемы");
+
+                    //foreach (DataRow row in set.Tables[tableName].Rows)
+                    //{
+                    //    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
+                    //}
+                    for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
+                    {
+                        set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
+                    }
+                }
+
+                int i = 0;
+                //foreach (ReportColumnName column in UsedReportColumns)
+                //{
+                //    if (set.Tables[tableName].Columns.Contains(column.Name))
+                //    {
+                //        set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
+                //        i++;
+                //    }
+                //}
+
+                int colCount = UsedReportColumns.Count;
+                for (int j = 0; j < colCount; j++)
+                {
+                    if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
+                    {
+                        set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
+                        i++;
+                    }
+                }
+
+
+                if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
+                {
+                    set.Tables[tableName].Columns.Remove("VideoConnectors");
+                }
+            }
+            
+            //string tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName;
+
+            //set.Tables.Add(tableName);
+            //new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
+
+            //if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
             //{
-            //    if (set.Tables[tableName].Columns.Contains(column.Name))
+            //    set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
+            //    set.Tables[tableName].Columns.Add("Видеоразъемы");
+
+            //    //foreach (DataRow row in set.Tables[tableName].Rows)
+            //    //{
+            //    //    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
+            //    //}
+            //    for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
             //    {
-            //        set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
+            //        set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
+            //    }
+            //}
+
+            //int i = 0;
+            ////foreach (ReportColumnName column in UsedReportColumns)
+            ////{
+            ////    if (set.Tables[tableName].Columns.Contains(column.Name))
+            ////    {
+            ////        set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
+            ////        i++;
+            ////    }
+            ////}
+
+            //int colCount = UsedReportColumns.Count;
+            //for (int j=0; j < colCount; j++)
+            //{
+            //    if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
+            //    {
+            //        set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
             //        i++;
             //    }
             //}
 
-            int colCount = UsedReportColumns.Count;
-            for (int j=0; j < colCount; j++)
-            {
-                if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
-                {
-                    set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
-                    i++;
-                }
-            }
 
-
-            if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
-            {
-                set.Tables[tableName].Columns.Remove("VideoConnectors");
-            }
+            //if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
+            //{
+            //    set.Tables[tableName].Columns.Remove("VideoConnectors");
+            //}
         }
 
         public ExcelFile CreateReport()

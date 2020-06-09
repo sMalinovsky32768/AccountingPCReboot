@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
-        Title="ChangePlaceWindow" Height="900" Width="500" WindowStartupLocation="CenterOwner" 
+        Title="ChangePlaceWindow" Height="600" Width="1000" WindowStartupLocation="CenterOwner" 
         ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" DragOver="Window_DragOver">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="0"/>
@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Название" VerticalAlignment="Center"/>
-                        <TextBox Grid.Column="2" x:Name="placeName" Style="{DynamicResource text-box}" VerticalAlignment="Center"/>
+                        <TextBox Grid.Column="2" x:Name="placeName" Style="{DynamicResource text-box}" VerticalAlignment="Center" Text="{Binding Path=Name}"/>
                     </Grid>
                     <Separator DockPanel.Dock="Top"/>
                     <Grid DockPanel.Dock="Top">
@@ -37,7 +37,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,0">
-                            <Button x:Name="addSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                            <Button x:Name="addTypeDeviceButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                                             Margin="0,0,10,0" Command="{Binding AddTypeDevice}" Style="{DynamicResource default-button}">
                                 <Grid>
                                     <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
@@ -57,7 +57,7 @@
                                                   Fill="{DynamicResource on-background-brush}"/>
                                 </Grid>
                             </Button>
-                            <Button x:Name="delSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
+                            <Button x:Name="delTypeDeviceButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
                                     Margin="0" Style="{DynamicResource default-button}" Command="{Binding DelTypeDevice}"
                                     CommandParameter="{Binding Path=SelectedItem, ElementName=devicesOnPlace}">
                                 <Grid>
@@ -75,7 +75,7 @@
                             </Button>
                         </StackPanel>
                         <Grid Grid.Row="2">
-                            <ListBox x:Name="devicesOnPlace" ItemsSource="{Binding Path=TypeDeviceCollection}">
+                            <ListBox x:Name="devicesOnPlace" ItemsSource="{Binding Path=TypeDeviceCollection, UpdateSourceTrigger=PropertyChanged}" Height="400" Margin="1,5">
                                 <ListBox.Style>
                                     <Style TargetType="ListBox" BasedOn="{StaticResource list-box-no-selected}">
                                         <Setter Property="ItemTemplate">
@@ -83,7 +83,7 @@
                                                 <DataTemplate>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="300"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Grid.Resources>
@@ -94,9 +94,11 @@
                                                         <!-- В первом выбирается тип, во втором устройство (не обязательно)
                                                         Список устройств подгружается при выборе типа или определяется автоматически если тип не выбран -->
                                                         <ComboBox x:Name="__type" DisplayMemberPath="Name" SelectionChanged="Type_SelectionChanged"
-                                                          SelectedItem="{Binding Path=TypeDevice}" Style="{DynamicResource box}"/>
-                                                        <ComboBox x:Name="__order" Grid.Column="1" DisplayMemberPath="Name" 
-                                                          SelectedItem="{Binding Path=Device}" Style="{DynamicResource box}"/>
+                                                          SelectedItem="{Binding Path=TypeDevice}" Style="{DynamicResource box}" 
+                                                                  ItemsSource="{x:Static local:TypeDeviceNames.Collection}"/>
+                                                        <ComboBox x:Name="__device" Grid.Column="1" DisplayMemberPath="Наименование" 
+                                                          SelectedItem="{Binding Path=Row}" Style="{DynamicResource box}"
+                                                                  ItemsSource="{Binding Path=Table.Rows, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </Setter.Value>
@@ -106,7 +108,28 @@
                             </ListBox>
                         </Grid>
                     </Grid>
-                    <Grid DockPanel.Dock="Top" x:Name="plugGrid"/>
+                    <Separator DockPanel.Dock="Top"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                                        Height="35" Margin="0" DockPanel.Dock="Bottom">
+                        <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True" Content="Отмена" Click="Cancel_Click"/>
+                        <Button Width="100" IsDefault="True" Content="Создать" Click="SaveChanges_Click">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource primary-button}">
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding ElementName=placeName, Path=Text}" Value=""/>
+                                                <Condition Binding="{Binding ElementName=devicesOnPlace, Path=Items.Count}" Value="0"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <MultiDataTrigger.Setters>
+                                                <Setter Property="IsEnabled" Value="False"/>
+                                            </MultiDataTrigger.Setters>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
                 </DockPanel>
             </Grid>
             <StatusBar Grid.Row="2">
