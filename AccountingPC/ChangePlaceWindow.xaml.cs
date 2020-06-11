@@ -55,6 +55,7 @@ namespace AccountingPC
                     container.Loaded += Container_Loaded;
                 }
             }
+            devicesOnPlace.ItemsSource = CurrentPlace.TypeDeviceCollection;
         }
 
         private void Container_Loaded(object sender, RoutedEventArgs e)
@@ -62,9 +63,15 @@ namespace AccountingPC
             FrameworkElement element = (FrameworkElement)sender;
             element.Loaded -= Container_Loaded;
 
-            //Grid grid = VisualTreeHelper.GetChild(element, 0) as Grid;
+            //if (VisualTreeHelper.GetChildrenCount(element) > 0)
+            //{
+            //    Border border = VisualTreeHelper.GetChild(element, 0) as Border;
 
-            SetSourceForDevice();
+            //    SetSourceForDevice(border);
+            //}
+
+            SetSourceForDevice(element);
+            //SetSourceForDevice();
         }
 
         private void SetSourceForDevice()
@@ -84,7 +91,58 @@ namespace AccountingPC
                     deviceBox.ItemsSource = ((TypeDeviceOnPlace)item).Table.DefaultView;
                     foreach (DataRowView rowView in deviceBox.ItemsSource)
                     {
-                        if (Convert.ToInt32(rowView.Row["ID"]) == ((TypeDeviceOnPlace)item)?.Device?.ID) 
+                        if (Convert.ToInt32(rowView.Row["ID"]) == ((TypeDeviceOnPlace)item)?.Device?.ID)
+                        {
+                            deviceBox.SelectedItem = rowView;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetSourceForDevice(int i)
+        {
+            object item = devicesOnPlace.Items[i];
+            ListBoxItem listBoxItem = (ListBoxItem)(devicesOnPlace?.ItemContainerGenerator?.ContainerFromItem(item));
+            ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
+            DataTemplate template = contentPresenter?.ContentTemplate;
+            if (template != null)
+            {
+                //ComboBox typeBox = (ComboBox)template?.FindName("__type", contentPresenter);
+                ComboBox deviceBox = (ComboBox)template?.FindName("__device", contentPresenter);
+
+                //typeBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
+                deviceBox.ItemsSource = ((TypeDeviceOnPlace)item).Table.DefaultView;
+                foreach (DataRowView rowView in deviceBox.ItemsSource)
+                {
+                    if (Convert.ToInt32(rowView.Row["ID"]) == ((TypeDeviceOnPlace)item)?.Device?.ID)
+                    {
+                        deviceBox.SelectedItem = rowView;
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void SetSourceForDevice(FrameworkElement element)
+        {
+            //ListBoxItem listBoxItem = (ListBoxItem)(devicesOnPlace?.ItemContainerGenerator?.ContainerFromItem(element));
+            //ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
+            ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(element);
+            DataTemplate template = contentPresenter?.ContentTemplate;
+            if (template != null)
+            {
+                //ComboBox typeBox = (ComboBox)template?.FindName("__type", contentPresenter);
+                ComboBox deviceBox = (ComboBox)template?.FindName("__device", contentPresenter);
+
+                //typeBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
+                if (deviceBox != null)
+                {
+                    deviceBox.ItemsSource = ((TypeDeviceOnPlace)element.DataContext).Table.DefaultView;
+                    foreach (DataRowView rowView in deviceBox.ItemsSource)
+                    {
+                        if (Convert.ToInt32(rowView.Row["ID"]) == ((TypeDeviceOnPlace)element.DataContext)?.Device?.ID)
                         {
                             deviceBox.SelectedItem = rowView;
                             break;
@@ -152,9 +210,9 @@ namespace AccountingPC
                         {
                             while (reader.Read())
                             {
-                                if (reader["ID"].GetType() != typeof(DBNull))
+                                if (reader["ID"].GetType() != typeof(DBNull)) // если место занято
                                 {
-                                    TypeDeviceOnPlace temp = new TypeDeviceOnPlace()
+                                    TypeDeviceOnPlace temp = new TypeDeviceOnPlace(CurrentPlace)
                                     {
                                         PlaceID = Convert.ToInt32(reader["PlaceID"]),
                                         TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
@@ -172,19 +230,11 @@ namespace AccountingPC
                                             break;
                                         }
                                     }
-                                    //for (int i = 0; i < temp.Table.DefaultView.Count; i++)
-                                    //{
-                                    //    if (Convert.ToInt32(temp.Table.DefaultView.[i]["ID"]) == Convert.ToInt32(reader["ID"]))
-                                    //    {
-                                    //        temp.Row = temp.Table.Rows[i];
-                                    //        break;
-                                    //    }
-                                    //}
                                     CurrentPlace.TypeDeviceCollection.Add(temp);
                                 }
                                 else
                                 {
-                                    CurrentPlace.TypeDeviceCollection.Add(new TypeDeviceOnPlace()
+                                    CurrentPlace.TypeDeviceCollection.Add(new TypeDeviceOnPlace(CurrentPlace)
                                     {
                                         PlaceID = Convert.ToInt32(reader["PlaceID"]),
                                         TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
@@ -221,7 +271,7 @@ namespace AccountingPC
 
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            SetSourceForDevice(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(sender as ComboBox)))) as ListBoxItem);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -235,7 +285,70 @@ namespace AccountingPC
 
         private void SaveChanges_Click(object sender, RoutedEventArgs e)
         {
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}").ExecuteNonQuery();
+                int count = CurrentPlace.TypeDeviceRemovedCollection.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    TypeDeviceOnPlace temp = CurrentPlace.TypeDeviceRemovedCollection[i];
+                    if (temp.Row != null) 
+                    {
+                        new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}").ExecuteNonQuery();
+                    }
+                    if (temp.PlaceID != 0)
+                    {
+                        if (temp.IsRemoved)
+                        {
+                            new SqlCommand($"Delete from Place Where ID={temp.PlaceID}").ExecuteNonQuery();
+                        }
+                    }
+                }
 
+                count = CurrentPlace.TypeDeviceCollection.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    TypeDeviceOnPlace temp = CurrentPlace.TypeDeviceCollection[i];
+                    if (temp.PlaceID != 0)
+                    {
+                        new SqlCommand($"Update Place set TypeDeviceID=dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}') Where ID={temp.PlaceID}").ExecuteNonQuery();
+                        if (temp.Row != null) // устройство
+                        {
+                            new SqlCommand($"Update {temp.Row["TypeDevice"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}").ExecuteNonQuery();
+                            // проверить id!=0
+                            // если да то добавить в бд
+                            // найти есть ли устройство на этом месте
+                            // если есть удалить у него PlaceID (присвоить null)
+                            // [GetDeviceOnPlaceID], TableName взять из temp.TypeDevice
+                            // при этом учитывать старый и новый тип устройсива (его тоже изменить)
+                            // установить для temp.Row в бд PlaceID=temp.PlaceID
+
+                        }
+                    }
+                    else
+                    {
+                        SqlCommand command = new SqlCommand($"dbo.[AddLocation]")
+                        {
+                            CommandType = CommandType.StoredProcedure,
+                        };
+                        command.Parameters.Add(new SqlParameter("@AudienceTableID", AudienceTableID));
+                        command.Parameters.Add(new SqlParameter("@TypeDeviceID", 
+                            Convert.ToInt32(new SqlCommand($"Select dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}')").ExecuteScalar())));
+                        SqlParameter parameter = new SqlParameter
+                        {
+                            ParameterName = "@PlaceID",
+                            Direction = ParameterDirection.Output
+                        };
+                        command.Parameters.Add(parameter);
+                        command.ExecuteNonQuery();
+                        int PID = Convert.ToInt32(command.Parameters["@PlaceID"].Value);
+                        if (temp.Row != null) // устройство
+                        {
+                            new SqlCommand($"Update {temp.Row["TypeDevice"]} set PlaceID={PID} Where ID={temp.Row["ID"]}").ExecuteNonQuery();
+                        }
+                    }
+                }
+            }
         }
     }
 }

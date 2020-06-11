@@ -24,8 +24,8 @@
                 <DockPanel Margin="5,10,5,5">
                     <Grid DockPanel.Dock="Top" Height="30">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="120"/>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Название" VerticalAlignment="Center"/>
                         <TextBox Grid.Column="2" x:Name="placeName" Style="{DynamicResource text-box}" VerticalAlignment="Center" Text="{Binding Path=Name}"/>
@@ -75,7 +75,7 @@
                             </Button>
                         </StackPanel>
                         <Grid Grid.Row="2">
-                            <ListBox x:Name="devicesOnPlace" ItemsSource="{Binding Path=TypeDeviceCollection, UpdateSourceTrigger=PropertyChanged}" Height="400" Margin="1,5">
+                            <ListBox x:Name="devicesOnPlace" Height="400" Margin="1,5"><!--ItemsSource="{Binding Path=TypeDeviceCollection}"-->
                                 <ListBox.Style>
                                     <Style TargetType="ListBox" BasedOn="{StaticResource list-box-no-selected}">
                                         <Setter Property="ItemTemplate">
@@ -83,7 +83,7 @@
                                                 <DataTemplate>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="300"/>
+                                                            <ColumnDefinition Width="250"/>
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Grid.Resources>
@@ -96,9 +96,9 @@
                                                         <ComboBox x:Name="__type" DisplayMemberPath="Name" SelectionChanged="Type_SelectionChanged"
                                                           SelectedItem="{Binding Path=TypeDevice}" Style="{DynamicResource box}" 
                                                                   ItemsSource="{x:Static local:TypeDeviceNames.Collection}"/>
-                                                        <ComboBox x:Name="__device" Grid.Column="1" DisplayMemberPath="Наименование" 
+                                                        <ComboBox x:Name="__device" Grid.Column="1" DisplayMemberPath="FullName" 
                                                           SelectedItem="{Binding Path=Row}" Style="{DynamicResource box}"
-                                                                  ItemsSource="{Binding Path=Table.Rows, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                  ItemsSource="{Binding Path=Table.DefaultView, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </Setter.Value>

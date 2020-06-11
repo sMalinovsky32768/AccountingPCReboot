@@ -75,7 +75,7 @@ namespace AccountingPC.AccountingReport
             FrameworkElement element = (FrameworkElement)sender;
             element.Loaded -= Container_Loaded;
 
-            Grid grid = VisualTreeHelper.GetChild(element, 0) as Grid;
+            //Grid grid = VisualTreeHelper.GetChild(element, 0) as Grid;
 
             SetSourceForSorting();
         }

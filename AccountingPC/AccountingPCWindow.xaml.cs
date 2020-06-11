@@ -585,6 +585,11 @@ namespace AccountingPC
                 equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
             }
 
+            if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("PlaceID"))
+            {
+                equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("PlaceID")].Visibility = Visibility.Collapsed;
+            }
+
             equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("ImageID")].Visibility = Visibility.Collapsed;
 
             ((DataGridTextColumn)equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.
@@ -613,6 +618,11 @@ namespace AccountingPC
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("VideoConnectors"))
             {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("VideoConnectors")].Visibility = Visibility.Collapsed;
+            }
+
+            if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("PlaceID"))
+            {
+                equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("PlaceID")].Visibility = Visibility.Collapsed;
             }
 
             if (((DataView)grid.ItemsSource).Table.Columns.Contains("ImageID"))

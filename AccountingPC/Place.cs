@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -19,7 +20,7 @@ namespace AccountingPC
 
     internal static class TypeDeviceNames
     {
-        private static readonly List<TypeDeviceName> collection = new List<TypeDeviceName>()
+        public static List<TypeDeviceName> Collection { get; } = new List<TypeDeviceName>()
         {
             new TypeDeviceName()
             {
@@ -67,7 +68,6 @@ namespace AccountingPC
                 Name = "Экран для проектора",
             },
         };
-        public static List<TypeDeviceName> Collection => collection;
 
         public static TypeDeviceName GetTypeDeviceName(TypeDevice type)
         {
@@ -140,7 +140,18 @@ namespace AccountingPC
             get => row;
             set
             {
+                bool i = row != null;
                 row = value;
+                if (i && !Place.TypeDeviceRemovedCollection.Contains(this)) 
+                {
+                    Place.TypeDeviceRemovedCollection.Add(new TypeDeviceOnPlace(Place)
+                    {
+                        PlaceID = PlaceID,
+                        TypeDevice = TypeDevice,
+                        Device = Device,
+                        Row = Row,
+                    });
+                }
                 OnPropertyChanged();
             }
         }
@@ -154,9 +165,12 @@ namespace AccountingPC
                 OnPropertyChanged();
             }
         }
-        public TypeDeviceOnPlace()
+        internal Place Place { get; set; }
+
+        public TypeDeviceOnPlace(Place place)
         {
             TypeDeviceChanged += TypeDeviceOnPlace_TypeDeviceChanged;
+            Place = place;
         }
 
         private void TypeDeviceOnPlace_TypeDeviceChanged()
@@ -165,39 +179,48 @@ namespace AccountingPC
             {
                 case AccountingPC.TypeDevice.InteractiveWhiteboard:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllBoard()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllBoardWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllBoardWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.Monitor:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllMonitor()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllMonitorWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllMonitorWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.NetworkSwitch:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllNetworkSwitch()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNetworkSwitchWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNetworkSwitchWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.Notebook:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllNotebook()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNotebookWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNotebookWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.OtherEquipment:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllOtherEquipment()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllOtherEquipmentWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllOtherEquipmentWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.PC:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllPC()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPCWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPCWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.PrinterScanner:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllPrinterScanner()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPrinterScannerWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPrinterScannerWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.Projector:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllProjector()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjectorWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjector() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.ProjectorScreen:
                     Table = new DataTable();
-                    new SqlDataAdapter("Select ID, [Наименование] from dbo.GetAllScreen()", ConnectionString).Fill(Table);
+                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreenWithFullName()", ConnectionString).Fill(Table);
+                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreen() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
             }
         }
@@ -211,31 +234,40 @@ namespace AccountingPC
 
     internal class Place : INotifyPropertyChanged
     {
+        private string name;
+        private ObservableCollection<TypeDeviceOnPlace> typeDeviceCollection = new ObservableCollection<TypeDeviceOnPlace>();
+        private ObservableCollection<TypeDeviceOnPlace> typeDeviceRemovedCollection = new ObservableCollection<TypeDeviceOnPlace>();
+
         private AccountingCommand addTypeDevice;
         public AccountingCommand AddTypeDevice => addTypeDevice ??
-            (addTypeDevice = new AccountingCommand(obj =>
-            {
-                TypeDeviceCollection.Add(new TypeDeviceOnPlace());
-            },
-            (obj) =>
-            {
-                return true;
-            }
+            (addTypeDevice = new AccountingCommand(
+                obj =>
+                {
+                    TypeDeviceCollection.Add(new TypeDeviceOnPlace(this));
+                },
+                (obj) =>
+                {
+                    return true;
+                }
             ));
 
         private AccountingCommand delTypeDevice;
-        private string name;
-        private List<TypeDeviceOnPlace> typeDeviceCollection = new List<TypeDeviceOnPlace>();
-
         public AccountingCommand DelTypeDevice => delTypeDevice ??
-            (delTypeDevice = new AccountingCommand(obj =>
-            {
-                ((TypeDeviceOnPlace)obj).IsRemoved = true;
-            },
-            (obj) =>
-            {
-                return true;
-            }
+            (delTypeDevice = new AccountingCommand(
+                obj =>
+                {
+                    TypeDeviceOnPlace temp = (TypeDeviceOnPlace)obj;
+                    temp.IsRemoved = true;
+                    TypeDeviceRemovedCollection.Add(temp);
+                    TypeDeviceCollection.Remove(temp);
+                    //((TypeDeviceOnPlace)obj).IsRemoved = true;
+                },
+                (obj) =>
+                {
+                    if (obj != null)
+                        return true;
+                    return false;
+                }
             ));
 
         public int ID { get; set; }
@@ -248,12 +280,21 @@ namespace AccountingPC
                 OnPropertyChanged();
             }
         }
-        public List<TypeDeviceOnPlace> TypeDeviceCollection 
+        public ObservableCollection<TypeDeviceOnPlace> TypeDeviceCollection
         {
             get => typeDeviceCollection;
             set
             {
                 typeDeviceCollection = value;
+                OnPropertyChanged();
+            }
+        }
+        public ObservableCollection<TypeDeviceOnPlace> TypeDeviceRemovedCollection
+        {
+            get => typeDeviceRemovedCollection;
+            set
+            {
+                typeDeviceRemovedCollection = value;
                 OnPropertyChanged();
             }
         }
