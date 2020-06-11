@@ -143,6 +143,7 @@
     <Compile Include="Place.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Software.cs" />
+    <Compile Include="TypeDeviceOnPlace.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

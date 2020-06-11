@@ -626,7 +626,7 @@
                                               ToolTip="Совпадают по имени и цене"/>
                                     </StackPanel>
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                        <Button Content="Сохранить" Style="{DynamicResource default-button}" Margin="5" Padding="10 5" Click="SaveChanges"/>
+                                        <Button Content="Сохранить" Style="{DynamicResource default-button}" Margin="5" Padding="10 5" Click="SaveChanges" x:Name="saveButton"/>
                                     </StackPanel>
                                 </Grid>
                             </Grid>

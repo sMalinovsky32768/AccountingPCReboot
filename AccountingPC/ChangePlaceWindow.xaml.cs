@@ -192,8 +192,10 @@ namespace AccountingPC
             switch (Accounting.TypeChange)
             {
                 case TypeChange.Add:
+                    saveButton.Content = "Добавить";
                     break;
                 case TypeChange.Change:
+                    saveButton.Content = "Изменить";
                     AudienceID = Accounting.AudienceID;
                     AudienceTableID = Accounting.AudienceTableID;
                     string commandString;
@@ -202,7 +204,7 @@ namespace AccountingPC
                     {
                         connection.Open();
                         CurrentPlace.ID = AudienceTableID;
-                        commandString = $"SELECT [Место] FROM [dbo].[GetAllLocationInAudience]({AudienceID}) Where ID={AudienceTableID}";
+                        commandString = $"SELECT [Name] FROM [dbo].[GetAllLocationInAudience]({AudienceID}) Where ID={AudienceTableID}";
                         CurrentPlace.Name = new SqlCommand(commandString, connection).ExecuteScalar().ToString();
                         commandString = $"SELECT * FROM dbo.GetAllTypeAndDeviceOnPlace({AudienceTableID})";
                         reader = new SqlCommand(commandString, connection).ExecuteReader();
@@ -212,16 +214,25 @@ namespace AccountingPC
                             {
                                 if (reader["ID"].GetType() != typeof(DBNull)) // если место занято
                                 {
-                                    TypeDeviceOnPlace temp = new TypeDeviceOnPlace(CurrentPlace)
-                                    {
-                                        PlaceID = Convert.ToInt32(reader["PlaceID"]),
-                                        TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
-                                        Device = new DeviceOnPlace
+                                    TypeDeviceOnPlace temp = new TypeDeviceOnPlace(
+                                        TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
+                                        null, 
+                                        new DeviceOnPlace
                                         {
                                             ID = Convert.ToInt32(reader["ID"]),
                                             Name = reader["FullName"].ToString(),
                                         },
-                                    };
+                                        Convert.ToInt32(reader["PlaceID"]),
+                                        CurrentPlace);
+                                    //{
+                                    //    PlaceID = Convert.ToInt32(reader["PlaceID"]),
+                                    //    TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
+                                    //    Device = new DeviceOnPlace
+                                    //    {
+                                    //        ID = Convert.ToInt32(reader["ID"]),
+                                    //        Name = reader["FullName"].ToString(),
+                                    //    },
+                                    //};
                                     foreach(DataRowView rowView in temp.Table.DefaultView)
                                     {
                                         if (Convert.ToInt32(rowView.Row["ID"]) == Convert.ToInt32(reader["ID"]))
@@ -234,11 +245,16 @@ namespace AccountingPC
                                 }
                                 else
                                 {
-                                    CurrentPlace.TypeDeviceCollection.Add(new TypeDeviceOnPlace(CurrentPlace)
-                                    {
-                                        PlaceID = Convert.ToInt32(reader["PlaceID"]),
-                                        TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
-                                    });
+                                    CurrentPlace.TypeDeviceCollection.Add(new TypeDeviceOnPlace(
+                                        TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
+                                        null,
+                                        null,
+                                        Convert.ToInt32(reader["PlaceID"]),
+                                        CurrentPlace));
+                                    //{
+                                    //    PlaceID = Convert.ToInt32(reader["PlaceID"]),
+                                    //    TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
+                                    //});
                                 }
                             }
                         }
@@ -287,20 +303,21 @@ namespace AccountingPC
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}").ExecuteNonQuery();
+                connection.Open();
+                new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}", connection).ExecuteNonQuery();
                 int count = CurrentPlace.TypeDeviceRemovedCollection.Count;
                 for (int i = 0; i < count; i++)
                 {
                     TypeDeviceOnPlace temp = CurrentPlace.TypeDeviceRemovedCollection[i];
                     if (temp.Row != null) 
                     {
-                        new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}").ExecuteNonQuery();
+                        new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}", connection).ExecuteNonQuery();
                     }
                     if (temp.PlaceID != 0)
                     {
                         if (temp.IsRemoved)
                         {
-                            new SqlCommand($"Delete from Place Where ID={temp.PlaceID}").ExecuteNonQuery();
+                            new SqlCommand($"Delete from Place Where ID={temp.PlaceID}", connection).ExecuteNonQuery();
                         }
                     }
                 }
@@ -311,10 +328,10 @@ namespace AccountingPC
                     TypeDeviceOnPlace temp = CurrentPlace.TypeDeviceCollection[i];
                     if (temp.PlaceID != 0)
                     {
-                        new SqlCommand($"Update Place set TypeDeviceID=dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}') Where ID={temp.PlaceID}").ExecuteNonQuery();
+                        new SqlCommand($"Update Place set TypeDeviceID=dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}') Where ID={temp.PlaceID}", connection).ExecuteNonQuery();
                         if (temp.Row != null) // устройство
                         {
-                            new SqlCommand($"Update {temp.Row["TypeDevice"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}").ExecuteNonQuery();
+                            new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}", connection).ExecuteNonQuery();
                             // проверить id!=0
                             // если да то добавить в бд
                             // найти есть ли устройство на этом месте
@@ -327,28 +344,32 @@ namespace AccountingPC
                     }
                     else
                     {
-                        SqlCommand command = new SqlCommand($"dbo.[AddLocation]")
+                        SqlCommand command = new SqlCommand($"AddLocation", connection)
                         {
                             CommandType = CommandType.StoredProcedure,
                         };
                         command.Parameters.Add(new SqlParameter("@AudienceTableID", AudienceTableID));
                         command.Parameters.Add(new SqlParameter("@TypeDeviceID", 
-                            Convert.ToInt32(new SqlCommand($"Select dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}')").ExecuteScalar())));
+                            Convert.ToInt32(new SqlCommand($"Select dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}')", connection).ExecuteScalar())));
                         SqlParameter parameter = new SqlParameter
                         {
                             ParameterName = "@PlaceID",
-                            Direction = ParameterDirection.Output
+                            Direction = ParameterDirection.Output,
+                            DbType = DbType.Int32,
                         };
                         command.Parameters.Add(parameter);
                         command.ExecuteNonQuery();
                         int PID = Convert.ToInt32(command.Parameters["@PlaceID"].Value);
                         if (temp.Row != null) // устройство
                         {
-                            new SqlCommand($"Update {temp.Row["TypeDevice"]} set PlaceID={PID} Where ID={temp.Row["ID"]}").ExecuteNonQuery();
+                            new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID={PID} Where ID={temp.Row["ID"]}", connection).ExecuteNonQuery();
                         }
                     }
                 }
             }
+            Accounting.IsHitTestVisible = true;
+            Accounting.ChangeLocationView();
+            Close();
         }
     }
 }

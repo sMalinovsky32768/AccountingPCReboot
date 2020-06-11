@@ -112,7 +112,7 @@
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
                                         Height="35" Margin="0" DockPanel.Dock="Bottom">
                         <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True" Content="Отмена" Click="Cancel_Click"/>
-                        <Button Width="100" IsDefault="True" Content="Создать" Click="SaveChanges_Click">
+                        <Button Width="100" IsDefault="True" Content="Создать" Click="SaveChanges_Click" x:Name="saveButton">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource primary-button}">
                                     <Style.Triggers>

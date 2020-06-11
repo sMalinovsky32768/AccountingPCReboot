@@ -108,6 +108,15 @@ namespace AccountingPC
         {
             //Accounting.Hide();
             Accounting.IsHitTestVisible = false;
+            switch (Accounting.TypeChange)
+            {
+                case TypeChange.Add:
+                    saveButton.Content = "Добавить";
+                    break;
+                case TypeChange.Change:
+                    saveButton.Content = "Изменить";
+                    break;
+            }
             ChangeView();
         }
 

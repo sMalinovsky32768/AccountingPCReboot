@@ -676,6 +676,10 @@ namespace AccountingPC
             {
                 grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
             }
+            if (((DataView)grid.ItemsSource).Table.Columns.Contains("Name"))
+            {
+                grid.Columns[((DataView)grid.ItemsSource).Table.Columns.IndexOf("Name")].Visibility = Visibility.Collapsed;
+            }
         }
 
         private void DevicesOnPlace_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -698,12 +702,15 @@ namespace AccountingPC
 
         private void AddPlace(object sender, RoutedEventArgs e)
         {
-
+            TypeChange = TypeChange.Add;
+            new ChangePlaceWindow(this).Show();
         }
 
         private void DeletePlace(object sender, RoutedEventArgs e)
         {
-
+            //удалить все Place
+            //удалить сам стол
+            //
         }
 
         private void ChangePlace(object sender, RoutedEventArgs e)
