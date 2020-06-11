@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,9 +14,6 @@ using System.Windows.Threading;
 
 namespace AccountingPC.AccountingReport
 {
-    /// <summary>
-    /// Interaction logic for ConfiguringReportWindow.xaml
-    /// </summary>
     public partial class ConfiguringReportWindow : Window
     {
         internal Report CurrentReport { get; set; }
@@ -75,35 +73,7 @@ namespace AccountingPC.AccountingReport
             FrameworkElement element = (FrameworkElement)sender;
             element.Loaded -= Container_Loaded;
 
-            //Grid grid = VisualTreeHelper.GetChild(element, 0) as Grid;
-
             SetSourceForSorting();
-        }
-
-        public void UpdateReportConfig()
-        {
-            if (CurrentReport.Options.TypeReport != TypeReport.Full)
-            {
-                selectionColumnGrid.IsEnabled = true;
-                selectionSortingParamGrid.IsEnabled = true;
-
-                //unusedColumn.ItemsSource = CurrentReport.UnusedReportColumns;
-                //unusedColumn.DisplayMemberPath = "Name";
-
-                //usedColumn.ItemsSource = CurrentReport.UsedReportColumns;
-                //usedColumn.DisplayMemberPath = "Name";
-
-                //SetSourceForSorting();
-            }
-            else
-            {
-                //unusedColumn.ItemsSource = null;
-                //usedColumn.ItemsSource = null;
-                //sortingParamsList.ItemsSource = null;
-
-                //selectionColumnGrid.IsEnabled = false;
-                //selectionSortingParamGrid.IsEnabled = false;
-            }
         }
 
         private childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
@@ -131,37 +101,11 @@ namespace AccountingPC.AccountingReport
             return null;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetSourceForSorting()
         {
             ObservableCollection<ReportColumnName> relations = new ObservableCollection<ReportColumnName>();
             ObservableCollection<OrderName> orderNames = new ObservableCollection<OrderName>();
-            //foreach (object item in sortingParamsList.Items)
-            //{
-            //    ListBoxItem listBoxItem = (ListBoxItem)(sortingParamsList?.ItemContainerGenerator?.ContainerFromItem(item));
-            //    ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
-            //    DataTemplate template = contentPresenter?.ContentTemplate;
-            //    if (template != null)
-            //    {
-            //        ComboBox colBox = (ComboBox)template?.FindName("col", contentPresenter);
-            //        ComboBox orderBox = (ComboBox)template?.FindName("order", contentPresenter);
-
-            //        colBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
-            //        orderBox.ItemsSource = OrderNameCollection.Collection;
-            //        //orderBox.ItemsSource = SortOrderRelation.OrderNames.Except(orderNames);
-            //        if (colBox.SelectedItem != null)
-            //        {
-            //            relations.Add((ReportColumnName)colBox.SelectedItem);
-            //        }
-            //        if (orderBox.SelectedItem != null)
-            //        {
-            //            orderNames.Add((OrderName)orderBox.SelectedItem);
-            //        }
-            //    }
-            //    else
-            //    {
-            //        //listBoxItem.Visibility = Visibility.Collapsed;
-            //    }
-            //}
             for (int i = 0; i < sortingParamsList.Items.Count; i++)
             {
                 object item = sortingParamsList.Items[i];
@@ -190,7 +134,7 @@ namespace AccountingPC.AccountingReport
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();// Для перемещение окна
+            DragMove();
         }
 
         private void TypeReportChangedEventHandler()
@@ -232,14 +176,6 @@ namespace AccountingPC.AccountingReport
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //foreach (ReportName reportName in ((ObservableCollection<ReportName>)typeReportBox.ItemsSource))
-            //{
-            //    if (CurrentReport.Options.TypeReport == reportName.Type)
-            //    {
-            //        typeReportBox.SelectedItem = reportName;
-            //        return;
-            //    }
-            //}
             for (int i = 0; i < ((ObservableCollection<ReportName>)typeReportBox.ItemsSource).Count; i++)
             {
                 ReportName reportName = ((ObservableCollection<ReportName>)typeReportBox.ItemsSource)[i];
@@ -249,8 +185,6 @@ namespace AccountingPC.AccountingReport
                     return;
                 }
             }
-
-            UpdateReportConfig();
         }
 
         private void CreateReport_Click(object sender, RoutedEventArgs e)
@@ -263,10 +197,8 @@ namespace AccountingPC.AccountingReport
                         IsBackground = false,
                     };
                     save.Start(GetFileName());
-                    //SaveReport();
                     break;
                 case CreateReportOptions.OpenExcel:
-                    //OpenReport();
                     Thread open = new Thread(new ThreadStart(OpenReport))
                     {
                         IsBackground = false,
@@ -315,12 +247,15 @@ namespace AccountingPC.AccountingReport
             CurrentReport.Options.CreateOptions = CreateReportOptions.Preview;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private string GetFileName()
         {
             Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog
             {
-                Filter = "XLSX files (*.xlsx, *.xlsm, *.xltx, *.xltm)|*.xlsx;*.xlsm;*.xltx;*.xltm|XLS files (*.xls, *.xlt)|*.xls;*.xlt|ODS files (*.ods, *.ots)|*.ods;*.ots|CSV files (*.csv, *.tsv)|*.csv;*.tsv|HTML files (*.html, *.htm)|*.html;*.htm|Portable Document Format|*.pdf",
-                //Filter = "SpreadSheet|*.xlsx;*.xls;*.csv;*.ods|Portable Document Format|*.pdf|HTML|*.html|Image|*.png;*.jpg;*.gif;.*bmp",
+                Filter = "XLSX files (*.xlsx, *.xlsm, *.xltx, *.xltm)|*.xlsx;*.xlsm;*.xltx;*.xltm|"
+                         + "XLS files (*.xls, *.xlt)|*.xls;*.xlt|ODS files (*.ods, *.ots)|*.ods;*.ots|"
+                         + "CSV files (*.csv, *.tsv)|*.csv;*.tsv|HTML files (*.html, *.htm)|*.html;*.htm|"
+                         + "Portable Document Format|*.pdf",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                 FileName = $"Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx"
             };
@@ -332,6 +267,7 @@ namespace AccountingPC.AccountingReport
             return dialog.FileName;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void OpenReport()
         {
             fileName = $@"{Path.GetTempPath()}Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx";
@@ -353,6 +289,7 @@ namespace AccountingPC.AccountingReport
             task.Start();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SaveReport(string fileName)
         {
             try
@@ -368,6 +305,7 @@ namespace AccountingPC.AccountingReport
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SaveReport(object fileName)
         {
             try
@@ -387,6 +325,7 @@ namespace AccountingPC.AccountingReport
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PrintReport()
         {
             Task task = new Task(() =>
@@ -399,6 +338,7 @@ namespace AccountingPC.AccountingReport
             task.Start();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void PreviewReport()
         {
             Task task = new Task(() =>
@@ -413,18 +353,18 @@ namespace AccountingPC.AccountingReport
 
         private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            //toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.Parse("01.01.2000"), (DateTime)e.AddedItems[0]));
             toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, (DateTime)e.AddedItems[0]));
             toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddDays(1), DateTime.MaxValue));
         }
 
         private void ToDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            //fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.Today));
             fromDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, DateTime.Parse("31.12.1999")));
             fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.MaxValue));
         }
 
+
+        // учесть тип отчета
         private void Split_Checked(object sender, RoutedEventArgs e)
         {
             selectionColumnGrid.Visibility = Visibility.Collapsed;
@@ -434,23 +374,7 @@ namespace AccountingPC.AccountingReport
         {
             selectionColumnGrid.Visibility = Visibility.Visible;
         }
-    }
 
-    internal static class OpenExcel
-    {
-        private static readonly Process excel = new Process();
-        private static string fileName;
 
-        public static void Open(string fName)
-        {
-            fileName = fName;
-            excel.StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}");
-            excel.EnableRaisingEvents = true;
-            excel.Exited += (sender, e) => new FileInfo(fileName)?.Delete();
-            excel.Start();
-
-            //excel = Process.Start("excel.exe", $"/n {fileName}");
-            //excel.WaitForExit();
-        }
     }
 }

@@ -4,22 +4,13 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace AccountingPC
 {
-    /// <summary>
-    /// Interaction logic for ChangePlaceWindow.xaml
-    /// </summary>
     public partial class ChangePlaceWindow : Window
     {
         private static readonly string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -63,80 +54,17 @@ namespace AccountingPC
             FrameworkElement element = (FrameworkElement)sender;
             element.Loaded -= Container_Loaded;
 
-            //if (VisualTreeHelper.GetChildrenCount(element) > 0)
-            //{
-            //    Border border = VisualTreeHelper.GetChild(element, 0) as Border;
-
-            //    SetSourceForDevice(border);
-            //}
-
             SetSourceForDevice(element);
-            //SetSourceForDevice();
-        }
-
-        private void SetSourceForDevice()
-        {
-            for (int i = 0; i < devicesOnPlace.Items.Count; i++)
-            {
-                object item = devicesOnPlace.Items[i];
-                ListBoxItem listBoxItem = (ListBoxItem)(devicesOnPlace?.ItemContainerGenerator?.ContainerFromItem(item));
-                ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
-                DataTemplate template = contentPresenter?.ContentTemplate;
-                if (template != null)
-                {
-                    //ComboBox typeBox = (ComboBox)template?.FindName("__type", contentPresenter);
-                    ComboBox deviceBox = (ComboBox)template?.FindName("__device", contentPresenter);
-
-                    //typeBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
-                    deviceBox.ItemsSource = ((TypeDeviceOnPlace)item).Table.DefaultView;
-                    foreach (DataRowView rowView in deviceBox.ItemsSource)
-                    {
-                        if (Convert.ToInt32(rowView.Row["ID"]) == ((TypeDeviceOnPlace)item)?.Device?.ID)
-                        {
-                            deviceBox.SelectedItem = rowView;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        private void SetSourceForDevice(int i)
-        {
-            object item = devicesOnPlace.Items[i];
-            ListBoxItem listBoxItem = (ListBoxItem)(devicesOnPlace?.ItemContainerGenerator?.ContainerFromItem(item));
-            ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
-            DataTemplate template = contentPresenter?.ContentTemplate;
-            if (template != null)
-            {
-                //ComboBox typeBox = (ComboBox)template?.FindName("__type", contentPresenter);
-                ComboBox deviceBox = (ComboBox)template?.FindName("__device", contentPresenter);
-
-                //typeBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
-                deviceBox.ItemsSource = ((TypeDeviceOnPlace)item).Table.DefaultView;
-                foreach (DataRowView rowView in deviceBox.ItemsSource)
-                {
-                    if (Convert.ToInt32(rowView.Row["ID"]) == ((TypeDeviceOnPlace)item)?.Device?.ID)
-                    {
-                        deviceBox.SelectedItem = rowView;
-                        break;
-                    }
-                }
-            }
         }
 
         private void SetSourceForDevice(FrameworkElement element)
         {
-            //ListBoxItem listBoxItem = (ListBoxItem)(devicesOnPlace?.ItemContainerGenerator?.ContainerFromItem(element));
-            //ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(listBoxItem);
             ContentPresenter contentPresenter = FindVisualChild<ContentPresenter>(element);
             DataTemplate template = contentPresenter?.ContentTemplate;
             if (template != null)
             {
-                //ComboBox typeBox = (ComboBox)template?.FindName("__type", contentPresenter);
                 ComboBox deviceBox = (ComboBox)template?.FindName("__device", contentPresenter);
 
-                //typeBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
                 if (deviceBox != null)
                 {
                     deviceBox.ItemsSource = ((TypeDeviceOnPlace)element.DataContext).Table.DefaultView;
@@ -159,9 +87,9 @@ namespace AccountingPC
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                    if (child != null && child is childItem)
+                    if (child != null && child is childItem item)
                     {
-                        return (childItem)child;
+                        return item;
                     }
                     else
                     {
@@ -224,15 +152,6 @@ namespace AccountingPC
                                         },
                                         Convert.ToInt32(reader["PlaceID"]),
                                         CurrentPlace);
-                                    //{
-                                    //    PlaceID = Convert.ToInt32(reader["PlaceID"]),
-                                    //    TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
-                                    //    Device = new DeviceOnPlace
-                                    //    {
-                                    //        ID = Convert.ToInt32(reader["ID"]),
-                                    //        Name = reader["FullName"].ToString(),
-                                    //    },
-                                    //};
                                     foreach(DataRowView rowView in temp.Table.DefaultView)
                                     {
                                         if (Convert.ToInt32(rowView.Row["ID"]) == Convert.ToInt32(reader["ID"]))
@@ -251,10 +170,6 @@ namespace AccountingPC
                                         null,
                                         Convert.ToInt32(reader["PlaceID"]),
                                         CurrentPlace));
-                                    //{
-                                    //    PlaceID = Convert.ToInt32(reader["PlaceID"]),
-                                    //    TypeDevice = TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice), reader["TypeName"].ToString())),
-                                    //});
                                 }
                             }
                         }
@@ -267,11 +182,8 @@ namespace AccountingPC
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //Accounting.Show();
             Accounting.IsHitTestVisible = true;
             Accounting.ChangeLocationView();
-            Accounting.viewGrid.IsEnabled = true;
-            Accounting.menu.IsEnabled = true;
             Close();
         }
 
@@ -287,15 +199,14 @@ namespace AccountingPC
 
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetSourceForDevice(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(sender as ComboBox)))) as ListBoxItem);
+            SetSourceForDevice(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(
+                VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(sender as ComboBox)))) as ListBoxItem);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Accounting.IsHitTestVisible = true;
             Accounting.ChangeLocationView();
-            Accounting.viewGrid.IsEnabled = true;
-            Accounting.menu.IsEnabled = true;
             Close();
         }
 
@@ -304,6 +215,23 @@ namespace AccountingPC
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
+                if (AudienceTableID == 0)
+                {
+                    SqlCommand command = new SqlCommand($"AddLocation", connection)
+                    {
+                        CommandType = CommandType.StoredProcedure,
+                    };
+                    command.Parameters.Add(new SqlParameter("@AudienceID", AudienceID));
+                    SqlParameter parameter = new SqlParameter
+                    {
+                        ParameterName = "@TableID",
+                        Direction = ParameterDirection.Output,
+                        DbType = DbType.Int32,
+                    };
+                    command.Parameters.Add(parameter);
+                    command.ExecuteNonQuery();
+                    AudienceTableID = Convert.ToInt32(command.Parameters["@TableID"].Value);
+                }
                 new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}", connection).ExecuteNonQuery();
                 int count = CurrentPlace.TypeDeviceRemovedCollection.Count;
                 for (int i = 0; i < count; i++)
@@ -311,7 +239,10 @@ namespace AccountingPC
                     TypeDeviceOnPlace temp = CurrentPlace.TypeDeviceRemovedCollection[i];
                     if (temp.Row != null) 
                     {
-                        new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}", connection).ExecuteNonQuery();
+                        object obj = new SqlCommand($"Select TOP(1) PlaceID from {temp.Row["TableName"]} Where ID={temp.Row["ID"]}", connection).ExecuteScalar();
+                        int id = Convert.ToInt32(obj.GetType() != typeof(DBNull) ? obj : 0);
+                        if (id == temp.PlaceID)
+                            new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}", connection).ExecuteNonQuery();
                     }
                     if (temp.PlaceID != 0)
                     {
@@ -332,13 +263,6 @@ namespace AccountingPC
                         if (temp.Row != null) // устройство
                         {
                             new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}", connection).ExecuteNonQuery();
-                            // проверить id!=0
-                            // если да то добавить в бд
-                            // найти есть ли устройство на этом месте
-                            // если есть удалить у него PlaceID (присвоить null)
-                            // [GetDeviceOnPlaceID], TableName взять из temp.TypeDevice
-                            // при этом учитывать старый и новый тип устройсива (его тоже изменить)
-                            // установить для temp.Row в бд PlaceID=temp.PlaceID
 
                         }
                     }

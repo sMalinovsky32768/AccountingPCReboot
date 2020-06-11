@@ -518,39 +518,6 @@
                                                             </ControlTemplate>
                                                         </Setter.Value>
                                                     </Setter>
-                                                    <!--<Setter Property="Button.Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Grid>
-                                                                <Border CornerRadius="5" BorderThickness="0" Name="btnBorder" 
-                                                                        Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}" 
-                                                                        Background="{DynamicResource surface-brush}" BorderBrush="{DynamicResource surface-brush}">
-                                                                    <Border.Effect>
-                                                                        <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
-                                                                    </Border.Effect>
-                                                                    <StackPanel>
-                                                                        <TextBlock x:Name="load_filename"/>
-                                                                        <
-                                                                    </StackPanel>
-                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                                                      TextElement.FontWeight="Bold" Name="btnContent" 
-                                                                                      TextElement.Foreground="{DynamicResource on-surface-brush}">
-                                                                    </ContentPresenter>
-                                                                </Border>
-                                                            </Grid>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="true">
-                                                                    <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
-                                                                    <Setter TargetName="btnBorder" Property="Effect">
-                                                                        <Setter.Value>
-                                                                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
-                                                                        </Setter.Value>
-                                                                    </Setter>
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>-->
                                                 </Style>
                                                 <Style x:Key="image-filename-text-box" TargetType="TextBox">
                                                     <Setter Property="TextBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
@@ -576,7 +543,6 @@
                                                                         <Border.Effect>
                                                                             <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
                                                                         </Border.Effect>
-                                                                        <!--Для отображения введенного текста-->
                                                                         <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                                                                     </Border>
                                                                 </Grid>
@@ -618,7 +584,7 @@
                                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
                                         <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
                                               VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" 
-                                              Checked="AutoInvN_Checked" Unchecked="autoInvN_Unchecked"/>
+                                              Checked="AutoInvN_Checked" Unchecked="AutoInvN_Unchecked"/>
                                         <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
                                               VerticalAlignment="Center" IsChecked="True" Checked="DisabledRepeatInvN_Checked" Unchecked="DisabledRepeatInvN_Unchecked"/>
                                         <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" VerticalAlignment="Center"
@@ -786,9 +752,6 @@
                 </Grid.ColumnDefinitions>
                 <StatusBar HorizontalContentAlignment="Left">
                     <StatusBarItem x:Name="statusItem1" HorizontalAlignment="Left"/>
-                    <!--<StatusBarItem HorizontalAlignment="Left">
-                        <CheckBox Content="блокировать" Checked="CheckBox_Checked" Unchecked="CheckBox_Unchecked"/>
-                    </StatusBarItem>-->
                 </StatusBar>
             </Grid>
         </Grid>

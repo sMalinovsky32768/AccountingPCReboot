@@ -72,15 +72,6 @@ namespace AccountingPC.AccountingReport
                         if (obj != null)
                         {
                             ReportColumnName columnName = obj as ReportColumnName;
-                            //foreach (ReportColumnName reportColumnName in UnusedReportColumns)
-                            //{
-                            //    if (reportColumnName == columnName)
-                            //    {
-                            //        SelectedUnusedColumn =
-                            //        UnusedReportColumns[UnusedReportColumns.IndexOf(columnName) < UnusedReportColumns.Count - 1 ?
-                            //        UnusedReportColumns.IndexOf(columnName) + 1 : 0];
-                            //    }
-                            //}
                             for (int i = 0; i < UnusedReportColumns.Count; i++)
                             {
                                 ReportColumnName reportColumnName = UnusedReportColumns[i];
@@ -121,15 +112,6 @@ namespace AccountingPC.AccountingReport
                         if (obj != null)
                         {
                             ReportColumnName columnName = obj as ReportColumnName;
-                            //foreach (ReportColumnName reportColumnName in UsedReportColumns)
-                            //{
-                            //    if (reportColumnName == columnName)
-                            //    {
-                            //        SelectedUsedColumn =
-                            //        UsedReportColumns[UsedReportColumns.IndexOf(columnName) < UsedReportColumns.Count - 1 ?
-                            //        UsedReportColumns.IndexOf(columnName) + 1 : 0];
-                            //    }
-                            //}
                             for (int i = 0; i < UsedReportColumns.Count; i++)
                             {
                                 ReportColumnName reportColumnName = UsedReportColumns[i];
@@ -141,14 +123,6 @@ namespace AccountingPC.AccountingReport
                                 }
                             }
                             SortingParam sortingParam = null;
-                            //foreach (SortingParam param in Options.SortingParamList)
-                            //{
-                            //    if (param.ColumnName.Column == columnName.Column)
-                            //    {
-                            //        sortingParam = param;
-                            //        break;
-                            //    }
-                            //}
                             for (int i = 0; i < Options.SortingParamList.Count; i++)
                             {
                                 SortingParam param = Options.SortingParamList[i];
@@ -194,19 +168,13 @@ namespace AccountingPC.AccountingReport
             Options.TypeReportChangedEvent += TypeChangedEventHandler;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeColumn()
         {
             UsedReportColumns = new ObservableCollection<ReportColumnName>();
             UnusedReportColumns = new ObservableCollection<ReportColumnName>();
             if (Options.TypeReport != TypeReport.Full)
             {
-                //foreach (ReportColumnName relation in ReportColumnNameCollection.Collection)
-                //{
-                //    if (ReportRelationCollection.Collection[Options.TypeReport].Columns.Contains(relation.Column))
-                //    {
-                //        UnusedReportColumns.Add(relation);
-                //    }
-                //}
                 for (int i = 0; i < ReportColumnNameCollection.Collection.Count; i++)
                 {
                     ReportColumnName relation = ReportColumnNameCollection.Collection[i];
@@ -244,10 +212,6 @@ namespace AccountingPC.AccountingReport
 
                 if (isFull)
                 {
-                    //foreach (ReportColumn column in relation.Columns)
-                    //{
-                    //    vs.Add(ReportColumnNameCollection.GetColumnName(column).Name);
-                    //}
                     for (int j = 0; j < relation.Columns.Count; j++)
                     {
                         vs.Add(ReportColumnNameCollection.GetColumnName(relation.Columns[j]).Name);
@@ -255,10 +219,6 @@ namespace AccountingPC.AccountingReport
                 }
                 else
                 {
-                    //foreach (ReportColumnName columnRelation in UsedReportColumns)
-                    //{
-                    //    vs.Add(ReportColumnNameCollection.GetColumnName(columnRelation.Column).Name);
-                    //}
                     for (int j = 0; j < UsedReportColumns.Count; j++)
                     {
                         vs.Add(ReportColumnNameCollection.GetColumnName(UsedReportColumns[j].Column).Name);
@@ -266,15 +226,6 @@ namespace AccountingPC.AccountingReport
                 }
 
                 int i = 0;
-                //foreach (string str in vs)
-                //{
-                //    commandText += $"[{str}]";
-                //    i++;
-                //    if (i < vs.Count)
-                //    {
-                //        commandText += ", ";
-                //    }
-                //}
                 for (int j = 0; j < vs.Count; j++)
                 {
                     commandText += $"[{vs[i]}]";
@@ -371,7 +322,7 @@ namespace AccountingPC.AccountingReport
                     string tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName + " " + table.Rows[z]["Name"].ToString();
 
                     set.Tables.Add(tableName);
-                    new SqlDataAdapter(CommandTextBuilder(isFull, Convert.ToInt32(table.Rows[z]["ID"])), ConnectionString).Fill(set, tableName); // добавить where audience 
+                    new SqlDataAdapter(CommandTextBuilder(isFull, Convert.ToInt32(table.Rows[z]["ID"])), ConnectionString).Fill(set, tableName); 
 
                     if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
                     {
@@ -414,10 +365,6 @@ namespace AccountingPC.AccountingReport
                     set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
                     set.Tables[tableName].Columns.Add("Видеоразъемы");
 
-                    //foreach (DataRow row in set.Tables[tableName].Rows)
-                    //{
-                    //    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
-                    //}
                     for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
                     {
                         set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
@@ -425,15 +372,6 @@ namespace AccountingPC.AccountingReport
                 }
 
                 int i = 0;
-                //foreach (ReportColumnName column in UsedReportColumns)
-                //{
-                //    if (set.Tables[tableName].Columns.Contains(column.Name))
-                //    {
-                //        set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
-                //        i++;
-                //    }
-                //}
-
                 int colCount = UsedReportColumns.Count;
                 for (int j = 0; j < colCount; j++)
                 {
@@ -444,58 +382,11 @@ namespace AccountingPC.AccountingReport
                     }
                 }
 
-
                 if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
                 {
                     set.Tables[tableName].Columns.Remove("VideoConnectors");
                 }
             }
-            
-            //string tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName;
-
-            //set.Tables.Add(tableName);
-            //new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
-
-            //if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
-            //{
-            //    set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
-            //    set.Tables[tableName].Columns.Add("Видеоразъемы");
-
-            //    //foreach (DataRow row in set.Tables[tableName].Rows)
-            //    //{
-            //    //    row["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]));
-            //    //}
-            //    for (int rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
-            //    {
-            //        set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] = AccountingPCWindow.GetVideoConnectors(Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
-            //    }
-            //}
-
-            //int i = 0;
-            ////foreach (ReportColumnName column in UsedReportColumns)
-            ////{
-            ////    if (set.Tables[tableName].Columns.Contains(column.Name))
-            ////    {
-            ////        set.Tables[tableName].Columns[column.Name].SetOrdinal(i);
-            ////        i++;
-            ////    }
-            ////}
-
-            //int colCount = UsedReportColumns.Count;
-            //for (int j=0; j < colCount; j++)
-            //{
-            //    if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
-            //    {
-            //        set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
-            //        i++;
-            //    }
-            //}
-
-
-            //if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
-            //{
-            //    set.Tables[tableName].Columns.Remove("VideoConnectors");
-            //}
         }
 
         public ExcelFile CreateReport()
@@ -507,7 +398,6 @@ namespace AccountingPC.AccountingReport
 
             ExcelFile book = new ExcelFile();
 
-            //foreach (DataTable dataTable in dataSet.Tables)
             for (int q = 0; q < dataSet.Tables.Count; q++)
             {
                 DataTable dataTable = dataSet.Tables[q];
@@ -534,20 +424,6 @@ namespace AccountingPC.AccountingReport
                             worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
                             if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
                             {
-                                //int rowIndex;
-                                //foreach (ExcelRow row in worksheet.Rows)
-                                //{
-                                //    rowIndex = row.Index;
-                                //    if (rowIndex == 0)
-                                //    {
-                                //        continue;
-                                //    }
-
-                                //    string cell = worksheet.Cells[rowIndex, col].Name;
-                                //    string cell2 = worksheet.Cells[rowIndex, col2].Name;
-                                //    string formula = $"={cell}*{cell2}";
-                                //    worksheet.Cells[rowIndex, col1].Formula = formula;
-                                //}
                                 string totalCostName = worksheet.Columns[col1].Name;
                                 string countName = worksheet.Columns[col2].Name;
                                 for (int i = 1; i < rowCount; i++)
@@ -641,20 +517,6 @@ namespace AccountingPC.AccountingReport
                                 end = worksheet.Cells[rowCount, col2].Name;
                                 worksheet.Cells[rowCount + 1, col2].Formula = $"=SUM({begin}:{end})";
 
-                                //int rowIndex;
-                                //foreach (ExcelRow row in worksheet.Rows)
-                                //{
-                                //    rowIndex = row.Index;
-                                //    if (rowIndex == 0)
-                                //    {
-                                //        continue;
-                                //    }
-
-                                //    string cell = worksheet.Cells[rowIndex, col].Name;
-                                //    string cell2 = worksheet.Cells[rowIndex, col2].Name;
-                                //    string formula = $"={cell}*{cell2}";
-                                //    worksheet.Cells[rowIndex, col1].Formula = formula;
-                                //}
                                 string totalCostName = worksheet.Columns[col1].Name;
                                 string countName = worksheet.Columns[col2].Name;
                                 for (int i = 1; i < rowCount; i++)
@@ -674,10 +536,6 @@ namespace AccountingPC.AccountingReport
                             worksheet.Cells[rowCount + 1, col].Style.NumberFormat = "0__Устройств";
                     }
                 }
-                //foreach (ExcelColumn column in worksheet.Columns)
-                //{
-                //    column.AutoFit();
-                //}
 
                 int columnCount = worksheet.CalculateMaxUsedColumns();
                 for (int i = 0; i < columnCount; i++)

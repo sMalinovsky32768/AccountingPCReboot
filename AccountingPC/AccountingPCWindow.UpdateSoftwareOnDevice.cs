@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 
 namespace AccountingPC
 {
@@ -22,28 +23,15 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSoftwareOnPC()
         {
-            //PcSoftwareDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(PcSoftwareDataSet);
-            //softwareOnDevice.ItemsSource = PcSoftwareDataSet.Tables[0].DefaultView;
-
             DefaultDataSet.Tables["PCSoftware"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnPC({DeviceID})", ConnectionString).Fill(DefaultDataSet, "PCSoftware");
-            //softwareOnDevice.ItemsSource = DefaultDataSet.Tables["PCSoftware"].DefaultView;
             PcSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            //foreach (DataRow row in DefaultDataSet.Tables["PCSoftware"].Rows)
-            //{
-            //    PcSoftware.Add(new InstalledSoftware()
-            //    {
-            //        ID = Convert.ToInt32(row[0]),
-            //        Name = row[1].ToString(),
-            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
-            //    });
-            //}
             for (int i = 0; i < DefaultDataSet.Tables["PCSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["PCSoftware"].Rows[i];
@@ -57,29 +45,19 @@ namespace AccountingPC
             softwareOnDevice.ItemsSource = PcSoftware;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSoftwareOnNotebook()
         {
-            //NotebookSoftwareDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(NotebookSoftwareDataSet);
             DefaultDataSet.Tables["NotebookSoftware"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetSoftwareOnNotebook({DeviceID})", ConnectionString).Fill(DefaultDataSet, "NotebookSoftware");
             NotebookSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            //foreach (DataRow row in DefaultDataSet.Tables["NotebookSoftware"].Rows)
-            //{
-            //    NotebookSoftware.Add(new InstalledSoftware()
-            //    {
-            //        ID = Convert.ToInt32(row[0]),
-            //        Name = row[1].ToString(),
-            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
-            //    });
-            //}
             for (int i = 0; i < DefaultDataSet.Tables["NotebookSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["NotebookSoftware"].Rows[i];
-                PcSoftware.Add(new InstalledSoftware()
+                PcSoftware?.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -89,25 +67,15 @@ namespace AccountingPC
             softwareOnDevice.ItemsSource = NotebookSoftware;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateNotInstalledSoftwareOnPC()
         {
-            //PcNotInstalledSoftwareDataSet = new DataSet();
-            //new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(PcNotInstalledSoftwareDataSet);
             DefaultDataSet.Tables["PCNotInstalledSoftware"].Clear();
             new SqlDataAdapter($"select * From dbo.GetNotInstalledOnPC({DeviceID})", ConnectionString).Fill(DefaultDataSet, "PCNotInstalledSoftware");
             PcNotInstalledSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            //foreach (DataRow row in DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows)
-            //{
-            //    PcNotInstalledSoftware.Add(new InstalledSoftware()
-            //    {
-            //        ID = Convert.ToInt32(row[0]),
-            //        Name = row[1].ToString(),
-            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
-            //    });
-            //}
             for (int i = 0; i < DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows[i];
@@ -121,25 +89,15 @@ namespace AccountingPC
             addSoftware.ContextMenu.ItemsSource = PcNotInstalledSoftware;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateNotInstalledSoftwareOnNotebook()
         {
-            //NotebookNotInstalledSoftwareDataSet = new DataSet();
-            //new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(NotebookNotInstalledSoftwareDataSet);
             DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Clear();
             new SqlDataAdapter($"select * From dbo.GetNotInstalledOnNotebook({DeviceID})", ConnectionString).Fill(DefaultDataSet, "NotebookNotInstalledSoftware");
             NotebookNotInstalledSoftware = new List<InstalledSoftware>
             {
                 Capacity = 128
             };
-            //foreach (DataRow row in DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows)
-            //{
-            //    NotebookNotInstalledSoftware.Add(new InstalledSoftware()
-            //    {
-            //        ID = Convert.ToInt32(row[0]),
-            //        Name = row[1].ToString(),
-            //        CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
-            //    });
-            //}
             for (int i = 0; i < DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows[i];

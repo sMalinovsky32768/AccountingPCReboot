@@ -6,9 +6,6 @@ using System.Windows.Input;
 
 namespace AccountingPC
 {
-    /// <summary>
-    /// Логика взаимодействия для ParametersWindow.xaml
-    /// </summary>
     public partial class ParametersWindow : Window
     {
         public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
@@ -35,7 +32,6 @@ namespace AccountingPC
                     break;
                 case "Стили":
                     frameSettings.Source = new Uri("ParametersPages/ParametersStylesPage.xaml", UriKind.RelativeOrAbsolute);
-                    // frameSettings.Source = new Uri("Maps/MapDefault.xaml", UriKind.RelativeOrAbsolute);
                     break;
                 case "Безопасность":
                     frameSettings.Source = new Uri("ParametersPages/ParametersSecurityPage.xaml", UriKind.RelativeOrAbsolute);
@@ -64,12 +60,11 @@ namespace AccountingPC
             }
             DialogResult = true;
             Close();
-            //((AccountingPCWindow)Owner).ChangeWindowState();
         }
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();// Для перемещение ока
+            DragMove();
         }
 
         private void ExitApp(object sender, RoutedEventArgs e)

@@ -11,18 +11,14 @@ namespace AccountingPC
     {
         internal AccountingPCWindow accounting;
 
-        // Выход при Esc
         public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
             "Exit", "ExitCommand", typeof(MainWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
-        //Authorization authorization;
 
         public MainWindow()
         {
             InitializeComponent();
             loginTextBox.Focus();
-            //authorization = new Authorization();
-            //DataContext = authorization;
         }
 
         private void LoginClick(object sender, RoutedEventArgs e)
@@ -36,7 +32,6 @@ namespace AccountingPC
             if (isTrueLogin && isTruePassword)
             {
                 Hide();
-                //new AccountingPCWindow().Show();
                 accounting = new AccountingPCWindow();
                 accounting.Show();
                 Close();
@@ -55,12 +50,7 @@ namespace AccountingPC
 
         private void Border_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            DragMove();// Для перемещение ока
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            //accounting = new AccountingPCWindow();
+            DragMove();
         }
     }
 }

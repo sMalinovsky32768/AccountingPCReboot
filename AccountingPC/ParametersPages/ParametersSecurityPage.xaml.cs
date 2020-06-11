@@ -1,6 +1,7 @@
 ﻿using AccountingPC.Properties;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -10,9 +11,6 @@ using System.Windows.Controls;
 
 namespace AccountingPC.ParametersPages
 {
-    /// <summary>
-    /// Логика взаимодействия для ParametersSecurityPage.xaml
-    /// </summary>
     public partial class ParametersSecurityPage : Page
     {
         public ParametersSecurityPage()
@@ -74,6 +72,7 @@ namespace AccountingPC.ParametersPages
         /// Ключ представляет логическое значение. True - пароль изменен. False - Произошла ошибка.
         /// Значение представляет сообщение о статусе изменения пароля.
         /// </returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public KeyValuePair<bool, string> ChangePassword()
         {
             string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(oldPass.Password)));
@@ -97,6 +96,7 @@ namespace AccountingPC.ParametersPages
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UseAuth_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (useAuth.SelectedIndex)

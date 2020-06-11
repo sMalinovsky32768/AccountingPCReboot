@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace AccountingPC
@@ -14,6 +15,7 @@ namespace AccountingPC
                         string name = obj.ToString();
                         using (SqlConnection connection = new SqlConnection(ConnectionString))
                         {
+                            connection.Open();
                             SqlCommand command = new SqlCommand("Insert Into Audience (Name) Values (@Name)", connection);
                             command.Parameters.AddWithValue("@Name", name);
                             command.ExecuteNonQuery();
@@ -38,6 +40,7 @@ namespace AccountingPC
                         DataRow row = ((DataRowView)obj).Row;
                         using (SqlConnection connection = new SqlConnection(ConnectionString))
                         {
+                            connection.Open();
                             SqlCommand command = new SqlCommand("Delete from Audience where ID=@ID", connection);
                             command.Parameters.AddWithValue("@ID", Convert.ToInt32(row["ID"]));
                             command.ExecuteNonQuery();
@@ -53,11 +56,9 @@ namespace AccountingPC
                         return true;
                     }));
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void UpdateAudienceList()
         {
-            //AudienceDataSet = new DataSet();
-            //new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", ConnectionString).Fill(AudienceDataSet);
-            //audienceList.ItemsSource = AudienceDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Audience"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()", 
                 ConnectionString).Fill(DefaultDataSet, "Audience");
@@ -65,11 +66,9 @@ namespace AccountingPC
             audienceList.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ChangeLocationView()
         {
-            //AudiencePlaceDataSet = new DataSet();
-            //new SqlDataAdapter($"Select distinct * From dbo.[GetAllLocationInAudience]({AudienceID})", ConnectionString).Fill(AudiencePlaceDataSet);
-            //audienceTableView.ItemsSource = AudiencePlaceDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["AudiencePlace"].Clear();
             new SqlDataAdapter($"Select * From dbo.[GetAllLocationInAudience]({AudienceID})",
                 ConnectionString).Fill(DefaultDataSet, "AudiencePlace");

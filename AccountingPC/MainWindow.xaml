@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AccountingPC" Loaded="Window_Loaded"
+        xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
         Title="Авторизация" Height="150" Width="350" ResizeMode="NoResize" 
         WindowStartupLocation="CenterScreen" WindowStyle="None">
@@ -44,7 +44,7 @@
             <TextBlock Grid.Column="1" Text="Пароль:"/>
             <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passwordTextBox" Password="admin"/>
             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="loginButton" Content="Войти" Click="LoginClick" 
-                    IsDefault="True" Style="{DynamicResource primary-button}" Margin="5 0" Height="30"/>
+                    IsDefault="True" Style="{DynamicResource primary-button}" Margin="10 0" Height="30"/>
         </Grid>
     </Border>
 </Window>

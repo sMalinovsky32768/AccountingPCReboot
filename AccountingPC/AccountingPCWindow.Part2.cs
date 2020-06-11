@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 using System.Windows;
 
 namespace AccountingPC
@@ -22,6 +23,7 @@ namespace AccountingPC
             return res;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static List<string> GetListVideoConnectors(int value)
         {
             List<string> arr = new List<string>
@@ -48,6 +50,7 @@ namespace AccountingPC
             return arr;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private Dictionary<int, byte[]> GetImages()
         {
             Dictionary<int, byte[]> temp = new Dictionary<int, byte[]>();
@@ -66,16 +69,18 @@ namespace AccountingPC
             return temp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void LoadFromSettings()
         {
             Height = AccountingPCWindowSettings.Default.Height > MinHeight ? AccountingPCWindowSettings.Default.Height : MinHeight;
             Width = AccountingPCWindowSettings.Default.Width > MinWidth ? AccountingPCWindowSettings.Default.Width : MinWidth;
-            lastHeight = AccountingPCWindowSettings.Default.lastHeignt;
-            lastWidth = AccountingPCWindowSettings.Default.lastWidth;
+            LastHeight = AccountingPCWindowSettings.Default.lastHeignt;
+            LastWidth = AccountingPCWindowSettings.Default.lastWidth;
             WindowState = AccountingPCWindowSettings.Default.WindowState != string.Empty ?
                 (WindowState)Enum.Parse(typeof(WindowState), AccountingPCWindowSettings.Default.WindowState) : WindowState.Normal;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void ChangeWindowState()
         {
             if (WindowState == WindowState.Maximized)
@@ -90,6 +95,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SelectViewEquipment()
         {
             NowView = View.Equipment;
@@ -100,6 +106,7 @@ namespace AccountingPC
             equipmentCategoryList.SelectedIndex = 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SelectViewSoftware()
         {
             NowView = View.Software;
@@ -110,6 +117,7 @@ namespace AccountingPC
             softwareCategoryList.SelectedIndex = 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SelectViewInvoice()
         {
             NowView = View.Invoice;
@@ -120,6 +128,7 @@ namespace AccountingPC
             LoadInvoiceList();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SelectViewLocation()
         {
             NowView = View.Location;

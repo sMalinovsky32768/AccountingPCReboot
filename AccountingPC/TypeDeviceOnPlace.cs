@@ -2,7 +2,6 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace AccountingPC
@@ -87,47 +86,38 @@ namespace AccountingPC
                 case AccountingPC.TypeDevice.InteractiveWhiteboard:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllBoardWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllBoardWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.Monitor:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllMonitorWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllMonitorWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.NetworkSwitch:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNetworkSwitchWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNetworkSwitchWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.Notebook:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNotebookWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNotebookWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.OtherEquipment:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllOtherEquipmentWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllOtherEquipmentWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.PC:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPCWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPCWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.PrinterScanner:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPrinterScannerWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPrinterScannerWithFullName() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.Projector:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjectorWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjector() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
                 case AccountingPC.TypeDevice.ProjectorScreen:
                     Table = new DataTable();
                     new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreenWithFullName()", ConnectionString).Fill(Table);
-                    //new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreen() where PlaceID is null", ConnectionString).Fill(Table);
                     break;
             }
         }

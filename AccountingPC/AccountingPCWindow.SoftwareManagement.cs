@@ -1,5 +1,5 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
+using System.Runtime.CompilerServices;
 
 namespace AccountingPC
 {
@@ -18,17 +18,17 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SetViewToLicenseSoftware()
         {
-            //softwareView.ItemsSource = SoftwareDataSet.Tables[0].DefaultView;
             softwareView.ItemsSource = DefaultDataSet.Tables["Software"].DefaultView;
 
             TypeSoft = TypeSoft.LicenseSoftware;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SetViewToOS()
         {
-            //softwareView.ItemsSource = OsDataSet.Tables[0].DefaultView;
             softwareView.ItemsSource = DefaultDataSet.Tables["OS"].DefaultView;
 
             TypeSoft = TypeSoft.OS;
@@ -53,18 +53,16 @@ namespace AccountingPC
             UpdateOSData();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateLicenseSoftwareData()
         {
-            //SoftwareDataSet = new DataSet();
-            //new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(SoftwareDataSet);
             DefaultDataSet.Tables["Software"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllSoftware()", ConnectionString).Fill(DefaultDataSet, "Software");
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateOSData()
         {
-            //OsDataSet = new DataSet();
-            //new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
             DefaultDataSet.Tables["OS"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
         }

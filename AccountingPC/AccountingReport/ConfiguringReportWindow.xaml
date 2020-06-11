@@ -33,8 +33,6 @@
                                        HorizontalAlignment="Left" Margin="10,0,0,0"/>
                         </StackPanel>
                         <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
-                            <!--<Button x:Name="buttonMinimized" Style="{DynamicResource minimizeButton}"/>
-                            <Button x:Name="buttonMaximized" Style="{DynamicResource maximizeButton}"/>-->
                             <Button x:Name="buttonExit" Style="{DynamicResource exitAppButton}"/>
                         </StackPanel>
                     </Grid>
@@ -48,7 +46,6 @@
                             <StackPanel Margin="10,5" DockPanel.Dock="Top">
                                 <TextBlock Text="Тип отчета"/>
                                 <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}" SelectedItem="{Binding Path=Options.ReportName}"/>
-                                <!--SelectionChanged="TypeReportBox_SelectionChanged"/>-->
                             </StackPanel>
                             <Separator DockPanel.Dock="Top"/>
                             <Grid x:Name="selectionColumnGrid" Height="200" Margin="10,5" DockPanel.Dock="Top">
@@ -67,17 +64,8 @@
                                              ItemsSource="{Binding Path=UnusedReportColumns, UpdateSourceTrigger=PropertyChanged}"/>
                                     <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
                                         <Button x:Name="useColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0,0,0,10" Command="{Binding AddUsedReportColumns}" CommandParameter="{Binding Path=SelectedItem, ElementName=unusedColumn}">
-                                            <!--Click="UseColumnButton_Click">-->
-                                            <Button.Style>
-                                                <Style BasedOn="{StaticResource default-button}" TargetType="Button">
-                                                    <!--<Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=unusedColumn, Path=SelectedIndex}" Value="-1">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>-->
-                                                </Style>
-                                            </Button.Style>
+                                            Margin="0,0,0,10" Command="{Binding AddUsedReportColumns}" CommandParameter="{Binding Path=SelectedItem, ElementName=unusedColumn}"
+                                                Style="{DynamicResource default-button}">
                                             <Grid>
                                                 <Path Data="M 11.5 0.359375 C 17.65625 0.359375 22.640625 5.34375 22.640625 11.5 
                                                   C 22.640625 17.65625 17.65625 22.640625 11.5 22.640625 C 5.34375 22.640625 
@@ -93,17 +81,8 @@
                                             </Grid>
                                         </Button>
                                         <Button x:Name="notUseColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0" Command="{Binding DelUsedReportColumns}" CommandParameter="{Binding Path=SelectedItem, ElementName=usedColumn}">
-                                            <!--Click="NotUseColumnButton_Click">-->
-                                            <Button.Style>
-                                                <Style BasedOn="{StaticResource default-button}" TargetType="Button">
-                                                    <!--<Style.Triggers>
-                                                        <DataTrigger Binding="{Binding ElementName=usedColumn, Path=SelectedIndex}" Value="-1">
-                                                            <Setter Property="IsEnabled" Value="False"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>-->
-                                                </Style>
-                                            </Button.Style>
+                                            Margin="0" Command="{Binding DelUsedReportColumns}" CommandParameter="{Binding Path=SelectedItem, ElementName=usedColumn}"
+                                                Style="{DynamicResource default-button}">
                                             <Grid>
                                                 <Path Data="M 11.5 22.640625 C 5.34375 22.640625 0.359375 17.65625 0.359375 11.5 
                                                   C 0.359375 5.34375 5.34375 0.359375 11.5 0.359375 C 17.65625 0.359375 
@@ -161,16 +140,8 @@
                                         </Grid>
                                     </Button>
                                     <Button x:Name="delSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0" Command="{Binding Options.DelSortingParam}" CommandParameter="{Binding Path=SelectedItem, ElementName=sortingParamsList}"><!--Click="DelSortingParamButton_Click">-->
-                                        <Button.Style>
-                                            <Style BasedOn="{StaticResource default-button}" TargetType="Button">
-                                                <!--<Style.Triggers>
-                                                    <DataTrigger Binding="{Binding ElementName=sortingParamsList, Path=SelectedIndex}" Value="-1">
-                                                        <Setter Property="IsEnabled" Value="False"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>-->
-                                            </Style>
-                                        </Button.Style>
+                                            Margin="0" Command="{Binding Options.DelSortingParam}" CommandParameter="{Binding Path=SelectedItem, ElementName=sortingParamsList}"
+                                            Style="{DynamicResource default-button}">
                                         <Grid>
                                             <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
@@ -228,18 +199,18 @@
                             <Grid DockPanel.Dock="Top" Margin="10,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="auto"/>
                                 </Grid.ColumnDefinitions>
                                 <RadioButton x:Name="IsSaveReport" GroupName="CreateReportOption" 
                                              Content="Сохранить" Checked="IsSaveReport_Checked"/>
                                 <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption" 
                                              Content="Открыть в Excel" Checked="IsOperReport_Checked" Grid.Column="1"/>
-                                <RadioButton x:Name="IsPrintReport" GroupName="CreateReportOption" 
+                                <RadioButton x:Name="IsPrintReport" GroupName="CreateReportOption" Visibility="Collapsed"
                                              Content="Печать" Checked="IsPrintReport_Checked" Grid.Column="2"/>
                                 <RadioButton x:Name="IsPreviewReport" GroupName="CreateReportOption" Content="Предварительный просмотр"
-                                             Checked="IsPreviewReport_Checked" Grid.Column="3"/>
+                                             Checked="IsPreviewReport_Checked" Grid.Column="3" Visibility="Collapsed"/>
                             </Grid>
                             <Separator DockPanel.Dock="Top"/>
                             <Grid DockPanel.Dock="Top" Margin="10,0" x:Name="periodGrid">
@@ -328,7 +299,6 @@
                             <StatusBarItem x:Name="statusItem1"/>
                         </StatusBar>
                     </Grid>
-                    <!---->
                 </Grid>
             </Grid>
         </Border>

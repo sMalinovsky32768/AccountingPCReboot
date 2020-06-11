@@ -38,8 +38,8 @@ namespace AccountingPC.BlackTheme
                 ((Window)sender).WindowState = WindowState.Normal;
                 if (sender.GetType() == typeof(AccountingPCWindow))
                 {
-                    ((Window)sender).Height = ((AccountingPCWindow)sender).lastHeight;
-                    ((Window)sender).Width = ((AccountingPCWindow)sender).lastWidth;
+                    ((Window)sender).Height = ((AccountingPCWindow)sender).LastHeight;
+                    ((Window)sender).Width = ((AccountingPCWindow)sender).LastWidth;
                 }
                 ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Visible;
                 ((Path)((Button)e.OriginalSource).Template.FindName("Restore", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;
@@ -48,8 +48,8 @@ namespace AccountingPC.BlackTheme
             {
                 if (sender.GetType() == typeof(AccountingPCWindow))
                 {
-                    ((AccountingPCWindow)sender).lastHeight = ((Window)sender).Height;
-                    ((AccountingPCWindow)sender).lastWidth = ((Window)sender).Width;
+                    ((AccountingPCWindow)sender).LastHeight = ((Window)sender).Height;
+                    ((AccountingPCWindow)sender).LastWidth = ((Window)sender).Width;
                 }
                 ((Window)sender).WindowState = WindowState.Maximized;
                 ((Path)((Button)e.OriginalSource).Template.FindName("Maximize", (Button)e.OriginalSource)).Visibility = Visibility.Collapsed;

@@ -170,8 +170,8 @@ namespace AccountingPC.AccountingReport
 
         public bool IsPeriod { get; set; }
 
-        public DateTime? FromDate { get; set; } //= DateTime.Parse($"01.01.{DateTime.Today.Year}");
-        public DateTime? ToDate { get; set; } //= DateTime.Parse($"31.12.{DateTime.Today.Year}");
+        public DateTime? FromDate { get; set; } 
+        public DateTime? ToDate { get; set; } 
 
         public ObservableCollection<SortingParam> SortingParamList
         {
@@ -209,7 +209,6 @@ namespace AccountingPC.AccountingReport
             temp += " order by ";
 
             int i = 0;
-            //foreach (SortingParam param in SortingParamList)
             for (int j = 0; j < SortingParamList.Count; j++)
             {
                 SortingParam param = SortingParamList[j];

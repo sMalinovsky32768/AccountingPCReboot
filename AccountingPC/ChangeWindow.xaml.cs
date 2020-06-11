@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -13,9 +14,6 @@ using System.Windows.Input;
 
 namespace AccountingPC
 {
-    /// <summary>
-    /// Interaction logic for ChangeWindow.xaml
-    /// </summary>
     public partial class ChangeWindow : Window
     {
         private static readonly string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
@@ -24,56 +22,15 @@ namespace AccountingPC
         public static readonly RoutedCommand CloseCommand = new RoutedUICommand(
             "Close", "CloseCommand", typeof(AccountingPCWindow),
             new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
-        private AccountingPCWindow accounting;
 
         private bool IsChangeAnalog { get; set; }
-        public AccountingPCWindow Accounting { get => accounting; private set => accounting = value; }
-        //public DataSet AspectRatioDataSet { get => aspectRatioDataSet; set => aspectRatioDataSet = value; }
-        //public DataSet CpuDataSet { get => cpuDataSet; set => cpuDataSet = value; }
-        //public DataSet OsDataSet { get => osDataSet; set => osDataSet = value; }
-        //public DataSet ScreenInstalledDataSet { get => screenInstalledDataSet; set => screenInstalledDataSet = value; }
-        //public DataSet FrequencyDataSet { get => frequencyDataSet; set => frequencyDataSet = value; }
-        //public DataSet LocationDataSet { get => locationDataSet; set => locationDataSet = value; }
-        //public DataSet MatrixTechnologyDataSet { get => matrixTechnologyDataSet; set => matrixTechnologyDataSet = value; }
-        //public DataSet PaperSizeDataSet { get => paperSizeDataSet; set => paperSizeDataSet = value; }
-        //public DataSet ProjectorTechnologyDataSet { get => projectorTechnologyDataSet; set => projectorTechnologyDataSet = value; }
-        //public DataSet ResolutionDataSet { get => resolutionDataSet; set => resolutionDataSet = value; }
-        //public DataSet TypeNetworkSwitchDataSet { get => typeNetworkSwitchDataSet; set => typeNetworkSwitchDataSet = value; }
-        //public DataSet TypeNotebookDataSet { get => typeNotebookDataSet; set => typeNotebookDataSet = value; }
-        //public DataSet TypePrinterDataSet { get => typePrinterDataSet; set => typePrinterDataSet = value; }
-        //public DataSet VideoConnectorsDataSet { get => videoConnectorsDataSet; set => videoConnectorsDataSet = value; }
-        //public DataSet WifiFrequencyDataSet { get => wifiFrequencyDataSet; set => wifiFrequencyDataSet = value; }
-        //public DataSet NameDataSet { get => nameDataSet; set => nameDataSet = value; }
-        //public DataSet MotherboardDataSet { get => motherboardDataSet; set => motherboardDataSet = value; }
-        //public DataSet VCardDataSet { get => vCardDataSet; set => vCardDataSet = value; }
-        //public DataSet TypeLicenseDataSet { get => typeLicenseDataSet; set => typeLicenseDataSet = value; }
-        //public DataSet InvoiceDataSet { get => invoiceDataSet; set => invoiceDataSet = value; }
+        public AccountingPCWindow Accounting { get; private set; }
 
         public DataSet DefaultDataSet { get; set; }
 
         internal List<ListBoxItem> videoConnectorsItems;
 
         private Binding invNBinding;
-        //private DataSet aspectRatioDataSet;
-        //private DataSet cpuDataSet;
-        //private DataSet osDataSet;
-        //private DataSet screenInstalledDataSet;
-        //private DataSet frequencyDataSet;
-        //private DataSet locationDataSet;
-        //private DataSet matrixTechnologyDataSet;
-        //private DataSet paperSizeDataSet;
-        //private DataSet projectorTechnologyDataSet;
-        //private DataSet resolutionDataSet;
-        //private DataSet typeNetworkSwitchDataSet;
-        //private DataSet typeNotebookDataSet;
-        //private DataSet typePrinterDataSet;
-        //private DataSet videoConnectorsDataSet;
-        //private DataSet wifiFrequencyDataSet;
-        //private DataSet nameDataSet;
-        //private DataSet motherboardDataSet;
-        //private DataSet vCardDataSet;
-        //private DataSet typeLicenseDataSet;
-        //private DataSet invoiceDataSet;
 
         public ChangeWindow(AccountingPCWindow window)
         {
@@ -106,7 +63,6 @@ namespace AccountingPC
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            //Accounting.Hide();
             Accounting.IsHitTestVisible = false;
             switch (Accounting.TypeChange)
             {
@@ -120,130 +76,118 @@ namespace AccountingPC
             ChangeView();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ChangeView()
         {
             switch (Accounting.NowView)
             {
                 case View.Equipment:
-                    //Width = 1100;
-                    //Height = 700;
                     changeSoftwareGrid.Visibility = Visibility.Collapsed;
                     changeEquipmentGrid.Visibility = Visibility.Visible;
-                    if (!Accounting.IsPreOpenEquipmentPopup)
+                    Initialize();
+                    switch (Accounting.TypeChange)
                     {
-                        Initialize();
-                        switch (Accounting.TypeChange)
-                        {
-                            case TypeChange.Change:
-                                switch (Accounting.TypeDevice)
-                                {
-                                    case TypeDevice.PC:
-                                        GetPC(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.Notebook:
-                                        GetNotebook(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.Monitor:
-                                        GetMonitor(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.Projector:
-                                        GetProjector(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.InteractiveWhiteboard:
-                                        GetInteractiveWhiteboard(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.ProjectorScreen:
-                                        GetProjectorScreen(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.PrinterScanner:
-                                        GetPrinterScanner(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.NetworkSwitch:
-                                        GetNetworkSwitch(device, Accounting.DeviceID);
-                                        break;
-                                    case TypeDevice.OtherEquipment:
-                                        GetOtherEquipment(device, Accounting.DeviceID);
-                                        break;
-                                }
-                                SetDeviceLocationAndInvoice(device);
-                                break;
-                            case TypeChange.Add:
-                                switch (Accounting.TypeDevice)
-                                {
-                                    case TypeDevice.PC:
-                                        device = new PC();
-                                        break;
-                                    case TypeDevice.Notebook:
-                                        device = new Notebook();
-                                        break;
-                                    case TypeDevice.Monitor:
-                                        device = new Monitor();
-                                        break;
-                                    case TypeDevice.Projector:
-                                        device = new Projector();
-                                        break;
-                                    case TypeDevice.InteractiveWhiteboard:
-                                        device = new InteractiveWhiteboard();
-                                        break;
-                                    case TypeDevice.ProjectorScreen:
-                                        device = new ProjectorScreen();
-                                        break;
-                                    case TypeDevice.PrinterScanner:
-                                        device = new PrinterScanner();
-                                        break;
-                                    case TypeDevice.NetworkSwitch:
-                                        device = new NetworkSwitch();
-                                        break;
-                                    case TypeDevice.OtherEquipment:
-                                        device = new OtherEquipment();
-                                        break;
-                                }
-                                break;
-                        }
+                        case TypeChange.Change:
+                            switch (Accounting.TypeDevice)
+                            {
+                                case TypeDevice.PC:
+                                    GetPC(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.Notebook:
+                                    GetNotebook(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.Monitor:
+                                    GetMonitor(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.Projector:
+                                    GetProjector(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.InteractiveWhiteboard:
+                                    GetInteractiveWhiteboard(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.ProjectorScreen:
+                                    GetProjectorScreen(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.PrinterScanner:
+                                    GetPrinterScanner(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.NetworkSwitch:
+                                    GetNetworkSwitch(device, Accounting.DeviceID);
+                                    break;
+                                case TypeDevice.OtherEquipment:
+                                    GetOtherEquipment(device, Accounting.DeviceID);
+                                    break;
+                            }
+                            SetDeviceLocationAndInvoice(device);
+                            break;
+                        case TypeChange.Add:
+                            switch (Accounting.TypeDevice)
+                            {
+                                case TypeDevice.PC:
+                                    device = new PC();
+                                    break;
+                                case TypeDevice.Notebook:
+                                    device = new Notebook();
+                                    break;
+                                case TypeDevice.Monitor:
+                                    device = new Monitor();
+                                    break;
+                                case TypeDevice.Projector:
+                                    device = new Projector();
+                                    break;
+                                case TypeDevice.InteractiveWhiteboard:
+                                    device = new InteractiveWhiteboard();
+                                    break;
+                                case TypeDevice.ProjectorScreen:
+                                    device = new ProjectorScreen();
+                                    break;
+                                case TypeDevice.PrinterScanner:
+                                    device = new PrinterScanner();
+                                    break;
+                                case TypeDevice.NetworkSwitch:
+                                    device = new NetworkSwitch();
+                                    break;
+                                case TypeDevice.OtherEquipment:
+                                    device = new OtherEquipment();
+                                    break;
+                            }
+                            break;
                     }
                     break;
                 case View.Software:
-                    //Width = 600;
-                    //Height = 300;
                     changeEquipmentGrid.Visibility = Visibility.Collapsed;
                     changeSoftwareGrid.Visibility = Visibility.Visible;
-                    if (!Accounting.IsPreOpenSoftwarePopup)
+                    Initialize();
+                    switch (Accounting.TypeChange)
                     {
-                        Initialize();
-                        switch (Accounting.TypeChange)
-                        {
-                            case TypeChange.Add:
-                                switch (Accounting.TypeSoft)
-                                {
-                                    case TypeSoft.LicenseSoftware:
-                                        soft = new LicenseSoftware();
-                                        //AddSoftware();
-                                        break;
-                                    case TypeSoft.OS:
-                                        soft = new OS();
-                                        //AddOS();
-                                        break;
-                                }
-                                break;
-                            case TypeChange.Change:
-                                switch (Accounting.TypeSoft)
-                                {
-                                    case TypeSoft.LicenseSoftware:
-                                        GetLicenseSoftware(soft, Accounting.SoftwareID);
-                                        //AddSoftware();
-                                        break;
-                                    case TypeSoft.OS:
-                                        GetOS(soft, Accounting.SoftwareID);
-                                        //AddOS();
-                                        break;
-                                }
-                                break;
-                        }
+                        case TypeChange.Add:
+                            switch (Accounting.TypeSoft)
+                            {
+                                case TypeSoft.LicenseSoftware:
+                                    soft = new LicenseSoftware();
+                                    break;
+                                case TypeSoft.OS:
+                                    soft = new OS();
+                                    break;
+                            }
+                            break;
+                        case TypeChange.Change:
+                            switch (Accounting.TypeSoft)
+                            {
+                                case TypeSoft.LicenseSoftware:
+                                    GetLicenseSoftware(soft, Accounting.SoftwareID);
+                                    break;
+                                case TypeSoft.OS:
+                                    GetOS(soft, Accounting.SoftwareID);
+                                    break;
+                            }
+                            break;
                     }
                     break;
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Initialize()
         {
             switch (Accounting.NowView)
@@ -296,6 +240,7 @@ namespace AccountingPC
             UpdateSource();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetPC(Device d, int id)
         {
             string commandString;
@@ -385,6 +330,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetNotebook(Device d, int id)
         {
             string commandString;
@@ -507,6 +453,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetMonitor(Device d, int id)
         {
             string commandString;
@@ -587,6 +534,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetProjector(Device d, int id)
         {
             string commandString;
@@ -656,6 +604,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetInteractiveWhiteboard(Device d, int id)
         {
             string commandString;
@@ -689,6 +638,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetProjectorScreen(Device d, int id)
         {
             string commandString;
@@ -746,6 +696,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetPrinterScanner(Device d, int id)
         {
             string commandString;
@@ -799,6 +750,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetNetworkSwitch(Device d, int id)
         {
             string commandString;
@@ -854,6 +806,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetOtherEquipment(Device d, int id)
         {
             string commandString;
@@ -884,6 +837,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void SetDeviceLocationAndInvoice(Device d)
         {
             foreach (object obj in location.ItemsSource)
@@ -899,6 +853,7 @@ namespace AccountingPC
             invoice.Text = d.InvoiceNumber;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ResetEquipmentGrid()
         {
             imageFilename.Text = string.Empty;
@@ -956,6 +911,7 @@ namespace AccountingPC
             GridPlacement(imageLoadGrid, 0, 6, 12);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForInteractiveWhiteboard()
         {
             invoiceGrid.Visibility = Visibility.Visible;
@@ -966,6 +922,7 @@ namespace AccountingPC
             GridPlacement(locationGrid, 5, 1, 7);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForMonitor()
         {
             vConnectorsGrid.Visibility = Visibility.Visible;
@@ -984,6 +941,7 @@ namespace AccountingPC
             GridPlacement(vConnectorsGrid, 10, 1, 2, 2);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForNetworkSwitch()
         {
             typeGrid.Visibility = Visibility.Visible;
@@ -1001,6 +959,7 @@ namespace AccountingPC
             GridPlacement(locationGrid, 0, 2, 12);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForNotebook()
         {
             typeGrid.Visibility = Visibility.Visible;
@@ -1046,6 +1005,7 @@ namespace AccountingPC
             GridPlacement(vConnectorsGrid, 10, 2, 2, 4);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForOtherEquipment()
         {
             invoiceGrid.Visibility = Visibility.Visible;
@@ -1054,6 +1014,7 @@ namespace AccountingPC
             GridPlacement(locationGrid, 3, 1, 9);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForPC()
         {
             motherboardGrid.Visibility = Visibility.Visible;
@@ -1089,6 +1050,7 @@ namespace AccountingPC
             GridPlacement(vConnectorsGrid, 10, 2, 2, 3);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForPrinterScanner()
         {
             paperSizeGrid.Visibility = Visibility.Visible;
@@ -1104,6 +1066,7 @@ namespace AccountingPC
             GridPlacement(locationGrid, 5, 1, 7);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForProjector()
         {
             vConnectorsGrid.Visibility = Visibility.Visible;
@@ -1120,6 +1083,7 @@ namespace AccountingPC
             GridPlacement(vConnectorsGrid, 10, 1, 2, 2);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForProjectorScreen()
         {
             diagonalGrid.Visibility = Visibility.Visible;
@@ -1136,6 +1100,7 @@ namespace AccountingPC
             GridPlacement(locationGrid, 3, 2, 9);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForSoftware()
         {
             softwareNameGrid.Visibility = Visibility.Visible;
@@ -1150,6 +1115,7 @@ namespace AccountingPC
             GridPlacement(softwareInvoiceGrid, 4, 1, 2);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void InitializeForOS()
         {
             softwareNameGrid.Visibility = Visibility.Visible;
@@ -1169,21 +1135,6 @@ namespace AccountingPC
             Grid.SetRow(element, row);
             Grid.SetColumnSpan(element, colSpan);
             Grid.SetRowSpan(element, rowSpan);
-        }
-
-        public static string GetVideoConnectors(int value)
-        {
-            List<string> arr = GetListVideoConnectors(value);
-            string res = string.Empty;
-            for (int i = 0; i < arr.Count; i++)
-            {
-                res += $"{arr[i]}";
-                if (i < arr.Count - 1)
-                {
-                    res += ", ";
-                }
-            }
-            return res;
         }
 
         private static List<string> GetListVideoConnectors(int value)
@@ -1217,7 +1168,6 @@ namespace AccountingPC
             int value = 0;
             foreach (object obj in list.SelectedItems)
             {
-                //foreach (DataRowView row in VideoConnectorsDataSet.Tables[0].DefaultView)
                 foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView) 
                 {
                     string s = (obj as ListBoxItem).Content.ToString();
@@ -1392,10 +1342,6 @@ namespace AccountingPC
                         catch { }
                     });
                     task.Start();
-                    //changeEquipmentPopup.IsOpen = false;
-                    Accounting.IsPreOpenEquipmentPopup = false;
-                    Accounting.viewGrid.IsEnabled = true;
-                    Accounting.menu.IsEnabled = true;
                     break;
             }
         }
@@ -1468,47 +1414,38 @@ namespace AccountingPC
                         catch { }
                     });
                     task.Start();
-                    //changeEquipmentPopup.IsOpen = false;
-                    Accounting.IsPreOpenEquipmentPopup = false;
-                    Accounting.viewGrid.IsEnabled = true;
-                    Accounting.menu.IsEnabled = true;
                     break;
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForAspectRatio()
         {
-            //AspectRatioDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllAspectRatio()", ConnectionString).Fill(AspectRatioDataSet);
-            //aspectRatio.ItemsSource = AspectRatioDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["AspectRatio"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllAspectRatio()", ConnectionString).Fill(DefaultDataSet, "AspectRatio");
             aspectRatio.ItemsSource = DefaultDataSet.Tables["AspectRatio"].DefaultView;
             aspectRatio.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForOS()
         {
-            //OsDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(OsDataSet);
-            //os.ItemsSource = OsDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["OS"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
             os.ItemsSource = DefaultDataSet.Tables["OS"].DefaultView;
             os.DisplayMemberPath = "Наименование";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForScreenInstalled()
         {
-            //ScreenInstalledDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", ConnectionString).Fill(ScreenInstalledDataSet);
-            //screenInstalled.ItemsSource = ScreenInstalledDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["ScreenInstalled"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", ConnectionString).Fill(DefaultDataSet, "ScreenInstalled");
             screenInstalled.ItemsSource = DefaultDataSet.Tables["ScreenInstalled"].DefaultView;
             screenInstalled.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForName()
         {
             SqlDataAdapter NameDataAdapter = null;
@@ -1542,16 +1479,13 @@ namespace AccountingPC
                     NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorScreenName()", ConnectionString);
                     break;
             }
-
-            //NameDataSet = new DataSet();
-            //NameDataAdapter.Fill(NameDataSet);
-            //name.ItemsSource = NameDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Name"].Clear();
             NameDataAdapter?.Fill(DefaultDataSet, "Name");
             name.ItemsSource = DefaultDataSet.Tables["Name"].DefaultView;
             name.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForLocation()
         {
             SqlDataAdapter LocationDataAdapter = null;
@@ -1585,33 +1519,24 @@ namespace AccountingPC
                     LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](8)", ConnectionString);
                     break;
             }
-
-            //LocationDataSet = new DataSet();
-            //LocationDataAdapter.Fill(LocationDataSet);
-            //location.ItemsSource = LocationDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Location"].Clear();
             LocationDataAdapter?.Fill(DefaultDataSet, "Location");
             location.ItemsSource = DefaultDataSet.Tables["Location"].DefaultView;
             location.DisplayMemberPath = "Place";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForCPU()
         {
             switch (Accounting.TypeDevice)
             {
                 case TypeDevice.Notebook:
-                    //CpuDataSet = new DataSet();
-                    //new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString).Fill(CpuDataSet);
-                    //cpu.ItemsSource = CpuDataSet.Tables[0].DefaultView;
                     DefaultDataSet.Tables["CPU"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
                     cpu.ItemsSource = DefaultDataSet.Tables["CPU"].DefaultView;
                     cpu.DisplayMemberPath = "CPUModel";
                     break;
                 case TypeDevice.PC:
-                    //CpuDataSet = new DataSet();
-                    //new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", ConnectionString).Fill(CpuDataSet);
-                    //cpu.ItemsSource = CpuDataSet.Tables[0].DefaultView;
                     DefaultDataSet.Tables["CPU"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
                     cpu.ItemsSource = DefaultDataSet.Tables["CPU"].DefaultView;
@@ -1620,23 +1545,18 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForVideoCard()
         {
             switch (Accounting.TypeDevice)
             {
                 case TypeDevice.Notebook:
-                    //VCardDataSet = new DataSet();
-                    //new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString).Fill(VCardDataSet);
-                    //vCard.ItemsSource = VCardDataSet.Tables[0].DefaultView;
                     DefaultDataSet.Tables["VCard"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString).Fill(DefaultDataSet, "VCard");
                     vCard.ItemsSource = DefaultDataSet.Tables["VCard"].DefaultView;
                     vCard.DisplayMemberPath = "VideoCard";
                     break;
                 case TypeDevice.PC:
-                    //VCardDataSet = new DataSet();
-                    //new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCvCard()", ConnectionString).Fill(VCardDataSet);
-                    //vCard.ItemsSource = VCardDataSet.Tables[0].DefaultView;
                     DefaultDataSet.Tables["VCard"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCvCard()", ConnectionString).Fill(DefaultDataSet, "VCard");
                     vCard.ItemsSource = DefaultDataSet.Tables["VCard"].DefaultView;
@@ -1645,30 +1565,24 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForType()
         {
             switch (Accounting.TypeDevice)
             {
                 case TypeDevice.NetworkSwitch:
-                    //TypeNetworkSwitchDataSet = new DataSet();
-                    //new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString).Fill(TypeNetworkSwitchDataSet);
-                    //type.ItemsSource = TypeNetworkSwitchDataSet.Tables[0].DefaultView;
                     DefaultDataSet.Tables["TypeNetworkSwitch"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString).Fill(DefaultDataSet, "TypeNetworkSwitch");
                     type.ItemsSource = DefaultDataSet.Tables["TypeNetworkSwitch"].DefaultView;
                     type.DisplayMemberPath = "Name";
                     break;
                 case TypeDevice.Notebook:
-                    //TypeNotebookDataSet = new DataSet();
-                    //new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", ConnectionString).Fill(TypeNotebookDataSet);
-                    //type.ItemsSource = TypeNotebookDataSet.Tables[0].DefaultView;
                     DefaultDataSet.Tables["TypeNotebook"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", ConnectionString).Fill(DefaultDataSet, "TypeNotebook");
                     type.ItemsSource = DefaultDataSet.Tables["TypeNotebook"].DefaultView;
                     type.DisplayMemberPath = "Name";
                     break;
                 case TypeDevice.PrinterScanner:
-                    //TypePrinterDataSet = new DataSet();
                     DefaultDataSet.Tables["TypePrinter"].Clear();
                     new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypePrinter()", ConnectionString).Fill(DefaultDataSet, "TypePrinter");
                     type.ItemsSource = DefaultDataSet.Tables["TypePrinter"].DefaultView;
@@ -1677,72 +1591,60 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForFrequency()
         {
-            //FrequencyDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", ConnectionString).Fill(FrequencyDataSet);
-            //screenFrequency.ItemsSource = FrequencyDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Frequency"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", ConnectionString).Fill(DefaultDataSet, "Frequency");
             screenFrequency.ItemsSource = DefaultDataSet.Tables["Frequency"].DefaultView;
             screenFrequency.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForMatrixTechology()
         {
-            //MatrixTechnologyDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(MatrixTechnologyDataSet);
-            //matrixTechnology.ItemsSource = MatrixTechnologyDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["MatrixTechnology"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(DefaultDataSet, "MatrixTechnology");
             matrixTechnology.ItemsSource = DefaultDataSet.Tables["MatrixTechnology"].DefaultView;
             matrixTechnology.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForPaperSize()
         {
-            //PaperSizeDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllPaperSize()", ConnectionString).Fill(PaperSizeDataSet);
-            //paperSize.ItemsSource = PaperSizeDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["PaperSize"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllPaperSize()", ConnectionString).Fill(DefaultDataSet, "PaperSize");
             paperSize.ItemsSource = DefaultDataSet.Tables["PaperSize"].DefaultView;
             paperSize.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForProjectorTechnology()
         {
-            //ProjectorTechnologyDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorTechnology()", ConnectionString).Fill(ProjectorTechnologyDataSet);
-            //projectorTechnology.ItemsSource = ProjectorTechnologyDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["ProjectorTechnology"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorTechnology()", ConnectionString).Fill(DefaultDataSet, "ProjectorTechnology");
             projectorTechnology.ItemsSource = DefaultDataSet.Tables["ProjectorTechnology"].DefaultView;
             projectorTechnology.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForResolution()
         {
-            //ResolutionDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllResolution()", ConnectionString).Fill(ResolutionDataSet);
-            //resolution.ItemsSource = ResolutionDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Resolution"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllResolution()", ConnectionString).Fill(DefaultDataSet, "Resolution");
             resolution.ItemsSource = DefaultDataSet.Tables["Resolution"].DefaultView;
             resolution.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForVideoConnectors()
         {
-            //VideoConnectorsDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllVideoConnector()", ConnectionString).Fill(VideoConnectorsDataSet);
             DefaultDataSet.Tables["VideoConnectors"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllVideoConnector()", ConnectionString).Fill(DefaultDataSet, "VideoConnectors");
             videoConnectorsItems = new List<ListBoxItem>
             {
                 Capacity = 32
             };
-            //foreach (DataRowView row in VideoConnectorsDataSet.Tables[0].DefaultView)
             foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView)
             {
                 videoConnectorsItems.Add(new ListBoxItem() { Content = row.Row[1].ToString() });
@@ -1751,23 +1653,18 @@ namespace AccountingPC
             vConnectors.ItemsSource = videoConnectorsItems;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForWifiFrequency()
         {
-            //WifiFrequencyDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllWiFiFrequency()", ConnectionString).Fill(WifiFrequencyDataSet);
-            //wifiFrequency.ItemsSource = WifiFrequencyDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["WifiFrequency"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllWiFiFrequency()", ConnectionString).Fill(DefaultDataSet, "WifiFrequency");
             wifiFrequency.ItemsSource = DefaultDataSet.Tables["WifiFrequency"].DefaultView;
             wifiFrequency.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForInvoice()
         {
-            //InvoiceDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString).Fill(InvoiceDataSet);
-            //invoice.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
-            //softwareInvoice.ItemsSource = InvoiceDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Invoice"].Clear();
             new SqlDataAdapter($"SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString).Fill(DefaultDataSet, "Invoice");
             invoice.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
@@ -1776,28 +1673,25 @@ namespace AccountingPC
             softwareInvoice.DisplayMemberPath = "Number";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForMotherboard()
         {
-            //MotherboardDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", ConnectionString).Fill(MotherboardDataSet);
-            //motherboard.ItemsSource = MotherboardDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["Motherboard"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", ConnectionString).Fill(DefaultDataSet, "Motherboard");
             motherboard.ItemsSource = DefaultDataSet.Tables["Motherboard"].DefaultView;
             motherboard.DisplayMemberPath = "Motherboard";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSourceForTypeLicense()
         {
-            //TypeLicenseDataSet = new DataSet();
-            //new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString).Fill(TypeLicenseDataSet);
-            //typeLicense.ItemsSource = TypeLicenseDataSet.Tables[0].DefaultView;
             DefaultDataSet.Tables["TypeLicense"].Clear();
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString).Fill(DefaultDataSet, "TypeLicense");
             typeLicense.ItemsSource = DefaultDataSet.Tables["TypeLicense"].DefaultView;
             typeLicense.DisplayMemberPath = "Name";
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddPC()
         {
             string commandString;
@@ -1883,6 +1777,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddNotebook()
         {
             string commandString;
@@ -1968,6 +1863,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddMonitor()
         {
             string commandString;
@@ -2000,6 +1896,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddNetworkSwitch()
         {
             string commandString;
@@ -2036,6 +1933,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddInteractiveWhiteboard()
         {
             string commandString;
@@ -2064,6 +1962,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddPrinterScanner()
         {
             string commandString;
@@ -2093,6 +1992,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddProjector()
         {
             string commandString;
@@ -2124,6 +2024,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddProjectorScreen()
         {
             string commandString;
@@ -2155,6 +2056,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddOtherEquipment()
         {
             string commandString;
@@ -2172,7 +2074,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 byte[] bytes = LoadImage(imageFilename.Text);
                 if (bytes != null)
                 {
@@ -2183,6 +2084,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdatePC()
         {
             string commandString;
@@ -2201,7 +2103,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
                 command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
@@ -2226,6 +2127,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateNotebook()
         {
             string commandString;
@@ -2245,7 +2147,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
@@ -2273,6 +2174,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateMonitor()
         {
             string commandString;
@@ -2291,7 +2193,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
@@ -2308,6 +2209,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateNetworkSwitch()
         {
             string commandString;
@@ -2326,7 +2228,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
@@ -2341,6 +2242,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateInteractiveWhiteboard()
         {
             string commandString;
@@ -2359,7 +2261,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 byte[] bytes = LoadImage(imageFilename.Text);
                 if (bytes != null)
@@ -2372,6 +2273,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdatePrinterScanner()
         {
             string commandString;
@@ -2390,7 +2292,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
                 byte[] bytes = LoadImage(imageFilename.Text);
@@ -2404,6 +2305,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateProjector()
         {
             string commandString;
@@ -2422,7 +2324,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView)projectorTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
@@ -2438,6 +2339,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateProjectorScreen()
         {
             string commandString;
@@ -2456,7 +2358,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@IsEDrive", Convert.ToBoolean(isEDrive.IsChecked)));
                 command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
@@ -2472,6 +2373,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateOtherEquipment()
         {
             string commandString;
@@ -2490,7 +2392,6 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                //command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?[0]));
                 byte[] bytes = LoadImage(imageFilename.Text);
                 if (bytes != null)
                 {
@@ -2534,10 +2435,12 @@ namespace AccountingPC
             return null;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddSoftware()
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
+                connection.Open();
                 SqlCommand command = null;
                 command = new SqlCommand($"AddLicenseSoftware", connection)
                 {
@@ -2552,10 +2455,12 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddOS()
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
+                connection.Open();
                 SqlCommand command = null;
                 command = new SqlCommand($"AddOS", connection)
                 {
@@ -2569,10 +2474,12 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSoftware()
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
+                connection.Open();
                 SqlCommand command = null;
                 command = new SqlCommand($"UpdateLicenseSoftware", connection)
                 {
@@ -2588,10 +2495,12 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateOS()
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
+                connection.Open();
                 SqlCommand command = null;
                 command = new SqlCommand($"UpdateOS", connection)
                 {
@@ -2606,6 +2515,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetLicenseSoftware(Software software, int id)
         {
             string commandString;
@@ -2647,6 +2557,7 @@ namespace AccountingPC
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void GetOS(Software software, int id)
         {
             string commandString;
@@ -2687,7 +2598,7 @@ namespace AccountingPC
             }
         }
 
-        private void autoInvN_Unchecked(object sender, RoutedEventArgs e)
+        private void AutoInvN_Unchecked(object sender, RoutedEventArgs e)
         {
             inventoryNumber.IsEnabled = true;
         }
@@ -2714,26 +2625,19 @@ namespace AccountingPC
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            //Accounting.Show();
             Accounting.IsHitTestVisible = true;
             switch (Accounting.NowView)
             {
                 case View.Equipment:
-                    //changeEquipmentPopup.IsOpen = false;
-                    Accounting.IsPreOpenEquipmentPopup = false;
                     Accounting.UpdateEquipmentData();
                     Accounting.UpdateImages();
                     Accounting.ChangeEquipmentView();
                     break;
                 case View.Software:
-                    //changeSoftwarePopup.IsOpen = false;
-                    Accounting.IsPreOpenSoftwarePopup = false;
                     Accounting.UpdateSoftwareData();
                     Accounting.ChangeSoftwareView();
                     break;
             }
-            Accounting.viewGrid.IsEnabled = true;
-            Accounting.menu.IsEnabled = true;
             Close();
         }
 
@@ -2747,16 +2651,14 @@ namespace AccountingPC
 
         private void ImageLoad_Click(object sender, RoutedEventArgs e)
         {
-            //PreClose();
-            System.Windows.Forms.OpenFileDialog dialog = new System.Windows.Forms.OpenFileDialog
+            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
             {
                 Filter = "Image Files(*.BMP;*.PNG;*.JPG;*.GIF)|*.BMP;*.PNG;*.JPG;*.GIF"
             };
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel)
+            if (dialog.ShowDialog() == false)
             {
                 return;
             }
-            //PostClose();
             imageFilename.Text = dialog.FileName;
         }
 
@@ -2777,32 +2679,12 @@ namespace AccountingPC
 
         private void MoveWindow(object sender, MouseButtonEventArgs e)
         {
-            //DragEnter += (obj, args) => Accounting.DragMove();
             DragMove();
-
-            //Widhth 900
-            //Height 500
-            //Accounting.Width 1366
-            //Accounting.Height 768
-
-            //Left 510
-            //Top 290
-            //Accounting.Left 277
-            //Accounting.Top 156
-
-            //ΔWidth 466
-            //ΔHeight 268
-            //ΔLeft 233
-            //ΔTop 124
-
-            //double w = SystemParameters.PrimaryScreenWidth;//1920
-            //double h = SystemParameters.PrimaryScreenHeight;//1080
             if (Accounting != null)
             {
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
                 Accounting.Top = Top - (Accounting.Height - Height) / 2;
             }
-            //Accounting.DragMove();
         }
 
         private void Window_DragOver(object sender, DragEventArgs e)
@@ -2812,18 +2694,6 @@ namespace AccountingPC
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
                 Accounting.Top = Top - (Accounting.Height - Height) / 2;
             }
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            Accounting.menu.IsEnabled = false;
-            Accounting.viewGrid.IsEnabled = false;
-        }
-
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            Accounting.menu.IsEnabled = true;
-            Accounting.viewGrid.IsEnabled = true;
         }
     }
 }

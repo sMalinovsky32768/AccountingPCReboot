@@ -8,7 +8,6 @@ namespace AccountingPC
 {
     internal class InventoryNumberValidationRule : ValidationRule
     {
-        //public bool IsAvailable { get; set; }
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)
         {
             if (!Check(value))
@@ -22,8 +21,7 @@ namespace AccountingPC
         {
             string s = (string)value;
             string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            int inv;
-            if (s != "" && int.TryParse(s, out inv))
+            if (s != "" && int.TryParse(s, out int inv))
             {
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {

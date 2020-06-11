@@ -25,12 +25,6 @@
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <!--<DataGrid x:Name="baseSettings" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Cell">
-                <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="ParameterNameGrid" Header="Параметр" IsReadOnly="True" Binding="{Binding Path=Name}"/>
-                    <DataGridComboBoxColumn x:Name="ParameterValueGrid" Header="Значение" Binding="{Binding Path=Value}"/>
-                </DataGrid.Columns>
-            </DataGrid>-->
             <Grid x:Name="grid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>

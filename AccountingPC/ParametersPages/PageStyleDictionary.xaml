@@ -24,7 +24,6 @@
                         <Border BorderThickness="0 0 0 1" x:Name="border"
                                 BorderBrush="{DynamicResource surface-brush}" 
                                 Background="{DynamicResource background-brush}">
-                            <!--Для отображения введенного текста-->
                             <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -49,7 +48,6 @@
                         <Border BorderThickness="0 0 0 1" x:Name="border"
                                 BorderBrush="{DynamicResource surface-brush}" 
                                 Background="{DynamicResource background-brush}">
-                            <!--Для отображения введенного текста-->
                             <ScrollViewer Margin="0" x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -167,7 +165,6 @@
                                         <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.9" Color="{DynamicResource shadow}"/>
                                     </Border.Effect>
                                 </Border>
-                                <!---->
                                 <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                 </ScrollViewer>

@@ -113,7 +113,6 @@
     <Compile Include="AccountingReport\ReportRelationCollection.cs" />
     <Compile Include="AccountingReport\SortingParam.cs" />
     <Compile Include="AccountingReport\OrderNameCollection.cs" />
-    <Compile Include="Autorization.cs" />
     <Compile Include="BlackTheme\ForButton.cs" />
     <Compile Include="ChangePlaceWindow.xaml.cs">
       <DependentUpon>ChangePlaceWindow.xaml</DependentUpon>
@@ -122,20 +121,10 @@
       <DependentUpon>ChangeWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AccountingPCWindow.InvoiceManagement.cs" />
+    <Compile Include="DeviceOnPlace.cs" />
     <Compile Include="Devices.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="TypeDevice.cs" />
     <Compile Include="LightTheme\ForButton.cs" />
-    <Compile Include="Maps\CreateMapDefault.cs" />
-    <Compile Include="Maps\MapDefault.xaml.cs">
-      <DependentUpon>MapDefault.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Maps\Place.cs" />
-    <Compile Include="Maps\ViewMaps.xaml.cs">
-      <DependentUpon>ViewMaps.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Maps\ViewPlaceInfo.xaml.cs">
-      <DependentUpon>ViewPlaceInfo.xaml</DependentUpon>
-    </Compile>
     <Compile Include="InstalledSoftware.cs" />
     <Compile Include="AccountingPCValidationRules.cs" />
     <Compile Include="AccountingReport\Report.cs" />
@@ -143,7 +132,12 @@
     <Compile Include="Place.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Software.cs" />
+    <Compile Include="TypeChange.cs" />
+    <Compile Include="TypeDeviceName.cs" />
+    <Compile Include="TypeDeviceNames.cs" />
     <Compile Include="TypeDeviceOnPlace.cs" />
+    <Compile Include="TypeSoft.cs" />
+    <Compile Include="View.cs" />
     <Page Include="AccountingPCWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -307,18 +301,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Maps\MapDefault.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Maps\ViewMaps.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Maps\ViewPlaceInfo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="NewStyles\BlackTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -436,13 +418,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Scripts\CommonData.sql" />
     <Content Include="Scripts\Data.sql" />
-    <Content Include="Scripts\OnlyDB.sql" />
-    <Content Include="Scripts\Schema.sql" />
-    <Resource Include="images\window-close.png" />
-    <Resource Include="images\window-maximize.png" />
-    <Resource Include="images\window-minimize.png" />
-    <Resource Include="images\window-restore.png" />
+    <EmbeddedResource Include="Scripts\OnlyDB.sql" />
+    <EmbeddedResource Include="Scripts\Schema.sql" />
     <Content Include="images\icon.ico">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -75,7 +75,7 @@
                             </Button>
                         </StackPanel>
                         <Grid Grid.Row="2">
-                            <ListBox x:Name="devicesOnPlace" Height="400" Margin="1,5"><!--ItemsSource="{Binding Path=TypeDeviceCollection}"-->
+                            <ListBox x:Name="devicesOnPlace" Height="400" Margin="1,5">
                                 <ListBox.Style>
                                     <Style TargetType="ListBox" BasedOn="{StaticResource list-box-no-selected}">
                                         <Setter Property="ItemTemplate">
@@ -91,8 +91,6 @@
                                                                 <Setter Property="Margin" Value="5"/>
                                                             </Style>
                                                         </Grid.Resources>
-                                                        <!-- В первом выбирается тип, во втором устройство (не обязательно)
-                                                        Список устройств подгружается при выборе типа или определяется автоматически если тип не выбран -->
                                                         <ComboBox x:Name="__type" DisplayMemberPath="Name" SelectionChanged="Type_SelectionChanged"
                                                           SelectedItem="{Binding Path=TypeDevice}" Style="{DynamicResource box}" 
                                                                   ItemsSource="{x:Static local:TypeDeviceNames.Collection}"/>

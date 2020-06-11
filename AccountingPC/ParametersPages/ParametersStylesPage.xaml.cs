@@ -3,9 +3,6 @@ using System.Windows.Controls;
 
 namespace AccountingPC.ParametersPages
 {
-    /// <summary>
-    /// Логика взаимодействия для ParametersStylesPage.xaml
-    /// </summary>
     public partial class ParametersStylesPage : Page
     {
         public ParametersStylesPage()
