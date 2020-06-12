@@ -9,10 +9,48 @@ namespace AccountingPC
 {
     internal static class Security
     {
+        public static string Login
+        {
+            get
+            {
+                try
+                {
+                    UnicodeEncoding ByteConverter = new UnicodeEncoding();
+
+                    byte[] keyForLogin;
+                    byte[] ivForLogin;
+                    string decLogin;
+
+                    using (SHA256 sha = SHA256.Create())
+                    {
+                        keyForLogin = sha.ComputeHash(Convert.FromBase64String(SecuritySettings.Default.PASSWORD));
+                    }
+                    using (MD5 md5 = MD5.Create())
+                    {
+                        ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
+                    }
+
+                    using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                    {
+                        myAes.Key = keyForLogin;
+                        myAes.IV = ivForLogin;
+                        decLogin = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.LOGIN), myAes.Key, myAes.IV);
+                    }
+                    return decLogin;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
         public static void SetUserCredentials(string login, string pass)
         {
             try
             {
+                login = !string.IsNullOrWhiteSpace(login) ? login : Login;
+
                 UnicodeEncoding ByteConverter = new UnicodeEncoding();
 
                 string encLogin;
@@ -65,7 +103,6 @@ namespace AccountingPC
                 }
 
                 SecuritySettings.Default.PASSWORD = encPass;
-                SecuritySettings.Default.PASSWORD_HASH = Convert.ToBase64String(ivForPass);
                 SecuritySettings.Default.LOGIN = encLogin;
                 SecuritySettings.Default.LOGIN_HASH = Convert.ToBase64String(ivForLogin);
 
@@ -150,7 +187,6 @@ namespace AccountingPC
         {
             try
             {
-                login = string.IsNullOrWhiteSpace(login) ? SecuritySettings.Default.LOGIN : login;
                 UnicodeEncoding ByteConverter = new UnicodeEncoding();
 
                 byte[] keyForPass;
@@ -185,7 +221,7 @@ namespace AccountingPC
                 }
                 using (MD5 md5 = MD5.Create())
                 {
-                    ivForPass = Convert.FromBase64String(SecuritySettings.Default.PASSWORD_HASH);
+                    ivForPass = md5.ComputeHash(ByteConverter.GetBytes(oldPass));
                 }
                 using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
                 {
@@ -201,9 +237,8 @@ namespace AccountingPC
                 }
                 else return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message, ex.GetType().Name, MessageBoxButton.OKCancel, MessageBoxImage.Error);
                 return false;
             }
         }

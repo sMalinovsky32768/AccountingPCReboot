@@ -5,9 +5,6 @@
     <Setting Name="LOGIN_HASH" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="PASSWORD_HASH" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="LOGIN" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>

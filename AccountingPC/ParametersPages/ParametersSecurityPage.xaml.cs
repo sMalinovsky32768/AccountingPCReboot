@@ -1,9 +1,6 @@
 ﻿using AccountingPC.Properties;
-using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -25,6 +22,7 @@ namespace AccountingPC.ParametersPages
                     useAuth.SelectedIndex = 1;
                     break;
             }
+            login.Text = Security.Login;
         }
 
         private void ChangeClick(object sender, RoutedEventArgs e)

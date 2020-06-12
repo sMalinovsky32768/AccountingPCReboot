@@ -38,18 +38,6 @@ namespace AccountingPC.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string PASSWORD_HASH {
-            get {
-                return ((string)(this["PASSWORD_HASH"]));
-            }
-            set {
-                this["PASSWORD_HASH"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string LOGIN {
             get {
                 return ((string)(this["LOGIN"]));
