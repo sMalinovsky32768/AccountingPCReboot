@@ -363,18 +363,24 @@ namespace AccountingPC.AccountingReport
             fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime)e.AddedItems[0], DateTime.MaxValue));
         }
 
-
-        // учесть тип отчета
         private void Split_Checked(object sender, RoutedEventArgs e)
         {
+            selectionSortingParamGrid.Visibility = Visibility.Collapsed;
             selectionColumnGrid.Visibility = Visibility.Collapsed;
         }
 
         private void Split_Unchecked(object sender, RoutedEventArgs e)
         {
-            selectionColumnGrid.Visibility = Visibility.Visible;
+            if (CurrentReport.Options.TypeReport == TypeReport.Full)
+            {
+                selectionSortingParamGrid.Visibility = Visibility.Collapsed;
+                selectionColumnGrid.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                selectionSortingParamGrid.Visibility = Visibility.Visible;
+                selectionColumnGrid.Visibility = Visibility.Visible;
+            }
         }
-
-
     }
 }

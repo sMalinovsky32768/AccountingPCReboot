@@ -76,7 +76,7 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1" Content="Подтвердить" Width="120" Height="30" HorizontalAlignment="Right" Click="ChangeClick" 
+                <Button Grid.Column="1" Content="Изменить" Width="100" Height="30" HorizontalAlignment="Right" Click="ChangeClick" 
                         Style="{DynamicResource primary-button}" Margin="10 5" Padding="10 5"/>
             </Grid>
             <Grid Grid.Row="3" Height="30">

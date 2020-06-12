@@ -42,7 +42,7 @@
             <TextBlock Text="Логин:"/>
             <TextBox Grid.Row="1" x:Name="loginTextBox" Text="admin"/>
             <TextBlock Grid.Column="1" Text="Пароль:"/>
-            <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passwordTextBox" Password="admin"/>
+            <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passwordBox" Password="admin"/>
             <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="loginButton" Content="Войти" Click="LoginClick" 
                     IsDefault="True" Style="{DynamicResource primary-button}" Margin="10 0" Height="30"/>
         </Grid>

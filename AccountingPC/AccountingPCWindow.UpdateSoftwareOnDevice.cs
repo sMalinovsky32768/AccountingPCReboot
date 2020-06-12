@@ -35,7 +35,7 @@ namespace AccountingPC
             for (int i = 0; i < DefaultDataSet.Tables["PCSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["PCSoftware"].Rows[i];
-                PcSoftware.Add(new InstalledSoftware()
+                PcSoftware?.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -57,7 +57,7 @@ namespace AccountingPC
             for (int i = 0; i < DefaultDataSet.Tables["NotebookSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["NotebookSoftware"].Rows[i];
-                PcSoftware?.Add(new InstalledSoftware()
+                NotebookSoftware?.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -79,7 +79,7 @@ namespace AccountingPC
             for (int i = 0; i < DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["PCNotInstalledSoftware"].Rows[i];
-                PcSoftware.Add(new InstalledSoftware()
+                PcNotInstalledSoftware?.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
@@ -101,7 +101,7 @@ namespace AccountingPC
             for (int i = 0; i < DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows.Count; i++)
             {
                 DataRow row = DefaultDataSet.Tables["NotebookNotInstalledSoftware"].Rows[i];
-                PcSoftware.Add(new InstalledSoftware()
+                NotebookNotInstalledSoftware?.Add(new InstalledSoftware()
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),

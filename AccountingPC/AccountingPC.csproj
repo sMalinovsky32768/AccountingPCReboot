@@ -123,6 +123,12 @@
     <Compile Include="AccountingPCWindow.InvoiceManagement.cs" />
     <Compile Include="DeviceOnPlace.cs" />
     <Compile Include="Devices.cs" />
+    <Compile Include="Properties\SecuritySettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>SecuritySettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Security.cs" />
     <Compile Include="TypeDevice.cs" />
     <Compile Include="LightTheme\ForButton.cs" />
     <Compile Include="InstalledSoftware.cs" />
@@ -397,6 +403,10 @@
       <LastGenOutput>AccountingPCWindowSettings.Designer.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\SecuritySettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>SecuritySettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

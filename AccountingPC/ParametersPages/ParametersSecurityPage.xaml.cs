@@ -16,7 +16,6 @@ namespace AccountingPC.ParametersPages
         public ParametersSecurityPage()
         {
             InitializeComponent();
-            login.Text = Settings.Default.USER_NAME;
             switch (Settings.Default.USE_AUTH)
             {
                 case true:
@@ -34,7 +33,7 @@ namespace AccountingPC.ParametersPages
                 || string.IsNullOrWhiteSpace(newPass.Password) 
                 || string.IsNullOrWhiteSpace(repeatPass.Password)))
             {
-                KeyValuePair<bool, string> res = ChangePassword();
+                KeyValuePair<bool, string> res = ChangeCredentials();
                 if (res.Key)
                 {
                     changeStatus.Content = res.Value;
@@ -60,43 +59,25 @@ namespace AccountingPC.ParametersPages
                     MessageBox.Show(res.Value);
                 }
             }
-            Settings.Default.USER_NAME = login.Text;
         }
 
-        /// <summary>
-        /// Метод сравнивает старый пароль с сохраненным. 
-        /// Если пароли равны, то сравнивается новый пароль с его повтором. 
-        /// Если новый пароль совпадает, хешированный пароль сохраняется.
-        /// </summary>
-        /// <returns>Возвращает пару ключ-значение.
-        /// Ключ представляет логическое значение. True - пароль изменен. False - Произошла ошибка.
-        /// Значение представляет сообщение о статусе изменения пароля.
-        /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public KeyValuePair<bool, string> ChangePassword()
+        public KeyValuePair<bool, string> ChangeCredentials()
         {
-            string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(oldPass.Password)));
-            string setPass = Settings.Default.PASSWORD_HASH;
-            if (enPass == setPass)
+            if (newPass.Password == repeatPass.Password)
             {
-                if (newPass.Password == repeatPass.Password)
+                if(Security.UpdatCredentials(oldPass.Password, newPass.Password, login.Text))
                 {
-                    Settings.Default.PASSWORD_HASH = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(repeatPass.Password)));
-                    Settings.Default.Save();
                     return new KeyValuePair<bool, string>(true, "Пароль успешно изменен");
                 }
-                else
-                {
-                    return new KeyValuePair<bool, string>(false, "Пароли не совпадают");
-                }
+                else return new KeyValuePair<bool, string>(false, "Неверный пароль");
             }
             else
             {
-                return new KeyValuePair<bool, string>(false, "Неверный пароль");
+                return new KeyValuePair<bool, string>(false, "Пароли не совпадают");
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UseAuth_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             switch (useAuth.SelectedIndex)

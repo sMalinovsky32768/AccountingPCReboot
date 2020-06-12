@@ -63,7 +63,9 @@ namespace AccountingPC
 
                 notify.Visible = false;
             }
-            SetUserCredentials();
+            if (string.IsNullOrWhiteSpace(SecuritySettings.Default.LOGIN) ||
+                string.IsNullOrWhiteSpace(SecuritySettings.Default.PASSWORD))
+                Security.SetUserCredentials();
             // CreateDB();
         }
 
@@ -89,31 +91,6 @@ namespace AccountingPC
                 else
                     new AccountingPCWindow().Show();
             }
-        }
-
-        private void SetUserCredentials(string login, string pass)
-        {
-            if (string.IsNullOrWhiteSpace(Settings.Default.USER_NAME))
-            {
-                Settings.Default.USER_NAME = login;
-            }
-
-            if (string.IsNullOrWhiteSpace(Settings.Default.PASSWORD_HASH))
-            {
-                Settings.Default.PASSWORD_HASH = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(pass)));
-            }
-
-            Settings.Default.Save();
-        }
-
-        private void SetUserCredentials(string userCredentials)
-        {
-            SetUserCredentials(userCredentials, userCredentials);
-        }
-
-        private void SetUserCredentials()
-        {
-            SetUserCredentials("admin");
         }
 
         private void CreateDB()

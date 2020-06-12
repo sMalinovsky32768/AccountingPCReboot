@@ -13,11 +13,11 @@ namespace AccountingPC.Properties {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.6.0.0")]
-    internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
+    internal sealed partial class SecuritySettings : global::System.Configuration.ApplicationSettingsBase {
         
-        private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
+        private static SecuritySettings defaultInstance = ((SecuritySettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new SecuritySettings())));
         
-        public static Settings Default {
+        public static SecuritySettings Default {
             get {
                 return defaultInstance;
             }
@@ -25,37 +25,49 @@ namespace AccountingPC.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SHUTDOWN_ON_EXPLICIT {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LOGIN_HASH {
             get {
-                return ((bool)(this["SHUTDOWN_ON_EXPLICIT"]));
+                return ((string)(this["LOGIN_HASH"]));
             }
             set {
-                this["SHUTDOWN_ON_EXPLICIT"] = value;
+                this["LOGIN_HASH"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool USE_AUTH {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PASSWORD_HASH {
             get {
-                return ((bool)(this["USE_AUTH"]));
+                return ((string)(this["PASSWORD_HASH"]));
             }
             set {
-                this["USE_AUTH"] = value;
+                this["PASSWORD_HASH"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int THEME {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LOGIN {
             get {
-                return ((int)(this["THEME"]));
+                return ((string)(this["LOGIN"]));
             }
             set {
-                this["THEME"] = value;
+                this["LOGIN"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PASSWORD {
+            get {
+                return ((string)(this["PASSWORD"]));
+            }
+            set {
+                this["PASSWORD"] = value;
             }
         }
     }

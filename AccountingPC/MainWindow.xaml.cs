@@ -24,12 +24,14 @@ namespace AccountingPC
         private void LoginClick(object sender, RoutedEventArgs e)
         {
             string login = loginTextBox.Text;
-            string uName = Settings.Default.USER_NAME;
-            string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
-            string setPass = Settings.Default.PASSWORD_HASH;
-            bool isTrueLogin = login == uName;
-            bool isTruePassword = enPass == setPass;
-            if (isTrueLogin && isTruePassword)
+            string pass = passwordBox.Password;
+            //string uName = Settings.Default.LOGIN_HASH;
+            //string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
+            //string setPass = Settings.Default.PASSWORD_HASH;
+            //bool isTrueLogin = login == uName;
+            //bool isTruePassword = enPass == setPass;
+            //if (isTrueLogin && isTruePassword)
+            if (Security.VerifyCredentials(login, pass))
             {
                 Hide();
                 accounting = new AccountingPCWindow();
