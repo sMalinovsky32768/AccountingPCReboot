@@ -95,7 +95,7 @@
     <Compile Include="AccountingPCWindow.Part2.cs" />
     <Compile Include="AccountingPCWindow.Part1.cs" />
     <Compile Include="AccountingPCWindow.WindowChange.cs" />
-    <Compile Include="AccountingPCWindowSettings.Designer.cs">
+    <Compile Include="Properties\AccountingPCWindowSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>AccountingPCWindowSettings.settings</DependentUpon>
@@ -307,46 +307,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NewStyles\BlackTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\BoxStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\ButtonStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\CalendarStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\Color.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\CommonStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\DataGridStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\LightTheme.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\MenuStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="NewStyles\Scroll.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="ParametersPages\PageStyleDictionary.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -398,7 +358,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="AccountingPCWindowSettings.settings">
+    <None Include="Properties\AccountingPCWindowSettings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>AccountingPCWindowSettings.Designer.cs</LastGenOutput>
     </None>

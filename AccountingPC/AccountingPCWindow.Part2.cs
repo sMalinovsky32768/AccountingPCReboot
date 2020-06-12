@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccountingPC.Properties;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
