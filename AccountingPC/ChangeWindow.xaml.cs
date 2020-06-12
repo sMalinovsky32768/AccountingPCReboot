@@ -68,9 +68,11 @@ namespace AccountingPC
             {
                 case TypeChange.Add:
                     saveButton.Content = "Добавить";
+                    saveSoftButton.Content = "Добавить";
                     break;
                 case TypeChange.Change:
                     saveButton.Content = "Изменить";
+                    saveSoftButton.Content = "Изменить";
                     break;
             }
             ChangeView();

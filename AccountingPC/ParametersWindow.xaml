@@ -48,8 +48,8 @@
                 <Frame x:Name="frameSettings" Grid.Column="2" Source="/AccountingPC;component/ParametersPages/ParametersBasicPage.xaml" NavigationUIVisibility="Hidden"/>
             </Grid>
             <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Отмена" Style="{DynamicResource default-button}" Padding="20 5" Margin="5" Width="100" IsCancel="True" Click="ButtonClick"/>
-                <Button Content="ОК" Style="{DynamicResource primary-button}" Padding="20 5" Margin="5" Width="100" IsDefault="True" Click="ButtonClick"/>
+                <Button Content="Отмена" Style="{DynamicResource default-button}" Padding="5" Margin="5" Width="100" IsCancel="True" Click="ButtonClick"/>
+                <Button Content="Применить" Style="{DynamicResource primary-button}" Padding="5" Margin="5" Width="100" IsDefault="True" Click="ButtonClick"/>
             </StackPanel>
         </Grid>
     </Border>

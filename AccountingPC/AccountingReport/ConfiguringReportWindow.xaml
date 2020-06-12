@@ -208,9 +208,9 @@
                                 <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption" 
                                              Content="Открыть в Excel" Checked="IsOperReport_Checked" Grid.Column="1"/>
                                 <RadioButton x:Name="IsPrintReport" GroupName="CreateReportOption" Visibility="Collapsed"
-                                             Content="Печать" Checked="IsPrintReport_Checked" Grid.Column="2"/>
+                                             Content="Печать" Checked="IsPrintReport_Checked" Grid.Column="2" IsEnabled="False"/>
                                 <RadioButton x:Name="IsPreviewReport" GroupName="CreateReportOption" Content="Предварительный просмотр"
-                                             Checked="IsPreviewReport_Checked" Grid.Column="3" Visibility="Collapsed"/>
+                                             Checked="IsPreviewReport_Checked" Grid.Column="3" Visibility="Collapsed" IsEnabled="False"/>
                             </Grid>
                             <Separator DockPanel.Dock="Top"/>
                             <Grid DockPanel.Dock="Top" Margin="10,0" x:Name="periodGrid">
