@@ -68,8 +68,9 @@ namespace AccountingPC
                 SecuritySettings.Default.PASSWORD_HASH = Convert.ToBase64String(ivForPass);
                 SecuritySettings.Default.LOGIN = encLogin;
                 SecuritySettings.Default.LOGIN_HASH = Convert.ToBase64String(ivForLogin);
+
                 SecuritySettings.Default.Save();
-                
+
             }
             catch (Exception ex)
             {

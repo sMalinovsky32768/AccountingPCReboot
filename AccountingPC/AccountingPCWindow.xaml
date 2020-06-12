@@ -64,7 +64,7 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="viewGrid">
-                    <Grid x:Name="equipmentGrid" Visibility="Collapsed" Margin="0,5,0,0">
+                    <Grid x:Name="equipmentGrid" Visibility="Visible" Margin="0,5,0,0">
                         <Grid.Style>
                             <Style>
                                 <Style.Triggers>
@@ -106,7 +106,10 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="auto"/>
                                     </Grid.ColumnDefinitions>
-                                    <Grid></Grid>
+                                    <Grid>
+                                        <CheckBox VerticalAlignment="Center" Margin="5" Content="В рабочем состоянии" x:Name="isWorkingCondition" 
+                                                  Checked="IsWorkingCondition_Checked" Unchecked="IsWorkingCondition_Unchecked" Visibility="Collapsed"/>
+                                    </Grid>
                                     <Grid Grid.Column="1">
                                         <Grid.Resources>
                                             <Style TargetType="{x:Type Button}" x:Key="btn-view" BasedOn="{StaticResource default-button}">
@@ -376,7 +379,7 @@
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Grid x:Name="locationManagementGrid" Visibility="Visible" Margin="0,5,0,0">
+                    <Grid x:Name="locationManagementGrid" Visibility="Collapsed" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition MaxWidth="400" MinWidth="250"/>
                             <ColumnDefinition Width="auto"/>

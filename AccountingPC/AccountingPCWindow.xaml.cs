@@ -350,7 +350,27 @@ namespace AccountingPC
 
         private void EquipmentView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if (equipmentView.SelectedItems.Count != 1)
+            {
+                isWorkingCondition.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                isWorkingCondition.Visibility = Visibility.Visible;
+            }
             DeviceID = Convert.ToInt32(((DataRowView)equipmentView?.SelectedItem)?.Row?[0]);
+            object condition = ((DataRowView)equipmentView?.SelectedItem)?.Row?["IsWorkingCondition"];
+            if (condition != null)
+            {
+                if (condition.GetType() == typeof(DBNull))
+                {
+                    isWorkingCondition.IsChecked = true;
+                }
+                else
+                {
+                    isWorkingCondition.IsChecked = Convert.ToBoolean(condition);
+                }
+            }
             BitmapFrame frame = null;
             object obj = equipmentView.SelectedItems.Count > 0 ? (((DataRowView)equipmentView.SelectedItems?[0])?.Row["ImageID"]) : 0;
             int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? 0 : obj);
@@ -521,6 +541,9 @@ namespace AccountingPC
             if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("ID"))
                 equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("ID")].Visibility = Visibility.Collapsed;
 
+            if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("IsWorkingCondition"))
+                equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("IsWorkingCondition")].Visibility = Visibility.Collapsed;
+
             if (((DataView)equipmentView.ItemsSource).Table.Columns.Contains("InvoiceID"))
                 equipmentView.Columns[((DataView)equipmentView.ItemsSource).Table.Columns.IndexOf("InvoiceID")].Visibility = Visibility.Collapsed;
 
@@ -668,6 +691,30 @@ namespace AccountingPC
         {
             TypeChange = TypeChange.Change;
             new ChangePlaceWindow(this).Show();
+        }
+
+        private void IsWorkingCondition_Checked(object sender, RoutedEventArgs e)
+        {
+            if (DeviceID != 0)
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    new SqlCommand($"Update {TypeDevice} set IsWorkingCondition=1 where ID={DeviceID}", connection).ExecuteNonQuery();
+                }
+            }
+        }
+
+        private void IsWorkingCondition_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (DeviceID != 0)
+            {
+                using (SqlConnection connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    new SqlCommand($"Update {TypeDevice} set IsWorkingCondition=0 where ID={DeviceID}", connection).ExecuteNonQuery();
+                }
+            }
         }
     }
 }

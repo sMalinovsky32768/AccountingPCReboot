@@ -25,12 +25,6 @@ namespace AccountingPC
         {
             string login = loginTextBox.Text;
             string pass = passwordBox.Password;
-            //string uName = Settings.Default.LOGIN_HASH;
-            //string enPass = Convert.ToBase64String(SHA256.Create().ComputeHash(Encoding.ASCII.GetBytes(passwordTextBox.Password)));
-            //string setPass = Settings.Default.PASSWORD_HASH;
-            //bool isTrueLogin = login == uName;
-            //bool isTruePassword = enPass == setPass;
-            //if (isTrueLogin && isTruePassword)
             if (Security.VerifyCredentials(login, pass))
             {
                 Hide();
