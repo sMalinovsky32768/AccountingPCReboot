@@ -66,18 +66,18 @@
                                             <local:Device x:Name="device"/>
                                         </Grid.DataContext>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
@@ -643,12 +643,12 @@
                                             <local:Software x:Name="soft"/>
                                         </Grid.DataContext>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100"/>
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>

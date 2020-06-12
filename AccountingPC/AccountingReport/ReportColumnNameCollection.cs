@@ -42,6 +42,7 @@ namespace AccountingPC.AccountingReport
         Count,
         IsAvailable,
         TotalCount,
+        IsWorkingCondition,
     }
 
     internal class ReportColumnName
@@ -98,6 +99,7 @@ namespace AccountingPC.AccountingReport
             new ReportColumnName(ReportColumn.Count, "Количество"),
             new ReportColumnName(ReportColumn.IsAvailable, "Доступно"),
             new ReportColumnName(ReportColumn.TotalCount, "Общее количество"),
+            new ReportColumnName(ReportColumn.IsWorkingCondition, "Состояние"),
         };
 
         public static ObservableCollection<ReportColumnName> Collection => collection;

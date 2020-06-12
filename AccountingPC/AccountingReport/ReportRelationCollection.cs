@@ -89,6 +89,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -112,6 +113,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -134,6 +136,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -153,6 +156,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -175,6 +179,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -195,6 +200,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -216,6 +222,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -234,6 +241,7 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.InvoiceNumber,
                         ReportColumn.AcquisitionDate,
                         ReportColumn.Audience,
+                        ReportColumn.IsWorkingCondition,
                     },
                 }
             },
@@ -308,7 +316,6 @@ namespace AccountingPC.AccountingReport
                         ReportColumn.Count,
                         ReportColumn.TotalCount,
                         ReportColumn.IsAvailable,
-
                     },
                 }
             },
