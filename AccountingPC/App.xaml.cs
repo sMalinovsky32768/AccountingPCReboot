@@ -56,7 +56,22 @@ namespace AccountingPC
                 notify = new NotifyIcon(new Container());
                 notifyContextMenu = new ContextMenu(new[]
                     {new MenuItem("Выход", ShutdownCurrentApp)});
-                notify.Icon = new Icon("images/icon.ico");
+                try
+                {
+                    var assembly = Assembly.GetExecutingAssembly();
+                    var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
+                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                    {
+                        if (stream != null)
+                            notify.Icon = new Icon(stream);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Clipboard.SetText(ex.ToString());
+                }
+
+                //notify.Icon = new Icon("images/icon.ico");
                 notify.ContextMenu = notifyContextMenu;
                 notify.Text = "AccountingPC";
                 notify.DoubleClick += NotifyDoubleClick;

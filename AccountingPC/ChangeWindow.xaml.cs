@@ -4,6 +4,8 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 
 namespace AccountingPC
@@ -50,6 +53,20 @@ namespace AccountingPC
             DefaultDataSet.Tables.Add("Invoice");
 
             InitializeComponent();
+            try
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                        Icon = BitmapFrame.Create(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Clipboard.SetText(ex.ToString());
+            }
             Owner = window;
             Accounting = window;
         }

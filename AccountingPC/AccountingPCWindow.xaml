@@ -5,7 +5,7 @@
         xmlns:local="clr-namespace:AccountingPC"
         x:Name="window" x:Class="AccountingPC.AccountingPCWindow" mc:Ignorable="d"
         Title="AccountingPC" Height="768" Width="1366" MinWidth="960" MinHeight="768"
-        WindowStartupLocation="CenterScreen" Icon="images/icon.ico" WindowStyle="None"
+        WindowStartupLocation="CenterScreen" WindowStyle="None"
         Loaded="Window_Loaded" Closed="Window_Closed" SizeChanged="Window_SizeChanged"
         SourceInitialized="Window_SourceInitialized"
         DragOver="Window_DragOver" MaxHeight="{Binding SystemParameters.MaximizedPrimaryScreenHeight}"

@@ -382,9 +382,7 @@
     <Content Include="Scripts\Data.sql" />
     <EmbeddedResource Include="Scripts\OnlyDB.sql" />
     <EmbeddedResource Include="Scripts\Schema.sql" />
-    <Content Include="images\icon.ico">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <EmbeddedResource Include="images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Interop.Excel">

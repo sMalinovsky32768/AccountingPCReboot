@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using Microsoft.Win32;
+using System.Windows.Media.Imaging;
 
 namespace AccountingPC.AccountingReport
 {
@@ -16,6 +19,20 @@ namespace AccountingPC.AccountingReport
         public ConfiguringReportWindow(TypeReport typeReport = TypeReport.Simple)
         {
             InitializeComponent();
+            try
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                        Icon = BitmapFrame.Create(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Clipboard.SetText(ex.ToString());
+            }
             typeReportBox.ItemsSource = ReportNameCollection.Collection;
             typeReportBox.DisplayMemberPath = "Name";
             CurrentReport = new Report();

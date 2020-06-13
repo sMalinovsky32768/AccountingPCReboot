@@ -1,5 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
 
 namespace AccountingPC
 {
@@ -14,6 +19,20 @@ namespace AccountingPC
         public MainWindow()
         {
             InitializeComponent();
+            try
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                        Icon = BitmapFrame.Create(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Clipboard.SetText(ex.ToString());
+            }
             loginTextBox.Focus();
         }
 

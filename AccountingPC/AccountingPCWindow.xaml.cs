@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,6 +91,20 @@ namespace AccountingPC
             DefaultDataSet.Tables.Add("DeviceOnPlace");
 
             InitializeComponent();
+            try
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
+                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                        Icon = BitmapFrame.Create(stream);
+                }
+            }
+            catch (Exception ex)
+            {
+                Clipboard.SetText(ex.ToString());
+            }
             LastHeight = Height;
             LastWidth = Width;
             UpdateAllEquipmentData();

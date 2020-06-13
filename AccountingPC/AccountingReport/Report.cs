@@ -75,91 +75,91 @@ namespace AccountingPC.AccountingReport
         }
 
         public ReportCommand AddUsedReportColumns => addUsedReportColumns ??
-                                                     (addUsedReportColumns = new ReportCommand(obj =>
-                                                         {
-                                                             if (obj != null)
-                                                             {
-                                                                 var columnName = obj as ReportColumnName;
-                                                                 for (var i = 0; i < UnusedReportColumns.Count; i++)
-                                                                 {
-                                                                     var reportColumnName = UnusedReportColumns[i];
-                                                                     if (reportColumnName == columnName)
-                                                                         SelectedUnusedColumn =
-                                                                             UnusedReportColumns[
-                                                                                 UnusedReportColumns
-                                                                                     .IndexOf(columnName) <
-                                                                                 UnusedReportColumns.Count - 1
-                                                                                     ? UnusedReportColumns.IndexOf(
-                                                                                         columnName) + 1
-                                                                                     : 0];
-                                                                 }
+         (addUsedReportColumns = new ReportCommand(obj =>
+             {
+                 if (obj != null)
+                 {
+                     var columnName = obj as ReportColumnName;
+                     for (var i = 0; i < UnusedReportColumns.Count; i++)
+                     {
+                         var reportColumnName = UnusedReportColumns[i];
+                         if (reportColumnName == columnName)
+                             SelectedUnusedColumn =
+                                 UnusedReportColumns[
+                                     UnusedReportColumns
+                                         .IndexOf(columnName) <
+                                     UnusedReportColumns.Count - 1
+                                         ? UnusedReportColumns.IndexOf(
+                                             columnName) + 1
+                                         : 0];
+                     }
 
-                                                                 UsedReportColumns.Add(columnName);
-                                                                 UnusedReportColumns.Remove(columnName);
-                                                             }
-                                                         },
-                                                         obj =>
-                                                         {
-                                                             if (UnusedReportColumns.Count > 0)
-                                                             {
-                                                                 if (SelectedUnusedColumn != null)
-                                                                     return true;
-                                                                 return false;
-                                                             }
+                     UsedReportColumns.Add(columnName);
+                     UnusedReportColumns.Remove(columnName);
+                 }
+             },
+             obj =>
+             {
+                 if (UnusedReportColumns.Count > 0)
+                 {
+                     if (SelectedUnusedColumn != null)
+                         return true;
+                     return false;
+                 }
 
-                                                             return false;
-                                                         }));
+                 return false;
+             }));
 
         public ReportCommand DelUsedReportColumns => delUsedReportColumns ??
-                                                     (delUsedReportColumns = new ReportCommand(obj =>
-                                                         {
-                                                             if (obj != null)
-                                                             {
-                                                                 var columnName = obj as ReportColumnName;
-                                                                 for (var i = 0; i < UsedReportColumns.Count; i++)
-                                                                 {
-                                                                     var reportColumnName = UsedReportColumns[i];
-                                                                     if (reportColumnName == columnName)
-                                                                         SelectedUsedColumn =
-                                                                             UsedReportColumns[
-                                                                                 UsedReportColumns.IndexOf(columnName) <
-                                                                                 UsedReportColumns.Count - 1
-                                                                                     ? UsedReportColumns.IndexOf(
-                                                                                         columnName) + 1
-                                                                                     : 0];
-                                                                 }
+         (delUsedReportColumns = new ReportCommand(obj =>
+             {
+                 if (obj != null)
+                 {
+                     var columnName = obj as ReportColumnName;
+                     for (var i = 0; i < UsedReportColumns.Count; i++)
+                     {
+                         var reportColumnName = UsedReportColumns[i];
+                         if (reportColumnName == columnName)
+                             SelectedUsedColumn =
+                                 UsedReportColumns[
+                                     UsedReportColumns.IndexOf(columnName) <
+                                     UsedReportColumns.Count - 1
+                                         ? UsedReportColumns.IndexOf(
+                                             columnName) + 1
+                                         : 0];
+                     }
 
-                                                                 SortingParam sortingParam = null;
-                                                                 for (var i = 0;
-                                                                     i < Options.SortingParamList.Count;
-                                                                     i++)
-                                                                 {
-                                                                     var param = Options.SortingParamList[i];
-                                                                     if (param.ColumnName.Column == columnName.Column)
-                                                                     {
-                                                                         sortingParam = param;
-                                                                         break;
-                                                                     }
-                                                                 }
+                     SortingParam sortingParam = null;
+                     for (var i = 0;
+                         i < Options.SortingParamList.Count;
+                         i++)
+                     {
+                         var param = Options.SortingParamList[i];
+                         if (param.ColumnName.Column == columnName.Column)
+                         {
+                             sortingParam = param;
+                             break;
+                         }
+                     }
 
-                                                                 if (sortingParam != null)
-                                                                     Options.SortingParamList.Remove(sortingParam);
+                     if (sortingParam != null)
+                         Options.SortingParamList.Remove(sortingParam);
 
-                                                                 UnusedReportColumns.Add(columnName);
-                                                                 UsedReportColumns.Remove(columnName);
-                                                             }
-                                                         },
-                                                         obj =>
-                                                         {
-                                                             if (UsedReportColumns.Count > 0)
-                                                             {
-                                                                 if (SelectedUsedColumn != null)
-                                                                     return true;
-                                                                 return false;
-                                                             }
+                     UnusedReportColumns.Add(columnName);
+                     UsedReportColumns.Remove(columnName);
+                 }
+             },
+             obj =>
+             {
+                 if (UsedReportColumns.Count > 0)
+                 {
+                     if (SelectedUsedColumn != null)
+                         return true;
+                     return false;
+                 }
 
-                                                             return false;
-                                                         }));
+                 return false;
+             }));
 
         public ReportOptions Options { get; }
 
