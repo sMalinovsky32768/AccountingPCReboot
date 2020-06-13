@@ -59,8 +59,6 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="true">
-                            <!--<Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource primary-dark-brush}"/>
-                            <Setter TargetName="btnContent" Property="TextElement.Foreground" Value="{DynamicResource on-primary-dark-brush}"/>-->
                             <Setter TargetName="btnBorder" Property="Effect">
                                 <Setter.Value>
                                     <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
@@ -146,7 +144,6 @@
     </Style>
     <Style x:Key="exitAppButton" BasedOn="{StaticResource controlButton}">
         <Setter Property="Button.Command" Value="{x:Static local:ForButton.CloseCommand}"/>
-        <!--<Setter Property="Button.Click" Value="CloseWindow"/>-->
         <Setter Property="Button.Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

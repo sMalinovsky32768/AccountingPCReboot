@@ -95,6 +95,7 @@
     <Compile Include="AccountingPCWindow.Part2.cs" />
     <Compile Include="AccountingPCWindow.Part1.cs" />
     <Compile Include="AccountingPCWindow.WindowChange.cs" />
+    <Compile Include="AccountingReport\Report.CreateExcel.cs" />
     <Compile Include="Properties\AccountingPCWindowSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -102,9 +103,6 @@
     </Compile>
     <Compile Include="AccountingReport\ConfiguringReportWindow.xaml.cs">
       <DependentUpon>ConfiguringReportWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="AccountingReport\PreviewReportWindow.xaml.cs">
-      <DependentUpon>PreviewReportWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AccountingReport\ReportColumnNameCollection.cs" />
     <Compile Include="AccountingReport\ReportCommand.cs" />
@@ -149,10 +147,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="AccountingReport\ConfiguringReportWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="AccountingReport\PreviewReportWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

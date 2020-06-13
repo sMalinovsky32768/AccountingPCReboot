@@ -32,7 +32,6 @@ namespace AccountingPC
                     temp.IsRemoved = true;
                     TypeDeviceRemovedCollection.Add(temp);
                     TypeDeviceCollection.Remove(temp);
-                    //((TypeDeviceOnPlace)obj).IsRemoved = true;
                 },
                 (obj) =>
                 {

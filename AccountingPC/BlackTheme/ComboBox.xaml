@@ -10,12 +10,6 @@
             <Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="5" BorderThickness="0" 
                     Background="{DynamicResource surface-brush}">
             </Border>
-            <!--<Path x:Name="Arrow" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"
-                  Data="M 0 0 L 5 5 L 10 0 Z">
-                <Path.Fill>
-                    <SolidColorBrush Color="{DynamicResource gray-200}"/>
-                </Path.Fill>
-            </Path>-->
         </Grid>
     </ControlTemplate>
 
@@ -106,7 +100,7 @@
                                         <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.9" Color="{DynamicResource shadow}"/>
                                     </Border.Effect>
                                 </Border>
-                                <!----><ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                 </ScrollViewer>
                             </Grid>

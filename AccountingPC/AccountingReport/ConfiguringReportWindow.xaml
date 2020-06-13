@@ -1,9 +1,8 @@
 ﻿<Window x:Name="window" x:Class="AccountingPC.AccountingReport.ConfiguringReportWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:AccountingPC.AccountingReport"
         mc:Ignorable="d"
         Title="Создание отчета" Height="920" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
     <WindowChrome.WindowChrome>
@@ -196,22 +195,14 @@
                                     </Style>
                                 </Separator.Style>
                             </Separator>
-                            <Grid DockPanel.Dock="Top" Margin="10,0">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                    <ColumnDefinition Width="auto"/>
-                                </Grid.ColumnDefinitions>
+                            <StackPanel DockPanel.Dock="Top" Margin="10,0" Orientation="Horizontal">
                                 <RadioButton x:Name="IsSaveReport" GroupName="CreateReportOption" 
-                                             Content="Сохранить" Checked="IsSaveReport_Checked"/>
+                                             Content="Сохранить" Checked="IsSaveReport_Checked" Margin="0,0,20,0"/>
+                                <RadioButton x:Name="IsSaveAsPDF" GroupName="CreateReportOption" 
+                                             Content="Сохранить в PDF" Checked="IsSaveAsPDF_Checked" Margin="0,0,20,0"/>
                                 <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption" 
-                                             Content="Открыть в Excel" Checked="IsOperReport_Checked" Grid.Column="1"/>
-                                <RadioButton x:Name="IsPrintReport" GroupName="CreateReportOption" Visibility="Collapsed"
-                                             Content="Печать" Checked="IsPrintReport_Checked" Grid.Column="2" IsEnabled="False"/>
-                                <RadioButton x:Name="IsPreviewReport" GroupName="CreateReportOption" Content="Предварительный просмотр"
-                                             Checked="IsPreviewReport_Checked" Grid.Column="3" Visibility="Collapsed" IsEnabled="False"/>
-                            </Grid>
+                                             Content="Открыть в Excel" Checked="IsOperReport_Checked" Margin="0,0,20,0"/>
+                            </StackPanel>
                             <Separator DockPanel.Dock="Top"/>
                             <Grid DockPanel.Dock="Top" Margin="10,0" x:Name="periodGrid">
                                 <Grid.RowDefinitions>

@@ -25,7 +25,6 @@
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
                             </Border.Effect>
-                            <!--Для отображения введенного текста-->
                             <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -69,7 +68,6 @@
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
                             </Border.Effect>
-                            <!--Для отображения введенного текста-->
                             <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -103,7 +101,6 @@
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
                             </Border.Effect>
-                            <!--Для отображения введенного текста-->
                             <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>

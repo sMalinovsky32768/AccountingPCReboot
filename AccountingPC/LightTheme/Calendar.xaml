@@ -87,7 +87,7 @@
                                 <VisualState Name="Active"/>
                                 <VisualState Name="Inactive">
                                     <Storyboard>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="NormalText" To="{DynamicResource surface-light}"
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="NormalText" To="{DynamicResource surface}"
                                                         Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </VisualState>
@@ -136,7 +136,7 @@
                         </Rectangle>
                         <ContentPresenter x:Name="NormalText" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="5,1,5,1"
-                                          TextElement.Foreground="{DynamicResource on-surface-light-brush}"/>
+                                          TextElement.Foreground="{DynamicResource on-surface-brush}"/>
                         <Path x:Name="Blackout" Opacity="0" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                               RenderTransformOrigin="0.5,0.5" Fill="{DynamicResource on-background-brush}" Stretch="Fill" Data="M8.1772461,11.029181 L10.433105,
                               11.029181 L11.700684,12.801641 L12.973633, 11.029181 L15.191895,11.029181 L12.844727,
@@ -202,7 +202,7 @@
                                 <VisualState Name="Active"/>
                                 <VisualState Name="Inactive">
                                     <Storyboard>
-                                        <ColorAnimation Duration="0" Storyboard.TargetName="NormalText" To="{DynamicResource surface-light}"
+                                        <ColorAnimation Duration="0" Storyboard.TargetName="NormalText" To="{DynamicResource surface}"
                                                         Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"/>
                                     </Storyboard>
                                 </VisualState>
@@ -239,7 +239,7 @@
                         <ContentPresenter x:Name="NormalText" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="1,0,1,1">
                             <TextElement.Foreground>
-                                <SolidColorBrush Color="{DynamicResource on-surface-light}"/>
+                                <SolidColorBrush Color="{DynamicResource on-surface}"/>
                             </TextElement.Foreground>
                         </ContentPresenter>
                         <Rectangle x:Name="CalendarButtonFocusVisual" Visibility="Collapsed" IsHitTestVisible="false" RadiusX="1" RadiusY="1">
@@ -278,7 +278,6 @@
                     </VisualState>
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
-            <!--<Rectangle Fill="Transparent" Opacity="1" Stretch="Fill"/>-->
             <Grid  Background="Transparent">
                 <Path x:Name="path" Margin="14,-6,0,0" Stretch="Fill" HorizontalAlignment="Left" Height="10"
                       VerticalAlignment="Center" Width="6" Data="M288.75,232.25 L288.75,240.625 L283,236.625 z">
@@ -342,7 +341,7 @@
                 </VisualStateGroup>
             </VisualStateManager.VisualStateGroups>
             <ContentPresenter x:Name="buttonContent" Margin="1,4,1,9" ContentTemplate="{TemplateBinding ContentTemplate}"
-                              Content="{TemplateBinding Content}" TextElement.Foreground="{DynamicResource on-surface-light-brush}"
+                              Content="{TemplateBinding Content}" TextElement.Foreground="{DynamicResource on-surface-brush}"
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
         </Grid>
@@ -355,13 +354,13 @@
                 <ControlTemplate TargetType="{x:Type CalendarItem}">
                     <ControlTemplate.Resources>
                         <DataTemplate x:Key="{x:Static CalendarItem.DayTitleTemplateResourceKey}">
-                            <TextBlock Foreground="{DynamicResource on-surface-light-brush}" FontWeight="Bold" FontSize="9.5" FontFamily="Verdana"
+                            <TextBlock Foreground="{DynamicResource on-surface-brush}" FontWeight="Bold" FontSize="9.5" FontFamily="Verdana"
                                        Margin="0,6,0,6" Text="{Binding}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </DataTemplate>
                     </ControlTemplate.Resources>
                     <Grid x:Name="PART_Root">
                         <Grid.Resources>
-                            <SolidColorBrush x:Key="DisabledColor" Color="{DynamicResource surface-light}"/>
+                            <SolidColorBrush x:Key="DisabledColor" Color="{DynamicResource surface}"/>
                         </Grid.Resources>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
@@ -591,7 +590,7 @@
                                     <SolidColorBrush Color="{DynamicResource surface}"/>
                                 </Border.BorderBrush>
                             </Border>
-                            <Border x:Name="Background" BorderBrush="{DynamicResource surface-light-brush}" BorderThickness="1"
+                            <Border x:Name="Background" BorderBrush="{DynamicResource surface-brush}" BorderThickness="1"
                                     Grid.ColumnSpan="4" CornerRadius=".5" Margin="0,-1,0,0" 
                                     Opacity="1" Grid.Row="1" Grid.RowSpan="3">
                                 <Border.Background>
@@ -639,7 +638,7 @@
                                   C17.803692,12.460618 17.305971,11.873379 
                                   16.310528,11.873379 C15.83071,11.873379 
                                   15.399232,12.079271 15.016094,12.491055 L14.65086,12.238613 z"/>
-                            <Ellipse Grid.ColumnSpan="4" Fill="{DynamicResource on-surface-light-brush}" HorizontalAlignment="Center" 
+                            <Ellipse Grid.ColumnSpan="4" Fill="{DynamicResource on-surface-brush}" HorizontalAlignment="Center" 
                                      Height="3" StrokeThickness="0" VerticalAlignment="Center" Width="3"/>
                             <Border x:Name="DisabledVisual" BorderBrush="{DynamicResource primary-light-gradient}" BorderThickness="1"
                                     Grid.ColumnSpan="4" CornerRadius="0,0,.5,.5" Opacity="0"
@@ -658,8 +657,6 @@
         <Setter Property="Padding" Value="0"/>
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <!--Set CalendarStyle to DatePickerCalendarStyle.-->
-        <!--<Setter Property="CalendarStyle" Value="{DynamicResource DatePickerCalendarStyle}"/>-->
         <Setter Property="CalendarStyle" Value="{StaticResource {x:Type Calendar}}"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -689,7 +686,7 @@
                                     Focusable="False" HorizontalAlignment="Left" Margin="3,0,3,0" Grid.Row="0"
                                     Style="{StaticResource DropDownButtonStyle}" VerticalAlignment="Top"/>
                             <DatePickerTextBox x:Name="PART_TextBox" Grid.Column="0" 
-                                               Foreground="{DynamicResource on-surface-light-brush}"
+                                               Foreground="{DynamicResource on-surface-brush}"
                                                Focusable="{TemplateBinding Focusable}"
                                                HorizontalContentAlignment="Stretch" Grid.Row="0"
                                                VerticalContentAlignment="Stretch" Style="{DynamicResource date-picker-text-box}"/>

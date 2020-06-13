@@ -1,5 +1,4 @@
-﻿using GemBox.Spreadsheet;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,7 +9,7 @@ using System.Runtime.CompilerServices;
 
 namespace AccountingPC.AccountingReport
 {
-    internal class Report : INotifyPropertyChanged
+    internal partial class Report : INotifyPropertyChanged
     {
         public static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -206,7 +205,7 @@ namespace AccountingPC.AccountingReport
             
             string commandText;
 
-            if (!Options.SplitByAudience)
+            if (!Options.SplitByAudience || string.IsNullOrWhiteSpace(relation.SP)) 
             {
                 commandText = "SELECT ";
 
@@ -270,7 +269,7 @@ namespace AccountingPC.AccountingReport
             }
             else
             {
-                commandText = $"EXEC {relation.SP} ";//добавить параметры
+                commandText = $"EXEC {relation.SP} ";
                 if (Options.IsPeriod)
                 {
                     if (Options.FromDate != null)
@@ -313,7 +312,11 @@ namespace AccountingPC.AccountingReport
 
         private void FillDataSet(DataSet set, bool isFull = false)
         {
-            if (Options.SplitByAudience)
+            if (Options.SplitByAudience && 
+                Options.TypeReport != TypeReport.OS && 
+                Options.TypeReport != TypeReport.SoftAndOS && 
+                Options.TypeReport != TypeReport.Software && 
+                Options.TypeReport != TypeReport.UseSoft)
             {
                 DataTable table = new DataTable();
                 new SqlDataAdapter("Select ID, Name From Audience", ConnectionString).Fill(table);
@@ -387,164 +390,6 @@ namespace AccountingPC.AccountingReport
                     set.Tables[tableName].Columns.Remove("VideoConnectors");
                 }
             }
-        }
-
-        public ExcelFile CreateReport()
-        {
-            DataSet dataSet = GetDataSet();
-
-            SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-            SpreadsheetInfo.FreeLimitReached += (sender, e) => e.FreeLimitReachedAction = FreeLimitReachedAction.ContinueAsTrial;
-
-            ExcelFile book = new ExcelFile();
-
-            for (int q = 0; q < dataSet.Tables.Count; q++)
-            {
-                DataTable dataTable = dataSet.Tables[q];
-                ExcelWorksheet worksheet = book.Worksheets.Add(dataTable.TableName);
-
-                worksheet.InsertDataTable(dataTable, new InsertDataTableOptions()
-                {
-                    ColumnHeaders = true,
-                    StartColumn = 2,
-                    StartRow = 1
-                });
-                int rowCount = worksheet.Rows.Count;
-                worksheet.Cells[rowCount + 1, 0].Value = "Итого:";
-                int col;
-                if (Options.IsShowUnitOfMeasurement)
-                {
-                    // Установка денежного типа для Цены
-                    if (worksheet.Cells.FindText("Цена", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-
-                        if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
-                        {
-                            worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                            if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
-                            {
-                                string totalCostName = worksheet.Columns[col1].Name;
-                                string countName = worksheet.Columns[col2].Name;
-                                for (int i = 1; i < rowCount; i++)
-                                {
-                                    worksheet.Cells[i, col1].Formula = $"={totalCostName}{i}*{countName}{i}";
-                                }
-                            }
-                        }
-                    }
-                    if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
-                    }
-                    if (worksheet.Cells.FindText("Дата приобретения", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "dd-MM-yyyy";
-                    }
-                    if (worksheet.Cells.FindText("Диагональ", false, out _, out col) ||
-                        worksheet.Cells.FindText("Диагональ экрана", false, out _, out col) ||
-                        worksheet.Cells.FindText("Максимальная диагональ", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat =
-                            NumberFormatBuilder.Accounting(2, true, false, "\u2033", false);
-                    }
-                    if (worksheet.Cells.FindText("Базовая частота", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
-                    }
-                    if (worksheet.Cells.FindText("Максимальная частота", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
-                    }
-                    if (worksheet.Cells.FindText("Частота обновления", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__МГц";
-                    }
-                    if (worksheet.Cells.FindText("ОЗУ", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                    }
-                    if (worksheet.Cells.FindText("Видеопамять", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                    }
-                    if (worksheet.Cells.FindText("Объем SSD", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                    }
-                    if (worksheet.Cells.FindText("Объем HDD", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "###__ГБ";
-                    }
-                }
-
-                if (Options.IsCountMaxMinAverageSum)
-                {
-                    // Установка денежного типа для Цены
-                    if (worksheet.Cells.FindText("Цена", false, out _, out col))
-                    {
-                        string begin = worksheet.Cells[0, col].Name;
-                        string end = worksheet.Cells[rowCount, col].Name;
-                        worksheet.Cells[rowCount + 1, col].Formula = $"=SUM({begin}:{end})";
-
-                        worksheet.Cells[rowCount + 2, col - 1].Value = "Минимальная цена";
-                        worksheet.Cells[rowCount + 2, col].Formula = $"=MIN({begin}:{end})";
-
-                        worksheet.Cells[rowCount + 3, col - 1].Value = "Средняя цена";
-                        worksheet.Cells[rowCount + 3, col].Formula = $"=AVERAGE({begin}:{end})";
-
-                        worksheet.Cells[rowCount + 4, col - 1].Value = "Максимальная цена";
-                        worksheet.Cells[rowCount + 4, col].Formula = $"=MAX({begin}:{end})";
-
-                        if (Options.IsShowUnitOfMeasurement)
-                        {
-                            worksheet.Cells[rowCount + 1, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                            worksheet.Cells[rowCount + 2, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                            worksheet.Cells[rowCount + 3, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                            worksheet.Cells[rowCount + 4, col].Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                        }
-
-                        if (worksheet.Cells.FindText("Общая стоимость", false, out _, out int col1))
-                        {
-                            begin = worksheet.Cells[0, col1].Name;
-                            end = worksheet.Cells[rowCount, col1].Name;
-                            worksheet.Cells[rowCount + 1, col1].Formula = $"=SUM({begin}:{end})";
-                            if (Options.IsShowUnitOfMeasurement)  
-                                worksheet.Columns[col].Cells.Style.NumberFormat = NumberFormatBuilder.Currency("\u20bd", 2, true, false, true);
-                            if (worksheet.Cells.FindText("Количество", false, out _, out int col2))
-                            {
-                                begin = worksheet.Cells[0, col2].Name;
-                                end = worksheet.Cells[rowCount, col2].Name;
-                                worksheet.Cells[rowCount + 1, col2].Formula = $"=SUM({begin}:{end})";
-
-                                string totalCostName = worksheet.Columns[col1].Name;
-                                string countName = worksheet.Columns[col2].Name;
-                                for (int i = 1; i < rowCount; i++)
-                                {
-                                    worksheet.Cells[i, col1].Formula = $"={totalCostName}{i}*{countName}{i}";
-                                }
-                            }
-                        }
-                    }
-                    if (worksheet.Cells.FindText("Инвентарный номер", false, out _, out col))
-                    {
-                        worksheet.Columns[col].Cells.Style.NumberFormat = "000000000000000";
-                        string begin = worksheet.Cells[0, col].Name;
-                        string end = worksheet.Cells[rowCount, col].Name;
-                        worksheet.Cells[rowCount + 1, col].Formula = $"=COUNT({begin}:{end})";
-                        if (Options.IsShowUnitOfMeasurement) 
-                            worksheet.Cells[rowCount + 1, col].Style.NumberFormat = "0__Устройств";
-                    }
-                }
-
-                int columnCount = worksheet.CalculateMaxUsedColumns();
-                for (int i = 0; i < columnCount; i++)
-                {
-                    worksheet.Columns[i].AutoFit(1, worksheet.Rows[0], worksheet.Rows[worksheet.Rows.Count - 1]);
-                }
-            }
-
-            return book;
         }
 
         private void TypeChangedEventHandler()

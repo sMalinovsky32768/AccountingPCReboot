@@ -1,24 +1,17 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace AccountingPC.AccountingReport
 {
     public partial class ConfiguringReportWindow : Window
     {
         internal Report CurrentReport { get; set; }
-
-        private string fileName;
 
         public ConfiguringReportWindow(TypeReport typeReport = TypeReport.Simple)
         {
@@ -39,17 +32,18 @@ namespace AccountingPC.AccountingReport
         {
             switch (CurrentReport.Options.CreateOptions)
             {
-                case CreateReportOptions.SaveToFile:
+                case CreateReportOptions.SaveAsXlsx:
                     IsSaveReport.IsChecked = true;
+                    break;
+                case CreateReportOptions.SaveAsPDF:
+                    IsSaveAsPDF.IsChecked = true;
                     break;
                 case CreateReportOptions.OpenExcel:
                     IsOperReport.IsChecked = true;
                     break;
                 case CreateReportOptions.Print:
-                    IsPrintReport.IsChecked = true;
                     break;
                 case CreateReportOptions.Preview:
-                    IsPreviewReport.IsChecked = true;
                     break;
             }
         }
@@ -83,9 +77,9 @@ namespace AccountingPC.AccountingReport
                 for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
                 {
                     DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                    if (child != null && child is childItem)
+                    if (child != null && child is childItem item)
                     {
-                        return (childItem)child;
+                        return item;
                     }
                     else
                     {
@@ -176,7 +170,8 @@ namespace AccountingPC.AccountingReport
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < ((ObservableCollection<ReportName>)typeReportBox.ItemsSource).Count; i++)
+            int count = ((ObservableCollection<ReportName>)typeReportBox.ItemsSource).Count;
+            for (int i = 0; i < count; i++)
             {
                 ReportName reportName = ((ObservableCollection<ReportName>)typeReportBox.ItemsSource)[i];
                 if (CurrentReport.Options.TypeReport == reportName.Type)
@@ -191,33 +186,18 @@ namespace AccountingPC.AccountingReport
         {
             switch (CurrentReport.Options.CreateOptions)
             {
-                case CreateReportOptions.SaveToFile:
-                    Thread save = new Thread(new ParameterizedThreadStart(SaveReport))
-                    {
-                        IsBackground = false,
-                    };
-                    save.Start(GetFileName());
+                case CreateReportOptions.SaveAsXlsx:
+                    SaveAsExcel();
+                    break;
+                case CreateReportOptions.SaveAsPDF:
+                    SaveAsPDF();
                     break;
                 case CreateReportOptions.OpenExcel:
-                    Thread open = new Thread(new ThreadStart(OpenReport))
-                    {
-                        IsBackground = false,
-                    };
-                    open.Start();
+                    OpenReport();
                     break;
                 case CreateReportOptions.Print:
-                    Thread print = new Thread(new ThreadStart(PrintReport))
-                    {
-                        IsBackground = false,
-                    };
-                    print.Start();
                     break;
                 case CreateReportOptions.Preview:
-                    Thread preview = new Thread(new ThreadStart(PreviewReport))
-                    {
-                        IsBackground = false,
-                    };
-                    preview.Start();
                     break;
             }
         }
@@ -229,7 +209,7 @@ namespace AccountingPC.AccountingReport
 
         private void IsSaveReport_Checked(object sender, RoutedEventArgs e)
         {
-            CurrentReport.Options.CreateOptions = CreateReportOptions.SaveToFile;
+            CurrentReport.Options.CreateOptions = CreateReportOptions.SaveAsXlsx;
         }
 
         private void IsOperReport_Checked(object sender, RoutedEventArgs e)
@@ -245,110 +225,6 @@ namespace AccountingPC.AccountingReport
         private void IsPreviewReport_Checked(object sender, RoutedEventArgs e)
         {
             CurrentReport.Options.CreateOptions = CreateReportOptions.Preview;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private string GetFileName()
-        {
-            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog
-            {
-                Filter = "XLSX files (*.xlsx, *.xlsm, *.xltx, *.xltm)|*.xlsx;*.xlsm;*.xltx;*.xltm|"
-                         + "XLS files (*.xls, *.xlt)|*.xls;*.xlt|ODS files (*.ods, *.ots)|*.ods;*.ots|"
-                         + "CSV files (*.csv, *.tsv)|*.csv;*.tsv|HTML files (*.html, *.htm)|*.html;*.htm|"
-                         + "Portable Document Format|*.pdf",
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                FileName = $"Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx"
-            };
-            if (dialog.ShowDialog(this) == false)
-            {
-                return null;
-            }
-
-            return dialog.FileName;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void OpenReport()
-        {
-            fileName = $@"{Path.GetTempPath()}Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx";
-            Task task = new Task(() =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    SaveReport(fileName);
-
-                    Process excel = new Process
-                    {
-                        StartInfo = new ProcessStartInfo("excel.exe", $"/n {fileName}"),
-                        EnableRaisingEvents = true
-                    };
-                    excel.Exited += (sender, e) => new FileInfo(fileName)?.Delete();
-                    excel.Start();
-                });
-            });
-            task.Start();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SaveReport(string fileName)
-        {
-            try
-            {
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    CurrentReport.CreateReport().Save(fileName);
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SaveReport(object fileName)
-        {
-            try
-            {
-                Task task = new Task(() =>
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        SaveReport(fileName as string);
-                    });
-                });
-                task.Start();
-            }
-            catch
-            {
-
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void PrintReport()
-        {
-            Task task = new Task(() =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    CurrentReport.CreateReport().Print();
-                });
-            });
-            task.Start();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void PreviewReport()
-        {
-            Task task = new Task(() =>
-            {
-                Dispatcher.Invoke(() =>
-                {
-                    new PreviewReportWindow(CurrentReport.CreateReport()).ShowDialog();
-                });
-            });
-            task.Start();
         }
 
         private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
@@ -381,6 +257,50 @@ namespace AccountingPC.AccountingReport
                 selectionSortingParamGrid.Visibility = Visibility.Visible;
                 selectionColumnGrid.Visibility = Visibility.Visible;
             }
+        }
+
+        private void IsSaveAsPDF_Checked(object sender, RoutedEventArgs e)
+        {
+            CurrentReport.Options.CreateOptions = CreateReportOptions.SaveAsPDF;
+        }
+
+        private void SaveAsExcel()
+        {
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "XLSX files|*.xlsx",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                FileName = $"Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.xlsx"
+            };
+            if (dialog.ShowDialog(this) == false)
+            {
+                return;
+            }
+
+            string filename = dialog.FileName;
+            CurrentReport.CreateReportExcel(filename);
+        }
+
+        private void SaveAsPDF()
+        {
+            Microsoft.Win32.SaveFileDialog dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "Portable Document Format|*.pdf",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                FileName = $"Report_{CurrentReport.Options.TypeReport}__{DateTime.Now:dd-MM-yyyy__HH-mm-ss__g}.pdf"
+            };
+            if (dialog.ShowDialog(this) == false)
+            {
+                return;
+            }
+
+            string filename = dialog.FileName;
+            CurrentReport.CreateReportExcel(filename);
+        }
+
+        private void OpenReport()
+        {
+            CurrentReport.CreateReportExcel();
         }
     }
 }

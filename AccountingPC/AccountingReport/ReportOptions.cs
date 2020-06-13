@@ -27,7 +27,8 @@ namespace AccountingPC.AccountingReport
 
     internal enum CreateReportOptions : byte
     {
-        SaveToFile,
+        SaveAsXlsx,
+        SaveAsPDF,
         OpenExcel,
         Print,
         Preview,
@@ -44,13 +45,6 @@ namespace AccountingPC.AccountingReport
                     },
                     (obj) =>
                     {
-                        //foreach (SortingParam param in SortingParamList)
-                        //{
-                        //    if (param.ColumnName == null)
-                        //    {
-                        //        return false;
-                        //    }
-                        //}
                         for (int i = 0; i < SortingParamList.Count; i++)
                         {
                             if (SortingParamList[i].ColumnName == null)
@@ -75,18 +69,8 @@ namespace AccountingPC.AccountingReport
         public ReportCommand DelSortingParam => delSortingParam ??
                     (delSortingParam = new ReportCommand(obj =>
                     {
-                        SortingParam param = obj as SortingParam;
-                        if (param != null)
+                        if (obj is SortingParam param)
                         {
-                            //foreach (SortingParam sortingParam in SortingParamList)
-                            //{
-                            //    if (param == sortingParam)
-                            //    {
-                            //        SelectedSortingParam =
-                            //                SortingParamList[SortingParamList.IndexOf(param) < SortingParamList.Count - 2 ?
-                            //                SortingParamList.IndexOf(param) + 1 : 0];
-                            //    }
-                            //}
                             for (int i = 0; i < SortingParamList.Count; i++)
                             {
                                 if (param == SortingParamList[i])
@@ -130,7 +114,7 @@ namespace AccountingPC.AccountingReport
 
         private TypeReport typeReport;
         private ReportName reportName;
-        private CreateReportOptions createOptions = CreateReportOptions.SaveToFile;
+        private CreateReportOptions createOptions = CreateReportOptions.SaveAsXlsx;
         private ObservableCollection<SortingParam> sortingParamList = new ObservableCollection<SortingParam>();
         private SortingParam selectedSortingParam;
 

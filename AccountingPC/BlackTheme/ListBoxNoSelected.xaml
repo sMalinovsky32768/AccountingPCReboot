@@ -10,7 +10,6 @@
         <Setter Property="MinWidth" Value="120"/>
         <Setter Property="Margin" Value="2 5 2 2"/>
         <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}"/>
-        <!--<Setter Property="ListBoxItem.Style" Value="{DynamicResource list-box-item-no-selected}"/>-->
         <Setter Property="ItemContainerStyle" Value="{DynamicResource list-box-item-no-selected}"/>
         <Setter Property="Template">
             <Setter.Value>

@@ -116,7 +116,7 @@
                                                 Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)">
                                             <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource mouse-over}"/>
                                         </ColorAnimationUsingKeyFrames>
-                                    </Storyboard><!---->
+                                    </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
