@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
 using System.Windows;
@@ -14,14 +13,16 @@ namespace AccountingPC
             new SqlDataAdapter("SELECT * FROM dbo.GetAllPC()", ConnectionString).Fill(DefaultDataSet, "PC");
             if (!DefaultDataSet.Tables["PC"].Columns.Contains("Видеоразъемы"))
                 DefaultDataSet.Tables["PC"].Columns.Add("Видеоразъемы");
-            for (int j = 0; j < DefaultDataSet.Tables["PC"].Rows.Count; j++) 
+            for (var j = 0; j < DefaultDataSet.Tables["PC"].Rows.Count; j++)
             {
-                DataRow row = DefaultDataSet.Tables["PC"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
-                    GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+                var row = DefaultDataSet.Tables["PC"].Rows[j];
+                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                    ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
+                    : row["VideoConnectors"];
             }
-            int i = DefaultDataSet.Tables["PC"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = DefaultDataSet.Tables["PC"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+
+            var i = DefaultDataSet.Tables["PC"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            var ii = DefaultDataSet.Tables["PC"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
             DefaultDataSet.Tables["PC"].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             DefaultDataSet.Tables["PC"].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
@@ -32,14 +33,16 @@ namespace AccountingPC
             new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebook()", ConnectionString).Fill(DefaultDataSet, "Notebook");
             if (!DefaultDataSet.Tables["Notebook"].Columns.Contains("Видеоразъемы"))
                 DefaultDataSet.Tables["Notebook"].Columns.Add("Видеоразъемы");
-            for (int j = 0; j < DefaultDataSet.Tables["Notebook"].Rows.Count; j++)
+            for (var j = 0; j < DefaultDataSet.Tables["Notebook"].Rows.Count; j++)
             {
-                DataRow row = DefaultDataSet.Tables["Notebook"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
-                    GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+                var row = DefaultDataSet.Tables["Notebook"].Rows[j];
+                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                    ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
+                    : row["VideoConnectors"];
             }
-            int i = DefaultDataSet.Tables["Notebook"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = DefaultDataSet.Tables["Notebook"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+
+            var i = DefaultDataSet.Tables["Notebook"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            var ii = DefaultDataSet.Tables["Notebook"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
             DefaultDataSet.Tables["Notebook"].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             DefaultDataSet.Tables["Notebook"].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
@@ -50,14 +53,16 @@ namespace AccountingPC
             new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitor()", ConnectionString).Fill(DefaultDataSet, "Monitor");
             if (!DefaultDataSet.Tables["Monitor"].Columns.Contains("Видеоразъемы"))
                 DefaultDataSet.Tables["Monitor"].Columns.Add("Видеоразъемы");
-            for (int j = 0; j < DefaultDataSet.Tables["Monitor"].Rows.Count; j++)
+            for (var j = 0; j < DefaultDataSet.Tables["Monitor"].Rows.Count; j++)
             {
-                DataRow row = DefaultDataSet.Tables["Monitor"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
-                    GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+                var row = DefaultDataSet.Tables["Monitor"].Rows[j];
+                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                    ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
+                    : row["VideoConnectors"];
             }
-            int i = DefaultDataSet.Tables["Monitor"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = DefaultDataSet.Tables["Monitor"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+
+            var i = DefaultDataSet.Tables["Monitor"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            var ii = DefaultDataSet.Tables["Monitor"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
             DefaultDataSet.Tables["Monitor"].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             DefaultDataSet.Tables["Monitor"].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
@@ -65,17 +70,20 @@ namespace AccountingPC
         private void UpdateProjectorData()
         {
             DefaultDataSet.Tables["Projector"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString).Fill(DefaultDataSet, "Projector");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllProjector()", ConnectionString).Fill(DefaultDataSet,
+                "Projector");
             if (!DefaultDataSet.Tables["Projector"].Columns.Contains("Видеоразъемы"))
-            DefaultDataSet.Tables["Projector"].Columns.Add("Видеоразъемы");
-            for (int j = 0; j < DefaultDataSet.Tables["Projector"].Rows.Count; j++)
+                DefaultDataSet.Tables["Projector"].Columns.Add("Видеоразъемы");
+            for (var j = 0; j < DefaultDataSet.Tables["Projector"].Rows.Count; j++)
             {
-                DataRow row = DefaultDataSet.Tables["Projector"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
-                    GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+                var row = DefaultDataSet.Tables["Projector"].Rows[j];
+                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                    ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
+                    : row["VideoConnectors"];
             }
-            int i = DefaultDataSet.Tables["Projector"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
-            int ii = DefaultDataSet.Tables["Projector"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+
+            var i = DefaultDataSet.Tables["Projector"].DefaultView.Table.Columns.IndexOf("VideoConnectors");
+            var ii = DefaultDataSet.Tables["Projector"].DefaultView.Table.Columns.IndexOf("Видеоразъемы");
             DefaultDataSet.Tables["Projector"].DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i);
             DefaultDataSet.Tables["Projector"].DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(ii);
         }
@@ -91,28 +99,32 @@ namespace AccountingPC
         private void UpdateProjectorScreenData()
         {
             DefaultDataSet.Tables["ProjectorScreen"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString).Fill(DefaultDataSet, "ProjectorScreen");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllScreen()", ConnectionString).Fill(DefaultDataSet,
+                "ProjectorScreen");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdatePrinterScannerData()
         {
             DefaultDataSet.Tables["PrinterScanner"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString).Fill(DefaultDataSet, "PrinterScanner");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScanner()", ConnectionString).Fill(DefaultDataSet,
+                "PrinterScanner");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateNetworkSwitchData()
         {
             DefaultDataSet.Tables["NetworkSwitch"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString).Fill(DefaultDataSet, "NetworkSwitch");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitch()", ConnectionString).Fill(DefaultDataSet,
+                "NetworkSwitch");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateOtherEquipmentData()
         {
             DefaultDataSet.Tables["OtherEquipment"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString).Fill(DefaultDataSet, "OtherEquipment");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipment()", ConnectionString).Fill(DefaultDataSet,
+                "OtherEquipment");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

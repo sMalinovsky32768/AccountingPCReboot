@@ -2,26 +2,26 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AccountingPC.BlackTheme">
     <Style TargetType="GridSplitter">
-        <Setter Property="Background" Value="#33000000"/>
+        <Setter Property="Background" Value="#33000000" />
     </Style>
     <Style TargetType="TextBlock" x:Key="textBlock">
-        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}" />
     </Style>
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Color.xaml"/>
-        <ResourceDictionary Source="ComboBox.xaml"/>
-        <ResourceDictionary Source="CheckBox.xaml"/>
-        <ResourceDictionary Source="Calendar.xaml"/>
-        <ResourceDictionary Source="Button.xaml"/>
-        <ResourceDictionary Source="Box.xaml"/>
-        <ResourceDictionary Source="DataGrid.xaml"/>
-        <ResourceDictionary Source="Menu.xaml"/>
-        <ResourceDictionary Source="ListBox.xaml"/>
-        <ResourceDictionary Source="ListBoxNoSelected.xaml"/>
-        <ResourceDictionary Source="ListView.xaml"/>
-        <ResourceDictionary Source="Scroll.xaml"/>
-        <ResourceDictionary Source="StatusBar.xaml"/>
-        <ResourceDictionary Source="ContextMenu.xaml"/>
-        <ResourceDictionary Source="RadioButton.xaml"/>
+        <ResourceDictionary Source="Color.xaml" />
+        <ResourceDictionary Source="ComboBox.xaml" />
+        <ResourceDictionary Source="CheckBox.xaml" />
+        <ResourceDictionary Source="Calendar.xaml" />
+        <ResourceDictionary Source="Button.xaml" />
+        <ResourceDictionary Source="Box.xaml" />
+        <ResourceDictionary Source="DataGrid.xaml" />
+        <ResourceDictionary Source="Menu.xaml" />
+        <ResourceDictionary Source="ListBox.xaml" />
+        <ResourceDictionary Source="ListBoxNoSelected.xaml" />
+        <ResourceDictionary Source="ListView.xaml" />
+        <ResourceDictionary Source="Scroll.xaml" />
+        <ResourceDictionary Source="StatusBar.xaml" />
+        <ResourceDictionary Source="ContextMenu.xaml" />
+        <ResourceDictionary Source="RadioButton.xaml" />
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

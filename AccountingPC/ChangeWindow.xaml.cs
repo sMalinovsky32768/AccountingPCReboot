@@ -11,26 +11,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using Microsoft.Win32;
 
 namespace AccountingPC
 {
     public partial class ChangeWindow : Window
     {
-        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-
-        public static string ConnectionString => connectionString;
         public static readonly RoutedCommand CloseCommand = new RoutedUICommand(
             "Close", "CloseCommand", typeof(AccountingPCWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
-
-        private bool IsChangeAnalog { get; set; }
-        public AccountingPCWindow Accounting { get; private set; }
-
-        public DataSet DefaultDataSet { get; set; }
-
-        internal List<ListBoxItem> videoConnectorsItems;
+            new InputGestureCollection(new InputGesture[] {new KeyGesture(Key.Escape)}));
 
         private Binding invNBinding;
+
+        internal List<ListBoxItem> videoConnectorsItems;
 
         public ChangeWindow(AccountingPCWindow window)
         {
@@ -61,6 +54,14 @@ namespace AccountingPC
             Accounting = window;
         }
 
+        public static string ConnectionString { get; } =
+            ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+
+        private bool IsChangeAnalog { get; set; }
+        public AccountingPCWindow Accounting { get; }
+
+        public DataSet DefaultDataSet { get; set; }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Accounting.IsHitTestVisible = false;
@@ -75,6 +76,7 @@ namespace AccountingPC
                     saveSoftButton.Content = "Изменить";
                     break;
             }
+
             ChangeView();
         }
 
@@ -93,34 +95,35 @@ namespace AccountingPC
                             switch (Accounting.TypeDevice)
                             {
                                 case TypeDevice.PC:
-                                    GetPC(device, Accounting.DeviceID);
+                                    GetPC(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.Notebook:
-                                    GetNotebook(device, Accounting.DeviceID);
+                                    GetNotebook(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.Monitor:
-                                    GetMonitor(device, Accounting.DeviceID);
+                                    GetMonitor(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.Projector:
-                                    GetProjector(device, Accounting.DeviceID);
+                                    GetProjector(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.InteractiveWhiteboard:
-                                    GetInteractiveWhiteboard(device, Accounting.DeviceID);
+                                    GetInteractiveWhiteboard(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.ProjectorScreen:
-                                    GetProjectorScreen(device, Accounting.DeviceID);
+                                    GetProjectorScreen(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.PrinterScanner:
-                                    GetPrinterScanner(device, Accounting.DeviceID);
+                                    GetPrinterScanner(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.NetworkSwitch:
-                                    GetNetworkSwitch(device, Accounting.DeviceID);
+                                    GetNetworkSwitch(Accounting.DeviceID);
                                     break;
                                 case TypeDevice.OtherEquipment:
-                                    GetOtherEquipment(device, Accounting.DeviceID);
+                                    GetOtherEquipment(Accounting.DeviceID);
                                     break;
                             }
-                            SetDeviceLocationAndInvoice(device);
+
+                            SetDeviceLocationAndInvoice();
                             break;
                         case TypeChange.Add:
                             switch (Accounting.TypeDevice)
@@ -153,8 +156,10 @@ namespace AccountingPC
                                     device = new OtherEquipment();
                                     break;
                             }
+
                             break;
                     }
+
                     break;
                 case View.Software:
                     changeEquipmentGrid.Visibility = Visibility.Collapsed;
@@ -172,19 +177,22 @@ namespace AccountingPC
                                     soft = new OS();
                                     break;
                             }
+
                             break;
                         case TypeChange.Change:
                             switch (Accounting.TypeSoft)
                             {
                                 case TypeSoft.LicenseSoftware:
-                                    GetLicenseSoftware(soft, Accounting.SoftwareID);
+                                    GetLicenseSoftware(Accounting.SoftwareID);
                                     break;
                                 case TypeSoft.OS:
-                                    GetOS(soft, Accounting.SoftwareID);
+                                    GetOS(Accounting.SoftwareID);
                                     break;
                             }
+
                             break;
                     }
+
                     break;
             }
         }
@@ -226,6 +234,7 @@ namespace AccountingPC
                             InitializeForProjectorScreen();
                             break;
                     }
+
                     break;
                 case View.Software:
                     switch (Accounting.TypeSoft)
@@ -237,52 +246,71 @@ namespace AccountingPC
                             InitializeForOS();
                             break;
                     }
+
                     break;
             }
+
             UpdateSource();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetPC(Device d, int id)
+        private void GetPC(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetPCByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new PC()
+                        device = new PC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             Motherboard = reader["MotherBoard"].ToString(),
                             CPU = reader["CPUModel"].ToString(),
-                            Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull) ? reader["NumberOfCores"] : 0),
-                            Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull) ? reader["FrequencyProcessor"] : 0),
-                            MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull) ? reader["MaxFrequencyProcessor"] : 0),
+                            Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull)
+                                ? reader["NumberOfCores"]
+                                : 0),
+                            Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull)
+                                ? reader["FrequencyProcessor"]
+                                : 0),
+                            MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull)
+                                ? reader["MaxFrequencyProcessor"]
+                                : 0),
                             VCard = reader["VideoCard"].ToString(),
-                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull) ? reader["VideoRAMGB"] : 0),
+                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull)
+                                ? reader["VideoRAMGB"]
+                                : 0),
                             RAM = Convert.ToUInt32(reader["RAMGB"].GetType() != typeof(DBNull) ? reader["RAMGB"] : 0),
-                            FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull) ? reader["FrequencyRAM"] : 0),
-                            SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull) ? reader["SSDCapacityGB"] : 0),
-                            HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull) ? reader["HDDCapacityGB"] : 0),
+                            FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull)
+                                ? reader["FrequencyRAM"]
+                                : 0),
+                            SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull)
+                                ? reader["SSDCapacityGB"]
+                                : 0),
+                            HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull)
+                                ? reader["HDDCapacityGB"]
+                                : 0),
                             OSID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull) ? reader["VideoConnectors"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                                ? reader["VideoConnectors"]
+                                : 0)
                         };
-                        PC pc = d as PC;
+                        var pc = device as PC;
                         pc.VideoConnectors = GetListVideoConnectors(pc.VideoConnectorsValue);
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         motherboard.Text = pc.Motherboard;
                         cpu.Text = pc.CPU;
                         cores.Text = pc.Cores.ToString();
@@ -294,88 +322,113 @@ namespace AccountingPC
                         ssd.Text = pc.SSD.ToString();
                         ram.Text = pc.RAM.ToString();
                         ramFrequency.Text = pc.FrequencyRAM.ToString();
-                        foreach (object obj in os.ItemsSource)
+                        foreach (var obj in os.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(pc.OSID))
                             {
                                 os.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in location.ItemsSource)
+
+                        foreach (var obj in location.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(pc.PlaceID))
                             {
                                 location.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in vConnectors.Items)
+
+                        foreach (var obj in vConnectors.Items)
                         {
-                            ListBoxItem item = obj as ListBoxItem;
-                            foreach (string connector in pc.VideoConnectors)
-                            {
+                            var item = obj as ListBoxItem;
+                            foreach (var connector in pc.VideoConnectors)
                                 if (item.Content.ToString() == connector)
                                 {
                                     item.IsSelected = true;
                                     break;
                                 }
-                            }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetNotebook(Device d, int id)
+        private void GetNotebook(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetNotebookByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new Notebook()
+                        device = new Notebook
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
-                            TypeID = Convert.ToUInt32(reader["TypeNotebookID"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            TypeID = Convert.ToUInt32(reader["TypeNotebookID"].GetType() != typeof(DBNull) ? reader["TypeNotebookID"] : 0),
                             CPU = reader["CPUModel"].ToString(),
-                            Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull) ? reader["NumberOfCores"] : 0),
-                            Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull) ? reader["FrequencyProcessor"] : 0),
-                            MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull) ? reader["MaxFrequencyProcessor"] : 0),
+                            Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull)
+                                ? reader["NumberOfCores"]
+                                : 0),
+                            Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull)
+                                ? reader["FrequencyProcessor"]
+                                : 0),
+                            MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull)
+                                ? reader["MaxFrequencyProcessor"]
+                                : 0),
                             VCard = reader["VideoCard"].ToString(),
-                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull) ? reader["VideoRAMGB"] : 0),
+                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull)
+                                ? reader["VideoRAMGB"]
+                                : 0),
                             RAM = Convert.ToUInt32(reader["RAMGB"].GetType() != typeof(DBNull) ? reader["RAMGB"] : 0),
-                            FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull) ? reader["FrequencyRAM"] : 0),
-                            SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull) ? reader["SSDCapacityGB"] : 0),
-                            HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull) ? reader["HDDCapacityGB"] : 0),
+                            FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull)
+                                ? reader["FrequencyRAM"]
+                                : 0),
+                            SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull)
+                                ? reader["SSDCapacityGB"]
+                                : 0),
+                            HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull)
+                                ? reader["HDDCapacityGB"]
+                                : 0),
                             OSID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull) ? reader["ScreenDiagonal"] : 0),
-                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull) ? reader["ResolutionID"] : 0),
-                            FrequencyID = Convert.ToUInt32(reader["FrequencyID"].GetType() != typeof(DBNull) ? reader["FrequencyID"] : 0),
-                            MatrixTechnologyID = Convert.ToUInt32(reader["MatrixTechnologyID"].GetType() != typeof(DBNull) ? reader["MatrixTechnologyID"] : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull) ? reader["VideoConnectors"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull)
+                                ? reader["ScreenDiagonal"]
+                                : 0),
+                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull)
+                                ? reader["ResolutionID"]
+                                : 0),
+                            FrequencyID = Convert.ToUInt32(reader["FrequencyID"].GetType() != typeof(DBNull)
+                                ? reader["FrequencyID"]
+                                : 0),
+                            MatrixTechnologyID =
+                                Convert.ToUInt32(reader["MatrixTechnologyID"].GetType() != typeof(DBNull)
+                                    ? reader["MatrixTechnologyID"]
+                                    : 0),
+                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                                ? reader["VideoConnectors"]
+                                : 0)
                         };
-                        Notebook notebook = d as Notebook;
+                        var notebook = device as Notebook;
                         notebook.VideoConnectors = GetListVideoConnectors(notebook.VideoConnectorsValue);
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         cpu.Text = notebook.CPU;
                         cores.Text = notebook.Cores.ToString();
                         frequency.Text = notebook.Frequency.ToString();
@@ -387,305 +440,341 @@ namespace AccountingPC
                         ram.Text = notebook.RAM.ToString();
                         ramFrequency.Text = notebook.FrequencyRAM.ToString();
                         diagonal.Text = notebook.Diagonal.ToString();
-                        foreach (object obj in type.ItemsSource)
+                        foreach (var obj in type.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.TypeID))
                             {
                                 type.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in os.ItemsSource)
+
+                        foreach (var obj in os.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.OSID))
                             {
                                 os.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in resolution.ItemsSource)
+
+                        foreach (var obj in resolution.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.ResolutionID))
                             {
                                 resolution.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in screenFrequency.ItemsSource)
+
+                        foreach (var obj in screenFrequency.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.FrequencyID))
                             {
                                 screenFrequency.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in matrixTechnology.ItemsSource)
+
+                        foreach (var obj in matrixTechnology.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.MatrixTechnologyID))
                             {
                                 matrixTechnology.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in vConnectors.Items)
+
+                        foreach (var obj in vConnectors.Items)
                         {
-                            ListBoxItem item = obj as ListBoxItem;
-                            foreach (string connector in notebook.VideoConnectors)
-                            {
+                            var item = obj as ListBoxItem;
+                            foreach (var connector in notebook.VideoConnectors)
                                 if (item.Content.ToString() == connector)
                                 {
                                     item.IsSelected = true;
                                     break;
                                 }
-                            }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetMonitor(Device d, int id)
+        private void GetMonitor(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetMonitorByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new Monitor()
+                        device = new Monitor
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull) ? reader["ScreenDiagonal"] : 0),
-                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull) ? reader["ResolutionID"] : 0),
-                            FrequencyID = Convert.ToUInt32(reader["FrequencyID"].GetType() != typeof(DBNull) ? reader["FrequencyID"] : 0),
-                            MatrixTechnologyID = Convert.ToUInt32(reader["MatrixTechnologyID"].GetType() != typeof(DBNull) ? reader["MatrixTechnologyID"] : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull) ? reader["VideoConnectors"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull)
+                                ? reader["ScreenDiagonal"]
+                                : 0),
+                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull)
+                                ? reader["ResolutionID"]
+                                : 0),
+                            FrequencyID = Convert.ToUInt32(reader["FrequencyID"].GetType() != typeof(DBNull)
+                                ? reader["FrequencyID"]
+                                : 0),
+                            MatrixTechnologyID =
+                                Convert.ToUInt32(reader["MatrixTechnologyID"].GetType() != typeof(DBNull)
+                                    ? reader["MatrixTechnologyID"]
+                                    : 0),
+                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                                ? reader["VideoConnectors"]
+                                : 0)
                         };
-                        Monitor monitor = d as Monitor;
+                        var monitor = device as Monitor;
                         monitor.VideoConnectors = GetListVideoConnectors(monitor.VideoConnectorsValue);
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         diagonal.Text = monitor.Diagonal.ToString();
-                        foreach (object obj in resolution.ItemsSource)
+                        foreach (var obj in resolution.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.ResolutionID))
                             {
                                 resolution.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in screenFrequency.ItemsSource)
+
+                        foreach (var obj in screenFrequency.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.FrequencyID))
                             {
                                 screenFrequency.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in matrixTechnology.ItemsSource)
+
+                        foreach (var obj in matrixTechnology.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.MatrixTechnologyID))
                             {
                                 matrixTechnology.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in vConnectors.Items)
+
+                        foreach (var obj in vConnectors.Items)
                         {
-                            ListBoxItem item = obj as ListBoxItem;
-                            foreach (string connector in monitor.VideoConnectors)
-                            {
+                            var item = obj as ListBoxItem;
+                            foreach (var connector in monitor.VideoConnectors)
                                 if (item.Content.ToString() == connector)
                                 {
                                     item.IsSelected = true;
                                     break;
                                 }
-                            }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetProjector(Device d, int id)
+        private void GetProjector(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetProjectorByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new Projector()
+                        device = new Projector
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            Diagonal = Convert.ToSingle(reader["MaxDiagonal"].GetType() != typeof(DBNull) ? reader["MaxDiagonal"] : 0),
-                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull) ? reader["ResolutionID"] : 0),
-                            ProjectorTechnologyID = Convert.ToUInt32(reader["ProjectorTechnologyID"].GetType() != typeof(DBNull) ? reader["ProjectorTechnologyID"] : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull) ? reader["VideoConnectors"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            Diagonal = Convert.ToSingle(reader["MaxDiagonal"].GetType() != typeof(DBNull)
+                                ? reader["MaxDiagonal"]
+                                : 0),
+                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull)
+                                ? reader["ResolutionID"]
+                                : 0),
+                            ProjectorTechnologyID =
+                                Convert.ToUInt32(reader["ProjectorTechnologyID"].GetType() != typeof(DBNull)
+                                    ? reader["ProjectorTechnologyID"]
+                                    : 0),
+                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                                ? reader["VideoConnectors"]
+                                : 0)
                         };
-                        Projector projector = d as Projector;
+                        var projector = device as Projector;
                         projector.VideoConnectors = GetListVideoConnectors(projector.VideoConnectorsValue);
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         diagonal.Text = projector.Diagonal.ToString();
-                        foreach (object obj in resolution.ItemsSource)
+                        foreach (var obj in resolution.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(projector.ResolutionID))
                             {
                                 resolution.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in projectorTechnology.ItemsSource)
+
+                        foreach (var obj in projectorTechnology.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(projector.ProjectorTechnologyID))
                             {
                                 projectorTechnology.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in vConnectors.Items)
+
+                        foreach (var obj in vConnectors.Items)
                         {
-                            ListBoxItem item = obj as ListBoxItem;
-                            foreach (string connector in projector.VideoConnectors)
-                            {
+                            var item = obj as ListBoxItem;
+                            foreach (var connector in projector.VideoConnectors)
                                 if (item.Content.ToString() == connector)
                                 {
                                     item.IsSelected = true;
                                     break;
                                 }
-                            }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetInteractiveWhiteboard(Device d, int id)
+        private void GetInteractiveWhiteboard(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetBoardByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new InteractiveWhiteboard()
+                        device = new InteractiveWhiteboard
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull) ? reader["Diagonal"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull)
+                                ? reader["Diagonal"]
+                                : 0)
                         };
-                        InteractiveWhiteboard board = d as InteractiveWhiteboard;
+                        var board = device as InteractiveWhiteboard;
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         diagonal.Text = board.Diagonal.ToString();
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetProjectorScreen(Device d, int id)
+        private void GetProjectorScreen(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetScreenByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new ProjectorScreen()
+                        device = new ProjectorScreen
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull) ? reader["Diagonal"] : 0),
-                            AspectRatioID = Convert.ToUInt32(reader["AspectRatioID"].GetType() != typeof(DBNull) ? reader["AspectRatioID"] : 0),
-                            ScreenInstalledID = Convert.ToUInt32(reader["ScreenInstalledID"].GetType() != typeof(DBNull) ? reader["ScreenInstalledID"] : 0),
-                            IsElectronicDrive = Convert.ToBoolean(reader["IsElectronicDrive"].GetType() != typeof(DBNull) ? reader["IsElectronicDrive"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull)
+                                ? reader["Diagonal"]
+                                : 0),
+                            AspectRatioID = Convert.ToUInt32(reader["AspectRatioID"].GetType() != typeof(DBNull)
+                                ? reader["AspectRatioID"]
+                                : 0),
+                            ScreenInstalledID = Convert.ToUInt32(reader["ScreenInstalledID"].GetType() != typeof(DBNull)
+                                ? reader["ScreenInstalledID"]
+                                : 0),
+                            IsElectronicDrive =
+                                Convert.ToBoolean(reader["IsElectronicDrive"].GetType() != typeof(DBNull)
+                                    ? reader["IsElectronicDrive"]
+                                    : 0)
                         };
-                        ProjectorScreen screen = d as ProjectorScreen;
+                        var screen = device as ProjectorScreen;
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         diagonal.Text = screen.Diagonal.ToString();
                         isEDrive.IsChecked = screen.IsElectronicDrive;
-                        foreach (object obj in aspectRatio.ItemsSource)
+                        foreach (var obj in aspectRatio.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == screen.AspectRatioID)
                             {
                                 aspectRatio.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in screenInstalled.ItemsSource)
+
+                        foreach (var obj in screenInstalled.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == screen.ScreenInstalledID)
                             {
                                 screenInstalled.SelectedItem = row;
@@ -693,53 +782,57 @@ namespace AccountingPC
                             }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetPrinterScanner(Device d, int id)
+        private void GetPrinterScanner(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetPrinterScannerByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new PrinterScanner()
+                        device = new PrinterScanner
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
-                            TypeID = Convert.ToUInt32(reader["TypePrinterID"]),
+                            TypeID = Convert.ToUInt32(reader["TypePrinterID"].GetType() != typeof(DBNull)
+                                ? reader["TypePrinterID"] : 0),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            PaperSizeID = Convert.ToUInt32(reader["PaperSizeID"].GetType() != typeof(DBNull) ? reader["PaperSizeID"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            PaperSizeID = Convert.ToUInt32(reader["PaperSizeID"].GetType() != typeof(DBNull)
+                                ? reader["PaperSizeID"]
+                                : 0)
                         };
-                        PrinterScanner printerScanner = d as PrinterScanner;
+                        var printerScanner = device as PrinterScanner;
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
-                        foreach (object obj in type.ItemsSource)
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
+                        foreach (var obj in type.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == printerScanner.TypeID)
                             {
                                 type.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in paperSize.ItemsSource)
+
+                        foreach (var obj in paperSize.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == printerScanner.PaperSizeID)
                             {
                                 paperSize.SelectedItem = row;
@@ -747,55 +840,60 @@ namespace AccountingPC
                             }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetNetworkSwitch(Device d, int id)
+        private void GetNetworkSwitch(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetNetworkSwitchByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new NetworkSwitch()
+                        device = new NetworkSwitch
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
-                            TypeID = Convert.ToUInt32(reader["TypeID"]),
+                            TypeID = Convert.ToUInt32(reader["TypeID"].GetType() != typeof(DBNull) ? reader["TypeID"] : 0),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
-                            Ports = Convert.ToUInt32(reader["NumberOfPorts"].GetType() != typeof(DBNull) ? reader["NumberOfPorts"] : 0),
-                            WiFiFrequencyID = Convert.ToUInt32(reader["WiFiFrequencyID"].GetType() != typeof(DBNull) ? reader["WiFiFrequencyID"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0),
+                            Ports = Convert.ToUInt32(reader["NumberOfPorts"].GetType() != typeof(DBNull)
+                                ? reader["NumberOfPorts"]
+                                : 0),
+                            WiFiFrequencyID = Convert.ToUInt32(reader["WiFiFrequencyID"].GetType() != typeof(DBNull)
+                                ? reader["WiFiFrequencyID"]
+                                : 0)
                         };
-                        NetworkSwitch networkSwitch = d as NetworkSwitch;
+                        var networkSwitch = device as NetworkSwitch;
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                         ports.Text = networkSwitch.Ports.ToString();
-                        foreach (object obj in type.ItemsSource)
+                        foreach (var obj in type.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == networkSwitch.TypeID)
                             {
                                 type.SelectedItem = row;
                                 break;
                             }
                         }
-                        foreach (object obj in wifiFrequency.ItemsSource)
+
+                        foreach (var obj in wifiFrequency.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
+                            row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == networkSwitch.WiFiFrequencyID)
                             {
                                 wifiFrequency.SelectedItem = row;
@@ -803,55 +901,55 @@ namespace AccountingPC
                             }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetOtherEquipment(Device d, int id)
+        private void GetOtherEquipment(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetOtherEquipmentByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        d = new OtherEquipment()
+                        device = new OtherEquipment
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
+                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull) ? reader["PlaceID"] : 0),
+                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                                ? reader["PlaceID"]
+                                : 0)
                         };
 
-                        inventoryNumber.Text = d.InventoryNumber.ToString();
-                        name.Text = d.Name;
-                        cost.Text = d.Cost.ToString();
+                        inventoryNumber.Text = device.InventoryNumber.ToString();
+                        name.Text = device.Name;
+                        cost.Text = device.Cost.ToString();
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetDeviceLocationAndInvoice(Device d)
+        private void SetDeviceLocationAndInvoice()
         {
-            foreach (object obj in location.ItemsSource)
+            foreach (var obj in location.ItemsSource)
             {
                 DataRowView row;
-                row = (obj as DataRowView);
-                if (Convert.ToUInt32(row.Row[0]) == d.PlaceID)
+                row = obj as DataRowView;
+                if (Convert.ToUInt32(row.Row[0]) == device.PlaceID)
                 {
                     location.SelectedItem = row;
                     break;
                 }
             }
-            invoice.Text = d.InvoiceNumber;
+
+            invoice.Text = device.InvoiceNumber;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -862,13 +960,9 @@ namespace AccountingPC
             {
                 autoInvN.Visibility = Visibility.Visible;
                 if (disabledRepeatInvN.IsChecked == true)
-                {
                     DisabledRepeatInvN_Checked();
-                }
                 else
-                {
                     DisabledRepeatInvN_Unchecked();
-                }
             }
             else if (Accounting.TypeChange == TypeChange.Change)
             {
@@ -876,6 +970,7 @@ namespace AccountingPC
                 autoInvN.IsChecked = false;
                 DisabledRepeatInvN_Unchecked();
             }
+
             inventoryNumberGrid.Visibility = Visibility.Visible;
             deviceNameGrid.Visibility = Visibility.Visible;
             costGrid.Visibility = Visibility.Visible;
@@ -1140,44 +1235,40 @@ namespace AccountingPC
 
         private static List<string> GetListVideoConnectors(int value)
         {
-            List<string> arr = new List<string>
+            var arr = new List<string>
             {
                 Capacity = 32
             };
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                SqlDataReader reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection).ExecuteReader();
+                var reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection)
+                    .ExecuteReader();
                 if (reader.HasRows)
-                {
                     while (reader.Read())
                     {
-                        int connectorValue = Convert.ToInt32(reader["Value"]);
+                        var connectorValue = Convert.ToInt32(reader["Value"]);
                         if (value >= connectorValue)
                         {
                             value -= connectorValue;
                             arr.Add(reader["Name"].ToString());
                         }
                     }
-                }
             }
+
             return arr;
         }
 
         private int GetValueVideoConnectors(ListBox list)
         {
-            int value = 0;
-            foreach (object obj in list.SelectedItems)
+            var value = 0;
+            foreach (var obj in list.SelectedItems)
+            foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView)
             {
-                foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView) 
-                {
-                    string s = (obj as ListBoxItem).Content.ToString();
-                    if (row.Row[1].ToString() == s)
-                    {
-                        value += Convert.ToInt32(row.Row[2]);
-                    }
-                }
+                var s = (obj as ListBoxItem).Content.ToString();
+                if (row.Row[1].ToString() == s) value += Convert.ToInt32(row.Row[2]);
             }
+
             return value;
         }
 
@@ -1269,25 +1360,28 @@ namespace AccountingPC
                             AddOtherEquipment();
                             break;
                     }
+
                     Accounting.statusItem1.Content = "Успешно добавлено";
                     statusItem1.Content = "Успешно добавлено";
                     task = new Task(() =>
                     {
                         try
                         {
-                            for (int i = 0; i < 10; i++)
+                            for (var i = 0; i < 10; i++)
                             {
                                 i++;
                                 Thread.Sleep(1000);
                             }
+
                             Dispatcher.Invoke(() =>
                             {
                                 Accounting.statusItem1.Content = string.Empty;
                                 statusItem1.Content = string.Empty;
                             });
-
                         }
-                        catch { }
+                        catch
+                        {
+                        }
                     });
                     task.Start();
                     break;
@@ -1322,25 +1416,28 @@ namespace AccountingPC
                             UpdateOtherEquipment();
                             break;
                     }
+
                     Accounting.statusItem1.Content = "Успешно изменено";
                     statusItem1.Content = "Успешно изменено";
                     task = new Task(() =>
                     {
                         try
                         {
-                            for (int i = 0; i < 10; i++)
+                            for (var i = 0; i < 10; i++)
                             {
                                 i++;
                                 Thread.Sleep(1000);
                             }
+
                             Dispatcher.Invoke(() =>
                             {
                                 Accounting.statusItem1.Content = string.Empty;
                                 statusItem1.Content = string.Empty;
                             });
-
                         }
-                        catch { }
+                        catch
+                        {
+                        }
                     });
                     task.Start();
                     break;
@@ -1362,25 +1459,28 @@ namespace AccountingPC
                             AddOS();
                             break;
                     }
+
                     Accounting.statusItem1.Content = "Успешно добавлено";
                     statusItem1.Content = "Успешно добавлено";
                     task = new Task(() =>
                     {
                         try
                         {
-                            for (int i = 0; i < 10; i++)
+                            for (var i = 0; i < 10; i++)
                             {
                                 i++;
                                 Thread.Sleep(1000);
                             }
+
                             Dispatcher.Invoke(() =>
                             {
                                 Accounting.statusItem1.Content = string.Empty;
                                 statusItem1.Content = string.Empty;
                             });
-
                         }
-                        catch { }
+                        catch
+                        {
+                        }
                     });
                     task.Start();
                     break;
@@ -1394,25 +1494,28 @@ namespace AccountingPC
                             UpdateOS();
                             break;
                     }
+
                     Accounting.statusItem1.Content = "Успешно изменено";
                     statusItem1.Content = "Успешно изменено";
                     task = new Task(() =>
                     {
                         try
                         {
-                            for (int i = 0; i < 10; i++)
+                            for (var i = 0; i < 10; i++)
                             {
                                 i++;
                                 Thread.Sleep(1000);
                             }
+
                             Dispatcher.Invoke(() =>
                             {
                                 Accounting.statusItem1.Content = string.Empty;
                                 statusItem1.Content = string.Empty;
                             });
-
                         }
-                        catch { }
+                        catch
+                        {
+                        }
                     });
                     task.Start();
                     break;
@@ -1423,7 +1526,8 @@ namespace AccountingPC
         private void UpdateSourceForAspectRatio()
         {
             DefaultDataSet.Tables["AspectRatio"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllAspectRatio()", ConnectionString).Fill(DefaultDataSet, "AspectRatio");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllAspectRatio()", ConnectionString).Fill(DefaultDataSet,
+                "AspectRatio");
             aspectRatio.ItemsSource = DefaultDataSet.Tables["AspectRatio"].DefaultView;
             aspectRatio.DisplayMemberPath = "Name";
         }
@@ -1432,7 +1536,7 @@ namespace AccountingPC
         private void UpdateSourceForOS()
         {
             DefaultDataSet.Tables["OS"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllOS()", ConnectionString).Fill(DefaultDataSet, "OS");
             os.ItemsSource = DefaultDataSet.Tables["OS"].DefaultView;
             os.DisplayMemberPath = "Наименование";
         }
@@ -1441,7 +1545,8 @@ namespace AccountingPC
         private void UpdateSourceForScreenInstalled()
         {
             DefaultDataSet.Tables["ScreenInstalled"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreenInstalled()", ConnectionString).Fill(DefaultDataSet, "ScreenInstalled");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllScreenInstalled()", ConnectionString).Fill(DefaultDataSet,
+                "ScreenInstalled");
             screenInstalled.ItemsSource = DefaultDataSet.Tables["ScreenInstalled"].DefaultView;
             screenInstalled.DisplayMemberPath = "Name";
         }
@@ -1453,33 +1558,38 @@ namespace AccountingPC
             switch (Accounting.TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllBoardName()", ConnectionString);
+                    NameDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllBoardName()", ConnectionString);
                     break;
                 case TypeDevice.Monitor:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllMonitorName()", ConnectionString);
+                    NameDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllMonitorName()", ConnectionString);
                     break;
                 case TypeDevice.NetworkSwitch:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNetworkSwitchName()", ConnectionString);
+                    NameDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.GetAllNetworkSwitchName()", ConnectionString);
                     break;
                 case TypeDevice.Notebook:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookName()", ConnectionString);
+                    NameDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebookName()", ConnectionString);
                     break;
                 case TypeDevice.OtherEquipment:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllOtherEquipmentName()", ConnectionString);
+                    NameDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.GetAllOtherEquipmentName()", ConnectionString);
                     break;
                 case TypeDevice.PC:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCName()", ConnectionString);
+                    NameDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllPCName()", ConnectionString);
                     break;
                 case TypeDevice.PrinterScanner:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllPrinterScannerName()", ConnectionString);
+                    NameDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.GetAllPrinterScannerName()", ConnectionString);
                     break;
                 case TypeDevice.Projector:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorName()", ConnectionString);
+                    NameDataAdapter = new SqlDataAdapter("SELECT * FROM dbo.GetAllProjectorName()", ConnectionString);
                     break;
                 case TypeDevice.ProjectorScreen:
-                    NameDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorScreenName()", ConnectionString);
+                    NameDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.GetAllProjectorScreenName()", ConnectionString);
                     break;
             }
+
             DefaultDataSet.Tables["Name"].Clear();
             NameDataAdapter?.Fill(DefaultDataSet, "Name");
             name.ItemsSource = DefaultDataSet.Tables["Name"].DefaultView;
@@ -1493,33 +1603,52 @@ namespace AccountingPC
             switch (Accounting.TypeDevice)
             {
                 case TypeDevice.InteractiveWhiteboard:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](4)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](4)",
+                            ConnectionString);
                     break;
                 case TypeDevice.Monitor:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](6)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](6)",
+                            ConnectionString);
                     break;
                 case TypeDevice.NetworkSwitch:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](5)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](5)",
+                            ConnectionString);
                     break;
                 case TypeDevice.Notebook:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](2)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](2)",
+                            ConnectionString);
                     break;
                 case TypeDevice.OtherEquipment:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](9)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](9)",
+                            ConnectionString);
                     break;
                 case TypeDevice.PC:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](1)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](1)",
+                            ConnectionString);
                     break;
                 case TypeDevice.PrinterScanner:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](3)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](3)",
+                            ConnectionString);
                     break;
                 case TypeDevice.Projector:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](7)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](7)",
+                            ConnectionString);
                     break;
                 case TypeDevice.ProjectorScreen:
-                    LocationDataAdapter = new SqlDataAdapter($"SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](8)", ConnectionString);
+                    LocationDataAdapter =
+                        new SqlDataAdapter("SELECT * FROM dbo.[GetAllCanUsedLocationByTypeDeviceID](8)",
+                            ConnectionString);
                     break;
             }
+
             DefaultDataSet.Tables["Location"].Clear();
             LocationDataAdapter?.Fill(DefaultDataSet, "Location");
             location.ItemsSource = DefaultDataSet.Tables["Location"].DefaultView;
@@ -1533,13 +1662,14 @@ namespace AccountingPC
             {
                 case TypeDevice.Notebook:
                     DefaultDataSet.Tables["CPU"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebookCPU()", ConnectionString).Fill(DefaultDataSet,
+                        "CPU");
                     cpu.ItemsSource = DefaultDataSet.Tables["CPU"].DefaultView;
                     cpu.DisplayMemberPath = "CPUModel";
                     break;
                 case TypeDevice.PC:
                     DefaultDataSet.Tables["CPU"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllPCCPU()", ConnectionString).Fill(DefaultDataSet, "CPU");
                     cpu.ItemsSource = DefaultDataSet.Tables["CPU"].DefaultView;
                     cpu.DisplayMemberPath = "CPUModel";
                     break;
@@ -1553,13 +1683,15 @@ namespace AccountingPC
             {
                 case TypeDevice.Notebook:
                     DefaultDataSet.Tables["VCard"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString).Fill(DefaultDataSet, "VCard");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllNotebookvCard()", ConnectionString).Fill(DefaultDataSet,
+                        "VCard");
                     vCard.ItemsSource = DefaultDataSet.Tables["VCard"].DefaultView;
                     vCard.DisplayMemberPath = "VideoCard";
                     break;
                 case TypeDevice.PC:
                     DefaultDataSet.Tables["VCard"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllPCvCard()", ConnectionString).Fill(DefaultDataSet, "VCard");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllPCvCard()", ConnectionString).Fill(DefaultDataSet,
+                        "VCard");
                     vCard.ItemsSource = DefaultDataSet.Tables["VCard"].DefaultView;
                     vCard.DisplayMemberPath = "VideoCard";
                     break;
@@ -1573,19 +1705,22 @@ namespace AccountingPC
             {
                 case TypeDevice.NetworkSwitch:
                     DefaultDataSet.Tables["TypeNetworkSwitch"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString).Fill(DefaultDataSet, "TypeNetworkSwitch");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllTypeNetworkSwitch()", ConnectionString).Fill(
+                        DefaultDataSet, "TypeNetworkSwitch");
                     type.ItemsSource = DefaultDataSet.Tables["TypeNetworkSwitch"].DefaultView;
                     type.DisplayMemberPath = "Name";
                     break;
                 case TypeDevice.Notebook:
                     DefaultDataSet.Tables["TypeNotebook"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeNotebook()", ConnectionString).Fill(DefaultDataSet, "TypeNotebook");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllTypeNotebook()", ConnectionString).Fill(DefaultDataSet,
+                        "TypeNotebook");
                     type.ItemsSource = DefaultDataSet.Tables["TypeNotebook"].DefaultView;
                     type.DisplayMemberPath = "Name";
                     break;
                 case TypeDevice.PrinterScanner:
                     DefaultDataSet.Tables["TypePrinter"].Clear();
-                    new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypePrinter()", ConnectionString).Fill(DefaultDataSet, "TypePrinter");
+                    new SqlDataAdapter("SELECT * FROM dbo.GetAllTypePrinter()", ConnectionString).Fill(DefaultDataSet,
+                        "TypePrinter");
                     type.ItemsSource = DefaultDataSet.Tables["TypePrinter"].DefaultView;
                     type.DisplayMemberPath = "Name";
                     break;
@@ -1596,7 +1731,8 @@ namespace AccountingPC
         private void UpdateSourceForFrequency()
         {
             DefaultDataSet.Tables["Frequency"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllFrequency()", ConnectionString).Fill(DefaultDataSet, "Frequency");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllFrequency()", ConnectionString).Fill(DefaultDataSet,
+                "Frequency");
             screenFrequency.ItemsSource = DefaultDataSet.Tables["Frequency"].DefaultView;
             screenFrequency.DisplayMemberPath = "Name";
         }
@@ -1605,7 +1741,8 @@ namespace AccountingPC
         private void UpdateSourceForMatrixTechology()
         {
             DefaultDataSet.Tables["MatrixTechnology"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(DefaultDataSet, "MatrixTechnology");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(DefaultDataSet,
+                "MatrixTechnology");
             matrixTechnology.ItemsSource = DefaultDataSet.Tables["MatrixTechnology"].DefaultView;
             matrixTechnology.DisplayMemberPath = "Name";
         }
@@ -1614,7 +1751,8 @@ namespace AccountingPC
         private void UpdateSourceForPaperSize()
         {
             DefaultDataSet.Tables["PaperSize"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllPaperSize()", ConnectionString).Fill(DefaultDataSet, "PaperSize");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllPaperSize()", ConnectionString).Fill(DefaultDataSet,
+                "PaperSize");
             paperSize.ItemsSource = DefaultDataSet.Tables["PaperSize"].DefaultView;
             paperSize.DisplayMemberPath = "Name";
         }
@@ -1623,7 +1761,8 @@ namespace AccountingPC
         private void UpdateSourceForProjectorTechnology()
         {
             DefaultDataSet.Tables["ProjectorTechnology"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjectorTechnology()", ConnectionString).Fill(DefaultDataSet, "ProjectorTechnology");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllProjectorTechnology()", ConnectionString).Fill(DefaultDataSet,
+                "ProjectorTechnology");
             projectorTechnology.ItemsSource = DefaultDataSet.Tables["ProjectorTechnology"].DefaultView;
             projectorTechnology.DisplayMemberPath = "Name";
         }
@@ -1632,7 +1771,8 @@ namespace AccountingPC
         private void UpdateSourceForResolution()
         {
             DefaultDataSet.Tables["Resolution"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllResolution()", ConnectionString).Fill(DefaultDataSet, "Resolution");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllResolution()", ConnectionString).Fill(DefaultDataSet,
+                "Resolution");
             resolution.ItemsSource = DefaultDataSet.Tables["Resolution"].DefaultView;
             resolution.DisplayMemberPath = "Name";
         }
@@ -1641,15 +1781,14 @@ namespace AccountingPC
         private void UpdateSourceForVideoConnectors()
         {
             DefaultDataSet.Tables["VideoConnectors"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllVideoConnector()", ConnectionString).Fill(DefaultDataSet, "VideoConnectors");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllVideoConnector()", ConnectionString).Fill(DefaultDataSet,
+                "VideoConnectors");
             videoConnectorsItems = new List<ListBoxItem>
             {
                 Capacity = 32
             };
             foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView)
-            {
-                videoConnectorsItems.Add(new ListBoxItem() { Content = row.Row[1].ToString() });
-            }
+                videoConnectorsItems.Add(new ListBoxItem {Content = row.Row[1].ToString()});
 
             vConnectors.ItemsSource = videoConnectorsItems;
         }
@@ -1658,7 +1797,8 @@ namespace AccountingPC
         private void UpdateSourceForWifiFrequency()
         {
             DefaultDataSet.Tables["WifiFrequency"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllWiFiFrequency()", ConnectionString).Fill(DefaultDataSet, "WifiFrequency");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllWiFiFrequency()", ConnectionString).Fill(DefaultDataSet,
+                "WifiFrequency");
             wifiFrequency.ItemsSource = DefaultDataSet.Tables["WifiFrequency"].DefaultView;
             wifiFrequency.DisplayMemberPath = "Name";
         }
@@ -1667,7 +1807,8 @@ namespace AccountingPC
         private void UpdateSourceForInvoice()
         {
             DefaultDataSet.Tables["Invoice"].Clear();
-            new SqlDataAdapter($"SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString).Fill(DefaultDataSet, "Invoice");
+            new SqlDataAdapter("SELECT [Number] FROM dbo.GetAllInvoice()", ConnectionString).Fill(DefaultDataSet,
+                "Invoice");
             invoice.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
             softwareInvoice.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
             invoice.DisplayMemberPath = "Number";
@@ -1678,7 +1819,8 @@ namespace AccountingPC
         private void UpdateSourceForMotherboard()
         {
             DefaultDataSet.Tables["Motherboard"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllMotherboard()", ConnectionString).Fill(DefaultDataSet, "Motherboard");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllMotherboard()", ConnectionString).Fill(DefaultDataSet,
+                "Motherboard");
             motherboard.ItemsSource = DefaultDataSet.Tables["Motherboard"].DefaultView;
             motherboard.DisplayMemberPath = "Motherboard";
         }
@@ -1687,7 +1829,8 @@ namespace AccountingPC
         private void UpdateSourceForTypeLicense()
         {
             DefaultDataSet.Tables["TypeLicense"].Clear();
-            new SqlDataAdapter($"SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString).Fill(DefaultDataSet, "TypeLicense");
+            new SqlDataAdapter("SELECT * FROM dbo.GetAllTypeSoftLicense()", ConnectionString).Fill(DefaultDataSet,
+                "TypeLicense");
             typeLicense.ItemsSource = DefaultDataSet.Tables["TypeLicense"].DefaultView;
             typeLicense.DisplayMemberPath = "Name";
         }
@@ -1698,7 +1841,7 @@ namespace AccountingPC
             string commandString;
             SqlCommand command;
             int temp;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddPC";
@@ -1709,70 +1852,43 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text == string.Empty ? null : cpu.Text));
                 temp = Convert.ToInt32(cores.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@Cores", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@Cores", temp));
 
                 temp = Convert.ToInt32(frequency.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@Frequency", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@Frequency", temp));
 
                 temp = Convert.ToInt32(maxFrequency.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
 
                 temp = Convert.ToInt32(ram.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@RAM", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@RAM", temp));
 
                 temp = Convert.ToInt32(ramFrequency.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@FrequencyRAM", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@FrequencyRAM", temp));
 
                 temp = Convert.ToInt32(ssd.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@SSD", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@SSD", temp));
 
                 temp = Convert.ToInt32(hdd.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@HDD", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@HDD", temp));
 
                 command.Parameters.Add(new SqlParameter("@Video", vCard.Text == string.Empty ? null : vCard.Text));
                 temp = Convert.ToInt32(videoram.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@VRAM", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@VRAM", temp));
 
-                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
+                var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null)
-                {
                     command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
                 else
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", SqlDbType.VarBinary) { SqlValue = null });
-                }
+                    command.Parameters.Add(new SqlParameter("@Image", SqlDbType.VarBinary) {SqlValue = null});
 
                 command.ExecuteNonQuery();
             }
@@ -1784,7 +1900,7 @@ namespace AccountingPC
             string commandString;
             SqlCommand command;
             int temp;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddNotebook";
@@ -1793,72 +1909,48 @@ namespace AccountingPC
                     CommandType = CommandType.StoredProcedure
                 };
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
-                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)type?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 temp = Convert.ToInt32(cores.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@Cores", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@Cores", temp));
 
                 temp = Convert.ToInt32(frequency.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@Frequency", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@Frequency", temp));
 
                 temp = Convert.ToInt32(maxFrequency.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
 
                 temp = Convert.ToInt32(ram.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@RAM", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@RAM", temp));
 
                 temp = Convert.ToInt32(ramFrequency.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@FrequencyRAM", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@FrequencyRAM", temp));
 
                 temp = Convert.ToInt32(ssd.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@SSD", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@SSD", temp));
 
                 temp = Convert.ToInt32(hdd.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@HDD", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@HDD", temp));
 
                 command.Parameters.Add(new SqlParameter("@Video", vCard.Text == string.Empty ? null : vCard.Text));
                 temp = Convert.ToInt32(videoram.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@VRAM", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@VRAM", temp));
 
-                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID",
+                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(
+                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -1869,7 +1961,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddMonitor";
@@ -1880,18 +1972,18 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID",
+                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(
+                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -1903,7 +1995,7 @@ namespace AccountingPC
             string commandString;
             SqlCommand command;
             int temp;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddNetworkSwitch";
@@ -1914,21 +2006,16 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 temp = Convert.ToInt32(ports.Text);
-                if (temp > 0)
-                {
-                    command.Parameters.Add(new SqlParameter("@Ports", temp));
-                }
+                if (temp > 0) command.Parameters.Add(new SqlParameter("@Ports", temp));
 
-                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView) wifiFrequency?.SelectedItem)?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -1939,7 +2026,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddInteractiveWhiteboard";
@@ -1950,14 +2037,12 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -1968,7 +2053,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddPrinterScanner";
@@ -1979,15 +2064,13 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView) paperSize?.SelectedItem)?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -1998,7 +2081,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddProjector";
@@ -2009,17 +2092,16 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView)projectorTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@TechnologyID",
+                    ((DataRowView) projectorTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -2030,7 +2112,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddProjectorScreen";
@@ -2041,17 +2123,17 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@IsElectronic", Convert.ToBoolean(isEDrive.IsChecked)));
-                command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled?.SelectedItem)?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(
+                    new SqlParameter("@AspectRatioID", ((DataRowView) aspectRatio?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@InstalledID",
+                    ((DataRowView) screenInstalled?.SelectedItem)?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -2062,7 +2144,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "AddOtherEquipment";
@@ -2073,13 +2155,11 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.ExecuteNonQuery();
             }
@@ -2090,7 +2170,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdatePCByID";
@@ -2103,7 +2183,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
                 command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
@@ -2114,14 +2194,11 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
                 command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
                 command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
-                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2133,7 +2210,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateNotebookByID";
@@ -2143,11 +2220,11 @@ namespace AccountingPC
                 };
                 command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
-                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)type?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
                 command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
@@ -2159,16 +2236,15 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
                 command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
                 command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
-                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView)os?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID",
+                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(
+                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2180,7 +2256,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateMonitorByID";
@@ -2193,17 +2269,16 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView)screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView)matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID",
+                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(
+                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2215,7 +2290,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateNetworkSwitchByID";
@@ -2227,16 +2302,14 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
-                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView)wifiFrequency?.SelectedItem)?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView) wifiFrequency?.SelectedItem)?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2248,7 +2321,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateInteractiveWhiteboardByID";
@@ -2260,14 +2333,12 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2279,7 +2350,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdatePrinterScannerByID";
@@ -2291,15 +2362,13 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView)type?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView)paperSize?.SelectedItem)?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView) paperSize?.SelectedItem)?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2311,7 +2380,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateProjectorByID";
@@ -2323,17 +2392,16 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView)projectorTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@TechnologyID",
+                    ((DataRowView) projectorTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView)resolution?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2345,7 +2413,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateProjectorScreenByID";
@@ -2357,17 +2425,17 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@IsEDrive", Convert.ToBoolean(isEDrive.IsChecked)));
-                command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView)aspectRatio?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView)screenInstalled?.SelectedItem)?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(
+                    new SqlParameter("@AspectRatioID", ((DataRowView) aspectRatio?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@InstalledID",
+                    ((DataRowView) screenInstalled?.SelectedItem)?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2379,7 +2447,7 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = "UpdateOtherEquipmentByID";
@@ -2391,13 +2459,11 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
                 command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
-                byte[] bytes = LoadImage(imageFilename.Text);
-                if (bytes != null)
-                {
-                    command.Parameters.Add(new SqlParameter("@Image", bytes));
-                }
+                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
+                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
+                var bytes = LoadImage(imageFilename.Text);
+                if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
                 command.Parameters.Add(new SqlParameter("@IsChangeAnalog", IsChangeAnalog));
                 command.ExecuteNonQuery();
@@ -2411,11 +2477,12 @@ namespace AccountingPC
                 byte[] data;
                 try
                 {
-                    using (FileStream fs = new FileStream(path, FileMode.Open))
+                    using (var fs = new FileStream(path, FileMode.Open))
                     {
                         data = new byte[fs.Length];
                         fs.Read(data, 0, data.Length);
                     }
+
                     return data;
                 }
                 catch
@@ -2423,27 +2490,26 @@ namespace AccountingPC
                     return null;
                 }
             }
-            else if (Accounting.TypeChange == TypeChange.Change)
+
+            if (Accounting.TypeChange == TypeChange.Change)
             {
-                object obj = ((DataRowView)Accounting.equipmentView.SelectedItems?[0]).Row["ImageID"];
-                int id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? null : obj);
-                if (id != 0)
-                {
-                    return Accounting.Images[id];
-                }
+                var obj = ((DataRowView) Accounting.equipmentView.SelectedItems?[0]).Row["ImageID"];
+                var id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? null : obj);
+                if (id != 0) return Accounting.Images[id];
                 return null;
             }
+
             return null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddSoftware()
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = null;
-                command = new SqlCommand($"AddLicenseSoftware", connection)
+                command = new SqlCommand("AddLicenseSoftware", connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -2451,7 +2517,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
-                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)typeLicense.SelectedItem).Row[0]));
+                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) typeLicense.SelectedItem).Row[0]));
                 command?.ExecuteNonQuery();
             }
         }
@@ -2459,11 +2525,11 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void AddOS()
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = null;
-                command = new SqlCommand($"AddOS", connection)
+                command = new SqlCommand("AddOS", connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -2478,11 +2544,11 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateSoftware()
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = null;
-                command = new SqlCommand($"UpdateLicenseSoftware", connection)
+                command = new SqlCommand("UpdateLicenseSoftware", connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -2491,7 +2557,7 @@ namespace AccountingPC
                 command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
-                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView)typeLicense.SelectedItem).Row[0]));
+                command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) typeLicense.SelectedItem).Row[0]));
                 command?.ExecuteNonQuery();
             }
         }
@@ -2499,11 +2565,11 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void UpdateOS()
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 SqlCommand command = null;
-                command = new SqlCommand($"UpdateOS", connection)
+                command = new SqlCommand("UpdateOS", connection)
                 {
                     CommandType = CommandType.StoredProcedure
                 };
@@ -2517,84 +2583,81 @@ namespace AccountingPC
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetLicenseSoftware(Software software, int id)
+        private void GetLicenseSoftware(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetLicenseSoftwareByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        software = new LicenseSoftware()
+                        soft = new LicenseSoftware
                         {
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
-                            Count = Convert.ToInt32(reader["Count"]),
+                            Cost = Convert.ToSingle(reader["Price"].GetType() != typeof(DBNull) ? reader["Price"] : 0),
+                            Count = Convert.ToInt32(reader["Count"].GetType() != typeof(DBNull) ? reader["Count"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            Type = Convert.ToInt32(reader["Type"]),
+                            Type = Convert.ToInt32(reader["Type"])
                         };
 
-                        softwareName.Text = software.Name;
-                        softwareCost.Text = software.Cost.ToString();
-                        softwareCount.Text = software.Count.ToString();
-                        softwareInvoice.Text = software.InvoiceNumber;
-                        foreach (object obj in typeLicense.ItemsSource)
+                        softwareName.Text = soft.Name;
+                        softwareCost.Text = soft.Cost.ToString();
+                        softwareCount.Text = soft.Count.ToString();
+                        softwareInvoice.Text = soft.InvoiceNumber;
+                        foreach (var obj in typeLicense.ItemsSource)
                         {
                             DataRowView row;
-                            row = (obj as DataRowView);
-                            if (Convert.ToUInt32(row.Row[0]) == (software as LicenseSoftware).Type)
+                            row = obj as DataRowView;
+                            if (Convert.ToUInt32(row.Row[0]) == (soft as LicenseSoftware).Type)
                             {
                                 typeLicense.SelectedItem = row;
                                 break;
                             }
                         }
                     }
-                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void GetOS(Software software, int id)
+        private void GetOS(int id)
         {
             string commandString;
             SqlDataReader reader;
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
                 commandString = $"SELECT * FROM dbo.GetOSByID({id})";
                 reader = new SqlCommand(commandString, connection).ExecuteReader();
                 if (reader.HasRows)
-                {
                     if (reader.Read())
                     {
-                        software = new OS()
+                        soft = new OS
                         {
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"]),
-                            Count = Convert.ToInt32(reader["Count"]),
-                            InvoiceNumber = reader["InvoiceNumber"].ToString(),
+                            Cost = Convert.ToSingle(reader["Price"].GetType() != typeof(DBNull) ? reader["Price"] : 0),
+                            Count = Convert.ToInt32(reader["Count"].GetType() != typeof(DBNull) ? reader["Count"] : 0),
+                            InvoiceNumber = reader["InvoiceNumber"].ToString()
                         };
 
-                        softwareName.Text = software.Name;
-                        softwareCost.Text = software.Cost.ToString();
-                        softwareCount.Text = software.Count.ToString();
-                        softwareInvoice.Text = software.InvoiceNumber;
+                        softwareName.Text = soft.Name;
+                        softwareCost.Text = soft.Cost.ToString();
+                        softwareCount.Text = soft.Count.ToString();
+                        softwareInvoice.Text = soft.InvoiceNumber;
                     }
-                }
             }
         }
 
         private void AutoInvN_Checked(object sender, RoutedEventArgs e)
         {
-            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
-                inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar().ToString();
+                inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar()
+                    .ToString();
                 inventoryNumber.IsEnabled = false;
             }
         }
@@ -2639,12 +2702,13 @@ namespace AccountingPC
                     Accounting.ChangeSoftwareView();
                     break;
             }
+
             Close();
         }
 
         private void Cpu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataRow row = ((DataRowView)cpu.SelectedItem)?.Row;
+            var row = ((DataRowView) cpu.SelectedItem)?.Row;
             frequency.Text = row?[1].ToString();
             maxFrequency.Text = row?[2].ToString();
             cores.Text = row?[3].ToString();
@@ -2652,14 +2716,11 @@ namespace AccountingPC
 
         private void ImageLoad_Click(object sender, RoutedEventArgs e)
         {
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog
+            var dialog = new OpenFileDialog
             {
                 Filter = "Image Files(*.BMP;*.PNG;*.JPG;*.GIF)|*.BMP;*.PNG;*.JPG;*.GIF"
             };
-            if (dialog.ShowDialog() == false)
-            {
-                return;
-            }
+            if (dialog.ShowDialog() == false) return;
             imageFilename.Text = dialog.FileName;
         }
 

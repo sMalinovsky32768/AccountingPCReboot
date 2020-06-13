@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -22,7 +21,7 @@ namespace AccountingPC.AccountingReport
         Software,
         OS,
         SoftAndOS,
-        UseSoft,
+        UseSoft
     }
 
     internal enum CreateReportOptions : byte
@@ -31,92 +30,80 @@ namespace AccountingPC.AccountingReport
         SaveAsPDF,
         OpenExcel,
         Print,
-        Preview,
+        Preview
     }
 
     internal class ReportOptions : INotifyPropertyChanged
     {
-        private ReportCommand addSortingParam;
-        public ReportCommand AddSortingParam => addSortingParam ??
-                    (addSortingParam = new ReportCommand(obj =>
-                    {
-                        SortingParamList.Add(new SortingParam());
-                        SelectedSortingParam = SortingParamList[SortingParamList.Count - 1];
-                    },
-                    (obj) =>
-                    {
-                        for (int i = 0; i < SortingParamList.Count; i++)
-                        {
-                            if (SortingParamList[i].ColumnName == null)
-                            {
-                                return false;
-                            }
-                        }
-                        if (Report.UsedReportColumns.Count <= SortingParamList.Count)
-                        {
-                            return false;
-                        }
-
-                        if (SortingParamList.Count > 5)
-                        {
-                            return false;
-                        }
-
-                        return true;
-                    }));
-
-        private ReportCommand delSortingParam;
-        public ReportCommand DelSortingParam => delSortingParam ??
-                    (delSortingParam = new ReportCommand(obj =>
-                    {
-                        if (obj is SortingParam param)
-                        {
-                            for (int i = 0; i < SortingParamList.Count; i++)
-                            {
-                                if (param == SortingParamList[i])
-                                {
-                                    SelectedSortingParam =
-                                            SortingParamList[SortingParamList.IndexOf(param) < SortingParamList.Count - 2 ?
-                                            SortingParamList.IndexOf(param) + 1 : 0];
-                                }
-                            }
-                            sortingParamList.Remove(param);
-                        }
-                    },
-                    (obj) =>
-                    {
-                        if (SortingParamList.Count > 0)
-                        {
-                            if (SelectedSortingParam != null)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            return false;
-                        }
-                    }));
-
         public delegate void ReportChanged();
 
-        public event ReportChanged TypeReportChangedEvent;
-        public event ReportChanged CreateOptionsChangedEvent;
+        private ReportCommand addSortingParam;
+        private CreateReportOptions createOptions = CreateReportOptions.SaveAsXlsx;
+
+        private ReportCommand delSortingParam;
+        private ReportName reportName;
+        private SortingParam selectedSortingParam;
+        private ObservableCollection<SortingParam> sortingParamList = new ObservableCollection<SortingParam>();
+
+        private TypeReport typeReport;
+
+        public ReportOptions(Report report)
+        {
+            Report = report;
+        }
+
+        public ReportCommand AddSortingParam => addSortingParam ??
+                                                (addSortingParam = new ReportCommand(obj =>
+                                                    {
+                                                        SortingParamList.Add(new SortingParam());
+                                                        SelectedSortingParam =
+                                                            SortingParamList[SortingParamList.Count - 1];
+                                                    },
+                                                    obj =>
+                                                    {
+                                                        for (var i = 0; i < SortingParamList.Count; i++)
+                                                            if (SortingParamList[i].ColumnName == null)
+                                                                return false;
+                                                        if (Report.UsedReportColumns.Count <= SortingParamList.Count)
+                                                            return false;
+
+                                                        if (SortingParamList.Count > 5) return false;
+
+                                                        return true;
+                                                    }));
+
+        public ReportCommand DelSortingParam => delSortingParam ??
+                                                (delSortingParam = new ReportCommand(obj =>
+                                                    {
+                                                        if (obj is SortingParam param)
+                                                        {
+                                                            for (var i = 0; i < SortingParamList.Count; i++)
+                                                                if (param == SortingParamList[i])
+                                                                    SelectedSortingParam =
+                                                                        SortingParamList[
+                                                                            SortingParamList.IndexOf(param) <
+                                                                            SortingParamList.Count - 2
+                                                                                ? SortingParamList.IndexOf(param) + 1
+                                                                                : 0];
+                                                            sortingParamList.Remove(param);
+                                                        }
+                                                    },
+                                                    obj =>
+                                                    {
+                                                        if (SortingParamList.Count > 0)
+                                                        {
+                                                            if (SelectedSortingParam != null)
+                                                                return true;
+                                                            return false;
+                                                        }
+
+                                                        return false;
+                                                    }));
 
         public bool IsShowUnitOfMeasurement { get; set; } = true;
         public bool IsCountMaxMinAverageSum { get; set; } = true;
 
         public bool SplitByAudience { get; set; } = false;
-
-        private TypeReport typeReport;
-        private ReportName reportName;
-        private CreateReportOptions createOptions = CreateReportOptions.SaveAsXlsx;
-        private ObservableCollection<SortingParam> sortingParamList = new ObservableCollection<SortingParam>();
-        private SortingParam selectedSortingParam;
 
         public TypeReport TypeReport
         {
@@ -126,9 +113,10 @@ namespace AccountingPC.AccountingReport
                 typeReport = value;
                 reportName = ReportNameCollection.GetReportName(TypeReport);
                 TypeReportChangedEvent?.Invoke();
-                OnPropertyChanged("TypeReport");
+                OnPropertyChanged();
             }
         }
+
         public ReportName ReportName
         {
             get => reportName;
@@ -137,7 +125,7 @@ namespace AccountingPC.AccountingReport
                 reportName = value;
                 typeReport = value.Type;
                 TypeReportChangedEvent?.Invoke();
-                OnPropertyChanged("ReportName");
+                OnPropertyChanged();
             }
         }
 
@@ -148,14 +136,14 @@ namespace AccountingPC.AccountingReport
             {
                 createOptions = value;
                 CreateOptionsChangedEvent?.Invoke();
-                OnPropertyChanged("CreateOptions");
+                OnPropertyChanged();
             }
         }
 
         public bool IsPeriod { get; set; }
 
-        public DateTime? FromDate { get; set; } 
-        public DateTime? ToDate { get; set; } 
+        public DateTime? FromDate { get; set; }
+        public DateTime? ToDate { get; set; }
 
         public ObservableCollection<SortingParam> SortingParamList
         {
@@ -163,7 +151,7 @@ namespace AccountingPC.AccountingReport
             set
             {
                 sortingParamList = value;
-                OnPropertyChanged("SortingParamList");
+                OnPropertyChanged();
             }
         }
 
@@ -173,59 +161,49 @@ namespace AccountingPC.AccountingReport
             set
             {
                 selectedSortingParam = value;
-                OnPropertyChanged("SelectedSortingParam");
+                OnPropertyChanged();
             }
         }
+
+        private Report Report { get; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public event ReportChanged TypeReportChangedEvent;
+        public event ReportChanged CreateOptionsChangedEvent;
+
         public string GetSortingString(bool isFull = false)
         {
-            string temp = string.Empty;
+            var temp = string.Empty;
 
-            if (isFull)
-            {
-                return string.Empty;
-            }
+            if (isFull) return string.Empty;
 
-            if (SortingParamList.Count <= 0)
-            {
-                return string.Empty;
-            }
+            if (SortingParamList.Count <= 0) return string.Empty;
 
             temp += " order by ";
 
-            int i = 0;
-            for (int j = 0; j < SortingParamList.Count; j++)
+            var i = 0;
+            for (var j = 0; j < SortingParamList.Count; j++)
             {
-                SortingParam param = SortingParamList[j];
-                List<ReportColumn> columns = ReportRelationCollection.Collection[TypeReport].Columns;
+                var param = SortingParamList[j];
+                var columns = ReportRelationCollection.Collection[TypeReport].Columns;
                 if (columns.Contains(param.ColumnName.Column))
                 {
                     temp += $"[{ReportColumnNameCollection.GetColumnName(param.ColumnName.Column).Name}] ";
                     if (param.OrderName.Order == SortOrder.Asc)
-                    {
                         temp += "asc";
-                    }
                     else
-                    {
                         temp += "desc";
-                    }
 
                     i++;
-                    if (i < SortingParamList.Count)
-                    {
-                        temp += ", ";
-                    }
+                    if (i < SortingParamList.Count) temp += ", ";
                 }
             }
 
             return temp;
         }
 
-        private Report Report { get; set; }
-
-        public ReportOptions(Report report) { Report = report; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName]string prop = "")
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }

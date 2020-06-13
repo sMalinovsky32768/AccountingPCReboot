@@ -5,46 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
-        Title="Авторизация" Height="150" Width="350" ResizeMode="NoResize" 
+        Title="Авторизация" Height="150" Width="350" ResizeMode="NoResize"
         WindowStartupLocation="CenterScreen" WindowStyle="None">
     <Window.Resources>
         <Style TargetType="TextBox" BasedOn="{StaticResource ResourceKey=text-box}">
-            <Setter Property="Margin" Value="5 0"/>
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="5 0" />
+            <Setter Property="Height" Value="30" />
         </Style>
         <Style TargetType="PasswordBox" BasedOn="{StaticResource ResourceKey=password-box}">
-            <Setter Property="Margin" Value="5 0"/>
-            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="5 0" />
+            <Setter Property="Height" Value="30" />
         </Style>
         <Style TargetType="TextBlock">
-            <Setter Property="TextBlock.FontSize" Value="14"/>
-            <Setter Property="TextBlock.Margin" Value="10,20,10,5"/>
-            <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
-            <Setter Property="TextBlock.FontFamily" Value="Source Sans Pro"/>
-            <Setter Property="TextBlock.Foreground" Value="{DynamicResource on-background-brush}"/>
+            <Setter Property="TextBlock.FontSize" Value="14" />
+            <Setter Property="TextBlock.Margin" Value="10,20,10,5" />
+            <Setter Property="TextBlock.VerticalAlignment" Value="Center" />
+            <Setter Property="TextBlock.FontFamily" Value="Source Sans Pro" />
+            <Setter Property="TextBlock.Foreground" Value="{DynamicResource on-background-brush}" />
         </Style>
     </Window.Resources>
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:MainWindow.ExitCommand}" Executed="CancelClick"/>
+        <CommandBinding Command="{x:Static local:MainWindow.ExitCommand}" Executed="CancelClick" />
     </Window.CommandBindings>
-    <Border RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="Border_MouseLeftButtonDown" BorderThickness="0" 
+    <Border RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="Border_MouseLeftButtonDown" BorderThickness="0"
             BorderBrush="{DynamicResource background-brush}" Background="{DynamicResource background-brush}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition/>
-                <RowDefinition/>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
+                <ColumnDefinition />
+                <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Логин:"/>
-            <TextBox Grid.Row="1" x:Name="loginTextBox" Text="admin"/>
-            <TextBlock Grid.Column="1" Text="Пароль:"/>
-            <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passwordBox" Password="admin"/>
-            <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="loginButton" Content="Войти" Click="LoginClick" 
-                    IsDefault="True" Style="{DynamicResource primary-button}" Margin="10 0" Height="30"/>
+            <TextBlock Text="Логин:" />
+            <TextBox Grid.Row="1" x:Name="loginTextBox"/>
+            <TextBlock Grid.Column="1" Text="Пароль:" />
+            <PasswordBox Grid.Row="1" Grid.Column="1" x:Name="passwordBox"/>
+            <Button Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" x:Name="loginButton" Content="Войти"
+                    Click="LoginClick"
+                    IsDefault="True" Style="{DynamicResource primary-button}" Margin="10 0" Height="30" />
         </Grid>
     </Border>
 </Window>

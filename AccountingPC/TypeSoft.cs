@@ -3,6 +3,6 @@
     internal enum TypeSoft : byte
     {
         LicenseSoftware,
-        OS,
+        OS
     }
 }

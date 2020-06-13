@@ -8,12 +8,12 @@ namespace AccountingPC
 {
     public partial class AccountingPCWindow : Window
     {
-        private bool mRestoreIfMove = false;
+        private bool mRestoreIfMove;
 
-        void Window_SourceInitialized(object sender, EventArgs e)
+        private void Window_SourceInitialized(object sender, EventArgs e)
         {
-            IntPtr mWindowHandle = (new WindowInteropHelper(this)).Handle;
-            HwndSource.FromHwnd(mWindowHandle).AddHook(new HwndSourceHook(WindowProc));
+            var mWindowHandle = new WindowInteropHelper(this).Handle;
+            HwndSource.FromHwnd(mWindowHandle).AddHook(WindowProc);
         }
 
 
@@ -35,18 +35,15 @@ namespace AccountingPC
             POINT lMousePosition;
             GetCursorPos(out lMousePosition);
 
-            IntPtr lPrimaryScreen = MonitorFromPoint(new POINT(0, 0), MonitorOptions.MONITOR_DEFAULTTOPRIMARY);
-            MONITORINFO lPrimaryScreenInfo = new MONITORINFO();
-            if (GetMonitorInfo(lPrimaryScreen, lPrimaryScreenInfo) == false)
-            {
-                return;
-            }
+            var lPrimaryScreen = MonitorFromPoint(new POINT(0, 0), MonitorOptions.MONITOR_DEFAULTTOPRIMARY);
+            var lPrimaryScreenInfo = new MONITORINFO();
+            if (GetMonitorInfo(lPrimaryScreen, lPrimaryScreenInfo) == false) return;
 
-            IntPtr lCurrentScreen = MonitorFromPoint(lMousePosition, MonitorOptions.MONITOR_DEFAULTTONEAREST);
+            var lCurrentScreen = MonitorFromPoint(lMousePosition, MonitorOptions.MONITOR_DEFAULTTONEAREST);
 
-            MINMAXINFO lMmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+            var lMmi = (MINMAXINFO) Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
 
-            if (lPrimaryScreen.Equals(lCurrentScreen) == true)
+            if (lPrimaryScreen.Equals(lCurrentScreen))
             {
                 lMmi.ptMaxPosition.X = lPrimaryScreenInfo.rcWork.Left;
                 lMmi.ptMaxPosition.Y = lPrimaryScreenInfo.rcWork.Top;
@@ -70,15 +67,15 @@ namespace AccountingPC
             switch (WindowState)
             {
                 case WindowState.Normal:
-                    {
-                        WindowState = WindowState.Maximized;
-                        break;
-                    }
+                {
+                    WindowState = WindowState.Maximized;
+                    break;
+                }
                 case WindowState.Maximized:
-                    {
-                        WindowState = WindowState.Normal;
-                        break;
-                    }
+                {
+                    WindowState = WindowState.Normal;
+                    break;
+                }
             }
         }
 
@@ -87,15 +84,13 @@ namespace AccountingPC
         {
             if (e.ClickCount == 2)
             {
-                if ((ResizeMode == ResizeMode.CanResize) || (ResizeMode == ResizeMode.CanResizeWithGrip))
-                {
+                if (ResizeMode == ResizeMode.CanResize || ResizeMode == ResizeMode.CanResizeWithGrip)
                     SwitchWindowState();
-                }
 
                 return;
             }
 
-            else if (WindowState == WindowState.Maximized)
+            if (WindowState == WindowState.Maximized)
             {
                 mRestoreIfMove = true;
                 return;
@@ -117,11 +112,11 @@ namespace AccountingPC
             {
                 mRestoreIfMove = false;
 
-                double percentHorizontal = e.GetPosition(this).X / ActualWidth;
-                double targetHorizontal = RestoreBounds.Width * percentHorizontal;
+                var percentHorizontal = e.GetPosition(this).X / ActualWidth;
+                var targetHorizontal = RestoreBounds.Width * percentHorizontal;
 
-                double percentVertical = e.GetPosition(this).Y / ActualHeight;
-                double targetVertical = RestoreBounds.Height * percentVertical;
+                var percentVertical = e.GetPosition(this).Y / ActualHeight;
+                var targetVertical = RestoreBounds.Height * percentVertical;
 
                 WindowState = WindowState.Normal;
 
@@ -137,22 +132,22 @@ namespace AccountingPC
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetCursorPos(out POINT lpPoint);
+        private static extern bool GetCursorPos(out POINT lpPoint);
 
 
         [DllImport("user32.dll", SetLastError = true)]
-        static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
+        private static extern IntPtr MonitorFromPoint(POINT pt, MonitorOptions dwFlags);
 
-        enum MonitorOptions : uint
+
+        [DllImport("user32.dll")]
+        private static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+
+        private enum MonitorOptions : uint
         {
             MONITOR_DEFAULTTONULL = 0x00000000,
             MONITOR_DEFAULTTOPRIMARY = 0x00000001,
             MONITOR_DEFAULTTONEAREST = 0x00000002
         }
-
-
-        [DllImport("user32.dll")]
-        static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
 
         [StructLayout(LayoutKind.Sequential)]
@@ -163,8 +158,8 @@ namespace AccountingPC
 
             public POINT(int x, int y)
             {
-                this.X = x;
-                this.Y = y;
+                X = x;
+                Y = y;
             }
         }
 
@@ -177,16 +172,16 @@ namespace AccountingPC
             public POINT ptMaxPosition;
             public POINT ptMinTrackSize;
             public POINT ptMaxTrackSize;
-        };
+        }
 
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public class MONITORINFO
         {
             public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
+            public int dwFlags = 0;
             public RECT rcMonitor = new RECT();
             public RECT rcWork = new RECT();
-            public int dwFlags = 0;
         }
 
 
@@ -197,10 +192,10 @@ namespace AccountingPC
 
             public RECT(int left, int top, int right, int bottom)
             {
-                this.Left = left;
-                this.Top = top;
-                this.Right = right;
-                this.Bottom = bottom;
+                Left = left;
+                Top = top;
+                Right = right;
+                Bottom = bottom;
             }
         }
     }

@@ -8,9 +8,10 @@ namespace AccountingPC
         private string name;
 
         public int ID { get; set; }
-        public string Name 
-        { 
-            get => name; 
+
+        public string Name
+        {
+            get => name;
             set
             {
                 name = value;
@@ -19,6 +20,7 @@ namespace AccountingPC
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

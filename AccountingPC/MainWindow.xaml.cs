@@ -1,19 +1,15 @@
-﻿using AccountingPC.Properties;
-using System;
-using System.Security.Cryptography;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace AccountingPC
 {
     public partial class MainWindow : Window
     {
-        internal AccountingPCWindow accounting;
-
         public static readonly RoutedCommand ExitCommand = new RoutedUICommand(
             "Exit", "ExitCommand", typeof(MainWindow),
-            new InputGestureCollection(new InputGesture[] { new KeyGesture(Key.Escape) }));
+            new InputGestureCollection(new InputGesture[] {new KeyGesture(Key.Escape)}));
+
+        internal AccountingPCWindow accounting;
 
         public MainWindow()
         {
@@ -23,8 +19,8 @@ namespace AccountingPC
 
         private void LoginClick(object sender, RoutedEventArgs e)
         {
-            string login = loginTextBox.Text;
-            string pass = passwordBox.Password;
+            var login = loginTextBox.Text;
+            var pass = passwordBox.Password;
             if (Security.VerifyCredentials(login, pass))
             {
                 Hide();

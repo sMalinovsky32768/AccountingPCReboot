@@ -10,6 +10,6 @@
         InteractiveWhiteboard,
         NetworkSwitch,
         OtherEquipment,
-        ProjectorScreen,
+        ProjectorScreen
     }
 }

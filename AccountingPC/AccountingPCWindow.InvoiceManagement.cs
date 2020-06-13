@@ -55,26 +55,26 @@ namespace AccountingPC
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllOS() Where InvoiceID={InvoiceID}",
                 ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Операционные системы");
 
-            for (int i = 0; i < InvoiceSoftwareAndEquipmentDataSet.Tables.Count; i++)
+            for (var i = 0; i < InvoiceSoftwareAndEquipmentDataSet.Tables.Count; i++)
             {
-                DataTable table = InvoiceSoftwareAndEquipmentDataSet.Tables[i];
+                var table = InvoiceSoftwareAndEquipmentDataSet.Tables[i];
                 if (table.Columns.Contains("VideoConnectors"))
-                {
                     if (table.Columns.Contains("VideoConnectors"))
                     {
                         table.Columns.Add("Видеоразъемы");
-                        for (int j=0; j < table.Rows.Count; j++)
+                        for (var j = 0; j < table.Rows.Count; j++)
                         {
-                            DataRow row = table.Rows[j];
-                            row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int) ?
-                                GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"])) : row["VideoConnectors"];
+                            var row = table.Rows[j];
+                            row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                                ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
+                                : row["VideoConnectors"];
                         }
-                        int i1 = table.DefaultView.Table.Columns.IndexOf("VideoConnectors");
-                        int i2 = table.DefaultView.Table.Columns.IndexOf("Видеоразъемы");
+
+                        var i1 = table.DefaultView.Table.Columns.IndexOf("VideoConnectors");
+                        var i2 = table.DefaultView.Table.Columns.IndexOf("Видеоразъемы");
                         table.DefaultView.Table.Columns["Видеоразъемы"].SetOrdinal(i1);
                         table.DefaultView.Table.Columns["VideoConnectors"].SetOrdinal(i2);
                     }
-                }
             }
         }
 
@@ -83,8 +83,8 @@ namespace AccountingPC
         {
             UpdateInvoiceData();
             invoiceItemsControl.ItemsSource = InvoiceSoftwareAndEquipmentDataSet.Tables;
-            invoiceNumberManager.Text = ((DataRowView)invoiceList?.SelectedItem)?.Row?["Number"].ToString();
-            dateManager.SelectedDate = Convert.ToDateTime(((DataRowView)invoiceList?.SelectedItem)?.Row?["Date"]);
+            invoiceNumberManager.Text = ((DataRowView) invoiceList?.SelectedItem)?.Row?["Number"].ToString();
+            dateManager.SelectedDate = Convert.ToDateTime(((DataRowView) invoiceList?.SelectedItem)?.Row?["Date"]);
         }
     }
 }

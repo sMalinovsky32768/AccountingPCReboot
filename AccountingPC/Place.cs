@@ -6,42 +6,42 @@ namespace AccountingPC
 {
     internal class Place : INotifyPropertyChanged
     {
-        private string name;
-        private ObservableCollection<TypeDeviceOnPlace> typeDeviceCollection = new ObservableCollection<TypeDeviceOnPlace>();
-        private ObservableCollection<TypeDeviceOnPlace> typeDeviceRemovedCollection = new ObservableCollection<TypeDeviceOnPlace>();
-
         private AccountingCommand addTypeDevice;
-        public AccountingCommand AddTypeDevice => addTypeDevice ??
-            (addTypeDevice = new AccountingCommand(
-                obj =>
-                {
-                    TypeDeviceCollection.Add(new TypeDeviceOnPlace(this));
-                },
-                (obj) =>
-                {
-                    return true;
-                }
-            ));
 
         private AccountingCommand delTypeDevice;
+        private string name;
+
+        private ObservableCollection<TypeDeviceOnPlace> typeDeviceCollection =
+            new ObservableCollection<TypeDeviceOnPlace>();
+
+        private ObservableCollection<TypeDeviceOnPlace> typeDeviceRemovedCollection =
+            new ObservableCollection<TypeDeviceOnPlace>();
+
+        public AccountingCommand AddTypeDevice => addTypeDevice ??
+                                                  (addTypeDevice = new AccountingCommand(
+                                                      obj => { TypeDeviceCollection.Add(new TypeDeviceOnPlace(this)); },
+                                                      obj => { return true; }
+                                                  ));
+
         public AccountingCommand DelTypeDevice => delTypeDevice ??
-            (delTypeDevice = new AccountingCommand(
-                obj =>
-                {
-                    TypeDeviceOnPlace temp = (TypeDeviceOnPlace)obj;
-                    temp.IsRemoved = true;
-                    TypeDeviceRemovedCollection.Add(temp);
-                    TypeDeviceCollection.Remove(temp);
-                },
-                (obj) =>
-                {
-                    if (obj != null)
-                        return true;
-                    return false;
-                }
-            ));
+                                                  (delTypeDevice = new AccountingCommand(
+                                                      obj =>
+                                                      {
+                                                          var temp = (TypeDeviceOnPlace) obj;
+                                                          temp.IsRemoved = true;
+                                                          TypeDeviceRemovedCollection.Add(temp);
+                                                          TypeDeviceCollection.Remove(temp);
+                                                      },
+                                                      obj =>
+                                                      {
+                                                          if (obj != null)
+                                                              return true;
+                                                          return false;
+                                                      }
+                                                  ));
 
         public int ID { get; set; }
+
         public string Name
         {
             get => name;
@@ -51,6 +51,7 @@ namespace AccountingPC
                 OnPropertyChanged();
             }
         }
+
         public ObservableCollection<TypeDeviceOnPlace> TypeDeviceCollection
         {
             get => typeDeviceCollection;
@@ -60,6 +61,7 @@ namespace AccountingPC
                 OnPropertyChanged();
             }
         }
+
         public ObservableCollection<TypeDeviceOnPlace> TypeDeviceRemovedCollection
         {
             get => typeDeviceRemovedCollection;
@@ -69,7 +71,9 @@ namespace AccountingPC
                 OnPropertyChanged();
             }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
+
         public void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));

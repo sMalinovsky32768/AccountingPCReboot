@@ -1,10 +1,10 @@
-﻿using AccountingPC.Properties;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using AccountingPC.Properties;
 
 namespace AccountingPC.ParametersPages
 {
@@ -22,16 +22,17 @@ namespace AccountingPC.ParametersPages
                     useAuth.SelectedIndex = 1;
                     break;
             }
+
             login.Text = Security.Login;
         }
 
         private void ChangeClick(object sender, RoutedEventArgs e)
         {
-            if (!(string.IsNullOrWhiteSpace(oldPass.Password) 
-                || string.IsNullOrWhiteSpace(newPass.Password) 
-                || string.IsNullOrWhiteSpace(repeatPass.Password)))
+            if (!(string.IsNullOrWhiteSpace(oldPass.Password)
+                  || string.IsNullOrWhiteSpace(newPass.Password)
+                  || string.IsNullOrWhiteSpace(repeatPass.Password)))
             {
-                KeyValuePair<bool, string> res = ChangeCredentials();
+                var res = ChangeCredentials();
                 if (res.Key)
                 {
                     changeStatus.Content = res.Value;
@@ -40,15 +41,17 @@ namespace AccountingPC.ParametersPages
                     {
                         try
                         {
-                            for (int i = 0; i < 10; i++)
+                            for (var i = 0; i < 10; i++)
                             {
                                 i++;
                                 Thread.Sleep(1000);
                             }
-                            Dispatcher.Invoke(() => changeStatus.Content = string.Empty);
 
+                            Dispatcher.Invoke(() => changeStatus.Content = string.Empty);
                         }
-                        catch { }
+                        catch
+                        {
+                        }
                     });
                     task.Start();
                 }
@@ -64,16 +67,12 @@ namespace AccountingPC.ParametersPages
         {
             if (newPass.Password == repeatPass.Password)
             {
-                if(Security.UpdatCredentials(oldPass.Password, newPass.Password, login.Text))
-                {
+                if (Security.UpdatCredentials(oldPass.Password, newPass.Password, login.Text))
                     return new KeyValuePair<bool, string>(true, "Пароль успешно изменен");
-                }
-                else return new KeyValuePair<bool, string>(false, "Неверный пароль");
+                return new KeyValuePair<bool, string>(false, "Неверный пароль");
             }
-            else
-            {
-                return new KeyValuePair<bool, string>(false, "Пароли не совпадают");
-            }
+
+            return new KeyValuePair<bool, string>(false, "Пароли не совпадают");
         }
 
         private void UseAuth_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -5,101 +5,107 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
-        Title="ChangeWindow" WindowStartupLocation="CenterOwner" 
+        Title="ChangeWindow" WindowStartupLocation="CenterOwner"
         MinHeight="300" MinWidth="600" SizeToContent="WidthAndHeight"
-        ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" 
+        ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded"
         DragOver="Window_DragOver">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0"/>
+        <WindowChrome CaptionHeight="0" />
     </WindowChrome.WindowChrome>
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed"/>
+        <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed" />
     </Window.CommandBindings>
-    <Border Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}" BorderThickness="1"
-            RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MoveWindow" >
+    <Border Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}"
+            BorderThickness="1"
+            RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MoveWindow">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="30"/>
+                <RowDefinition />
+                <RowDefinition Height="30" />
             </Grid.RowDefinitions>
             <Grid x:Name="mainGrid">
-                <Grid x:Name="changeEquipmentGrid" ScrollViewer.CanContentScroll="True" Visibility="Visible" Grid.Row="0">
+                <Grid x:Name="changeEquipmentGrid" ScrollViewer.CanContentScroll="True" Visibility="Visible"
+                      Grid.Row="0">
                     <Grid>
                         <Border Margin="5">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.9" Color="{DynamicResource shadow}"/>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.9"
+                                                  Color="{DynamicResource shadow}" />
                             </Border.Effect>
                             <Grid x:Name="grid" Background="{DynamicResource background-brush}">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Grid>
                                     <Grid.Resources>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource text-box}">
-                                            <Setter Property="Margin" Value="5 1"/>
+                                            <Setter Property="Margin" Value="5 1" />
                                         </Style>
-                                        <Style x:Key="invNTextBox" TargetType="TextBox" BasedOn="{StaticResource text-box}">
-                                            <Setter Property="Margin" Value="5 1"/>
-                                            <Setter Property="IsEnabled" Value="True"/>
+                                        <Style x:Key="invNTextBox" TargetType="TextBox"
+                                               BasedOn="{StaticResource text-box}">
+                                            <Setter Property="Margin" Value="5 1" />
+                                            <Setter Property="IsEnabled" Value="True" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}" Value="True">
-                                                    <Setter Property="TextBox.IsEnabled" Value="False"/>
+                                                <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}"
+                                                             Value="True">
+                                                    <Setter Property="TextBox.IsEnabled" Value="False" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                         <Style TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
-                                            <Setter Property="Margin" Value="5 1"/>
+                                            <Setter Property="Margin" Value="5 1" />
                                         </Style>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="FontSize" Value="14"/>
-                                            <Setter Property="TextWrapping" Value="Wrap"/>
-                                            <Setter Property="Margin" Value="10,5"/>
-                                            <Setter Property="Height" Value="auto"/>
-                                            <Setter Property="VerticalAlignment" Value="Bottom"/>
-                                            <Setter Property="FontFamily" Value="Source Sans Pro"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                            <Setter Property="Margin" Value="10,5" />
+                                            <Setter Property="Height" Value="auto" />
+                                            <Setter Property="VerticalAlignment" Value="Bottom" />
+                                            <Setter Property="FontFamily" Value="Source Sans Pro" />
+                                            <Setter Property="Foreground" Value="{DynamicResource on-background-brush}" />
                                         </Style>
                                     </Grid.Resources>
                                     <Grid x:Name="mainPopupGrid">
                                         <Grid.DataContext>
-                                            <local:Device x:Name="device"/>
+                                            <local:Device x:Name="device" />
                                         </Grid.DataContext>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="auto"/>
-                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="auto" />
+                                            <RowDefinition Height="auto" />
                                         </Grid.RowDefinitions>
                                         <Grid x:Name="inventoryNumberGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Инвентарный номер"/>
-                                            <TextBox Grid.Row="1" x:Name="inventoryNumber" Style="{DynamicResource invNTextBox}">
+                                            <TextBlock Text="Инвентарный номер" />
+                                            <TextBox Grid.Row="1" x:Name="inventoryNumber"
+                                                     Style="{DynamicResource invNTextBox}">
                                                 <TextBox.Text>
                                                     <Binding Path="InventoryNumber" NotifyOnValidationError="True">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
-                                                            <local:InventoryNumberValidationRule/>
+                                                            <ExceptionValidationRule />
+                                                            <local:InventoryNumberValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -107,16 +113,16 @@
                                         </Grid>
                                         <Grid x:Name="deviceNameGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Наименование"/>
-                                            <ComboBox Grid.Row="1" x:Name="name" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                            <TextBlock Text="Наименование" />
+                                            <ComboBox Grid.Row="1" x:Name="name" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True">
                                                 <ComboBox.Text>
                                                     <Binding Path="Name">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -124,15 +130,15 @@
                                         </Grid>
                                         <Grid x:Name="costGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Стоимость"/>
+                                            <TextBlock Text="Стоимость" />
                                             <TextBox Grid.Row="1" x:Name="cost">
                                                 <TextBox.Text>
                                                     <Binding Path="Cost">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -141,16 +147,16 @@
 
                                         <Grid x:Name="motherboardGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Материнская плата"/>
-                                            <ComboBox Grid.Row="1" x:Name="motherboard" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                            <TextBlock Text="Материнская плата" />
+                                            <ComboBox Grid.Row="1" x:Name="motherboard" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True">
                                                 <ComboBox.Text>
                                                     <Binding Path="Motherboard">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -158,16 +164,17 @@
                                         </Grid>
                                         <Grid x:Name="cpuGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Процессор"/>
-                                            <ComboBox Grid.Row="1" x:Name="cpu" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True" SelectionChanged="Cpu_SelectionChanged">
+                                            <TextBlock Text="Процессор" />
+                                            <ComboBox Grid.Row="1" x:Name="cpu" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True"
+                                                      SelectionChanged="Cpu_SelectionChanged">
                                                 <ComboBox.Text>
                                                     <Binding Path="CPU">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -175,15 +182,15 @@
                                         </Grid>
                                         <Grid x:Name="coresGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Количество ядер"/>
+                                            <TextBlock Text="Количество ядер" />
                                             <TextBox Grid.Row="1" x:Name="cores">
                                                 <TextBox.Text>
                                                     <Binding Path="Cores">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -191,15 +198,15 @@
                                         </Grid>
                                         <Grid x:Name="frequencyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Базовая частота (МГц)"/>
+                                            <TextBlock Text="Базовая частота (МГц)" />
                                             <TextBox Grid.Row="1" x:Name="frequency">
                                                 <TextBox.Text>
                                                     <Binding Path="Frequency">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -207,15 +214,15 @@
                                         </Grid>
                                         <Grid x:Name="maxFrequencyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Максимальная частота (МГц)"/>
+                                            <TextBlock Text="Максимальная частота (МГц)" />
                                             <TextBox Grid.Row="1" x:Name="maxFrequency">
                                                 <TextBox.Text>
                                                     <Binding Path="MaxFrequency">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -224,16 +231,16 @@
 
                                         <Grid x:Name="vCardGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Видеокарта"/>
-                                            <ComboBox Grid.Row="1" x:Name="vCard" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                            <TextBlock Text="Видеокарта" />
+                                            <ComboBox Grid.Row="1" x:Name="vCard" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True">
                                                 <ComboBox.Text>
                                                     <Binding Path="VCard">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -241,15 +248,15 @@
                                         </Grid>
                                         <Grid x:Name="videoramGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Объем видеопамяти (Гб)"/>
+                                            <TextBlock Text="Объем видеопамяти (Гб)" />
                                             <TextBox Grid.Row="1" x:Name="videoram">
                                                 <TextBox.Text>
                                                     <Binding Path="VideoRAM">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -257,15 +264,15 @@
                                         </Grid>
                                         <Grid x:Name="ramGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Объем ОЗУ (Гб)"/>
+                                            <TextBlock Text="Объем ОЗУ (Гб)" />
                                             <TextBox Grid.Row="1" x:Name="ram">
                                                 <TextBox.Text>
                                                     <Binding Path="RAM">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -273,15 +280,15 @@
                                         </Grid>
                                         <Grid x:Name="ramFrequencyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Частота памяти (МГц)"/>
+                                            <TextBlock Text="Частота памяти (МГц)" />
                                             <TextBox Grid.Row="1" x:Name="ramFrequency">
                                                 <TextBox.Text>
                                                     <Binding Path="FrequencyRAM">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -290,15 +297,15 @@
 
                                         <Grid x:Name="ssdGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Объем SSD (Гб)"/>
+                                            <TextBlock Text="Объем SSD (Гб)" />
                                             <TextBox Grid.Row="1" x:Name="ssd">
                                                 <TextBox.Text>
                                                     <Binding Path="SSD">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -306,15 +313,15 @@
                                         </Grid>
                                         <Grid x:Name="hddGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Объем HDD (Гб)"/>
+                                            <TextBlock Text="Объем HDD (Гб)" />
                                             <TextBox Grid.Row="1" x:Name="hdd">
                                                 <TextBox.Text>
                                                     <Binding Path="HDD">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -322,24 +329,24 @@
                                         </Grid>
                                         <Grid x:Name="osGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Операционная система"/>
-                                            <ComboBox Grid.Row="1" x:Name="os"/>
+                                            <TextBlock Text="Операционная система" />
+                                            <ComboBox Grid.Row="1" x:Name="os" />
                                         </Grid>
                                         <Grid x:Name="invoiceGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Номер накладной"/>
-                                            <ComboBox Grid.Row="1" x:Name="invoice" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                            <TextBlock Text="Номер накладной" />
+                                            <ComboBox Grid.Row="1" x:Name="invoice" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True">
                                                 <ComboBox.Text>
                                                     <Binding Path="InvoiceNumber">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -348,73 +355,75 @@
 
                                         <Grid x:Name="locationGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Расположение"/>
-                                            <ComboBox Grid.Row="1" x:Name="location" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Расположение" />
+                                            <ComboBox Grid.Row="1" x:Name="location" IsTextSearchEnabled="True" />
                                         </Grid>
 
                                         <Grid x:Name="vConnectorsGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition Height="auto"/>
-                                                <RowDefinition/>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Видео разъемы"/>
-                                            <ListBox Grid.Row="1" x:Name="vConnectors" SelectionMode="Multiple" Margin="5,1"/>
+                                            <TextBlock Text="Видео разъемы" />
+                                            <ListBox Grid.Row="1" x:Name="vConnectors" SelectionMode="Multiple"
+                                                     Margin="5,1" />
                                         </Grid>
 
                                         <Grid x:Name="resolutionGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Максимальное разрешение"/>
-                                            <ComboBox Grid.Row="1" x:Name="resolution" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Максимальное разрешение" />
+                                            <ComboBox Grid.Row="1" x:Name="resolution" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="screenFrequencyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Частота обновления"/>
-                                            <ComboBox Grid.Row="1" x:Name="screenFrequency" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Частота обновления" />
+                                            <ComboBox Grid.Row="1" x:Name="screenFrequency" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="matrixTechnologyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Технология изготовления матрицы"/>
-                                            <ComboBox Grid.Row="1" x:Name="matrixTechnology" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Технология изготовления матрицы" />
+                                            <ComboBox Grid.Row="1" x:Name="matrixTechnology" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="projectorTechnologyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Технология изготовления матрицы"/>
-                                            <ComboBox Grid.Row="1" x:Name="projectorTechnology" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Технология изготовления матрицы" />
+                                            <ComboBox Grid.Row="1" x:Name="projectorTechnology"
+                                                      IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="typeGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Тип"/>
-                                            <ComboBox Grid.Row="1" x:Name="type" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Тип" />
+                                            <ComboBox Grid.Row="1" x:Name="type" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="diagonalGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Диагональ (&#x2033;)"/>
+                                            <TextBlock Text="Диагональ (&#x2033;)" />
                                             <TextBox Grid.Row="1" x:Name="diagonal">
                                                 <TextBox.Text>
                                                     <Binding Path="Diagonal">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -422,39 +431,39 @@
                                         </Grid>
                                         <Grid x:Name="aspectRatioGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Соотношение сторон"/>
-                                            <ComboBox Grid.Row="1" x:Name="aspectRatio" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Соотношение сторон" />
+                                            <ComboBox Grid.Row="1" x:Name="aspectRatio" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="screenInstalledGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Установка"/>
-                                            <ComboBox Grid.Row="1" x:Name="screenInstalled" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Установка" />
+                                            <ComboBox Grid.Row="1" x:Name="screenInstalled" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="paperSizeGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Формат бумаги"/>
-                                            <ComboBox Grid.Row="1" x:Name="paperSize" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Формат бумаги" />
+                                            <ComboBox Grid.Row="1" x:Name="paperSize" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="portsGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Количество портов"/>
+                                            <TextBlock Text="Количество портов" />
                                             <TextBox Grid.Row="1" x:Name="ports">
                                                 <TextBox.Text>
                                                     <Binding Path="Ports">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -462,55 +471,69 @@
                                         </Grid>
                                         <Grid x:Name="wifiFrequencyGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Частота wifi"/>
-                                            <ComboBox Grid.Row="1" x:Name="wifiFrequency" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Частота wifi" />
+                                            <ComboBox Grid.Row="1" x:Name="wifiFrequency" IsTextSearchEnabled="True" />
                                         </Grid>
                                         <Grid x:Name="isEDriveGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <CheckBox Grid.Row="1" x:Name="isEDrive" Content="C электроприводом" HorizontalAlignment="Left">
+                                            <CheckBox Grid.Row="1" x:Name="isEDrive" Content="C электроприводом"
+                                                      HorizontalAlignment="Left">
                                                 <CheckBox.IsChecked>
-                                                    <Binding Path="IsElectronicDrive"/>
+                                                    <Binding Path="IsElectronicDrive" />
                                                 </CheckBox.IsChecked>
                                             </CheckBox>
                                         </Grid>
 
                                         <Grid x:Name="imageLoadGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
                                             <Grid.Resources>
                                                 <Style x:Key="image-load-button" TargetType="Button">
-                                                    <Setter Property="Margin" Value="0,1,5,1"/>
-                                                    <Setter Property="Height" Value="25"/>
+                                                    <Setter Property="Margin" Value="0,1,5,1" />
+                                                    <Setter Property="Height" Value="25" />
                                                     <Setter Property="Button.Template">
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="Button">
                                                                 <Grid>
-                                                                    <Border CornerRadius="0,5,5,0" BorderThickness="0" Name="btnBorder" 
-                                                                        Padding="{TemplateBinding Padding}" Margin="{TemplateBinding Margin}" 
-                                                                        Background="{DynamicResource surface-brush}" BorderBrush="{DynamicResource surface-brush}">
+                                                                    <Border CornerRadius="0,5,5,0" BorderThickness="0"
+                                                                            Name="btnBorder"
+                                                                            Padding="{TemplateBinding Padding}"
+                                                                            Margin="{TemplateBinding Margin}"
+                                                                            Background="{DynamicResource surface-brush}"
+                                                                            BorderBrush="{DynamicResource surface-brush}">
                                                                         <Border.Effect>
-                                                                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                                                            <DropShadowEffect BlurRadius="10"
+                                                                                              Color="{DynamicResource shadow}"
+                                                                                              Opacity="0.7"
+                                                                                              ShadowDepth="-5" />
                                                                         </Border.Effect>
-                                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" 
-                                                                                      TextElement.FontWeight="Bold" Name="btnContent" 
-                                                                                      TextElement.Foreground="{DynamicResource on-surface-brush}">
-                                                                        </ContentPresenter>
+                                                                        <ContentPresenter HorizontalAlignment="Center"
+                                                                                          VerticalAlignment="Center"
+                                                                                          TextElement.FontWeight="Bold"
+                                                                                          Name="btnContent"
+                                                                                          TextElement.Foreground="{DynamicResource on-surface-brush}" />
                                                                     </Border>
                                                                 </Grid>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsMouseOver" Value="true">
-                                                                        <Setter TargetName="btnBorder" Property="Background" Value="{DynamicResource mouse-over-brush}"/>
-                                                                        <Setter TargetName="btnBorder" Property="Effect">
+                                                                        <Setter TargetName="btnBorder"
+                                                                                Property="Background"
+                                                                                Value="{DynamicResource mouse-over-brush}" />
+                                                                        <Setter TargetName="btnBorder"
+                                                                                Property="Effect">
                                                                             <Setter.Value>
-                                                                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                                                                <DropShadowEffect BlurRadius="10"
+                                                                                                  Color="{DynamicResource primary-light}"
+                                                                                                  Opacity="1"
+                                                                                                  ShadowDepth="-5" />
                                                                             </Setter.Value>
                                                                         </Setter>
                                                                     </Trigger>
@@ -520,15 +543,18 @@
                                                     </Setter>
                                                 </Style>
                                                 <Style x:Key="image-filename-text-box" TargetType="TextBox">
-                                                    <Setter Property="TextBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
-                                                    <Setter Property="TextBox.Padding" Value="5 0"/>
-                                                    <Setter Property="TextBox.Margin" Value="5,1,0,1"/>
-                                                    <Setter Property="TextBox.Height" Value="25"/>
+                                                    <Setter Property="TextBox.Foreground"
+                                                            Value="{DynamicResource on-surface-brush}" />
+                                                    <Setter Property="TextBox.Padding" Value="5 0" />
+                                                    <Setter Property="TextBox.Margin" Value="5,1,0,1" />
+                                                    <Setter Property="TextBox.Height" Value="25" />
                                                     <Setter Property="Validation.ErrorTemplate">
                                                         <Setter.Value>
                                                             <ControlTemplate>
-                                                                <Border CornerRadius="5,0,0,5" BorderBrush="{DynamicResource error-brush}" BorderThickness="1,1,0,1">
-                                                                    <AdornedElementPlaceholder/>
+                                                                <Border CornerRadius="5,0,0,5"
+                                                                        BorderBrush="{DynamicResource error-brush}"
+                                                                        BorderThickness="1,1,0,1">
+                                                                    <AdornedElementPlaceholder />
                                                                 </Border>
                                                             </ControlTemplate>
                                                         </Setter.Value>
@@ -537,25 +563,37 @@
                                                         <Setter.Value>
                                                             <ControlTemplate TargetType="TextBox">
                                                                 <Grid>
-                                                                    <Border CornerRadius="5,0,0,5" BorderThickness="0" x:Name="border"
-                                                                        BorderBrush="{DynamicResource surface-brush}" Background="{DynamicResource surface-brush}" 
-                                                                        Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}">
+                                                                    <Border CornerRadius="5,0,0,5" BorderThickness="0"
+                                                                            x:Name="border"
+                                                                            BorderBrush="{DynamicResource surface-brush}"
+                                                                            Background="{DynamicResource surface-brush}"
+                                                                            Margin="{TemplateBinding Margin}"
+                                                                            Padding="{TemplateBinding Padding}">
                                                                         <Border.Effect>
-                                                                            <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                                                            <DropShadowEffect BlurRadius="10"
+                                                                                              Color="{DynamicResource shadow}"
+                                                                                              Opacity="0.7"
+                                                                                              ShadowDepth="-5" />
                                                                         </Border.Effect>
-                                                                        <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                                                                        <ScrollViewer x:Name="PART_ContentHost"
+                                                                                      VerticalAlignment="Center" />
                                                                     </Border>
                                                                 </Grid>
                                                                 <ControlTemplate.Triggers>
                                                                     <Trigger Property="IsFocused" Value="true">
                                                                         <Setter TargetName="border" Property="Effect">
                                                                             <Setter.Value>
-                                                                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                                                                <DropShadowEffect BlurRadius="10"
+                                                                                                  Color="{DynamicResource primary-light}"
+                                                                                                  Opacity="1"
+                                                                                                  ShadowDepth="-5" />
                                                                             </Setter.Value>
                                                                         </Setter>
                                                                     </Trigger>
-                                                                    <Trigger Property="Validation.HasError" Value="True">
-                                                                        <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                                                                    <Trigger Property="Validation.HasError"
+                                                                             Value="True">
+                                                                        <Setter Property="ToolTip"
+                                                                                Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
                                                                     </Trigger>
                                                                 </ControlTemplate.Triggers>
                                                             </ControlTemplate>
@@ -563,110 +601,126 @@
                                                     </Setter>
                                                 </Style>
                                             </Grid.Resources>
-                                            <TextBlock Text="Изображение"/>
+                                            <TextBlock Text="Изображение" />
                                             <Grid Grid.Row="1">
                                                 <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition/>
-                                                    <ColumnDefinition MaxWidth="80"/>
+                                                    <ColumnDefinition />
+                                                    <ColumnDefinition MaxWidth="80" />
                                                 </Grid.ColumnDefinitions>
-                                                <TextBox x:Name="imageFilename" Style="{DynamicResource image-filename-text-box}" IsEnabled="False"/>
-                                                <Button Grid.Column="1" x:Name="imageLoad" Style="{DynamicResource image-load-button}" 
-                                                    Click="ImageLoad_Click" Content="Открыть"/>
+                                                <TextBox x:Name="imageFilename"
+                                                         Style="{DynamicResource image-filename-text-box}"
+                                                         IsEnabled="False" />
+                                                <Button Grid.Column="1" x:Name="imageLoad"
+                                                        Style="{DynamicResource image-load-button}"
+                                                        Click="ImageLoad_Click" Content="Открыть" />
                                             </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                        <CheckBox Content="Автоматически устанавливать следующий доступный инвентарный номер" 
-                                              VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False" 
-                                              Checked="AutoInvN_Checked" Unchecked="AutoInvN_Unchecked"/>
-                                        <CheckBox Content="Запретить установку одного инвентарного номера для нескольких устройств" x:Name="disabledRepeatInvN" 
-                                              VerticalAlignment="Center" IsChecked="True" Checked="DisabledRepeatInvN_Checked" Unchecked="DisabledRepeatInvN_Unchecked"/>
-                                        <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog" VerticalAlignment="Center"
-                                              Checked="ChangeAnalog_Checked" Unchecked="ChangeAnalog_Unchecked" IsChecked="False"
-                                              ToolTip="Совпадают по имени и цене"/>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left"
+                                                VerticalAlignment="Center">
+                                        <CheckBox
+                                            Content="Автоматически устанавливать следующий доступный инвентарный номер"
+                                            VerticalAlignment="Center" x:Name="autoInvN" IsChecked="False"
+                                            Checked="AutoInvN_Checked" Unchecked="AutoInvN_Unchecked" />
+                                        <CheckBox
+                                            Content="Запретить установку одного инвентарного номера для нескольких устройств"
+                                            x:Name="disabledRepeatInvN"
+                                            VerticalAlignment="Center" IsChecked="True"
+                                            Checked="DisabledRepeatInvN_Checked"
+                                            Unchecked="DisabledRepeatInvN_Unchecked" />
+                                        <CheckBox Content="Изменить для аналогичных устройств" x:Name="changeAnalog"
+                                                  VerticalAlignment="Center"
+                                                  Checked="ChangeAnalog_Checked" Unchecked="ChangeAnalog_Unchecked"
+                                                  IsChecked="False"
+                                                  ToolTip="Совпадают по имени и цене" />
                                     </StackPanel>
-                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom">
-                                        <Button Width="120" MinHeight="25" Style="{DynamicResource default-button}" 
-                                                Margin="5" Padding="10 5" Click="SaveChanges" x:Name="saveButton"/>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom">
+                                        <Button Width="120" MinHeight="25" Style="{DynamicResource default-button}"
+                                                Margin="10 5" Padding="10 5" Click="SaveChanges" x:Name="saveButton" />
                                     </StackPanel>
                                 </Grid>
                             </Grid>
                         </Border>
                     </Grid>
                 </Grid>
-                <Grid x:Name="changeSoftwareGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed" Grid.Row="0">
+                <Grid x:Name="changeSoftwareGrid" ScrollViewer.CanContentScroll="True" Visibility="Collapsed"
+                      Grid.Row="0">
                     <Grid>
                         <Border Margin="5">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.9" Color="{DynamicResource shadow}"/>
+                                <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.9"
+                                                  Color="{DynamicResource shadow}" />
                             </Border.Effect>
                             <Grid x:Name="softwarePopupGrid" Background="{DynamicResource background-brush}">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Grid>
                                     <Grid.Resources>
                                         <Style TargetType="TextBox" BasedOn="{StaticResource text-box}">
-                                            <Setter Property="Margin" Value="5 1"/>
+                                            <Setter Property="Margin" Value="5 1" />
                                         </Style>
-                                        <Style x:Key="invNTextBox" TargetType="TextBox" BasedOn="{StaticResource text-box}">
-                                            <Setter Property="Margin" Value="5 1"/>
-                                            <Setter Property="IsEnabled" Value="True"/>
+                                        <Style x:Key="invNTextBox" TargetType="TextBox"
+                                               BasedOn="{StaticResource text-box}">
+                                            <Setter Property="Margin" Value="5 1" />
+                                            <Setter Property="IsEnabled" Value="True" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}" Value="True">
-                                                    <Setter Property="TextBox.IsEnabled" Value="False"/>
+                                                <DataTrigger Binding="{Binding IsChecked, ElementName=autoInvN}"
+                                                             Value="True">
+                                                    <Setter Property="TextBox.IsEnabled" Value="False" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                         <Style TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
-                                            <Setter Property="Margin" Value="5 1"/>
+                                            <Setter Property="Margin" Value="5 1" />
                                         </Style>
                                         <Style TargetType="TextBlock">
-                                            <Setter Property="FontSize" Value="14"/>
-                                            <Setter Property="TextWrapping" Value="Wrap"/>
-                                            <Setter Property="Margin" Value="10,5"/>
-                                            <Setter Property="Height" Value="auto"/>
-                                            <Setter Property="VerticalAlignment" Value="Bottom"/>
-                                            <Setter Property="FontFamily" Value="Source Sans Pro"/>
-                                            <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
+                                            <Setter Property="FontSize" Value="14" />
+                                            <Setter Property="TextWrapping" Value="Wrap" />
+                                            <Setter Property="Margin" Value="10,5" />
+                                            <Setter Property="Height" Value="auto" />
+                                            <Setter Property="VerticalAlignment" Value="Bottom" />
+                                            <Setter Property="FontFamily" Value="Source Sans Pro" />
+                                            <Setter Property="Foreground" Value="{DynamicResource on-background-brush}" />
                                         </Style>
                                     </Grid.Resources>
                                     <Grid x:Name="mainSoftwarePopupGrid">
                                         <Grid.DataContext>
-                                            <local:Software x:Name="soft"/>
+                                            <local:Software x:Name="soft" />
                                         </Grid.DataContext>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
-                                            <ColumnDefinition Width="*" MaxWidth="100"/>
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
+                                            <ColumnDefinition Width="*" MaxWidth="100" />
                                         </Grid.ColumnDefinitions>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
                                         </Grid.RowDefinitions>
                                         <Grid x:Name="softwareNameGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Наименование"/>
-                                            <ComboBox Grid.Row="1" x:Name="softwareName" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                            <TextBlock Text="Наименование" />
+                                            <ComboBox Grid.Row="1" x:Name="softwareName" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True">
                                                 <ComboBox.Text>
                                                     <Binding Path="Name">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -674,15 +728,15 @@
                                         </Grid>
                                         <Grid x:Name="softwareCostGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Стоимость"/>
+                                            <TextBlock Text="Стоимость" />
                                             <TextBox Grid.Row="1" x:Name="softwareCost">
                                                 <TextBox.Text>
                                                     <Binding Path="Cost">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -690,15 +744,15 @@
                                         </Grid>
                                         <Grid x:Name="softwareCountGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Количество"/>
+                                            <TextBlock Text="Количество" />
                                             <TextBox Grid.Row="1" x:Name="softwareCount">
                                                 <TextBox.Text>
                                                     <Binding Path="Count">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </TextBox.Text>
@@ -706,16 +760,16 @@
                                         </Grid>
                                         <Grid x:Name="softwareInvoiceGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Номер накладной"/>
-                                            <ComboBox Grid.Row="1" x:Name="softwareInvoice" IsEditable="True" 
-                                                  IsTextSearchEnabled="False" StaysOpenOnEdit="True">
+                                            <TextBlock Text="Номер накладной" />
+                                            <ComboBox Grid.Row="1" x:Name="softwareInvoice" IsEditable="True"
+                                                      IsTextSearchEnabled="False" StaysOpenOnEdit="True">
                                                 <ComboBox.Text>
                                                     <Binding Path="InvoiceNumber">
                                                         <Binding.ValidationRules>
-                                                            <ExceptionValidationRule/>
+                                                            <ExceptionValidationRule />
                                                         </Binding.ValidationRules>
                                                     </Binding>
                                                 </ComboBox.Text>
@@ -723,24 +777,25 @@
                                         </Grid>
                                         <Grid x:Name="typeLicenseGrid">
                                             <Grid.RowDefinitions>
-                                                <RowDefinition/>
-                                                <RowDefinition/>
+                                                <RowDefinition />
+                                                <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Тип"/>
-                                            <ComboBox Grid.Row="1" x:Name="typeLicense" IsTextSearchEnabled="True"/>
+                                            <TextBlock Text="Тип" />
+                                            <ComboBox Grid.Row="1" x:Name="typeLicense" IsTextSearchEnabled="True" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical" HorizontalAlignment="Left"
+                                                VerticalAlignment="Center" />
                                     <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
                                         <Button Width="120" MinHeight="25" Style="{DynamicResource default-button}"
-                                                Margin="5" Padding="10 5" Click="SaveChangesForSoftware" x:Name="saveSoftButton"/>
+                                                Margin="10 5" Padding="10 5" Click="SaveChangesForSoftware"
+                                                x:Name="saveSoftButton" />
                                     </StackPanel>
                                 </Grid>
                             </Grid>
@@ -750,10 +805,10 @@
             </Grid>
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
                 <StatusBar HorizontalContentAlignment="Left">
-                    <StatusBarItem x:Name="statusItem1" HorizontalAlignment="Left"/>
+                    <StatusBarItem x:Name="statusItem1" HorizontalAlignment="Left" />
                 </StatusBar>
             </Grid>
         </Grid>

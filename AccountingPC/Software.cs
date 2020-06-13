@@ -5,11 +5,14 @@ namespace AccountingPC
     internal class Software
     {
         public int ID { get; set; }
+
         [Required(ErrorMessage = "Поле является обязательным")]
         [StringLength(200, ErrorMessage = "Максимальная длина - 200")]
         public string Name { get; set; }
+
         public int Count { get; set; }
         public float Cost { get; set; }
+
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public string InvoiceNumber { get; set; }
     }
@@ -21,6 +24,5 @@ namespace AccountingPC
 
     internal class OS : Software
     {
-
     }
 }

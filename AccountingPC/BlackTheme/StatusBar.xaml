@@ -2,14 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AccountingPC.BlackTheme">
     <Style x:Key="{x:Type StatusBar}"
-       TargetType="{x:Type StatusBar}">
+           TargetType="{x:Type StatusBar}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="true" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type StatusBar}">
-                    <Border Padding="1" BorderBrush="{DynamicResource surface-background-gradient}" Background="{DynamicResource surface-gradient}">
-                        <ItemsPresenter/>
+                    <Border Padding="1" BorderBrush="{DynamicResource surface-background-gradient}"
+                            Background="{DynamicResource surface-gradient}">
+                        <ItemsPresenter />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -17,14 +18,14 @@
     </Style>
 
     <Style x:Key="{x:Static StatusBar.SeparatorStyleKey}"
-       TargetType="{x:Type Separator}">
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="SnapsToDevicePixels" Value="True"/>
+           TargetType="{x:Type Separator}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Separator}">
                     <Rectangle Width="1"
-                   Margin="3">
+                               Margin="3">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{DynamicResource mouse-over}" />
                         </Rectangle.Fill>
@@ -35,16 +36,16 @@
     </Style>
 
     <Style x:Key="{x:Type StatusBarItem}"
-       TargetType="{x:Type StatusBarItem}">
-        <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}"/>
+           TargetType="{x:Type StatusBarItem}">
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type StatusBarItem}">
                     <ContentPresenter Margin="3" Name="ContentSite" />
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
-                            <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource on-mouse-over-brush}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

@@ -4,109 +4,129 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Создание отчета" Height="920" Width="600" WindowStyle="None" Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
+        Title="Создание отчета" Height="920" Width="600" WindowStyle="None" Loaded="Window_Loaded"
+        WindowStartupLocation="CenterOwner">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0"/>
+        <WindowChrome CaptionHeight="0" />
     </WindowChrome.WindowChrome>
     <Grid>
-        <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}">
+        <Border RenderTransformOrigin="0.5,0.5" BorderThickness="1" Background="{DynamicResource background-brush}"
+                BorderBrush="{DynamicResource mouse-over-brush}">
             <Grid x:Name="windowGrid">
                 <Grid x:Name="mainGrid">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="25"/>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="25" />
                     </Grid.RowDefinitions>
                     <Grid Panel.ZIndex="9999">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="auto"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="auto"/>
+                            <ColumnDefinition Width="auto" />
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="auto" />
                         </Grid.ColumnDefinitions>
                         <Grid.Effect>
-                            <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.7" Color="{DynamicResource shadow}"/>
+                            <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.7"
+                                              Color="{DynamicResource shadow}" />
                         </Grid.Effect>
-                        <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown" 
-                                Background="{DynamicResource background-brush}" Orientation="Horizontal">
-                            <TextBlock Text="{Binding Title, ElementName=window}" Foreground="{DynamicResource on-background-brush}" 
-                                       HorizontalAlignment="Left" Margin="10,0,0,0"/>
+                        <StackPanel Grid.Column="1" MouseLeftButtonDown="Border_MouseLeftButtonDown"
+                                    Background="{DynamicResource background-brush}" Orientation="Horizontal">
+                            <TextBlock Text="{Binding Title, ElementName=window}"
+                                       Foreground="{DynamicResource on-background-brush}"
+                                       HorizontalAlignment="Left" Margin="10,0,0,0" />
                         </StackPanel>
-                        <StackPanel Grid.Column="2" Orientation="Horizontal" Background="{DynamicResource background-brush}">
-                            <Button x:Name="buttonExit" Style="{DynamicResource exitAppButton}"/>
+                        <StackPanel Grid.Column="2" Orientation="Horizontal"
+                                    Background="{DynamicResource background-brush}">
+                            <Button x:Name="buttonExit" Style="{DynamicResource exitAppButton}" />
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Row="1" x:Name="configureGrid">
                         <DockPanel Margin="0,5">
                             <DockPanel.Resources>
                                 <Style TargetType="TextBlock" BasedOn="{StaticResource textBlock}">
-                                    <Setter Property="Margin" Value="5"/>
+                                    <Setter Property="Margin" Value="5" />
                                 </Style>
                             </DockPanel.Resources>
                             <StackPanel Margin="10,5" DockPanel.Dock="Top">
-                                <TextBlock Text="Тип отчета"/>
-                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}" SelectedItem="{Binding Path=Options.ReportName}"/>
+                                <TextBlock Text="Тип отчета" />
+                                <ComboBox x:Name="typeReportBox" Style="{DynamicResource ResourceKey=comboBox}"
+                                          SelectedItem="{Binding Path=Options.ReportName}" />
                             </StackPanel>
-                            <Separator DockPanel.Dock="Top"/>
+                            <Separator DockPanel.Dock="Top" />
                             <Grid x:Name="selectionColumnGrid" Height="200" Margin="10,5" DockPanel.Dock="Top">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <TextBlock Text="Выберите столбцы, отображаемые в отчете"/>
+                                <TextBlock Text="Выберите столбцы, отображаемые в отчете" />
                                 <Grid Grid.Row="1">
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width='auto'/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width='auto' />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
-                                    <ListBox x:Name="unusedColumn" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedUnusedColumn}"
-                                             ItemsSource="{Binding Path=UnusedReportColumns, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <ListBox x:Name="unusedColumn" DisplayMemberPath="Name"
+                                             SelectedItem="{Binding Path=SelectedUnusedColumn}"
+                                             ItemsSource="{Binding Path=UnusedReportColumns, UpdateSourceTrigger=PropertyChanged}" />
                                     <StackPanel Orientation="Vertical" Grid.Column="1" VerticalAlignment="Center">
-                                        <Button x:Name="useColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0,0,0,10" Command="{Binding AddUsedReportColumns}" CommandParameter="{Binding Path=SelectedItem, ElementName=unusedColumn}"
+                                        <Button x:Name="useColumnButton" Width="27" Height="27"
+                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                Margin="0,0,0,10" Command="{Binding AddUsedReportColumns}"
+                                                CommandParameter="{Binding Path=SelectedItem, ElementName=unusedColumn}"
                                                 Style="{DynamicResource default-button}">
                                             <Grid>
-                                                <Path Data="M 11.5 0.359375 C 17.65625 0.359375 22.640625 5.34375 22.640625 11.5 
+                                                <Path
+                                                    Data="M 11.5 0.359375 C 17.65625 0.359375 22.640625 5.34375 22.640625 11.5 
                                                   C 22.640625 17.65625 17.65625 22.640625 11.5 22.640625 C 5.34375 22.640625 
                                                   0.359375 17.65625 0.359375 11.5 C 0.359375 5.34375 5.34375 0.359375 11.5 
-                                                  0.359375 Z" Fill="Transparent"/>
-                                                <Path Data="M 6.289062 13.476562 L 11.5 13.476562 L 11.5 16.660156 C 11.5 17.140625 
+                                                  0.359375 Z"
+                                                    Fill="Transparent" />
+                                                <Path
+                                                    Data="M 6.289062 13.476562 L 11.5 13.476562 L 11.5 16.660156 C 11.5 17.140625 
                                                   12.085938 17.382812 12.421875 17.042969 L 17.554688 11.882812 C 17.765625 
                                                   11.671875 17.765625 11.332031 17.554688 11.121094 L 12.421875 5.957031 C 
                                                   12.078125 5.617188 11.5 5.859375 11.5 6.339844 L 11.5 9.523438 L 6.289062 
                                                   9.523438 C 5.992188 9.523438 5.75 9.765625 5.75 10.0625 L 5.75 12.9375 C 
-                                                  5.75 13.234375 5.992188 13.476562 6.289062 13.476562 Z" 
-                                                  Fill="{DynamicResource on-background-brush}"/>
+                                                  5.75 13.234375 5.992188 13.476562 6.289062 13.476562 Z"
+                                                    Fill="{DynamicResource on-background-brush}" />
                                             </Grid>
                                         </Button>
-                                        <Button x:Name="notUseColumnButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0" Command="{Binding DelUsedReportColumns}" CommandParameter="{Binding Path=SelectedItem, ElementName=usedColumn}"
+                                        <Button x:Name="notUseColumnButton" Width="27" Height="27"
+                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                                Margin="0" Command="{Binding DelUsedReportColumns}"
+                                                CommandParameter="{Binding Path=SelectedItem, ElementName=usedColumn}"
                                                 Style="{DynamicResource default-button}">
                                             <Grid>
-                                                <Path Data="M 11.5 22.640625 C 5.34375 22.640625 0.359375 17.65625 0.359375 11.5 
+                                                <Path
+                                                    Data="M 11.5 22.640625 C 5.34375 22.640625 0.359375 17.65625 0.359375 11.5 
                                                   C 0.359375 5.34375 5.34375 0.359375 11.5 0.359375 C 17.65625 0.359375 
                                                   22.640625 5.34375 22.640625 11.5 C 22.640625 17.65625 17.65625 22.640625 
-                                                  11.5 22.640625 Z" Fill="Transparent"/>
-                                                <Path Data="M 16.710938 9.523438 L 11.5 9.523438 L 11.5 6.339844 C 11.5 5.859375 
+                                                  11.5 22.640625 Z"
+                                                    Fill="Transparent" />
+                                                <Path
+                                                    Data="M 16.710938 9.523438 L 11.5 9.523438 L 11.5 6.339844 C 11.5 5.859375 
                                                   10.914062 5.617188 10.578125 5.957031 L 5.445312 11.117188 C 5.234375 11.328125 
                                                   5.234375 11.667969 5.445312 11.878906 L 10.578125 17.039062 C 10.921875 
                                                   17.378906 11.5 17.136719 11.5 16.65625 L 11.5 13.476562 L 16.710938 13.476562 
                                                   C 17.007812 13.476562 17.25 13.234375 17.25 12.9375 L 17.25 10.0625 C 17.25 
-                                                  9.765625 17.007812 9.523438 16.710938 9.523438 Z" 
-                                                  Fill="{DynamicResource on-background-brush}"/>
+                                                  9.765625 17.007812 9.523438 16.710938 9.523438 Z"
+                                                    Fill="{DynamicResource on-background-brush}" />
                                             </Grid>
                                         </Button>
                                     </StackPanel>
-                                    <ListBox x:Name="usedColumn" Grid.Column="2" DisplayMemberPath="Name" SelectedItem="{Binding Path=SelectedUsedColumn}"
-                                             ItemsSource="{Binding Path=UsedReportColumns, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <ListBox x:Name="usedColumn" Grid.Column="2" DisplayMemberPath="Name"
+                                             SelectedItem="{Binding Path=SelectedUsedColumn}"
+                                             ItemsSource="{Binding Path=UsedReportColumns, UpdateSourceTrigger=PropertyChanged}" />
                                 </Grid>
                             </Grid>
                             <Separator DockPanel.Dock="Top">
                                 <Separator.Style>
                                     <Style TargetType="Separator">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=selectionColumnGrid, Path=Visibility}" Value="Collapsed">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            <DataTrigger
+                                                Binding="{Binding ElementName=selectionColumnGrid, Path=Visibility}"
+                                                Value="Collapsed">
+                                                <Setter Property="Visibility" Value="Collapsed" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
@@ -114,18 +134,24 @@
                             </Separator>
                             <Grid x:Name="selectionSortingParamGrid" Margin="10,5" DockPanel.Dock="Top">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,0">
-                                    <Button x:Name="addSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0,0,10,0" Command="{Binding Options.AddSortingParam}" Style="{DynamicResource default-button}">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                            VerticalAlignment="Center" Margin="2,0">
+                                    <Button x:Name="addSortingParamButton" Width="27" Height="27"
+                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                            Margin="0,0,10,0" Command="{Binding Options.AddSortingParam}"
+                                            Style="{DynamicResource default-button}">
                                         <Grid>
-                                            <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                            <Path
+                                                Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
                                                   20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
-                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
-                                            <Path Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z "
+                                                Fill="Transparent" />
+                                            <Path
+                                                Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
                                                   18.277344 13.296875 L 13.554688 13.296875 L 13.554688 17.429688 C 13.554688 
                                                   17.726562 13.277344 17.96875 12.9375 17.96875 L 10.0625 17.96875 C 9.722656 
                                                   17.96875 9.445312 17.726562 9.445312 17.429688 L 9.445312 13.296875 L 
@@ -134,29 +160,36 @@
                                                   L 9.445312 9.703125 L 9.445312 5.570312 C 9.445312 5.273438 9.722656 5.03125 
                                                   10.0625 5.03125 L 12.9375 5.03125 C 13.277344 5.03125 13.554688 5.273438 
                                                   13.554688 5.570312 L 13.554688 9.703125 L 18.277344 9.703125 C 18.617188 
-                                                  9.703125 18.894531 9.945312 18.894531 10.242188 Z" 
-                                                  Fill="{DynamicResource on-background-brush}"/>
+                                                  9.703125 18.894531 9.945312 18.894531 10.242188 Z"
+                                                Fill="{DynamicResource on-background-brush}" />
                                         </Grid>
                                     </Button>
-                                    <Button x:Name="delSortingParamButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0" Command="{Binding Options.DelSortingParam}" CommandParameter="{Binding Path=SelectedItem, ElementName=sortingParamsList}"
+                                    <Button x:Name="delSortingParamButton" Width="27" Height="27"
+                                            HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                            Margin="0" Command="{Binding Options.DelSortingParam}"
+                                            CommandParameter="{Binding Path=SelectedItem, ElementName=sortingParamsList}"
                                             Style="{DynamicResource default-button}">
                                         <Grid>
-                                            <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                            <Path
+                                                Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
                                                   20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
-                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
-                                            <Path Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z "
+                                                Fill="Transparent" />
+                                            <Path
+                                                Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
                                                   12.757812 L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 
                                                   9.703125 L 18.277344 9.703125 C 18.617188 9.703125 18.894531 9.945312 
                                                   18.894531 10.242188 L 18.894531 12.757812 C 18.894531 13.054688 18.617188 
-                                                  13.296875 18.277344 13.296875 Z " 
-                                                  Fill="{DynamicResource on-background-brush}"/>
+                                                  13.296875 18.277344 13.296875 Z "
+                                                Fill="{DynamicResource on-background-brush}" />
                                         </Grid>
                                     </Button>
                                 </StackPanel>
-                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0" SelectionMode="Single" Height="300" VerticalAlignment="Top" 
-                                         ItemsSource="{Binding Path=Options.SortingParamList}" SelectedItem="{Binding Path=Options.SelectedSortingParam}">
+                                <ListBox x:Name="sortingParamsList" Grid.Row="1" Margin="0,10,0,0"
+                                         SelectionMode="Single" Height="300" VerticalAlignment="Top"
+                                         ItemsSource="{Binding Path=Options.SortingParamList}"
+                                         SelectedItem="{Binding Path=Options.SelectedSortingParam}">
                                     <ListBox.Style>
                                         <Style TargetType="ListBox" BasedOn="{StaticResource list-box-no-selected}">
                                             <Setter Property="ItemTemplate">
@@ -164,18 +197,22 @@
                                                     <DataTemplate>
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*"/>
-                                                                <ColumnDefinition Width="*"/>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
                                                             </Grid.ColumnDefinitions>
                                                             <Grid.Resources>
-                                                                <Style x:Key="box" TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
-                                                                    <Setter Property="Margin" Value="5"/>
+                                                                <Style x:Key="box" TargetType="ComboBox"
+                                                                       BasedOn="{StaticResource comboBox}">
+                                                                    <Setter Property="Margin" Value="5" />
                                                                 </Style>
                                                             </Grid.Resources>
-                                                            <ComboBox x:Name="col" DisplayMemberPath="Name" 
-                                                          SelectedItem="{Binding Path=ColumnName}" Style="{DynamicResource box}"/>
-                                                            <ComboBox x:Name="order" Grid.Column="1" DisplayMemberPath="Name" 
-                                                          SelectedItem="{Binding Path=OrderName}" Style="{DynamicResource box}"/>
+                                                            <ComboBox x:Name="col" DisplayMemberPath="Name"
+                                                                      SelectedItem="{Binding Path=ColumnName}"
+                                                                      Style="{DynamicResource box}" />
+                                                            <ComboBox x:Name="order" Grid.Column="1"
+                                                                      DisplayMemberPath="Name"
+                                                                      SelectedItem="{Binding Path=OrderName}"
+                                                                      Style="{DynamicResource box}" />
                                                         </Grid>
                                                     </DataTemplate>
                                                 </Setter.Value>
@@ -188,94 +225,111 @@
                                 <Separator.Style>
                                     <Style TargetType="Separator">
                                         <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ElementName=selectionSortingParamGrid, Path=Visibility}" Value="Collapsed">
-                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            <DataTrigger
+                                                Binding="{Binding ElementName=selectionSortingParamGrid, Path=Visibility}"
+                                                Value="Collapsed">
+                                                <Setter Property="Visibility" Value="Collapsed" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Separator.Style>
                             </Separator>
                             <StackPanel DockPanel.Dock="Top" Margin="10,0" Orientation="Horizontal">
-                                <RadioButton x:Name="IsSaveReport" GroupName="CreateReportOption" 
-                                             Content="Сохранить" Checked="IsSaveReport_Checked" Margin="0,0,20,0"/>
-                                <RadioButton x:Name="IsSaveAsPDF" GroupName="CreateReportOption" 
-                                             Content="Сохранить в PDF" Checked="IsSaveAsPDF_Checked" Margin="0,0,20,0"/>
-                                <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption" 
-                                             Content="Открыть в Excel" Checked="IsOperReport_Checked" Margin="0,0,20,0"/>
+                                <RadioButton x:Name="IsSaveReport" GroupName="CreateReportOption"
+                                             Content="Сохранить" Checked="IsSaveReport_Checked" Margin="0,0,20,0" />
+                                <RadioButton x:Name="IsSaveAsPDF" GroupName="CreateReportOption"
+                                             Content="Сохранить в PDF" Checked="IsSaveAsPDF_Checked" Margin="0,0,20,0" />
+                                <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption"
+                                             Content="Открыть в Excel" Checked="IsOperReport_Checked" Margin="0,0,20,0" />
                             </StackPanel>
-                            <Separator DockPanel.Dock="Top"/>
+                            <Separator DockPanel.Dock="Top" />
                             <Grid DockPanel.Dock="Top" Margin="10,0" x:Name="periodGrid">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="auto"/>
-                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="auto" />
                                 </Grid.RowDefinitions>
                                 <Grid>
-                                    <CheckBox Content="Выбрать период" Margin="0,0,0,5" x:Name="isPeriod" 
-                                          IsChecked="{Binding Path=Options.IsPeriod}" VerticalAlignment="Center"/>
+                                    <CheckBox Content="Выбрать период" Margin="0,0,0,5" x:Name="isPeriod"
+                                              IsChecked="{Binding Path=Options.IsPeriod}" VerticalAlignment="Center" />
                                 </Grid>
                                 <Grid Grid.Row="1" x:Name="dateGrid">
                                     <Grid.Style>
                                         <Style TargetType="Grid">
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=isPeriod}" Value="False">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                <DataTrigger Binding="{Binding Path=IsChecked, ElementName=isPeriod}"
+                                                             Value="False">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
                                     </Grid.Style>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="10"/>
-                                        <ColumnDefinition/>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Начало: "/>
+                                        <TextBlock Text="Начало: " />
                                         <DatePicker Grid.Column="1" x:Name="fromDate" VerticalAlignment="Center"
-                                                    SelectedDate="{Binding Path=Options.FromDate}" SelectedDateChanged="FromDate_SelectedDateChanged"/>
+                                                    SelectedDate="{Binding Path=Options.FromDate}"
+                                                    SelectedDateChanged="FromDate_SelectedDateChanged" />
                                     </Grid>
                                     <Grid Grid.Column="2">
                                         <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition />
+                                            <ColumnDefinition Width="2*" />
                                         </Grid.ColumnDefinitions>
-                                        <TextBlock Text="Конец: "/>
+                                        <TextBlock Text="Конец: " />
                                         <DatePicker Grid.Column="1" x:Name="toDate" VerticalAlignment="Center"
-                                                    SelectedDate="{Binding Path=Options.ToDate}" SelectedDateChanged="ToDate_SelectedDateChanged"/>
+                                                    SelectedDate="{Binding Path=Options.ToDate}"
+                                                    SelectedDateChanged="ToDate_SelectedDateChanged" />
                                     </Grid>
                                 </Grid>
                             </Grid>
-                            <Separator DockPanel.Dock="Top"/>
+                            <Separator DockPanel.Dock="Top" />
                             <Grid DockPanel.Dock="Top" Margin="10,0">
                                 <StackPanel>
-                                    <CheckBox Content="Показывать единицы измерения" 
-                                              IsChecked="{Binding Path=Options.IsShowUnitOfMeasurement}" Margin="0,0,0,5"/>
-                                    <CheckBox Content="Посчитать сумму, максимальное, среднее и минимальное значения цены" 
-                                              IsChecked="{Binding Path=Options.IsCountMaxMinAverageSum}" Margin="0,0,0,5"/>
-                                    <CheckBox Content="Разделить по аудиториям" x:Name="split" Checked="Split_Checked" Unchecked="Split_Unchecked"
-                                              IsChecked="{Binding Path=Options.SplitByAudience}" Margin="0,0,0,5"/>
+                                    <CheckBox Content="Показывать единицы измерения"
+                                              IsChecked="{Binding Path=Options.IsShowUnitOfMeasurement}"
+                                              Margin="0,0,0,5" />
+                                    <CheckBox
+                                        Content="Посчитать сумму, максимальное, среднее и минимальное значения цены"
+                                        IsChecked="{Binding Path=Options.IsCountMaxMinAverageSum}" Margin="0,0,0,5" />
+                                    <CheckBox Content="Разделить по аудиториям" x:Name="split" Checked="Split_Checked"
+                                              Unchecked="Split_Unchecked"
+                                              IsChecked="{Binding Path=Options.SplitByAudience}" Margin="0,0,0,5" />
                                 </StackPanel>
                             </Grid>
-                            <Separator DockPanel.Dock="Top"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                            <Separator DockPanel.Dock="Top" />
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                         Height="35" Margin="0,0,5,0" DockPanel.Dock="Bottom">
-                                <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True" Content="Отмена" Click="Cancel_Click"/>
+                                <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True"
+                                        Content="Отмена" Click="Cancel_Click" />
                                 <Button Width="100" IsDefault="True" Content="Создать" Click="CreateReport_Click">
                                     <Button.Style>
                                         <Style TargetType="Button" BasedOn="{StaticResource primary-button}">
                                             <Style.Triggers>
                                                 <MultiDataTrigger>
                                                     <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding ElementName=IsSaveReport, Path=IsChecked}" Value="false"/>
-                                                        <Condition Binding="{Binding ElementName=IsOperReport, Path=IsChecked}" Value="false"/>
-                                                        <Condition Binding="{Binding ElementName=IsPrintReport, Path=IsChecked}" Value="false"/>
-                                                        <Condition Binding="{Binding ElementName=IsPreviewReport, Path=IsChecked}" Value="false"/>
+                                                        <Condition
+                                                            Binding="{Binding ElementName=IsSaveReport, Path=IsChecked}"
+                                                            Value="false" />
+                                                        <Condition
+                                                            Binding="{Binding ElementName=IsOperReport, Path=IsChecked}"
+                                                            Value="false" />
+                                                        <Condition
+                                                            Binding="{Binding ElementName=IsPrintReport, Path=IsChecked}"
+                                                            Value="false" />
+                                                        <Condition
+                                                            Binding="{Binding ElementName=IsPreviewReport, Path=IsChecked}"
+                                                            Value="false" />
                                                     </MultiDataTrigger.Conditions>
                                                     <MultiDataTrigger.Setters>
-                                                        <Setter Property="IsEnabled" Value="False"/>
+                                                        <Setter Property="IsEnabled" Value="False" />
                                                     </MultiDataTrigger.Setters>
                                                 </MultiDataTrigger>
                                             </Style.Triggers>
@@ -287,7 +341,7 @@
                     </Grid>
                     <Grid Grid.Row="2">
                         <StatusBar Name="status">
-                            <StatusBarItem x:Name="statusItem1"/>
+                            <StatusBarItem x:Name="statusItem1" />
                         </StatusBar>
                     </Grid>
                 </Grid>

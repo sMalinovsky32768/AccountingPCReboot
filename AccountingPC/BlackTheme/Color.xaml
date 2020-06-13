@@ -25,86 +25,86 @@
     <Color x:Key="on-error">#f5f5f5</Color>
 
     <!--background SolidColorBrushes-->
-    <SolidColorBrush x:Key="primary-brush" Color="{DynamicResource primary}"/>
-    <SolidColorBrush x:Key="primary-dark-brush" Color="{DynamicResource primary-dark}"/>
-    <SolidColorBrush x:Key="primary-light-brush" Color="{DynamicResource primary-light}"/>
-    <SolidColorBrush x:Key="background-brush" Color="{DynamicResource background}"/>
-    <SolidColorBrush x:Key="surface-brush" Color="{DynamicResource surface}"/>
-    <SolidColorBrush x:Key="mouse-over-brush" Color="{DynamicResource mouse-over}"/>
-    <SolidColorBrush x:Key="shadow-brush" Color="{DynamicResource shadow}"/>
-    <SolidColorBrush x:Key="error-brush" Color="{DynamicResource error}"/>
+    <SolidColorBrush x:Key="primary-brush" Color="{DynamicResource primary}" />
+    <SolidColorBrush x:Key="primary-dark-brush" Color="{DynamicResource primary-dark}" />
+    <SolidColorBrush x:Key="primary-light-brush" Color="{DynamicResource primary-light}" />
+    <SolidColorBrush x:Key="background-brush" Color="{DynamicResource background}" />
+    <SolidColorBrush x:Key="surface-brush" Color="{DynamicResource surface}" />
+    <SolidColorBrush x:Key="mouse-over-brush" Color="{DynamicResource mouse-over}" />
+    <SolidColorBrush x:Key="shadow-brush" Color="{DynamicResource shadow}" />
+    <SolidColorBrush x:Key="error-brush" Color="{DynamicResource error}" />
 
     <!--foreground SolidColorBrushes-->
-    <SolidColorBrush x:Key="on-primary-brush" Color="{DynamicResource on-primary}"/>
-    <SolidColorBrush x:Key="on-primary-dark-brush" Color="{DynamicResource on-primary-dark}"/>
-    <SolidColorBrush x:Key="on-primary-light-brush" Color="{DynamicResource on-primary-light}"/>
-    <SolidColorBrush x:Key="on-background-brush" Color="{DynamicResource on-background}"/>
-    <SolidColorBrush x:Key="on-surface-brush" Color="{DynamicResource on-surface}"/>
-    <SolidColorBrush x:Key="on-mouse-over-brush" Color="{DynamicResource on-mouse-over}"/>
-    <SolidColorBrush x:Key="on-error-brush" Color="{DynamicResource on-error}"/>
+    <SolidColorBrush x:Key="on-primary-brush" Color="{DynamicResource on-primary}" />
+    <SolidColorBrush x:Key="on-primary-dark-brush" Color="{DynamicResource on-primary-dark}" />
+    <SolidColorBrush x:Key="on-primary-light-brush" Color="{DynamicResource on-primary-light}" />
+    <SolidColorBrush x:Key="on-background-brush" Color="{DynamicResource on-background}" />
+    <SolidColorBrush x:Key="on-surface-brush" Color="{DynamicResource on-surface}" />
+    <SolidColorBrush x:Key="on-mouse-over-brush" Color="{DynamicResource on-mouse-over}" />
+    <SolidColorBrush x:Key="on-error-brush" Color="{DynamicResource on-error}" />
 
     <!--background gradient-->
     <LinearGradientBrush x:Key="surface-background-gradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource surface}" Offset="0"/>
-                <GradientStop Color="{DynamicResource background}" Offset="0"/>
+                <GradientStop Color="{DynamicResource surface}" Offset="0" />
+                <GradientStop Color="{DynamicResource background}" Offset="0" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="primary-dark-gradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource primary}" Offset="0"/>
-                <GradientStop Color="{DynamicResource primary-dark}" Offset="1"/>
+                <GradientStop Color="{DynamicResource primary}" Offset="0" />
+                <GradientStop Color="{DynamicResource primary-dark}" Offset="1" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="primary-light-gradient" StartPoint="0.5,0" EndPoint="0.5,1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource primary-light}" Offset="0"/>
-                <GradientStop Color="{DynamicResource primary}" Offset="1"/>
+                <GradientStop Color="{DynamicResource primary-light}" Offset="0" />
+                <GradientStop Color="{DynamicResource primary}" Offset="1" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="surface-background-gradient-reverse" StartPoint="0.5,0" EndPoint="0.5,1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource background}" Offset="0"/>
-                <GradientStop Color="{DynamicResource surface}" Offset="1"/>
+                <GradientStop Color="{DynamicResource background}" Offset="0" />
+                <GradientStop Color="{DynamicResource surface}" Offset="1" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="primary-dark-gradient-reverse" StartPoint="0.5,0" EndPoint="0.5,1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource primary-dark}" Offset="0"/>
-                <GradientStop Color="{DynamicResource primary}" Offset="1"/>
+                <GradientStop Color="{DynamicResource primary-dark}" Offset="0" />
+                <GradientStop Color="{DynamicResource primary}" Offset="1" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="primary-light-gradient-reverse" StartPoint="0.5,0" EndPoint="0.5,1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource primary}" Offset="0"/>
-                <GradientStop Color="{DynamicResource primary-light}" Offset="1"/>
+                <GradientStop Color="{DynamicResource primary}" Offset="0" />
+                <GradientStop Color="{DynamicResource primary-light}" Offset="1" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="surface-gradient" StartPoint="0 0" EndPoint="0 1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource shadow}" Offset="0"/>
-                <GradientStop Color="{DynamicResource surface}" Offset="0"/>
+                <GradientStop Color="{DynamicResource shadow}" Offset="0" />
+                <GradientStop Color="{DynamicResource surface}" Offset="0" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>
     <LinearGradientBrush x:Key="surface-gradient-reverse" StartPoint="0 0" EndPoint="0 1">
         <LinearGradientBrush.GradientStops>
             <GradientStopCollection>
-                <GradientStop Color="{DynamicResource surface}" Offset="0"/>
-                <GradientStop Color="{DynamicResource shadow}" Offset="1"/>
+                <GradientStop Color="{DynamicResource surface}" Offset="0" />
+                <GradientStop Color="{DynamicResource shadow}" Offset="1" />
             </GradientStopCollection>
         </LinearGradientBrush.GradientStops>
     </LinearGradientBrush>

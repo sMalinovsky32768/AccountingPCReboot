@@ -2,39 +2,41 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AccountingPC.LightTheme">
     <Style x:Key="list-box-no-selected" TargetType="ListBox">
-        <Setter Property="SnapsToDevicePixels" Value="true"/>
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="MinWidth" Value="120"/>
-        <Setter Property="MinHeight" Value="95"/>
-        <Setter Property="Margin" Value="2 5 2 2"/>
-        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}"/>
-        <Setter Property="ItemContainerStyle" Value="{DynamicResource list-box-item-no-selected}"/>
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="MinWidth" Value="120" />
+        <Setter Property="MinHeight" Value="95" />
+        <Setter Property="Margin" Value="2 5 2 2" />
+        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}" />
+        <Setter Property="ItemContainerStyle" Value="{DynamicResource list-box-item-no-selected}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBox">
-                    <Border Name="Border" BorderThickness="0" CornerRadius="5" 
+                    <Border Name="Border" BorderThickness="0" CornerRadius="5"
                             Margin="{TemplateBinding Margin}" Background="{DynamicResource surface-brush}">
                         <Border.Effect>
-                            <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.5" Color="{DynamicResource shadow}"/>
+                            <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.5"
+                                              Color="{DynamicResource shadow}" />
                         </Border.Effect>
                         <ScrollViewer Margin="0" Focusable="false">
-                            <StackPanel Margin="2" IsItemsHost="True"/>
+                            <StackPanel Margin="2" IsItemsHost="True" />
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="Border" Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.7" Color="{DynamicResource shadow}"/>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="-5" Opacity="0.7"
+                                                      Color="{DynamicResource shadow}" />
                                 </Setter.Value>
                             </Setter>
-                            <Setter Property="OpacityMask" Value="#99000000"/>
+                            <Setter Property="OpacityMask" Value="#99000000" />
                         </Trigger>
                         <Trigger Property="IsGrouping" Value="true">
-                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -43,28 +45,29 @@
     </Style>
 
     <Style x:Key="list-box-item-no-selected" TargetType="ListBoxItem">
-        <Setter Property="SnapsToDevicePixels"  Value="true"/>
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Padding" Value="10 5" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                    <Border x:Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true" 
+                    <Border x:Name="Border" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true"
                             CornerRadius="5" Background="Transparent">
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="SelectionStates">
-                                <VisualState x:Name="Unselected"/>
-                                <VisualState x:Name="Selected"/>
-                                <VisualState x:Name="SelectedUnfocused"/>
+                                <VisualState x:Name="Unselected" />
+                                <VisualState x:Name="Selected" />
+                                <VisualState x:Name="SelectedUnfocused" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter/>
+                        <ContentPresenter />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter TargetName="Border" Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="5" ShadowDepth="5" Opacity="0.2" Color="{DynamicResource shadow}"/>
+                                    <DropShadowEffect BlurRadius="5" ShadowDepth="5" Opacity="0.2"
+                                                      Color="{DynamicResource shadow}" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>

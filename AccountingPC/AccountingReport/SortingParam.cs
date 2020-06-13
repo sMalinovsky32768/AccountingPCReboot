@@ -3,7 +3,7 @@
     internal enum SortOrder : byte
     {
         Asc,
-        Desc,
+        Desc
     }
 
     internal class OrderName
@@ -14,18 +14,8 @@
 
     internal class SortingParam
     {
-        private ReportColumnName columnName;
-        private OrderName orderName = OrderNameCollection.GetOrderName(SortOrder.Asc);
+        public ReportColumnName ColumnName { get; set; }
 
-        public ReportColumnName ColumnName
-        {
-            get => columnName;
-            set => columnName = value;
-        }
-        public OrderName OrderName
-        {
-            get => orderName;
-            set => orderName = value;
-        }
+        public OrderName OrderName { get; set; } = OrderNameCollection.GetOrderName(SortOrder.Asc);
     }
 }

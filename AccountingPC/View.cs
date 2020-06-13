@@ -5,6 +5,6 @@
         Equipment,
         Software,
         Location,
-        Invoice,
+        Invoice
     }
 }

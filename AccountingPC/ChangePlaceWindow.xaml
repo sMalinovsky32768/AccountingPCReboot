@@ -5,46 +5,54 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AccountingPC"
         mc:Ignorable="d"
-        Title="ChangePlaceWindow" Height="600" Width="1000" WindowStartupLocation="CenterOwner" 
+        Title="ChangePlaceWindow" Height="600" Width="1000" WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize" WindowStyle="None" Loaded="Window_Loaded" DragOver="Window_DragOver">
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="0"/>
+        <WindowChrome CaptionHeight="0" />
     </WindowChrome.WindowChrome>
     <Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed"/>
+        <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed" />
     </Window.CommandBindings>
-    <Border Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}" BorderThickness="1"
+    <Border Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}"
+            BorderThickness="1"
             RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MoveWindow">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition Height="30"/>
+                <RowDefinition />
+                <RowDefinition Height="30" />
             </Grid.RowDefinitions>
             <Grid x:Name="mainGrid">
                 <DockPanel Margin="5,10,5,5">
                     <Grid DockPanel.Dock="Top" Height="30">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="120"/>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="Название" VerticalAlignment="Center"/>
-                        <TextBox Grid.Column="2" x:Name="placeName" Style="{DynamicResource text-box}" VerticalAlignment="Center" Text="{Binding Path=Name}"/>
+                        <TextBlock Text="Название" VerticalAlignment="Center" />
+                        <TextBox Grid.Column="2" x:Name="placeName" Style="{DynamicResource text-box}"
+                                 VerticalAlignment="Center" Text="{Binding Path=Name}" />
                     </Grid>
-                    <Separator DockPanel.Dock="Top"/>
+                    <Separator DockPanel.Dock="Top" />
                     <Grid DockPanel.Dock="Top">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition/>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition />
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="2,0">
-                            <Button x:Name="addTypeDeviceButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0,0,10,0" Command="{Binding AddTypeDevice}" Style="{DynamicResource default-button}">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Margin="2,0">
+                            <Button x:Name="addTypeDeviceButton" Width="27" Height="27"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    Margin="0,0,10,0" Command="{Binding AddTypeDevice}"
+                                    Style="{DynamicResource default-button}">
                                 <Grid>
-                                    <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                    <Path
+                                        Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
                                                   20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
-                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
-                                    <Path Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z "
+                                        Fill="Transparent" />
+                                    <Path
+                                        Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
                                                   18.277344 13.296875 L 13.554688 13.296875 L 13.554688 17.429688 C 13.554688 
                                                   17.726562 13.277344 17.96875 12.9375 17.96875 L 10.0625 17.96875 C 9.722656 
                                                   17.96875 9.445312 17.726562 9.445312 17.429688 L 9.445312 13.296875 L 
@@ -53,24 +61,29 @@
                                                   L 9.445312 9.703125 L 9.445312 5.570312 C 9.445312 5.273438 9.722656 5.03125 
                                                   10.0625 5.03125 L 12.9375 5.03125 C 13.277344 5.03125 13.554688 5.273438 
                                                   13.554688 5.570312 L 13.554688 9.703125 L 18.277344 9.703125 C 18.617188 
-                                                  9.703125 18.894531 9.945312 18.894531 10.242188 Z" 
-                                                  Fill="{DynamicResource on-background-brush}"/>
+                                                  9.703125 18.894531 9.945312 18.894531 10.242188 Z"
+                                        Fill="{DynamicResource on-background-brush}" />
                                 </Grid>
                             </Button>
-                            <Button x:Name="delTypeDeviceButton" Width="27" Height="27" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" 
-                                    Margin="0" Style="{DynamicResource default-button}" Command="{Binding DelTypeDevice}"
+                            <Button x:Name="delTypeDeviceButton" Width="27" Height="27"
+                                    HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                                    Margin="0" Style="{DynamicResource default-button}"
+                                    Command="{Binding DelTypeDevice}"
                                     CommandParameter="{Binding Path=SelectedItem, ElementName=devicesOnPlace}">
                                 <Grid>
-                                    <Path Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
+                                    <Path
+                                        Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
                                                   20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
-                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z " Fill="Transparent"/>
-                                    <Path Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
+                                                  C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z "
+                                        Fill="Transparent" />
+                                    <Path
+                                        Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
                                                   12.757812 L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 
                                                   9.703125 L 18.277344 9.703125 C 18.617188 9.703125 18.894531 9.945312 
                                                   18.894531 10.242188 L 18.894531 12.757812 C 18.894531 13.054688 18.617188 
-                                                  13.296875 18.277344 13.296875 Z " 
-                                                  Fill="{DynamicResource on-background-brush}"/>
+                                                  13.296875 18.277344 13.296875 Z "
+                                        Fill="{DynamicResource on-background-brush}" />
                                 </Grid>
                             </Button>
                         </StackPanel>
@@ -83,20 +96,25 @@
                                                 <DataTemplate>
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
-                                                            <ColumnDefinition Width="250"/>
-                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="250" />
+                                                            <ColumnDefinition Width="*" />
                                                         </Grid.ColumnDefinitions>
                                                         <Grid.Resources>
-                                                            <Style x:Key="box" TargetType="ComboBox" BasedOn="{StaticResource comboBox}">
-                                                                <Setter Property="Margin" Value="5"/>
+                                                            <Style x:Key="box" TargetType="ComboBox"
+                                                                   BasedOn="{StaticResource comboBox}">
+                                                                <Setter Property="Margin" Value="5" />
                                                             </Style>
                                                         </Grid.Resources>
-                                                        <ComboBox x:Name="__type" DisplayMemberPath="Name" SelectionChanged="Type_SelectionChanged"
-                                                          SelectedItem="{Binding Path=TypeDevice}" Style="{DynamicResource box}" 
-                                                                  ItemsSource="{x:Static local:TypeDeviceNames.Collection}"/>
-                                                        <ComboBox x:Name="__device" Grid.Column="1" DisplayMemberPath="FullName" 
-                                                          SelectedItem="{Binding Path=Row}" Style="{DynamicResource box}"
-                                                                  ItemsSource="{Binding Path=Table.DefaultView, UpdateSourceTrigger=PropertyChanged}"/>
+                                                        <ComboBox x:Name="__type" DisplayMemberPath="Name"
+                                                                  SelectionChanged="Type_SelectionChanged"
+                                                                  SelectedItem="{Binding Path=TypeDevice}"
+                                                                  Style="{DynamicResource box}"
+                                                                  ItemsSource="{x:Static local:TypeDeviceNames.Collection}" />
+                                                        <ComboBox x:Name="__device" Grid.Column="1"
+                                                                  DisplayMemberPath="FullName"
+                                                                  SelectedItem="{Binding Path=Row}"
+                                                                  Style="{DynamicResource box}"
+                                                                  ItemsSource="{Binding Path=Table.DefaultView, UpdateSourceTrigger=PropertyChanged}" />
                                                     </Grid>
                                                 </DataTemplate>
                                             </Setter.Value>
@@ -106,21 +124,26 @@
                             </ListBox>
                         </Grid>
                     </Grid>
-                    <Separator DockPanel.Dock="Top"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
-                                        Height="35" Margin="0" DockPanel.Dock="Bottom">
-                        <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True" Content="Отмена" Click="Cancel_Click"/>
-                        <Button Width="100" IsDefault="True" Content="Создать" Click="SaveChanges_Click" x:Name="saveButton">
+                    <Separator DockPanel.Dock="Top" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                Height="35" Margin="0" DockPanel.Dock="Bottom">
+                        <Button Style="{DynamicResource default-button}" Width="100" IsCancel="True" Content="Отмена"
+                                Click="Cancel_Click" />
+                        <Button Width="100" IsDefault="True" Content="Создать" Click="SaveChanges_Click"
+                                x:Name="saveButton">
                             <Button.Style>
                                 <Style TargetType="Button" BasedOn="{StaticResource primary-button}">
                                     <Style.Triggers>
                                         <MultiDataTrigger>
                                             <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding ElementName=placeName, Path=Text}" Value=""/>
-                                                <Condition Binding="{Binding ElementName=devicesOnPlace, Path=Items.Count}" Value="0"/>
+                                                <Condition Binding="{Binding ElementName=placeName, Path=Text}"
+                                                           Value="" />
+                                                <Condition
+                                                    Binding="{Binding ElementName=devicesOnPlace, Path=Items.Count}"
+                                                    Value="0" />
                                             </MultiDataTrigger.Conditions>
                                             <MultiDataTrigger.Setters>
-                                                <Setter Property="IsEnabled" Value="False"/>
+                                                <Setter Property="IsEnabled" Value="False" />
                                             </MultiDataTrigger.Setters>
                                         </MultiDataTrigger>
                                     </Style.Triggers>
@@ -131,7 +154,7 @@
                 </DockPanel>
             </Grid>
             <StatusBar Grid.Row="2">
-                <StatusBarItem x:Name="statusItem1"/>
+                <StatusBarItem x:Name="statusItem1" />
             </StatusBar>
         </Grid>
     </Border>

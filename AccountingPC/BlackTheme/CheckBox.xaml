@@ -2,11 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AccountingPC.BlackTheme">
     <Style x:Key="{x:Type CheckBox}"
-       TargetType="{x:Type CheckBox}">
-        <Setter Property="SnapsToDevicePixels" Value="true"/>
-        <Setter Property="OverridesDefaultStyle"  Value="true"/>
-        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
-        <Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}"/>
+           TargetType="{x:Type CheckBox}">
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}" />
+        <Setter Property="FocusVisualStyle" Value="{DynamicResource CheckBoxFocusVisual}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type CheckBox}">
@@ -17,8 +17,8 @@
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <LinearGradientBrush.GradientStops>
                                             <GradientStopCollection>
-                                                <GradientStop Color="{DynamicResource surface}" Offset="0.0"/>
-                                                <GradientStop Color="{DynamicResource background}" Offset="1.0"/>
+                                                <GradientStop Color="{DynamicResource surface}" Offset="0.0" />
+                                                <GradientStop Color="{DynamicResource background}" Offset="1.0" />
                                             </GradientStopCollection>
                                         </LinearGradientBrush.GradientStops>
                                     </LinearGradientBrush>
@@ -27,30 +27,28 @@
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
                                         <LinearGradientBrush.GradientStops>
                                             <GradientStopCollection>
-                                                <GradientStop Color="{DynamicResource on-surface}"/>
-                                                <GradientStop Color="{DynamicResource on-background}" Offset="1.0"/>
+                                                <GradientStop Color="{DynamicResource on-surface}" />
+                                                <GradientStop Color="{DynamicResource on-background}" Offset="1.0" />
                                             </GradientStopCollection>
                                         </LinearGradientBrush.GradientStops>
                                     </LinearGradientBrush>
                                 </Border.Background>
                                 <Grid>
                                     <Path Visibility="Collapsed" Width="11" Height="11" x:Name="CheckMark"
-                                          SnapsToDevicePixels="False" StrokeThickness="0.5" 
+                                          SnapsToDevicePixels="False" StrokeThickness="0.5"
                                           Fill="{DynamicResource background-brush}"
-                                          Stroke="{DynamicResource background-brush}" 
+                                          Stroke="{DynamicResource background-brush}"
                                           Data="M 3.734375 9.441406 L 0.160156 5.867188 
                                           C -0.0546875 5.652344 -0.0546875 5.300781 0.160156 5.085938 
                                           L 0.9375 4.308594 C 1.152344 4.09375 1.5 4.09375 1.714844 4.308594 
                                           L 4.125 6.71875 L 9.285156 1.558594 C 9.5 1.34375 9.847656 1.34375 
                                           10.0625 1.558594 L 10.839844 2.335938 C 11.054688 2.550781 11.054688 
                                           2.902344 10.839844 3.117188 L 4.515625 9.441406 C 4.300781 9.65625 
-                                          3.949219 9.65625 3.734375 9.441406 Z M 3.734375 9.441406 ">
-                                    </Path>
-                                    <Path Visibility="Collapsed" Width="11" Height="11" x:Name="InderminateMark" 
-                                          Fill="{DynamicResource background-brush}" 
-                                          Stroke="{DynamicResource background-brush}" StrokeThickness="3" 
-                                          SnapsToDevicePixels="False" Data="M 0 0 H 11 V 11 H -11 V -11 Z">
-                                    </Path>
+                                          3.949219 9.65625 3.734375 9.441406 Z M 3.734375 9.441406 " />
+                                    <Path Visibility="Collapsed" Width="11" Height="11" x:Name="InderminateMark"
+                                          Fill="{DynamicResource background-brush}"
+                                          Stroke="{DynamicResource background-brush}" StrokeThickness="3"
+                                          SnapsToDevicePixels="False" Data="M 0 0 H 11 V 11 H -11 V -11 Z" />
                                 </Grid>
                             </Border>
                         </BulletDecorator.Bullet>
@@ -60,63 +58,66 @@
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Panel.Background).
+                                                                      Storyboard.TargetProperty="(Panel.Background).
                                                                       (GradientBrush.GradientStops)[1].(GradientStop.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}"/>
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                                 <VisualState x:Name="Pressed">
                                     <Storyboard>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Panel.Background).
+                                                                      Storyboard.TargetProperty="(Panel.Background).
                                                                       (GradientBrush.GradientStops)[1].(GradientStop.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}"/>
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}" />
                                         </ColorAnimationUsingKeyFrames>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).
+                                                                      Storyboard.TargetProperty="(Border.BorderBrush).
                                                                       (GradientBrush.GradientStops)[0].(GradientStop.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}"/>
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}" />
                                         </ColorAnimationUsingKeyFrames>
                                         <ColorAnimationUsingKeyFrames Storyboard.TargetName="Border"
-                                                Storyboard.TargetProperty="(Border.BorderBrush).
+                                                                      Storyboard.TargetProperty="(Border.BorderBrush).
                                                                       (GradientBrush.GradientStops)[1].(GradientStop.Color)">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}"/>
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource shadow}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Disabled"/>
+                                <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
                             <VisualStateGroup x:Name="CheckStates">
                                 <VisualState x:Name="Checked">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="CheckMark">
-                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}"/>
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(UIElement.Visibility)"
+                                            Storyboard.TargetName="CheckMark">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
-                                <VisualState x:Name="Unchecked"/>
+                                <VisualState x:Name="Unchecked" />
                                 <VisualState x:Name="Indeterminate">
                                     <Storyboard>
-                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
-                                                                       Storyboard.TargetName="InderminateMark">
+                                        <ObjectAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(UIElement.Visibility)"
+                                            Storyboard.TargetName="InderminateMark">
                                             <DiscreteObjectKeyFrame KeyTime="0"
-                                                                    Value="{x:Static Visibility.Visible}"/>
+                                                                    Value="{x:Static Visibility.Visible}" />
                                         </ObjectAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" 
-                                          RecognizesAccessKey="True" TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                        <ContentPresenter Margin="4,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left"
+                                          RecognizesAccessKey="True"
+                                          TextBlock.Foreground="{TemplateBinding Foreground}" />
                     </BulletDecorator>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsEnabled" Value="False">
-                <Setter Property="Foreground" Value="{DynamicResource mouse-over-brush}"/>
+                <Setter Property="Foreground" Value="{DynamicResource mouse-over-brush}" />
             </Trigger>
         </Style.Triggers>
     </Style>

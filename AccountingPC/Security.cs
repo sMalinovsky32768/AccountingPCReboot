@@ -1,9 +1,9 @@
-﻿using AccountingPC.Properties;
-using System;
+﻿using System;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using AccountingPC.Properties;
 
 namespace AccountingPC
 {
@@ -15,27 +15,30 @@ namespace AccountingPC
             {
                 try
                 {
-                    UnicodeEncoding ByteConverter = new UnicodeEncoding();
+                    var ByteConverter = new UnicodeEncoding();
 
                     byte[] keyForLogin;
                     byte[] ivForLogin;
                     string decLogin;
 
-                    using (SHA256 sha = SHA256.Create())
+                    using (var sha = SHA256.Create())
                     {
                         keyForLogin = sha.ComputeHash(Convert.FromBase64String(SecuritySettings.Default.PASSWORD));
                     }
-                    using (MD5 md5 = MD5.Create())
+
+                    using (var md5 = MD5.Create())
                     {
                         ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
                     }
 
-                    using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                    using (var myAes = new AesCryptoServiceProvider())
                     {
                         myAes.Key = keyForLogin;
                         myAes.IV = ivForLogin;
-                        decLogin = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.LOGIN), myAes.Key, myAes.IV);
+                        decLogin = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.LOGIN),
+                            myAes.Key, myAes.IV);
                     }
+
                     return decLogin;
                 }
                 catch (Exception)
@@ -51,7 +54,7 @@ namespace AccountingPC
             {
                 login = !string.IsNullOrWhiteSpace(login) ? login : Login;
 
-                UnicodeEncoding ByteConverter = new UnicodeEncoding();
+                var ByteConverter = new UnicodeEncoding();
 
                 string encLogin;
                 byte[] loginByte;
@@ -69,15 +72,17 @@ namespace AccountingPC
 
                 loginByte = ByteConverter.GetBytes(login);
                 passByte = ByteConverter.GetBytes(pass);
-                using (SHA256 sha = SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     keyForPass = sha.ComputeHash(loginByte);
                 }
-                using (MD5 md5 = MD5.Create())
+
+                using (var md5 = MD5.Create())
                 {
                     ivForPass = md5.ComputeHash(passByte);
                 }
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+
+                using (var myAes = new AesCryptoServiceProvider())
                 {
                     myAes.Key = keyForPass;
                     myAes.IV = ivForPass;
@@ -85,16 +90,17 @@ namespace AccountingPC
                     encPass = Convert.ToBase64String(encryptedPass);
                 }
 
-                using (SHA256 sha = SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     keyForLogin = sha.ComputeHash(encryptedPass);
                 }
-                using (MD5 md5 = MD5.Create())
+
+                using (var md5 = MD5.Create())
                 {
                     ivForLogin = md5.ComputeHash(loginByte);
                 }
 
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                using (var myAes = new AesCryptoServiceProvider())
                 {
                     myAes.Key = keyForLogin;
                     myAes.IV = ivForLogin;
@@ -107,7 +113,6 @@ namespace AccountingPC
                 SecuritySettings.Default.LOGIN_HASH = Convert.ToBase64String(ivForLogin);
 
                 SecuritySettings.Default.Save();
-
             }
             catch (Exception ex)
             {
@@ -129,7 +134,7 @@ namespace AccountingPC
         {
             try
             {
-                UnicodeEncoding ByteConverter = new UnicodeEncoding();
+                var ByteConverter = new UnicodeEncoding();
 
                 byte[] encryptedLogin;
                 byte[] encryptedPass;
@@ -140,16 +145,17 @@ namespace AccountingPC
                 byte[] ivForPass;
                 byte[] ivForLogin;
 
-                using (SHA256 sha = SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     keyForPass = sha.ComputeHash(ByteConverter.GetBytes(inLogin));
                 }
-                using (MD5 md5 = MD5.Create())
+
+                using (var md5 = MD5.Create())
                 {
                     ivForPass = md5.ComputeHash(ByteConverter.GetBytes(inPass));
                 }
 
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                using (var myAes = new AesCryptoServiceProvider())
                 {
                     myAes.Key = keyForPass;
                     myAes.IV = ivForPass;
@@ -157,23 +163,25 @@ namespace AccountingPC
                     encryptedPass = EncryptStringToBytes_Aes(inPass, myAes.Key, myAes.IV);
                 }
 
-                using (SHA256 sha = SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     keyForLogin = sha.ComputeHash(encryptedPass);
                 }
-                using (MD5 md5 = MD5.Create())
+
+                using (var md5 = MD5.Create())
                 {
                     ivForLogin = md5.ComputeHash(ByteConverter.GetBytes(inLogin));
                 }
 
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                using (var myAes = new AesCryptoServiceProvider())
                 {
                     myAes.Key = keyForLogin;
                     myAes.IV = ivForLogin;
                     encryptedLogin = EncryptStringToBytes_Aes(inLogin, myAes.Key, myAes.IV);
                 }
-                bool validLogin = Convert.ToBase64String(encryptedLogin) == SecuritySettings.Default.LOGIN;
-                bool validPass = Convert.ToBase64String(encryptedPass) == SecuritySettings.Default.PASSWORD;
+
+                var validLogin = Convert.ToBase64String(encryptedLogin) == SecuritySettings.Default.LOGIN;
+                var validPass = Convert.ToBase64String(encryptedPass) == SecuritySettings.Default.PASSWORD;
                 return validLogin && validPass;
             }
             catch (Exception ex)
@@ -187,7 +195,7 @@ namespace AccountingPC
         {
             try
             {
-                UnicodeEncoding ByteConverter = new UnicodeEncoding();
+                var ByteConverter = new UnicodeEncoding();
 
                 byte[] keyForPass;
                 byte[] keyForLogin;
@@ -198,36 +206,41 @@ namespace AccountingPC
                 string decLogin;
                 string decPass;
 
-                using (SHA256 sha = SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     keyForLogin = sha.ComputeHash(Convert.FromBase64String(SecuritySettings.Default.PASSWORD));
                 }
-                using (MD5 md5 = MD5.Create())
+
+                using (var md5 = MD5.Create())
                 {
                     ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
                 }
 
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+                using (var myAes = new AesCryptoServiceProvider())
                 {
                     myAes.Key = keyForLogin;
                     myAes.IV = ivForLogin;
-                    decLogin = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.LOGIN), myAes.Key, myAes.IV);
+                    decLogin = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.LOGIN),
+                        myAes.Key, myAes.IV);
                 }
 
 
-                using (SHA256 sha = SHA256.Create())
+                using (var sha = SHA256.Create())
                 {
                     keyForPass = sha.ComputeHash(ByteConverter.GetBytes(decLogin));
                 }
-                using (MD5 md5 = MD5.Create())
+
+                using (var md5 = MD5.Create())
                 {
                     ivForPass = md5.ComputeHash(ByteConverter.GetBytes(oldPass));
                 }
-                using (AesCryptoServiceProvider myAes = new AesCryptoServiceProvider())
+
+                using (var myAes = new AesCryptoServiceProvider())
                 {
                     myAes.Key = keyForPass;
                     myAes.IV = ivForPass;
-                    decPass = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.PASSWORD), myAes.Key, myAes.IV);
+                    decPass = DecryptStringFromBytes_Aes(Convert.FromBase64String(SecuritySettings.Default.PASSWORD),
+                        myAes.Key, myAes.IV);
                 }
 
                 if (oldPass == decPass)
@@ -235,7 +248,8 @@ namespace AccountingPC
                     SetUserCredentials(login, newPass);
                     return true;
                 }
-                else return false;
+
+                return false;
             }
             catch (Exception)
             {
@@ -243,7 +257,7 @@ namespace AccountingPC
             }
         }
 
-        static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
+        private static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
             if (plainText == null || plainText.Length <= 0)
                 throw new ArgumentNullException("plainText");
@@ -252,21 +266,22 @@ namespace AccountingPC
             if (IV == null || IV.Length <= 0)
                 throw new ArgumentNullException("IV");
             byte[] encrypted;
-            using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
+            using (var aesAlg = new AesCryptoServiceProvider())
             {
                 aesAlg.Key = Key;
                 aesAlg.IV = IV;
 
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+                var encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
 
-                using (MemoryStream msEncrypt = new MemoryStream())
+                using (var msEncrypt = new MemoryStream())
                 {
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        using (var swEncrypt = new StreamWriter(csEncrypt))
                         {
                             swEncrypt.Write(plainText);
                         }
+
                         encrypted = msEncrypt.ToArray();
                     }
                 }
@@ -275,7 +290,7 @@ namespace AccountingPC
             return encrypted;
         }
 
-        static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
+        private static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
         {
             if (cipherText == null || cipherText.Length <= 0)
                 throw new ArgumentNullException("cipherText");
@@ -286,18 +301,18 @@ namespace AccountingPC
 
             string plaintext = null;
 
-            using (AesCryptoServiceProvider aesAlg = new AesCryptoServiceProvider())
+            using (var aesAlg = new AesCryptoServiceProvider())
             {
                 aesAlg.Key = Key;
                 aesAlg.IV = IV;
 
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                var decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
-                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                using (var msDecrypt = new MemoryStream(cipherText))
                 {
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                     {
-                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        using (var srDecrypt = new StreamReader(csDecrypt))
                         {
                             plaintext = srDecrypt.ReadToEnd();
                         }

@@ -1,5 +1,5 @@
-﻿using AccountingPC.Properties;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
+using AccountingPC.Properties;
 
 namespace AccountingPC.ParametersPages
 {

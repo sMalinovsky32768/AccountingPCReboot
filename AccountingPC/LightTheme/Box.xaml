@@ -2,14 +2,15 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:AccountingPC.LightTheme">
     <Style x:Key="text-box">
-        <Setter Property="TextBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
-        <Setter Property="TextBox.Padding" Value="5 0"/>
-        <Setter Property="TextBox.Height" Value="25"/>
+        <Setter Property="TextBox.Foreground" Value="{DynamicResource on-surface-brush}" />
+        <Setter Property="TextBox.Padding" Value="5 0" />
+        <Setter Property="TextBox.Height" Value="25" />
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource error-brush}" Padding="0">
-                        <AdornedElementPlaceholder/>
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource error-brush}"
+                            Padding="0">
+                        <AdornedElementPlaceholder />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -19,25 +20,28 @@
                 <ControlTemplate TargetType="TextBox">
                     <Grid>
                         <Border CornerRadius="5" BorderThickness="0" x:Name="border"
-                                BorderBrush="{DynamicResource surface-brush}" 
-                                Background="{DynamicResource surface-brush}" 
+                                BorderBrush="{DynamicResource surface-brush}"
+                                Background="{DynamicResource surface-brush}"
                                 Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7"
+                                                  ShadowDepth="-5" />
                             </Border.Effect>
-                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter TargetName="border" Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}"
+                                                      Opacity="1" ShadowDepth="-5" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
                         <Trigger Property="Validation.HasError" Value="True">
-                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                            <Setter Property="ToolTip"
+                                    Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -45,14 +49,15 @@
         </Setter>
     </Style>
     <Style x:Key="password-box">
-        <Setter Property="PasswordBox.Foreground" Value="{DynamicResource on-surface-brush}"/>
-        <Setter Property="PasswordBox.Padding" Value="5 0"/>
-        <Setter Property="PasswordBox.Height" Value="25"/>
+        <Setter Property="PasswordBox.Foreground" Value="{DynamicResource on-surface-brush}" />
+        <Setter Property="PasswordBox.Padding" Value="5 0" />
+        <Setter Property="PasswordBox.Height" Value="25" />
         <Setter Property="Validation.ErrorTemplate">
             <Setter.Value>
                 <ControlTemplate>
-                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource error-brush}" Padding="0">
-                        <AdornedElementPlaceholder/>
+                    <Border CornerRadius="5" BorderThickness="1" BorderBrush="{DynamicResource error-brush}"
+                            Padding="0">
+                        <AdornedElementPlaceholder />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -62,25 +67,28 @@
                 <ControlTemplate TargetType="PasswordBox">
                     <Grid>
                         <Border CornerRadius="5" BorderThickness="0" x:Name="border"
-                                BorderBrush="{DynamicResource surface-brush}" 
+                                BorderBrush="{DynamicResource surface-brush}"
                                 Background="{DynamicResource surface-brush}"
                                 Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7"
+                                                  ShadowDepth="-5" />
                             </Border.Effect>
-                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter TargetName="border" Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}"
+                                                      Opacity="1" ShadowDepth="-5" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
                         <Trigger Property="Validation.HasError" Value="True">
-                            <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                            <Setter Property="ToolTip"
+                                    Value="{Binding RelativeSource={RelativeSource Self}, Path=(Validation.Errors)[0].ErrorContent}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -88,27 +96,29 @@
         </Setter>
     </Style>
     <Style x:Key="date-picker-text-box" TargetType="DatePickerTextBox">
-        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}"/>
-        <Setter Property="Padding" Value="5 0"/>
+        <Setter Property="Foreground" Value="{DynamicResource on-surface-brush}" />
+        <Setter Property="Padding" Value="5 0" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="DatePickerTextBox">
                     <Grid>
                         <Border CornerRadius="2" BorderThickness="0" x:Name="border"
-                                BorderBrush="{DynamicResource surface-brush}" 
-                                Background="{DynamicResource surface-brush}" 
+                                BorderBrush="{DynamicResource surface-brush}"
+                                Background="{DynamicResource surface-brush}"
                                 Margin="{TemplateBinding Margin}" Padding="{TemplateBinding Padding}">
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7" ShadowDepth="-5"/>
+                                <DropShadowEffect BlurRadius="10" Color="{DynamicResource shadow}" Opacity="0.7"
+                                                  ShadowDepth="-5" />
                             </Border.Effect>
-                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center" />
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsFocused" Value="true">
                             <Setter TargetName="border" Property="Effect">
                                 <Setter.Value>
-                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}" Opacity="1" ShadowDepth="-5"/>
+                                    <DropShadowEffect BlurRadius="10" Color="{DynamicResource primary-light}"
+                                                      Opacity="1" ShadowDepth="-5" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>

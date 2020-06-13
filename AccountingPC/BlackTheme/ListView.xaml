@@ -17,35 +17,40 @@
 
                         <DockPanel Margin="{TemplateBinding Padding}">
                             <ScrollViewer DockPanel.Dock="Top"
-                          HorizontalScrollBarVisibility="Hidden"
-                          VerticalScrollBarVisibility="Hidden"
-                          Focusable="false">
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Hidden"
+                                          Focusable="false">
                                 <GridViewHeaderRowPresenter Margin="2,0,2,0"
-                                          Columns="{Binding Path=TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}"
-                                          ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle,
+                                                            Columns="{Binding Path=TemplatedParent.View.Columns, RelativeSource={RelativeSource TemplatedParent}}"
+                                                            ColumnHeaderContainerStyle="{Binding Path=TemplatedParent.View.ColumnHeaderContainerStyle,
                                     RelativeSource={RelativeSource TemplatedParent}}"
-                                          ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate,
+                                                            ColumnHeaderTemplate="{Binding Path=TemplatedParent.View.ColumnHeaderTemplate,
                                     RelativeSource={RelativeSource TemplatedParent}}"
-                                          ColumnHeaderTemplateSelector="{Binding Path=TemplatedParent.View.ColumnHeaderTemplateSelector,
+                                                            ColumnHeaderTemplateSelector="{Binding Path=TemplatedParent.View.ColumnHeaderTemplateSelector,
                                     RelativeSource={RelativeSource TemplatedParent}}"
-                                          AllowsColumnReorder="{Binding Path=TemplatedParent.View.AllowsColumnReorder,
+                                                            AllowsColumnReorder="{Binding Path=TemplatedParent.View.AllowsColumnReorder,
                                     RelativeSource={RelativeSource TemplatedParent}}"
-                                          ColumnHeaderContextMenu="{Binding Path=TemplatedParent.View.ColumnHeaderContextMenu,
+                                                            ColumnHeaderContextMenu="{Binding Path=TemplatedParent.View.ColumnHeaderContextMenu,
                                     RelativeSource={RelativeSource TemplatedParent}}"
-                                          ColumnHeaderToolTip="{Binding Path=TemplatedParent.View.ColumnHeaderToolTip,
+                                                            ColumnHeaderToolTip="{Binding Path=TemplatedParent.View.ColumnHeaderToolTip,
                                     RelativeSource={RelativeSource TemplatedParent}}"
-                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                             </ScrollViewer>
-                            <ScrollContentPresenter Name="PART_ScrollContentPresenter" 
-                                                    KeyboardNavigation.DirectionalNavigation="Local" CanContentScroll="True"
+                            <ScrollContentPresenter Name="PART_ScrollContentPresenter"
+                                                    KeyboardNavigation.DirectionalNavigation="Local"
+                                                    CanContentScroll="True"
                                                     CanHorizontallyScroll="False" CanVerticallyScroll="False" />
                         </DockPanel>
                         <ScrollBar Name="PART_HorizontalScrollBar" Orientation="Horizontal" Grid.Row="1"
-                                   Maximum="{TemplateBinding ScrollableWidth}" ViewportSize="{TemplateBinding ViewportWidth}"
-                                   Value="{TemplateBinding HorizontalOffset}" Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
+                                   Maximum="{TemplateBinding ScrollableWidth}"
+                                   ViewportSize="{TemplateBinding ViewportWidth}"
+                                   Value="{TemplateBinding HorizontalOffset}"
+                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
 
-                        <ScrollBar Name="PART_VerticalScrollBar" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}"
-                                   ViewportSize="{TemplateBinding ViewportHeight}" Value="{TemplateBinding VerticalOffset}"
+                        <ScrollBar Name="PART_VerticalScrollBar" Grid.Column="1"
+                                   Maximum="{TemplateBinding ScrollableHeight}"
+                                   ViewportSize="{TemplateBinding ViewportHeight}"
+                                   Value="{TemplateBinding VerticalOffset}"
                                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
 
                     </Grid>
@@ -55,8 +60,8 @@
     </Style>
 
     <Style x:Key="GridViewColumnHeaderGripper" TargetType="Thumb">
-        <Setter Property="Width" Value="18"/>
-        <Setter Property="Background" Value="{DynamicResource background-brush}"/>
+        <Setter Property="Width" Value="18" />
+        <Setter Property="Background" Value="{DynamicResource background-brush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Thumb}">
@@ -66,26 +71,27 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="BorderBrush" Value="{DynamicResource background-brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource background-brush}" />
     </Style>
 
     <Style x:Key="{x:Type GridViewColumnHeader}" TargetType="GridViewColumnHeader">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
-        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource on-background-brush}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="GridViewColumnHeader">
                     <Grid>
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
-                                <VisualState x:Name="Normal"/>
+                                <VisualState x:Name="Normal" />
                                 <VisualState x:Name="MouseOver">
                                     <Storyboard>
-                                        <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).
+                                        <ColorAnimationUsingKeyFrames
+                                            Storyboard.TargetProperty="(Panel.Background).
                                                                       (GradientBrush.GradientStops)[1].(GradientStop.Color)"
-                                                                      Storyboard.TargetName="HeaderBorder">
-                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource mouse-over}"/>
+                                            Storyboard.TargetName="HeaderBorder">
+                                            <EasingColorKeyFrame KeyTime="0" Value="{DynamicResource mouse-over}" />
                                         </ColorAnimationUsingKeyFrames>
                                     </Storyboard>
                                 </VisualState>
@@ -93,28 +99,27 @@
                                 <VisualState x:Name="Disabled" />
                             </VisualStateGroup>
                         </VisualStateManager.VisualStateGroups>
-                        <Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" Padding="2,0,2,0" 
-                                BorderBrush="{DynamicResource background-brush}" 
+                        <Border x:Name="HeaderBorder" BorderThickness="0,1,0,1" Padding="2,0,2,0"
+                                BorderBrush="{DynamicResource background-brush}"
                                 Background="{DynamicResource background-brush}">
                             <ContentPresenter x:Name="HeaderContent" Margin="0,0,0,1" RecognizesAccessKey="True"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                         </Border>
                         <Thumb x:Name="PART_HeaderGripper" HorizontalAlignment="Right"
-                               Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}"/>
+                               Margin="0,0,-9,0" Style="{StaticResource GridViewColumnHeaderGripper}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
         <Style.Triggers>
             <Trigger Property="Role" Value="Floating">
-                <Setter Property="Opacity"  Value="0.7"/>
+                <Setter Property="Opacity" Value="0.7" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="GridViewColumnHeader">
-                            <Canvas Name="PART_FloatingHeaderCanvas">
-                            </Canvas>
+                            <Canvas Name="PART_FloatingHeaderCanvas" />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -125,8 +130,7 @@
                         <ControlTemplate TargetType="GridViewColumnHeader">
                             <Border Name="HeaderBorder" BorderThickness="0,1,0,1"
                                     Background="{DynamicResource surface-brush}"
-                                    BorderBrush="{DynamicResource surface-background-gradient}">
-                            </Border>
+                                    BorderBrush="{DynamicResource surface-background-gradient}" />
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
@@ -135,24 +139,24 @@
     </Style>
 
     <Style x:Key="ListView" TargetType="ListView">
-        <Setter Property="SnapsToDevicePixels" Value="true"/>
-        <Setter Property="OverridesDefaultStyle" Value="true"/>
-        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto"/>
-        <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="SnapsToDevicePixels" Value="true" />
+        <Setter Property="OverridesDefaultStyle" Value="true" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListView">
                     <Border Name="Border" BorderThickness="1" Background="{DynamicResource surface-brush}"
                             BorderBrush="{DynamicResource background-brush}">
                         <ScrollViewer Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
-                            <ItemsPresenter/>
+                            <ItemsPresenter />
                         </ScrollViewer>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsGrouping" Value="true">
-                            <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
+                            <Setter Property="ScrollViewer.CanContentScroll" Value="false" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter TargetName="Border" Property="Background">
