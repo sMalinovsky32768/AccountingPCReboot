@@ -1,6 +1,7 @@
 ﻿using AccountingPC.Properties;
 using System;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -106,9 +107,7 @@ namespace AccountingPC
 
         private void CreateDB()
         {
-            string str;
-            var myConn = new SqlConnection(
-                    "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True");
+            var myConn = new SqlConnection(ConfigurationManager.ConnectionStrings["MasterConnection"].ConnectionString);
             bool exist = true;
             var myCommand = new SqlCommand("if EXISTS (SELECT name FROM sys.databases WHERE name = N'Accounting') select 1 else select 0", myConn);
             try
@@ -129,12 +128,14 @@ namespace AccountingPC
             {
                 var assembly = Assembly.GetExecutingAssembly();
                 var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("OnlyDB.sql"));
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                string str = null;
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        str = reader.ReadToEnd();
-                    }
+                    if (stream != null)
+                        using (var reader = new StreamReader(stream))
+                        {
+                            str = reader.ReadToEnd();
+                        }
                 }
 
                 myCommand = new SqlCommand(str, myConn);
@@ -151,38 +152,51 @@ namespace AccountingPC
                 {
                     if (myConn.State == ConnectionState.Open) myConn.Close();
                 }
+
+                myConn = new SqlConnection(ConfigurationManager.ConnectionStrings["DefaultConnection"]
+                    .ConnectionString);
 
                 resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("Schema.sql"));
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        str = reader.ReadToEnd();
-                    }
+                    if (stream != null)
+                        using (var reader = new StreamReader(stream))
+                        {
+                            str = reader.ReadToEnd();
+                        }
                 }
 
-                myCommand = new SqlCommand(str, myConn);
-                try
-                {
-                    myConn.Open();
-                    myCommand.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Clipboard.SetText(ex.ToString());
-                }
-                finally
-                {
-                    if (myConn.State == ConnectionState.Open) myConn.Close();
-                }
+                string[] arr = str?.Split(new string[] {"GO"}, StringSplitOptions.None);
+
+                if (arr != null)
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        str = arr[i];
+                        myCommand = new SqlCommand(str, myConn);
+                        try
+                        {
+                            myConn.Open();
+                            myCommand.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Clipboard.SetText(ex.ToString());
+                        }
+                        finally
+                        {
+                            if (myConn.State == ConnectionState.Open) myConn.Close();
+                        }
+                    }
+
 
                 resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("CommonData.sql"));
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
-                        str = reader.ReadToEnd();
-                    }
+                    if (stream != null)
+                        using (var reader = new StreamReader(stream))
+                        {
+                            str = reader.ReadToEnd();
+                        }
                 }
 
                 myCommand = new SqlCommand(str, myConn);
