@@ -1,5 +1,7 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace AccountingPC
 {
@@ -7,14 +9,22 @@ namespace AccountingPC
     {
         internal void ChangeSoftwareView()
         {
-            switch (softwareCategoryList.SelectedIndex)
+            try
             {
-                case 0:
-                    SetViewToLicenseSoftware();
-                    break;
-                case 1:
-                    SetViewToOS();
-                    break;
+                switch (softwareCategoryList.SelectedIndex)
+                {
+                    case 0:
+                        SetViewToLicenseSoftware();
+                        break;
+                    case 1:
+                        SetViewToOS();
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -36,21 +46,37 @@ namespace AccountingPC
 
         internal void UpdateSoftwareData()
         {
-            switch (TypeSoft)
+            try
             {
-                case TypeSoft.LicenseSoftware:
-                    UpdateLicenseSoftwareData();
-                    break;
-                case TypeSoft.OS:
-                    UpdateOSData();
-                    break;
+                switch (TypeSoft)
+                {
+                    case TypeSoft.LicenseSoftware:
+                        UpdateLicenseSoftwareData();
+                        break;
+                    case TypeSoft.OS:
+                        UpdateOSData();
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
         private void UpdateAllSoftwareData()
         {
-            UpdateLicenseSoftwareData();
-            UpdateOSData();
+            try
+            {
+                UpdateLicenseSoftwareData();
+                UpdateOSData();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

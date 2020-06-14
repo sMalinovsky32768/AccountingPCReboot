@@ -67,7 +67,7 @@ namespace AccountingPC.ParametersPages
         {
             if (newPass.Password == repeatPass.Password)
             {
-                if (Security.UpdatCredentials(oldPass.Password, newPass.Password, login.Text))
+                if (Security.UpdateCredentials(oldPass.Password, newPass.Password, login.Text))
                     return new KeyValuePair<bool, string>(true, "Пароль успешно изменен");
                 return new KeyValuePair<bool, string>(false, "Неверный пароль");
             }

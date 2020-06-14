@@ -53,15 +53,23 @@ namespace AccountingPC
 
         private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (devicesOnPlace.ItemContainerGenerator.Status ==
-                GeneratorStatus.ContainersGenerated)
+            try
             {
-                var containers = devicesOnPlace.Items.Cast<object>().Select(
-                    item => (FrameworkElement) devicesOnPlace.ItemContainerGenerator.ContainerFromItem(item));
-                foreach (var container in containers) container.Loaded += Container_Loaded;
-            }
+                if (devicesOnPlace.ItemContainerGenerator.Status ==
+                    GeneratorStatus.ContainersGenerated)
+                {
+                    var containers = devicesOnPlace.Items.Cast<object>().Select(
+                        item => (FrameworkElement) devicesOnPlace.ItemContainerGenerator.ContainerFromItem(item));
+                    foreach (var container in containers) container.Loaded += Container_Loaded;
+                }
 
-            devicesOnPlace.ItemsSource = CurrentPlace.TypeDeviceCollection;
+                devicesOnPlace.ItemsSource = CurrentPlace.TypeDeviceCollection;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void Container_Loaded(object sender, RoutedEventArgs e)
@@ -130,53 +138,61 @@ namespace AccountingPC
                     break;
                 case TypeChange.Change:
                     saveButton.Content = "Изменить";
-                    AudienceID = Accounting.AudienceID;
-                    AudienceTableID = Accounting.AudienceTableID;
-                    string commandString;
-                    SqlDataReader reader;
-                    using (var connection = new SqlConnection(ConnectionString))
+                    try
                     {
-                        connection.Open();
-                        CurrentPlace.ID = AudienceTableID;
-                        commandString =
-                            $"SELECT [Name] FROM [dbo].[GetAllLocationInAudience]({AudienceID}) Where ID={AudienceTableID}";
-                        CurrentPlace.Name = new SqlCommand(commandString, connection).ExecuteScalar().ToString();
-                        commandString = $"SELECT * FROM dbo.GetAllTypeAndDeviceOnPlace({AudienceTableID})";
-                        reader = new SqlCommand(commandString, connection).ExecuteReader();
-                        if (reader.HasRows)
-                            while (reader.Read())
-                                if (reader["ID"].GetType() != typeof(DBNull)) // если место занято
-                                {
-                                    var temp = new TypeDeviceOnPlace(
-                                        TypeDeviceNames.GetTypeDeviceName((TypeDevice) Enum.Parse(typeof(TypeDevice),
-                                            reader["TypeName"].ToString())),
-                                        null,
-                                        new DeviceOnPlace
-                                        {
-                                            ID = Convert.ToInt32(reader["ID"]),
-                                            Name = reader["FullName"].ToString()
-                                        },
-                                        Convert.ToInt32(reader["PlaceID"]),
-                                        CurrentPlace);
-                                    foreach (DataRowView rowView in temp.Table.DefaultView)
-                                        if (Convert.ToInt32(rowView.Row["ID"]) == Convert.ToInt32(reader["ID"]))
-                                        {
-                                            temp.Row = rowView;
-                                            break;
-                                        }
+                        AudienceID = Accounting.AudienceID;
+                        AudienceTableID = Accounting.AudienceTableID;
+                        string commandString;
+                        SqlDataReader reader;
+                        using (var connection = new SqlConnection(ConnectionString))
+                        {
+                            connection.Open();
+                            CurrentPlace.ID = AudienceTableID;
+                            commandString =
+                                $"SELECT [Name] FROM [dbo].[GetAllLocationInAudience]({AudienceID}) Where ID={AudienceTableID}";
+                            CurrentPlace.Name = new SqlCommand(commandString, connection).ExecuteScalar().ToString();
+                            commandString = $"SELECT * FROM dbo.GetAllTypeAndDeviceOnPlace({AudienceTableID})";
+                            reader = new SqlCommand(commandString, connection).ExecuteReader();
+                            if (reader.HasRows)
+                                while (reader.Read())
+                                    if (!(reader["ID"] is DBNull)) // если место занято
+                                    {
+                                        var temp = new TypeDeviceOnPlace(
+                                            TypeDeviceNames.GetTypeDeviceName((TypeDevice) Enum.Parse(typeof(TypeDevice),
+                                                reader["TypeName"].ToString())),
+                                            null,
+                                            new DeviceOnPlace
+                                            {
+                                                ID = Convert.ToInt32(reader["ID"]),
+                                                Name = reader["FullName"].ToString()
+                                            },
+                                            Convert.ToInt32(reader["PlaceID"]),
+                                            CurrentPlace);
+                                        foreach (DataRowView rowView in temp.Table.DefaultView)
+                                            if (Convert.ToInt32(rowView.Row["ID"]) == Convert.ToInt32(reader["ID"]))
+                                            {
+                                                temp.Row = rowView;
+                                                break;
+                                            }
 
-                                    CurrentPlace.TypeDeviceCollection.Add(temp);
-                                }
-                                else
-                                {
-                                    CurrentPlace.TypeDeviceCollection.Add(new TypeDeviceOnPlace(
-                                        TypeDeviceNames.GetTypeDeviceName((TypeDevice) Enum.Parse(typeof(TypeDevice),
-                                            reader["TypeName"].ToString())),
-                                        null,
-                                        null,
-                                        Convert.ToInt32(reader["PlaceID"]),
-                                        CurrentPlace));
-                                }
+                                        CurrentPlace.TypeDeviceCollection.Add(temp);
+                                    }
+                                    else
+                                    {
+                                        CurrentPlace.TypeDeviceCollection.Add(new TypeDeviceOnPlace(
+                                            TypeDeviceNames.GetTypeDeviceName((TypeDevice)Enum.Parse(typeof(TypeDevice),
+                                                reader["TypeName"].ToString())),
+                                            null,
+                                            null,
+                                            Convert.ToInt32(reader["PlaceID"]),
+                                            CurrentPlace));
+                                    }
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                            MessageBoxImage.Error);
                     }
 
                     break;
@@ -188,7 +204,15 @@ namespace AccountingPC
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Accounting.IsHitTestVisible = true;
-            Accounting.ChangeLocationView();
+            try
+            {
+                Accounting.ChangeLocationView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
             Close();
         }
 
@@ -204,14 +228,30 @@ namespace AccountingPC
 
         private void Type_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            SetSourceForDevice(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(
-                VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(sender as ComboBox)))) as ListBoxItem);
+            try
+            {
+                SetSourceForDevice(VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(
+                    VisualTreeHelper.GetParent(VisualTreeHelper.GetParent(sender as ComboBox)))) as ListBoxItem);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             Accounting.IsHitTestVisible = true;
-            Accounting.ChangeLocationView();
+            try
+            {
+                Accounting.ChangeLocationView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
             Close();
         }
 
@@ -219,86 +259,95 @@ namespace AccountingPC
         {
             using (var connection = new SqlConnection(ConnectionString))
             {
-                connection.Open();
-                if (AudienceTableID == 0)
+                try
                 {
-                    var command = new SqlCommand("AddLocation", connection)
-                    {
-                        CommandType = CommandType.StoredProcedure
-                    };
-                    command.Parameters.Add(new SqlParameter("@AudienceID", AudienceID));
-                    var parameter = new SqlParameter
-                    {
-                        ParameterName = "@TableID",
-                        Direction = ParameterDirection.Output,
-                        DbType = DbType.Int32
-                    };
-                    command.Parameters.Add(parameter);
-                    command.ExecuteNonQuery();
-                    AudienceTableID = Convert.ToInt32(command.Parameters["@TableID"].Value);
-                }
-
-                new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}",
-                    connection).ExecuteNonQuery();
-                var count = CurrentPlace.TypeDeviceRemovedCollection.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    var temp = CurrentPlace.TypeDeviceRemovedCollection[i];
-                    if (temp.Row != null)
-                    {
-                        var obj = new SqlCommand(
-                                $"Select TOP(1) PlaceID from {temp.Row["TableName"]} Where ID={temp.Row["ID"]}",
-                                connection)
-                            .ExecuteScalar();
-                        var id = Convert.ToInt32(obj.GetType() != typeof(DBNull) ? obj : 0);
-                        if (id == temp.PlaceID)
-                            new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}",
-                                connection).ExecuteNonQuery();
-                    }
-
-                    if (temp.PlaceID != 0)
-                        if (temp.IsRemoved)
-                            new SqlCommand($"Delete from Place Where ID={temp.PlaceID}", connection).ExecuteNonQuery();
-                }
-
-                count = CurrentPlace.TypeDeviceCollection.Count;
-                for (var i = 0; i < count; i++)
-                {
-                    var temp = CurrentPlace.TypeDeviceCollection[i];
-                    if (temp.PlaceID != 0)
-                    {
-                        new SqlCommand(
-                            $"Update Place set TypeDeviceID=dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}') Where ID={temp.PlaceID}",
-                            connection).ExecuteNonQuery();
-                        if (temp.Row != null) // устройство
-                            new SqlCommand(
-                                $"Update {temp.Row["TableName"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}",
-                                connection).ExecuteNonQuery();
-                    }
-                    else
+                    connection.Open();
+                    if (AudienceTableID == 0)
                     {
                         var command = new SqlCommand("AddLocation", connection)
                         {
                             CommandType = CommandType.StoredProcedure
                         };
-                        command.Parameters.Add(new SqlParameter("@AudienceTableID", AudienceTableID));
-                        command.Parameters.Add(new SqlParameter("@TypeDeviceID",
-                            Convert.ToInt32(new SqlCommand($"Select dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}')",
-                                connection).ExecuteScalar())));
+                        command.Parameters.Add(new SqlParameter("@AudienceID", AudienceID));
                         var parameter = new SqlParameter
                         {
-                            ParameterName = "@PlaceID",
+                            ParameterName = "@TableID",
                             Direction = ParameterDirection.Output,
                             DbType = DbType.Int32
                         };
                         command.Parameters.Add(parameter);
                         command.ExecuteNonQuery();
-                        var PID = Convert.ToInt32(command.Parameters["@PlaceID"].Value);
-                        if (temp.Row != null) // устройство
-                            new SqlCommand(
-                                $"Update {temp.Row["TableName"]} set PlaceID={PID} Where ID={temp.Row["ID"]}",
-                                connection).ExecuteNonQuery();
+                        AudienceTableID = Convert.ToInt32(command.Parameters["@TableID"].Value);
                     }
+
+                    new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}",
+                        connection).ExecuteNonQuery();
+                    var count = CurrentPlace.TypeDeviceRemovedCollection.Count;
+                    for (var i = 0; i < count; i++)
+                    {
+                        var temp = CurrentPlace.TypeDeviceRemovedCollection[i];
+                        if (temp.Row != null)
+                        {
+                            var obj = new SqlCommand(
+                                    $"Select TOP(1) PlaceID from {temp.Row["TableName"]} Where ID={temp.Row["ID"]}",
+                                    connection)
+                                .ExecuteScalar();
+                            var id = Convert.ToInt32(!(obj is DBNull) ? obj : 0);
+                            if (id == temp.PlaceID)
+                                new SqlCommand($"Update {temp.Row["TableName"]} set PlaceID=null Where ID={temp.Row["ID"]}",
+                                    connection).ExecuteNonQuery();
+                        }
+
+                        if (temp.PlaceID != 0)
+                            if (temp.IsRemoved)
+                                new SqlCommand($"Delete from Place Where ID={temp.PlaceID}", connection).ExecuteNonQuery();
+                    }
+
+                    count = CurrentPlace.TypeDeviceCollection.Count;
+                    for (var i = 0; i < count; i++)
+                    {
+                        var temp = CurrentPlace.TypeDeviceCollection[i];
+                        if (temp.PlaceID != 0)
+                        {
+                            new SqlCommand(
+                                $"Update Place set TypeDeviceID=dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}') Where ID={temp.PlaceID}",
+                                connection).ExecuteNonQuery();
+                            if (temp.Row != null) // устройство
+                                new SqlCommand(
+                                    $"Update {temp.Row["TableName"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}",
+                                    connection).ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            var command = new SqlCommand("AddLocation", connection)
+                            {
+                                CommandType = CommandType.StoredProcedure
+                            };
+                            command.Parameters.Add(new SqlParameter("@AudienceTableID", AudienceTableID));
+                            command.Parameters.Add(new SqlParameter("@TypeDeviceID",
+                                Convert.ToInt32(new SqlCommand($"Select dbo.GetTypeDeviceID(N'{temp.TypeDevice.Type}')",
+                                    connection).ExecuteScalar())));
+                            var parameter = new SqlParameter
+                            {
+                                ParameterName = "@PlaceID",
+                                Direction = ParameterDirection.Output,
+                                DbType = DbType.Int32
+                            };
+                            command.Parameters.Add(parameter);
+                            command.ExecuteNonQuery();
+                            var PID = Convert.ToInt32(command.Parameters["@PlaceID"].Value);
+                            if (temp.Row != null) // устройство
+                                new SqlCommand(
+                                    $"Update {temp.Row["TableName"]} set PlaceID={PID} Where ID={temp.Row["ID"]}",
+                                    connection).ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                    if (connection.State== ConnectionState.Open) connection.Close();
                 }
             }
 

@@ -16,7 +16,7 @@ namespace AccountingPC
 {
     public partial class App : Application
     {
-        public NotifyIcon notify;
+        public NotifyIcon Notify;
         private ContextMenu notifyContextMenu;
 
         public App()
@@ -53,7 +53,7 @@ namespace AccountingPC
                         break;
                 }
 
-                notify = new NotifyIcon(new Container());
+                Notify = new NotifyIcon(new Container());
                 notifyContextMenu = new ContextMenu(new[]
                     {new MenuItem("Выход", ShutdownCurrentApp)});
                 try
@@ -63,7 +63,7 @@ namespace AccountingPC
                     using (Stream stream = assembly.GetManifestResourceStream(resourceName))
                     {
                         if (stream != null)
-                            notify.Icon = new Icon(stream);
+                            Notify.Icon = new Icon(stream);
                     }
                 }
                 catch (Exception ex)
@@ -71,14 +71,13 @@ namespace AccountingPC
                     Clipboard.SetText(ex.ToString());
                 }
 
-                //notify.Icon = new Icon("images/icon.ico");
-                notify.ContextMenu = notifyContextMenu;
-                notify.Text = "AccountingPC";
-                notify.DoubleClick += NotifyDoubleClick;
+                Notify.ContextMenu = notifyContextMenu;
+                Notify.Text = "AccountingPC";
+                Notify.DoubleClick += NotifyDoubleClick;
                 if (Current.ShutdownMode == ShutdownMode.OnExplicitShutdown)
-                    notify.Visible = true;
+                    Notify.Visible = true;
                 else
-                    notify.Visible = false;
+                    Notify.Visible = false;
                 if (string.IsNullOrWhiteSpace(SecuritySettings.Default.LOGIN) ||
                     string.IsNullOrWhiteSpace(SecuritySettings.Default.PASSWORD))
                     Security.SetUserCredentials();

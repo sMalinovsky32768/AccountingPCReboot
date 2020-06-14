@@ -15,7 +15,7 @@ namespace AccountingPC
             {
                 try
                 {
-                    var ByteConverter = new UnicodeEncoding();
+                    var byteConverter = new UnicodeEncoding();
 
                     byte[] keyForLogin;
                     byte[] ivForLogin;
@@ -26,10 +26,7 @@ namespace AccountingPC
                         keyForLogin = sha.ComputeHash(Convert.FromBase64String(SecuritySettings.Default.PASSWORD));
                     }
 
-                    using (var md5 = MD5.Create())
-                    {
-                        ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
-                    }
+                    ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
 
                     using (var myAes = new AesCryptoServiceProvider())
                     {
@@ -54,7 +51,7 @@ namespace AccountingPC
             {
                 login = !string.IsNullOrWhiteSpace(login) ? login : Login;
 
-                var ByteConverter = new UnicodeEncoding();
+                var byteConverter = new UnicodeEncoding();
 
                 string encLogin;
                 byte[] loginByte;
@@ -70,8 +67,8 @@ namespace AccountingPC
                 byte[] ivForPass;
                 byte[] ivForLogin;
 
-                loginByte = ByteConverter.GetBytes(login);
-                passByte = ByteConverter.GetBytes(pass);
+                loginByte = byteConverter.GetBytes(login);
+                passByte = byteConverter.GetBytes(pass);
                 using (var sha = SHA256.Create())
                 {
                     keyForPass = sha.ComputeHash(loginByte);
@@ -134,7 +131,7 @@ namespace AccountingPC
         {
             try
             {
-                var ByteConverter = new UnicodeEncoding();
+                var byteConverter = new UnicodeEncoding();
 
                 byte[] encryptedLogin;
                 byte[] encryptedPass;
@@ -147,12 +144,12 @@ namespace AccountingPC
 
                 using (var sha = SHA256.Create())
                 {
-                    keyForPass = sha.ComputeHash(ByteConverter.GetBytes(inLogin));
+                    keyForPass = sha.ComputeHash(byteConverter.GetBytes(inLogin));
                 }
 
                 using (var md5 = MD5.Create())
                 {
-                    ivForPass = md5.ComputeHash(ByteConverter.GetBytes(inPass));
+                    ivForPass = md5.ComputeHash(byteConverter.GetBytes(inPass));
                 }
 
                 using (var myAes = new AesCryptoServiceProvider())
@@ -170,7 +167,7 @@ namespace AccountingPC
 
                 using (var md5 = MD5.Create())
                 {
-                    ivForLogin = md5.ComputeHash(ByteConverter.GetBytes(inLogin));
+                    ivForLogin = md5.ComputeHash(byteConverter.GetBytes(inLogin));
                 }
 
                 using (var myAes = new AesCryptoServiceProvider())
@@ -191,11 +188,11 @@ namespace AccountingPC
             }
         }
 
-        public static bool UpdatCredentials(string oldPass, string newPass, string login = null)
+        public static bool UpdateCredentials(string oldPass, string newPass, string login = null)
         {
             try
             {
-                var ByteConverter = new UnicodeEncoding();
+                var byteConverter = new UnicodeEncoding();
 
                 byte[] keyForPass;
                 byte[] keyForLogin;
@@ -211,10 +208,7 @@ namespace AccountingPC
                     keyForLogin = sha.ComputeHash(Convert.FromBase64String(SecuritySettings.Default.PASSWORD));
                 }
 
-                using (var md5 = MD5.Create())
-                {
-                    ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
-                }
+                ivForLogin = Convert.FromBase64String(SecuritySettings.Default.LOGIN_HASH);
 
                 using (var myAes = new AesCryptoServiceProvider())
                 {
@@ -227,12 +221,12 @@ namespace AccountingPC
 
                 using (var sha = SHA256.Create())
                 {
-                    keyForPass = sha.ComputeHash(ByteConverter.GetBytes(decLogin));
+                    keyForPass = sha.ComputeHash(byteConverter.GetBytes(decLogin));
                 }
 
                 using (var md5 = MD5.Create())
                 {
-                    ivForPass = md5.ComputeHash(ByteConverter.GetBytes(oldPass));
+                    ivForPass = md5.ComputeHash(byteConverter.GetBytes(oldPass));
                 }
 
                 using (var myAes = new AesCryptoServiceProvider())

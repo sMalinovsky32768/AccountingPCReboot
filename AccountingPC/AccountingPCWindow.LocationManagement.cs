@@ -16,15 +16,23 @@ namespace AccountingPC
                                                   (addAudience = new AccountingCommand(obj =>
                                                       {
                                                           var name = obj.ToString();
-                                                          using (var connection = new SqlConnection(ConnectionString))
+                                                          try
                                                           {
-                                                              connection.Open();
-                                                              var command =
-                                                                  new SqlCommand(
-                                                                      "Insert Into Audience (Name) Values (@Name)",
-                                                                      connection);
-                                                              command.Parameters.AddWithValue("@Name", name);
-                                                              command.ExecuteNonQuery();
+                                                              using (var connection = new SqlConnection(ConnectionString))
+                                                              {
+                                                                  connection.Open();
+                                                                  var command =
+                                                                      new SqlCommand(
+                                                                          "Insert Into Audience (Name) Values (@Name)",
+                                                                          connection);
+                                                                  command.Parameters.AddWithValue("@Name", name);
+                                                                  command.ExecuteNonQuery();
+                                                              }
+                                                          }
+                                                          catch (Exception exception)
+                                                          {
+                                                              MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                                                                  MessageBoxImage.Error);
                                                           }
 
                                                           addAudienceGrid.Visibility = Visibility.Collapsed;
@@ -41,15 +49,23 @@ namespace AccountingPC
                                                   (delAudience = new AccountingCommand(obj =>
                                                       {
                                                           var row = ((DataRowView) obj).Row;
-                                                          using (var connection = new SqlConnection(ConnectionString))
+                                                          try
                                                           {
-                                                              connection.Open();
-                                                              var command =
-                                                                  new SqlCommand("Delete from Audience where ID=@ID",
-                                                                      connection);
-                                                              command.Parameters.AddWithValue("@ID",
-                                                                  Convert.ToInt32(row["ID"]));
-                                                              command.ExecuteNonQuery();
+                                                              using (var connection = new SqlConnection(ConnectionString))
+                                                              {
+                                                                  connection.Open();
+                                                                  var command =
+                                                                      new SqlCommand("Delete from Audience where ID=@ID",
+                                                                          connection);
+                                                                  command.Parameters.AddWithValue("@ID",
+                                                                      Convert.ToInt32(row["ID"]));
+                                                                  command.ExecuteNonQuery();
+                                                              }
+                                                          }
+                                                          catch (Exception exception)
+                                                          {
+                                                              MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                                                                  MessageBoxImage.Error);
                                                           }
                                                       },
                                                       obj =>
@@ -62,20 +78,36 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void UpdateAudienceList()
         {
-            DefaultDataSet.Tables["Audience"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()",
-                ConnectionString).Fill(DefaultDataSet, "Audience");
-            audienceList.ItemsSource = DefaultDataSet.Tables["Audience"].DefaultView;
-            audienceList.DisplayMemberPath = "Name";
+            try
+            {
+                DefaultDataSet.Tables["Audience"].Clear();
+                new SqlDataAdapter("SELECT * FROM dbo.[GetAllAudience]()",
+                    ConnectionString).Fill(DefaultDataSet, "Audience");
+                audienceList.ItemsSource = DefaultDataSet.Tables["Audience"].DefaultView;
+                audienceList.DisplayMemberPath = "Name";
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void ChangeLocationView()
         {
-            DefaultDataSet.Tables["AudiencePlace"].Clear();
-            new SqlDataAdapter($"Select * From dbo.[GetAllLocationInAudience]({AudienceID})",
-                ConnectionString).Fill(DefaultDataSet, "AudiencePlace");
-            audienceTableView.ItemsSource = DefaultDataSet.Tables["AudiencePlace"].DefaultView;
+            try
+            {
+                DefaultDataSet.Tables["AudiencePlace"].Clear();
+                new SqlDataAdapter($"Select * From dbo.[GetAllLocationInAudience]({AudienceID})",
+                    ConnectionString).Fill(DefaultDataSet, "AudiencePlace");
+                audienceTableView.ItemsSource = DefaultDataSet.Tables["AudiencePlace"].DefaultView;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
     }
 }

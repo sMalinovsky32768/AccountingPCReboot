@@ -16,7 +16,7 @@ namespace AccountingPC
             for (var j = 0; j < DefaultDataSet.Tables["PC"].Rows.Count; j++)
             {
                 var row = DefaultDataSet.Tables["PC"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                row["Видеоразъемы"] = row["VideoConnectors"] is int
                     ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
                     : row["VideoConnectors"];
             }
@@ -36,7 +36,7 @@ namespace AccountingPC
             for (var j = 0; j < DefaultDataSet.Tables["Notebook"].Rows.Count; j++)
             {
                 var row = DefaultDataSet.Tables["Notebook"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                row["Видеоразъемы"] = row["VideoConnectors"] is int
                     ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
                     : row["VideoConnectors"];
             }
@@ -56,7 +56,7 @@ namespace AccountingPC
             for (var j = 0; j < DefaultDataSet.Tables["Monitor"].Rows.Count; j++)
             {
                 var row = DefaultDataSet.Tables["Monitor"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                row["Видеоразъемы"] = row["VideoConnectors"] is int
                     ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
                     : row["VideoConnectors"];
             }
@@ -77,7 +77,7 @@ namespace AccountingPC
             for (var j = 0; j < DefaultDataSet.Tables["Projector"].Rows.Count; j++)
             {
                 var row = DefaultDataSet.Tables["Projector"].Rows[j];
-                row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                row["Видеоразъемы"] = row["VideoConnectors"] is int
                     ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
                     : row["VideoConnectors"];
             }

@@ -8,22 +8,19 @@ namespace AccountingPC.AccountingReport
 {
     internal partial class Report
     {
-        public void CreateReportExcel(string path = null)
+        public void CreateReport(string path = null)
         {
             var dataSet = GetDataSet();
 
-            Application application;
-            _Workbook workbook;
-            _Worksheet activeWorksheet;
-            application = new Application
+            var application = new Application
             {
                 Visible = false
             };
 
-            workbook = application.Workbooks.Add(Missing.Value);
+            _Workbook workbook = application.Workbooks.Add(Missing.Value);
             try
             {
-                activeWorksheet = (_Worksheet) workbook.ActiveSheet;
+                var activeWorksheet = (_Worksheet) workbook.ActiveSheet;
                 for (var i = 0; i < dataSet.Tables.Count; i++)
                 {
                     var dataTable = dataSet.Tables[i];

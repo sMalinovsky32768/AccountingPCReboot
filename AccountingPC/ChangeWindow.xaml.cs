@@ -57,7 +57,7 @@ namespace AccountingPC
             {
                 var assembly = Assembly.GetExecutingAssembly();
                 var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream != null)
                         Icon = BitmapFrame.Create(stream);
@@ -94,7 +94,17 @@ namespace AccountingPC
                     break;
             }
 
-            ChangeView();
+            try
+            {
+
+                ChangeView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                throw;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -287,38 +297,38 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             Motherboard = reader["MotherBoard"].ToString(),
                             CPU = reader["CPUModel"].ToString(),
-                            Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull)
+                            Cores = Convert.ToUInt32(!(reader["NumberOfCores"] is DBNull)
                                 ? reader["NumberOfCores"]
                                 : 0),
-                            Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull)
+                            Frequency = Convert.ToUInt32(!(reader["FrequencyProcessor"] is DBNull)
                                 ? reader["FrequencyProcessor"]
                                 : 0),
-                            MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull)
+                            MaxFrequency = Convert.ToUInt32(!(reader["MaxFrequencyProcessor"] is DBNull)
                                 ? reader["MaxFrequencyProcessor"]
                                 : 0),
                             VCard = reader["VideoCard"].ToString(),
-                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull)
+                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"] is DBNull
                                 ? reader["VideoRAMGB"]
                                 : 0),
-                            RAM = Convert.ToUInt32(reader["RAMGB"].GetType() != typeof(DBNull) ? reader["RAMGB"] : 0),
-                            FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull)
+                            RAM = Convert.ToUInt32(!(reader["RAMGB"] is DBNull) ? reader["RAMGB"] : 0),
+                            FrequencyRAM = Convert.ToUInt32(!(reader["FrequencyRAM"] is DBNull)
                                 ? reader["FrequencyRAM"]
                                 : 0),
-                            SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull)
+                            SSD = Convert.ToUInt32(!(reader["SSDCapacityGB"] is DBNull)
                                 ? reader["SSDCapacityGB"]
                                 : 0),
-                            HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull)
+                            HDD = Convert.ToUInt32(!(reader["HDDCapacityGB"] is DBNull)
                                 ? reader["HDDCapacityGB"]
                                 : 0),
-                            OSID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
+                            OSID = Convert.ToUInt32(!(reader["OSID"] is DBNull) ? reader["OSID"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                            VideoConnectorsValue = Convert.ToInt32(!(reader["VideoConnectors"] is DBNull)
                                 ? reader["VideoConnectors"]
                                 : 0)
                         };
@@ -341,8 +351,7 @@ namespace AccountingPC
                         ramFrequency.Text = pc.FrequencyRAM.ToString();
                         foreach (var obj in os.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(pc.OSID))
                             {
                                 os.SelectedItem = row;
@@ -392,51 +401,51 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
-                            TypeID = Convert.ToUInt32(reader["TypeNotebookID"].GetType() != typeof(DBNull) ? reader["TypeNotebookID"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            TypeID = Convert.ToUInt32(!(reader["TypeNotebookID"] is DBNull) ? reader["TypeNotebookID"] : 0),
                             CPU = reader["CPUModel"].ToString(),
-                            Cores = Convert.ToUInt32(reader["NumberOfCores"].GetType() != typeof(DBNull)
+                            Cores = Convert.ToUInt32(!(reader["NumberOfCores"] is DBNull)
                                 ? reader["NumberOfCores"]
                                 : 0),
-                            Frequency = Convert.ToUInt32(reader["FrequencyProcessor"].GetType() != typeof(DBNull)
+                            Frequency = Convert.ToUInt32(!(reader["FrequencyProcessor"] is DBNull)
                                 ? reader["FrequencyProcessor"]
                                 : 0),
-                            MaxFrequency = Convert.ToUInt32(reader["MaxFrequencyProcessor"].GetType() != typeof(DBNull)
+                            MaxFrequency = Convert.ToUInt32(!(reader["MaxFrequencyProcessor"] is DBNull)
                                 ? reader["MaxFrequencyProcessor"]
                                 : 0),
                             VCard = reader["VideoCard"].ToString(),
-                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"].GetType() != typeof(DBNull)
+                            VideoRAM = Convert.ToUInt32(!(reader["VideoRAMGB"] is DBNull)
                                 ? reader["VideoRAMGB"]
                                 : 0),
-                            RAM = Convert.ToUInt32(reader["RAMGB"].GetType() != typeof(DBNull) ? reader["RAMGB"] : 0),
-                            FrequencyRAM = Convert.ToUInt32(reader["FrequencyRAM"].GetType() != typeof(DBNull)
+                            RAM = Convert.ToUInt32(!(reader["RAMGB"] is DBNull) ? reader["RAMGB"] : 0),
+                            FrequencyRAM = Convert.ToUInt32(!(reader["FrequencyRAM"] is DBNull)
                                 ? reader["FrequencyRAM"]
                                 : 0),
-                            SSD = Convert.ToUInt32(reader["SSDCapacityGB"].GetType() != typeof(DBNull)
+                            SSD = Convert.ToUInt32(!(reader["SSDCapacityGB"] is DBNull)
                                 ? reader["SSDCapacityGB"]
                                 : 0),
-                            HDD = Convert.ToUInt32(reader["HDDCapacityGB"].GetType() != typeof(DBNull)
+                            HDD = Convert.ToUInt32(!(reader["HDDCapacityGB"] is DBNull)
                                 ? reader["HDDCapacityGB"]
                                 : 0),
-                            OSID = Convert.ToUInt32(reader["OSID"].GetType() != typeof(DBNull) ? reader["OSID"] : 0),
+                            OSID = Convert.ToUInt32(!(reader["OSID"] is DBNull) ? reader["OSID"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull)
+                            Diagonal = Convert.ToSingle(!(reader["ScreenDiagonal"] is DBNull)
                                 ? reader["ScreenDiagonal"]
                                 : 0),
-                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull)
+                            ResolutionID = Convert.ToUInt32(!(reader["ResolutionID"] is DBNull)
                                 ? reader["ResolutionID"]
                                 : 0),
-                            FrequencyID = Convert.ToUInt32(reader["FrequencyID"].GetType() != typeof(DBNull)
+                            FrequencyID = Convert.ToUInt32(!(reader["FrequencyID"] is DBNull)
                                 ? reader["FrequencyID"]
                                 : 0),
                             MatrixTechnologyID =
-                                Convert.ToUInt32(reader["MatrixTechnologyID"].GetType() != typeof(DBNull)
+                                Convert.ToUInt32(!(reader["MatrixTechnologyID"] is DBNull)
                                     ? reader["MatrixTechnologyID"]
                                     : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                            VideoConnectorsValue = Convert.ToInt32(!(reader["VideoConnectors"] is DBNull)
                                 ? reader["VideoConnectors"]
                                 : 0)
                         };
@@ -459,8 +468,7 @@ namespace AccountingPC
                         diagonal.Text = notebook.Diagonal.ToString();
                         foreach (var obj in type.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.TypeID))
                             {
                                 type.SelectedItem = row;
@@ -470,8 +478,7 @@ namespace AccountingPC
 
                         foreach (var obj in os.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.OSID))
                             {
                                 os.SelectedItem = row;
@@ -481,8 +488,7 @@ namespace AccountingPC
 
                         foreach (var obj in resolution.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.ResolutionID))
                             {
                                 resolution.SelectedItem = row;
@@ -492,8 +498,7 @@ namespace AccountingPC
 
                         foreach (var obj in screenFrequency.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.FrequencyID))
                             {
                                 screenFrequency.SelectedItem = row;
@@ -503,8 +508,7 @@ namespace AccountingPC
 
                         foreach (var obj in matrixTechnology.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(notebook.MatrixTechnologyID))
                             {
                                 matrixTechnology.SelectedItem = row;
@@ -543,77 +547,76 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(reader["ScreenDiagonal"].GetType() != typeof(DBNull)
+                            Diagonal = Convert.ToSingle(!(reader["ScreenDiagonal"] is DBNull)
                                 ? reader["ScreenDiagonal"]
                                 : 0),
-                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull)
+                            ResolutionID = Convert.ToUInt32(!(reader["ResolutionID"] is DBNull)
                                 ? reader["ResolutionID"]
                                 : 0),
-                            FrequencyID = Convert.ToUInt32(reader["FrequencyID"].GetType() != typeof(DBNull)
+                            FrequencyID = Convert.ToUInt32(!(reader["FrequencyID"] is DBNull)
                                 ? reader["FrequencyID"]
                                 : 0),
                             MatrixTechnologyID =
-                                Convert.ToUInt32(reader["MatrixTechnologyID"].GetType() != typeof(DBNull)
+                                Convert.ToUInt32(!(reader["MatrixTechnologyID"] is DBNull)
                                     ? reader["MatrixTechnologyID"]
                                     : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                            VideoConnectorsValue = Convert.ToInt32(!(reader["VideoConnectors"] is DBNull)
                                 ? reader["VideoConnectors"]
                                 : 0)
                         };
-                        var monitor = device as Monitor;
-                        monitor.VideoConnectors = GetListVideoConnectors(monitor.VideoConnectorsValue);
-
-                        inventoryNumber.Text = device.InventoryNumber.ToString();
-                        name.Text = device.Name;
-                        cost.Text = device.Cost.ToString();
-                        diagonal.Text = monitor.Diagonal.ToString();
-                        foreach (var obj in resolution.ItemsSource)
+                        if (device is Monitor monitor)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.ResolutionID))
+                            monitor.VideoConnectors = GetListVideoConnectors(monitor.VideoConnectorsValue);
+
+                            inventoryNumber.Text = device.InventoryNumber.ToString();
+                            name.Text = device.Name;
+                            cost.Text = device.Cost.ToString();
+                            diagonal.Text = monitor.Diagonal.ToString();
+                            foreach (var obj in resolution.ItemsSource)
                             {
-                                resolution.SelectedItem = row;
-                                break;
-                            }
-                        }
-
-                        foreach (var obj in screenFrequency.ItemsSource)
-                        {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.FrequencyID))
-                            {
-                                screenFrequency.SelectedItem = row;
-                                break;
-                            }
-                        }
-
-                        foreach (var obj in matrixTechnology.ItemsSource)
-                        {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.MatrixTechnologyID))
-                            {
-                                matrixTechnology.SelectedItem = row;
-                                break;
-                            }
-                        }
-
-                        foreach (var obj in vConnectors.Items)
-                        {
-                            var item = obj as ListBoxItem;
-                            foreach (var connector in monitor.VideoConnectors)
-                                if (item.Content.ToString() == connector)
+                                var row = obj as DataRowView;
+                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.ResolutionID))
                                 {
-                                    item.IsSelected = true;
+                                    resolution.SelectedItem = row;
                                     break;
                                 }
+                            }
+
+                            foreach (var obj in screenFrequency.ItemsSource)
+                            {
+                                var row = obj as DataRowView;
+                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.FrequencyID))
+                                {
+                                    screenFrequency.SelectedItem = row;
+                                    break;
+                                }
+                            }
+
+                            foreach (var obj in matrixTechnology.ItemsSource)
+                            {
+                                var row = obj as DataRowView;
+                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(monitor.MatrixTechnologyID))
+                                {
+                                    matrixTechnology.SelectedItem = row;
+                                    break;
+                                }
+                            }
+
+                            foreach (var obj in vConnectors.Items)
+                            {
+                                var item = obj as ListBoxItem;
+                                foreach (var connector in monitor.VideoConnectors)
+                                    if (item.Content.ToString() == connector)
+                                    {
+                                        item.IsSelected = true;
+                                        break;
+                                    }
+                            }
                         }
                     }
             }
@@ -636,63 +639,65 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(reader["MaxDiagonal"].GetType() != typeof(DBNull)
+                            Diagonal = Convert.ToSingle(!(reader["MaxDiagonal"] is DBNull)
                                 ? reader["MaxDiagonal"]
                                 : 0),
-                            ResolutionID = Convert.ToUInt32(reader["ResolutionID"].GetType() != typeof(DBNull)
+                            ResolutionID = Convert.ToUInt32(!(reader["ResolutionID"] is DBNull)
                                 ? reader["ResolutionID"]
                                 : 0),
                             ProjectorTechnologyID =
-                                Convert.ToUInt32(reader["ProjectorTechnologyID"].GetType() != typeof(DBNull)
+                                Convert.ToUInt32(!(reader["ProjectorTechnologyID"] is DBNull)
                                     ? reader["ProjectorTechnologyID"]
                                     : 0),
-                            VideoConnectorsValue = Convert.ToInt32(reader["VideoConnectors"].GetType() != typeof(DBNull)
+                            VideoConnectorsValue = Convert.ToInt32(!(reader["VideoConnectors"] is DBNull)
                                 ? reader["VideoConnectors"]
                                 : 0)
                         };
-                        var projector = device as Projector;
-                        projector.VideoConnectors = GetListVideoConnectors(projector.VideoConnectorsValue);
-
-                        inventoryNumber.Text = device.InventoryNumber.ToString();
-                        name.Text = device.Name;
-                        cost.Text = device.Cost.ToString();
-                        diagonal.Text = projector.Diagonal.ToString();
-                        foreach (var obj in resolution.ItemsSource)
+                        if (device is Projector projector)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(projector.ResolutionID))
+                            projector.VideoConnectors = GetListVideoConnectors(projector.VideoConnectorsValue);
+
+                            inventoryNumber.Text = device.InventoryNumber.ToString();
+                            name.Text = device.Name;
+                            cost.Text = device.Cost.ToString();
+                            diagonal.Text = projector.Diagonal.ToString();
+                            foreach (var obj in resolution.ItemsSource)
                             {
-                                resolution.SelectedItem = row;
-                                break;
-                            }
-                        }
-
-                        foreach (var obj in projectorTechnology.ItemsSource)
-                        {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(projector.ProjectorTechnologyID))
-                            {
-                                projectorTechnology.SelectedItem = row;
-                                break;
-                            }
-                        }
-
-                        foreach (var obj in vConnectors.Items)
-                        {
-                            var item = obj as ListBoxItem;
-                            foreach (var connector in projector.VideoConnectors)
-                                if (item.Content.ToString() == connector)
+                                DataRowView row;
+                                row = obj as DataRowView;
+                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(projector.ResolutionID))
                                 {
-                                    item.IsSelected = true;
+                                    resolution.SelectedItem = row;
                                     break;
                                 }
+                            }
+
+                            foreach (var obj in projectorTechnology.ItemsSource)
+                            {
+                                DataRowView row;
+                                row = obj as DataRowView;
+                                if (Convert.ToUInt32(row.Row[0]) == Convert.ToUInt32(projector.ProjectorTechnologyID))
+                                {
+                                    projectorTechnology.SelectedItem = row;
+                                    break;
+                                }
+                            }
+
+                            foreach (var obj in vConnectors.Items)
+                            {
+                                var item = obj as ListBoxItem;
+                                foreach (var connector in projector.VideoConnectors)
+                                    if (item.Content.ToString() == connector)
+                                    {
+                                        item.IsSelected = true;
+                                        break;
+                                    }
+                            }
                         }
                     }
             }
@@ -715,12 +720,12 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull)
+                            Diagonal = Convert.ToSingle(!(reader["Diagonal"] is DBNull)
                                 ? reader["Diagonal"]
                                 : 0)
                         };
@@ -729,7 +734,7 @@ namespace AccountingPC
                         inventoryNumber.Text = device.InventoryNumber.ToString();
                         name.Text = device.Name;
                         cost.Text = device.Cost.ToString();
-                        diagonal.Text = board.Diagonal.ToString();
+                        diagonal.Text = board?.Diagonal.ToString();
                     }
             }
         }
@@ -751,22 +756,22 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(reader["Diagonal"].GetType() != typeof(DBNull)
+                            Diagonal = Convert.ToSingle(!(reader["Diagonal"] is DBNull)
                                 ? reader["Diagonal"]
                                 : 0),
-                            AspectRatioID = Convert.ToUInt32(reader["AspectRatioID"].GetType() != typeof(DBNull)
+                            AspectRatioID = Convert.ToUInt32(!(reader["AspectRatioID"] is DBNull)
                                 ? reader["AspectRatioID"]
                                 : 0),
-                            ScreenInstalledID = Convert.ToUInt32(reader["ScreenInstalledID"].GetType() != typeof(DBNull)
+                            ScreenInstalledID = Convert.ToUInt32(!(reader["ScreenInstalledID"] is DBNull)
                                 ? reader["ScreenInstalledID"]
                                 : 0),
                             IsElectronicDrive =
-                                Convert.ToBoolean(reader["IsElectronicDrive"].GetType() != typeof(DBNull)
+                                Convert.ToBoolean(!(reader["IsElectronicDrive"] is DBNull)
                                     ? reader["IsElectronicDrive"]
                                     : 0)
                         };
@@ -775,12 +780,11 @@ namespace AccountingPC
                         inventoryNumber.Text = device.InventoryNumber.ToString();
                         name.Text = device.Name;
                         cost.Text = device.Cost.ToString();
-                        diagonal.Text = screen.Diagonal.ToString();
-                        isEDrive.IsChecked = screen.IsElectronicDrive;
+                        diagonal.Text = screen?.Diagonal.ToString();
+                        isEDrive.IsChecked = screen?.IsElectronicDrive;
                         foreach (var obj in aspectRatio.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == screen.AspectRatioID)
                             {
                                 aspectRatio.SelectedItem = row;
@@ -790,8 +794,7 @@ namespace AccountingPC
 
                         foreach (var obj in screenInstalled.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
+                            var row = obj as DataRowView;
                             if (Convert.ToUInt32(row.Row[0]) == screen.ScreenInstalledID)
                             {
                                 screenInstalled.SelectedItem = row;
@@ -818,15 +821,15 @@ namespace AccountingPC
                         device = new PrinterScanner
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
-                            TypeID = Convert.ToUInt32(reader["TypePrinterID"].GetType() != typeof(DBNull)
+                            TypeID = Convert.ToUInt32(!(reader["TypePrinterID"] is DBNull)
                                 ? reader["TypePrinterID"] : 0),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            PaperSizeID = Convert.ToUInt32(reader["PaperSizeID"].GetType() != typeof(DBNull)
+                            PaperSizeID = Convert.ToUInt32(!(reader["PaperSizeID"] is DBNull)
                                 ? reader["PaperSizeID"]
                                 : 0)
                         };
@@ -837,9 +840,8 @@ namespace AccountingPC
                         cost.Text = device.Cost.ToString();
                         foreach (var obj in type.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == printerScanner.TypeID)
+                            var row = obj as DataRowView;
+                            if (Convert.ToUInt32(row?.Row[0]) == printerScanner?.TypeID)
                             {
                                 type.SelectedItem = row;
                                 break;
@@ -848,9 +850,8 @@ namespace AccountingPC
 
                         foreach (var obj in paperSize.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == printerScanner.PaperSizeID)
+                            var row = obj as DataRowView;
+                            if (Convert.ToUInt32(row?.Row[0]) == printerScanner?.PaperSizeID)
                             {
                                 paperSize.SelectedItem = row;
                                 break;
@@ -876,17 +877,17 @@ namespace AccountingPC
                         device = new NetworkSwitch
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
-                            TypeID = Convert.ToUInt32(reader["TypeID"].GetType() != typeof(DBNull) ? reader["TypeID"] : 0),
+                            TypeID = Convert.ToUInt32(!(reader["TypeID"] is DBNull) ? reader["TypeID"] : 0),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Ports = Convert.ToUInt32(reader["NumberOfPorts"].GetType() != typeof(DBNull)
+                            Ports = Convert.ToUInt32(!(reader["NumberOfPorts"] is DBNull)
                                 ? reader["NumberOfPorts"]
                                 : 0),
-                            WiFiFrequencyID = Convert.ToUInt32(reader["WiFiFrequencyID"].GetType() != typeof(DBNull)
+                            WiFiFrequencyID = Convert.ToUInt32(!(reader["WiFiFrequencyID"] is DBNull)
                                 ? reader["WiFiFrequencyID"]
                                 : 0)
                         };
@@ -895,12 +896,11 @@ namespace AccountingPC
                         inventoryNumber.Text = device.InventoryNumber.ToString();
                         name.Text = device.Name;
                         cost.Text = device.Cost.ToString();
-                        ports.Text = networkSwitch.Ports.ToString();
+                        ports.Text = networkSwitch?.Ports.ToString();
                         foreach (var obj in type.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == networkSwitch.TypeID)
+                            var row = obj as DataRowView;
+                            if (Convert.ToUInt32(row?.Row[0]) == networkSwitch?.TypeID)
                             {
                                 type.SelectedItem = row;
                                 break;
@@ -909,9 +909,8 @@ namespace AccountingPC
 
                         foreach (var obj in wifiFrequency.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == networkSwitch.WiFiFrequencyID)
+                            var row = obj as DataRowView;
+                            if (Convert.ToUInt32(row?.Row[0]) == networkSwitch?.WiFiFrequencyID)
                             {
                                 wifiFrequency.SelectedItem = row;
                                 break;
@@ -938,9 +937,9 @@ namespace AccountingPC
                         {
                             InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Cost"].GetType() != typeof(DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
-                            PlaceID = Convert.ToUInt32(reader["PlaceID"].GetType() != typeof(DBNull)
+                            PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0)
                         };
@@ -957,9 +956,8 @@ namespace AccountingPC
         {
             foreach (var obj in location.ItemsSource)
             {
-                DataRowView row;
-                row = obj as DataRowView;
-                if (Convert.ToUInt32(row.Row[0]) == device.PlaceID)
+                var row = obj as DataRowView;
+                if (Convert.ToUInt32(row?.Row[0]) == device.PlaceID)
                 {
                     location.SelectedItem = row;
                     break;
@@ -1242,7 +1240,7 @@ namespace AccountingPC
             GridPlacement(softwareInvoiceGrid, 4, 1, 2);
         }
 
-        private void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 1)
+        private static void GridPlacement(UIElement element, int column, int row, int colSpan, int rowSpan = 1)
         {
             Grid.SetColumn(element, column);
             Grid.SetRow(element, row);
@@ -1279,11 +1277,18 @@ namespace AccountingPC
         private int GetValueVideoConnectors(ListBox list)
         {
             var value = 0;
-            foreach (var obj in list.SelectedItems)
-            foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView)
+            try
             {
-                var s = (obj as ListBoxItem).Content.ToString();
-                if (row.Row[1].ToString() == s) value += Convert.ToInt32(row.Row[2]);
+                foreach (var obj in list.SelectedItems)
+                foreach (DataRowView row in DefaultDataSet.Tables["VideoConnectors"].DefaultView)
+                {
+                    var s = (obj as ListBoxItem).Content.ToString();
+                    if (row.Row[1].ToString() == s) value += Convert.ToInt32(row.Row[2]);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, e.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
             return value;
@@ -1326,7 +1331,7 @@ namespace AccountingPC
                     UpdateSourceForVideoCard();
                     UpdateSourceForType();
                     UpdateSourceForFrequency();
-                    UpdateSourceForMatrixTechology();
+                    UpdateSourceForMatrixTechnology();
                     UpdateSourceForPaperSize();
                     UpdateSourceForProjectorTechnology();
                     UpdateSourceForResolution();
@@ -1343,199 +1348,214 @@ namespace AccountingPC
 
         private void SaveOrUpdateEquipmentDB()
         {
-            Task task;
-            switch (Accounting.TypeChange)
+            try
             {
-                case TypeChange.Add:
-                    switch (Accounting.TypeDevice)
-                    {
-                        case TypeDevice.PC:
-                            AddPC();
-                            break;
-                        case TypeDevice.Notebook:
-                            AddNotebook();
-                            break;
-                        case TypeDevice.Monitor:
-                            AddMonitor();
-                            break;
-                        case TypeDevice.NetworkSwitch:
-                            AddNetworkSwitch();
-                            break;
-                        case TypeDevice.InteractiveWhiteboard:
-                            AddInteractiveWhiteboard();
-                            break;
-                        case TypeDevice.PrinterScanner:
-                            AddPrinterScanner();
-                            break;
-                        case TypeDevice.Projector:
-                            AddProjector();
-                            break;
-                        case TypeDevice.ProjectorScreen:
-                            AddProjectorScreen();
-                            break;
-                        case TypeDevice.OtherEquipment:
-                            AddOtherEquipment();
-                            break;
-                    }
-
-                    Accounting.statusItem1.Content = "Успешно добавлено";
-                    statusItem1.Content = "Успешно добавлено";
-                    task = new Task(() =>
-                    {
-                        try
+                Task task;
+                switch (Accounting.TypeChange)
+                {
+                    case TypeChange.Add:
+                        switch (Accounting.TypeDevice)
                         {
-                            for (var i = 0; i < 10; i++)
+                            case TypeDevice.PC:
+                                AddPC();
+                                break;
+                            case TypeDevice.Notebook:
+                                AddNotebook();
+                                break;
+                            case TypeDevice.Monitor:
+                                AddMonitor();
+                                break;
+                            case TypeDevice.NetworkSwitch:
+                                AddNetworkSwitch();
+                                break;
+                            case TypeDevice.InteractiveWhiteboard:
+                                AddInteractiveWhiteboard();
+                                break;
+                            case TypeDevice.PrinterScanner:
+                                AddPrinterScanner();
+                                break;
+                            case TypeDevice.Projector:
+                                AddProjector();
+                                break;
+                            case TypeDevice.ProjectorScreen:
+                                AddProjectorScreen();
+                                break;
+                            case TypeDevice.OtherEquipment:
+                                AddOtherEquipment();
+                                break;
+                        }
+
+                        Accounting.statusItem1.Content = "Успешно добавлено";
+                        statusItem1.Content = "Успешно добавлено";
+                        task = new Task(() =>
+                        {
+                            try
                             {
-                                i++;
-                                Thread.Sleep(1000);
+                                for (var i = 0; i < 10; i++)
+                                {
+                                    i++;
+                                    Thread.Sleep(1000);
+                                }
+
+                                Dispatcher.Invoke(() =>
+                                {
+                                    Accounting.statusItem1.Content = string.Empty;
+                                    statusItem1.Content = string.Empty;
+                                });
                             }
-
-                            Dispatcher.Invoke(() =>
+                            catch
                             {
-                                Accounting.statusItem1.Content = string.Empty;
-                                statusItem1.Content = string.Empty;
-                            });
-                        }
-                        catch
-                        {
-                        }
-                    });
-                    task.Start();
-                    break;
-                case TypeChange.Change:
-                    switch (Accounting.TypeDevice)
-                    {
-                        case TypeDevice.PC:
-                            UpdatePC();
-                            break;
-                        case TypeDevice.Notebook:
-                            UpdateNotebook();
-                            break;
-                        case TypeDevice.Monitor:
-                            UpdateMonitor();
-                            break;
-                        case TypeDevice.NetworkSwitch:
-                            UpdateNetworkSwitch();
-                            break;
-                        case TypeDevice.InteractiveWhiteboard:
-                            UpdateInteractiveWhiteboard();
-                            break;
-                        case TypeDevice.PrinterScanner:
-                            UpdatePrinterScanner();
-                            break;
-                        case TypeDevice.Projector:
-                            UpdateProjector();
-                            break;
-                        case TypeDevice.ProjectorScreen:
-                            UpdateProjectorScreen();
-                            break;
-                        case TypeDevice.OtherEquipment:
-                            UpdateOtherEquipment();
-                            break;
-                    }
-
-                    Accounting.statusItem1.Content = "Успешно изменено";
-                    statusItem1.Content = "Успешно изменено";
-                    task = new Task(() =>
-                    {
-                        try
-                        {
-                            for (var i = 0; i < 10; i++)
-                            {
-                                i++;
-                                Thread.Sleep(1000);
                             }
-
-                            Dispatcher.Invoke(() =>
-                            {
-                                Accounting.statusItem1.Content = string.Empty;
-                                statusItem1.Content = string.Empty;
-                            });
-                        }
-                        catch
+                        });
+                        task.Start();
+                        break;
+                    case TypeChange.Change:
+                        switch (Accounting.TypeDevice)
                         {
+                            case TypeDevice.PC:
+                                UpdatePC();
+                                break;
+                            case TypeDevice.Notebook:
+                                UpdateNotebook();
+                                break;
+                            case TypeDevice.Monitor:
+                                UpdateMonitor();
+                                break;
+                            case TypeDevice.NetworkSwitch:
+                                UpdateNetworkSwitch();
+                                break;
+                            case TypeDevice.InteractiveWhiteboard:
+                                UpdateInteractiveWhiteboard();
+                                break;
+                            case TypeDevice.PrinterScanner:
+                                UpdatePrinterScanner();
+                                break;
+                            case TypeDevice.Projector:
+                                UpdateProjector();
+                                break;
+                            case TypeDevice.ProjectorScreen:
+                                UpdateProjectorScreen();
+                                break;
+                            case TypeDevice.OtherEquipment:
+                                UpdateOtherEquipment();
+                                break;
                         }
-                    });
-                    task.Start();
-                    break;
+
+                        Accounting.statusItem1.Content = "Успешно изменено";
+                        statusItem1.Content = "Успешно изменено";
+                        task = new Task(() =>
+                        {
+                            try
+                            {
+                                for (var i = 0; i < 10; i++)
+                                {
+                                    i++;
+                                    Thread.Sleep(1000);
+                                }
+
+                                Dispatcher.Invoke(() =>
+                                {
+                                    Accounting.statusItem1.Content = string.Empty;
+                                    statusItem1.Content = string.Empty;
+                                });
+                            }
+                            catch
+                            {
+                            }
+                        });
+                        task.Start();
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, e.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void SaveOrUpdateSoftwareDB()
         {
-            Task task;
-            switch (Accounting.TypeChange)
+            try
             {
-                case TypeChange.Add:
-                    switch (Accounting.TypeSoft)
-                    {
-                        case TypeSoft.LicenseSoftware:
-                            AddSoftware();
-                            break;
-                        case TypeSoft.OS:
-                            AddOS();
-                            break;
-                    }
-
-                    Accounting.statusItem1.Content = "Успешно добавлено";
-                    statusItem1.Content = "Успешно добавлено";
-                    task = new Task(() =>
-                    {
-                        try
+                Task task;
+                switch (Accounting.TypeChange)
+                {
+                    case TypeChange.Add:
+                        switch (Accounting.TypeSoft)
                         {
-                            for (var i = 0; i < 10; i++)
+                            case TypeSoft.LicenseSoftware:
+                                AddSoftware();
+                                break;
+                            case TypeSoft.OS:
+                                AddOS();
+                                break;
+                        }
+
+                        Accounting.statusItem1.Content = "Успешно добавлено";
+                        statusItem1.Content = "Успешно добавлено";
+                        task = new Task(() =>
+                        {
+                            try
                             {
-                                i++;
-                                Thread.Sleep(1000);
+                                for (var i = 0; i < 10; i++)
+                                {
+                                    i++;
+                                    Thread.Sleep(1000);
+                                }
+
+                                Dispatcher.Invoke(() =>
+                                {
+                                    Accounting.statusItem1.Content = string.Empty;
+                                    statusItem1.Content = string.Empty;
+                                });
                             }
-
-                            Dispatcher.Invoke(() =>
+                            catch
                             {
-                                Accounting.statusItem1.Content = string.Empty;
-                                statusItem1.Content = string.Empty;
-                            });
-                        }
-                        catch
-                        {
-                        }
-                    });
-                    task.Start();
-                    break;
-                case TypeChange.Change:
-                    switch (Accounting.TypeSoft)
-                    {
-                        case TypeSoft.LicenseSoftware:
-                            UpdateSoftware();
-                            break;
-                        case TypeSoft.OS:
-                            UpdateOS();
-                            break;
-                    }
-
-                    Accounting.statusItem1.Content = "Успешно изменено";
-                    statusItem1.Content = "Успешно изменено";
-                    task = new Task(() =>
-                    {
-                        try
-                        {
-                            for (var i = 0; i < 10; i++)
-                            {
-                                i++;
-                                Thread.Sleep(1000);
                             }
-
-                            Dispatcher.Invoke(() =>
-                            {
-                                Accounting.statusItem1.Content = string.Empty;
-                                statusItem1.Content = string.Empty;
-                            });
-                        }
-                        catch
+                        });
+                        task.Start();
+                        break;
+                    case TypeChange.Change:
+                        switch (Accounting.TypeSoft)
                         {
+                            case TypeSoft.LicenseSoftware:
+                                UpdateSoftware();
+                                break;
+                            case TypeSoft.OS:
+                                UpdateOS();
+                                break;
                         }
-                    });
-                    task.Start();
-                    break;
+
+                        Accounting.statusItem1.Content = "Успешно изменено";
+                        statusItem1.Content = "Успешно изменено";
+                        task = new Task(() =>
+                        {
+                            try
+                            {
+                                for (var i = 0; i < 10; i++)
+                                {
+                                    i++;
+                                    Thread.Sleep(1000);
+                                }
+
+                                Dispatcher.Invoke(() =>
+                                {
+                                    Accounting.statusItem1.Content = string.Empty;
+                                    statusItem1.Content = string.Empty;
+                                });
+                            }
+                            catch
+                            {
+                            }
+                        });
+                        task.Start();
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, e.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
         }
 
@@ -1755,7 +1775,7 @@ namespace AccountingPC
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void UpdateSourceForMatrixTechology()
+        private void UpdateSourceForMatrixTechnology()
         {
             DefaultDataSet.Tables["MatrixTechnology"].Clear();
             new SqlDataAdapter("SELECT * FROM dbo.GetAllMatrixTechnology()", ConnectionString).Fill(DefaultDataSet,
@@ -2511,7 +2531,7 @@ namespace AccountingPC
             if (Accounting.TypeChange == TypeChange.Change)
             {
                 var obj = ((DataRowView) Accounting.equipmentView.SelectedItems?[0]).Row["ImageID"];
-                var id = Convert.ToInt32(obj.GetType() == typeof(DBNull) ? null : obj);
+                var id = Convert.ToInt32(obj is DBNull ? null : obj);
                 if (id != 0) return Accounting.Images[id];
                 return null;
             }
@@ -2615,8 +2635,8 @@ namespace AccountingPC
                         soft = new LicenseSoftware
                         {
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Price"].GetType() != typeof(DBNull) ? reader["Price"] : 0),
-                            Count = Convert.ToInt32(reader["Count"].GetType() != typeof(DBNull) ? reader["Count"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Price"] is DBNull) ? reader["Price"] : 0),
+                            Count = Convert.ToInt32(!(reader["Count"] is DBNull) ? reader["Count"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             Type = Convert.ToInt32(reader["Type"])
                         };
@@ -2627,9 +2647,8 @@ namespace AccountingPC
                         softwareInvoice.Text = soft.InvoiceNumber;
                         foreach (var obj in typeLicense.ItemsSource)
                         {
-                            DataRowView row;
-                            row = obj as DataRowView;
-                            if (Convert.ToUInt32(row.Row[0]) == (soft as LicenseSoftware).Type)
+                            var row = obj as DataRowView;
+                            if (Convert.ToUInt32(row?.Row[0]) == ((LicenseSoftware) soft).Type)
                             {
                                 typeLicense.SelectedItem = row;
                                 break;
@@ -2655,8 +2674,8 @@ namespace AccountingPC
                         soft = new OS
                         {
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(reader["Price"].GetType() != typeof(DBNull) ? reader["Price"] : 0),
-                            Count = Convert.ToInt32(reader["Count"].GetType() != typeof(DBNull) ? reader["Count"] : 0),
+                            Cost = Convert.ToSingle(!(reader["Price"] is DBNull) ? reader["Price"] : 0),
+                            Count = Convert.ToInt32(!(reader["Count"] is DBNull) ? reader["Count"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString()
                         };
 
@@ -2670,12 +2689,20 @@ namespace AccountingPC
 
         private void AutoInvN_Checked(object sender, RoutedEventArgs e)
         {
-            using (var connection = new SqlConnection(ConnectionString))
+            try
             {
-                connection.Open();
-                inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar()
-                    .ToString();
-                inventoryNumber.IsEnabled = false;
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    inventoryNumber.Text = new SqlCommand("SELECT dbo.GetNextInventoryNumber()", connection).ExecuteScalar()
+                        .ToString();
+                    inventoryNumber.IsEnabled = false;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -2696,28 +2723,52 @@ namespace AccountingPC
 
         private void DisabledRepeatInvN_Checked(object sender, RoutedEventArgs e)
         {
-            DisabledRepeatInvN_Checked();
+            try
+            {
+                DisabledRepeatInvN_Checked();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void DisabledRepeatInvN_Unchecked(object sender, RoutedEventArgs e)
         {
-            DisabledRepeatInvN_Unchecked();
+            try
+            {
+                DisabledRepeatInvN_Unchecked();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void CloseCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             Accounting.IsHitTestVisible = true;
-            switch (Accounting.NowView)
+            try
             {
-                case View.Equipment:
-                    Accounting.UpdateEquipmentData();
-                    Accounting.UpdateImages();
-                    Accounting.ChangeEquipmentView();
-                    break;
-                case View.Software:
-                    Accounting.UpdateSoftwareData();
-                    Accounting.ChangeSoftwareView();
-                    break;
+                switch (Accounting.NowView)
+                {
+                    case View.Equipment:
+                        Accounting.UpdateEquipmentData();
+                        Accounting.UpdateImages();
+                        Accounting.ChangeEquipmentView();
+                        break;
+                    case View.Software:
+                        Accounting.UpdateSoftwareData();
+                        Accounting.ChangeSoftwareView();
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
 
             Close();
@@ -2725,35 +2776,67 @@ namespace AccountingPC
 
         private void Cpu_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var row = ((DataRowView) cpu.SelectedItem)?.Row;
-            frequency.Text = row?[1].ToString();
-            maxFrequency.Text = row?[2].ToString();
-            cores.Text = row?[3].ToString();
+            try
+            {
+                var row = ((DataRowView) cpu.SelectedItem)?.Row;
+                frequency.Text = row?[1].ToString();
+                maxFrequency.Text = row?[2].ToString();
+                cores.Text = row?[3].ToString();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void ImageLoad_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog
+            try
             {
-                Filter = "Image Files(*.BMP;*.PNG;*.JPG;*.GIF)|*.BMP;*.PNG;*.JPG;*.GIF"
-            };
-            if (dialog.ShowDialog() == false) return;
-            imageFilename.Text = dialog.FileName;
+                var dialog = new OpenFileDialog
+                {
+                    Filter = "Image Files(*.BMP;*.PNG;*.JPG;*.GIF)|*.BMP;*.PNG;*.JPG;*.GIF"
+                };
+                if (dialog.ShowDialog() == false) return;
+                imageFilename.Text = dialog.FileName;
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void SaveChangesForSoftware(object sender, RoutedEventArgs e)
         {
-            SaveOrUpdateSoftwareDB();
-            Accounting.UpdateSoftwareData();
-            Accounting.ChangeSoftwareView();
+            try
+            {
+                SaveOrUpdateSoftwareDB();
+                Accounting.UpdateSoftwareData();
+                Accounting.ChangeSoftwareView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void SaveChanges(object sender, RoutedEventArgs e)
         {
-            SaveOrUpdateEquipmentDB();
-            Accounting.UpdateEquipmentData();
-            Accounting.UpdateImages();
-            Accounting.ChangeEquipmentView();
+            try
+            {
+                SaveOrUpdateEquipmentDB();
+                Accounting.UpdateEquipmentData();
+                Accounting.UpdateImages();
+                Accounting.ChangeEquipmentView();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void MoveWindow(object sender, MouseButtonEventArgs e)

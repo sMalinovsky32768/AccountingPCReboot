@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace AccountingPC
 {
@@ -9,16 +10,24 @@ namespace AccountingPC
     {
         private void UpdateSoftwareOnDevice()
         {
-            switch (TypeDevice)
+            try
             {
-                case TypeDevice.PC:
-                    UpdateSoftwareOnPC();
-                    UpdateNotInstalledSoftwareOnPC();
-                    break;
-                case TypeDevice.Notebook:
-                    UpdateSoftwareOnNotebook();
-                    UpdateNotInstalledSoftwareOnNotebook();
-                    break;
+                switch (TypeDevice)
+                {
+                    case TypeDevice.PC:
+                        UpdateSoftwareOnPC();
+                        UpdateNotInstalledSoftwareOnPC();
+                        break;
+                    case TypeDevice.Notebook:
+                        UpdateSoftwareOnNotebook();
+                        UpdateNotInstalledSoftwareOnNotebook();
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -39,7 +48,7 @@ namespace AccountingPC
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
-                    CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                    CountInstalled = Convert.ToInt32(row[2] is DBNull ? 0 : row[2])
                 });
             }
 
@@ -63,7 +72,7 @@ namespace AccountingPC
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
-                    CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                    CountInstalled = Convert.ToInt32(row[2] is DBNull ? 0 : row[2])
                 });
             }
 
@@ -87,7 +96,7 @@ namespace AccountingPC
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
-                    CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                    CountInstalled = Convert.ToInt32(row[2] is DBNull ? 0 : row[2])
                 });
             }
 
@@ -111,11 +120,11 @@ namespace AccountingPC
                 {
                     ID = Convert.ToInt32(row[0]),
                     Name = row[1].ToString(),
-                    CountInstalled = Convert.ToInt32(row[2].GetType() != typeof(DBNull) ? row[2] : 0)
+                    CountInstalled = Convert.ToInt32(row[2] is DBNull ? 0 : row[2])
                 });
             }
 
-            addSoftware.ContextMenu.ItemsSource = NotebookNotInstalledSoftware;
+            if (addSoftware.ContextMenu != null) addSoftware.ContextMenu.ItemsSource = NotebookNotInstalledSoftware;
         }
     }
 }

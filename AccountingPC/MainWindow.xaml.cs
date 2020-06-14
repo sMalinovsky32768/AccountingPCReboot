@@ -40,16 +40,25 @@ namespace AccountingPC
         {
             var login = loginTextBox.Text;
             var pass = passwordBox.Password;
-            if (Security.VerifyCredentials(login, pass))
+            try
             {
-                Hide();
-                accounting = new AccountingPCWindow();
-                accounting.Show();
-                Close();
+                if (Security.VerifyCredentials(login, pass))
+                {
+                    Hide();
+                    accounting = new AccountingPCWindow();
+                    accounting.Show();
+                    Close();
+                }
+                else
+                {
+                    MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
             }
-            else
+            catch (Exception exception)
             {
-                MessageBox.Show("Неправильный логин или пароль", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 

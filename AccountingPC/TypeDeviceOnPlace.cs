@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace AccountingPC
 {
@@ -92,53 +94,60 @@ namespace AccountingPC
 
         private void TypeDeviceOnPlace_TypeDeviceChanged()
         {
-            switch (TypeDevice.Type)
+            try
             {
-                case AccountingPC.TypeDevice.InteractiveWhiteboard:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllBoardWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.Monitor:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllMonitorWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.NetworkSwitch:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNetworkSwitchWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.Notebook:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNotebookWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.OtherEquipment:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllOtherEquipmentWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.PC:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPCWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.PrinterScanner:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPrinterScannerWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.Projector:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjectorWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
-                case AccountingPC.TypeDevice.ProjectorScreen:
-                    Table = new DataTable();
-                    new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreenWithFullName()",
-                        ConnectionString).Fill(Table);
-                    break;
+                switch (TypeDevice.Type)
+                {
+                    case AccountingPC.TypeDevice.InteractiveWhiteboard:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllBoardWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.Monitor:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllMonitorWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.NetworkSwitch:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNetworkSwitchWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.Notebook:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllNotebookWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.OtherEquipment:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllOtherEquipmentWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.PC:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPCWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.PrinterScanner:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllPrinterScannerWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.Projector:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjectorWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                    case AccountingPC.TypeDevice.ProjectorScreen:
+                        Table = new DataTable();
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreenWithFullName()",
+                            ConnectionString).Fill(Table);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, e.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

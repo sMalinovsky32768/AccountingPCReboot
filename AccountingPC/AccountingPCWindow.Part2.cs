@@ -30,21 +30,29 @@ namespace AccountingPC
             {
                 Capacity = 20
             };
-            using (var connection = new SqlConnection(ConnectionString))
+            try
             {
-                connection.Open();
-                var reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection)
-                    .ExecuteReader();
-                if (reader.HasRows)
-                    while (reader.Read())
-                    {
-                        var connectorValue = Convert.ToInt32(reader["Value"]);
-                        if (value >= connectorValue)
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    var reader = new SqlCommand("Select * from dbo.GetAllVideoConnector() Order by value desc", connection)
+                        .ExecuteReader();
+                    if (reader.HasRows)
+                        while (reader.Read())
                         {
-                            value -= connectorValue;
-                            arr.Add(reader["Name"].ToString());
+                            var connectorValue = Convert.ToInt32(reader["Value"]);
+                            if (value >= connectorValue)
+                            {
+                                value -= connectorValue;
+                                arr.Add(reader["Name"].ToString());
+                            }
                         }
-                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
 
             return arr;
@@ -55,12 +63,20 @@ namespace AccountingPC
         {
             var temp = new Dictionary<int, byte[]>();
 
-            using (var connection = new SqlConnection(ConnectionString))
+            try
             {
-                connection.Open();
-                var reader = new SqlCommand("SELECT * FROM dbo.GetAllImages()", connection).ExecuteReader();
+                using (var connection = new SqlConnection(ConnectionString))
+                {
+                    connection.Open();
+                    var reader = new SqlCommand("SELECT * FROM dbo.GetAllImages()", connection).ExecuteReader();
 
-                while (reader.Read()) temp.Add(reader.GetInt32(0), (byte[]) reader.GetValue(1));
+                    while (reader.Read()) temp.Add(reader.GetInt32(0), (byte[]) reader.GetValue(1));
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
 
             return temp;
@@ -85,17 +101,25 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void ChangeWindowState()
         {
-            if (WindowState == WindowState.Maximized)
+            try
             {
-                ((Path) buttonMaximized.Template.FindName("Maximize", buttonMaximized)).Visibility =
-                    Visibility.Collapsed;
-                ((Path) buttonMaximized.Template.FindName("Restore", buttonMaximized)).Visibility = Visibility.Visible;
+                if (WindowState == WindowState.Maximized)
+                {
+                    ((Path) buttonMaximized.Template.FindName("Maximize", buttonMaximized)).Visibility =
+                        Visibility.Collapsed;
+                    ((Path) buttonMaximized.Template.FindName("Restore", buttonMaximized)).Visibility = Visibility.Visible;
+                }
+                else if (WindowState == WindowState.Normal)
+                {
+                    ((Path) buttonMaximized.Template.FindName("Maximize", buttonMaximized)).Visibility = Visibility.Visible;
+                    ((Path) buttonMaximized.Template.FindName("Restore", buttonMaximized)).Visibility =
+                        Visibility.Collapsed;
+                }
             }
-            else if (WindowState == WindowState.Normal)
+            catch (Exception exception)
             {
-                ((Path) buttonMaximized.Template.FindName("Maximize", buttonMaximized)).Visibility = Visibility.Visible;
-                ((Path) buttonMaximized.Template.FindName("Restore", buttonMaximized)).Visibility =
-                    Visibility.Collapsed;
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 

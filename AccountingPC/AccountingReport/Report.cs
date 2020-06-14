@@ -6,6 +6,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace AccountingPC.AccountingReport
 {
@@ -289,15 +290,56 @@ namespace AccountingPC.AccountingReport
                 Options.TypeReport != TypeReport.UseSoft)
             {
                 var table = new DataTable();
-                new SqlDataAdapter("Select ID, Name From Audience", ConnectionString).Fill(table);
-                for (var z = 0; z < table.Rows.Count; z++)
+                try
                 {
-                    var tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName + " " +
-                                    table.Rows[z]["Name"];
+                    new SqlDataAdapter("Select ID, Name From Audience", ConnectionString).Fill(table);
+                    for (var z = 0; z < table.Rows.Count; z++)
+                    {
+                        var tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName + " " +
+                                        table.Rows[z]["Name"];
 
-                    set.Tables.Add(tableName);
-                    new SqlDataAdapter(CommandTextBuilder(isFull, Convert.ToInt32(table.Rows[z]["ID"])),
-                        ConnectionString).Fill(set, tableName);
+                        set.Tables.Add(tableName);
+                        new SqlDataAdapter(CommandTextBuilder(isFull, Convert.ToInt32(table.Rows[z]["ID"])),
+                            ConnectionString).Fill(set, tableName);
+
+                        if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
+                        {
+                            set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
+                            set.Tables[tableName].Columns.Add("Видеоразъемы");
+
+                            for (var rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
+                                set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] =
+                                    AccountingPCWindow.GetVideoConnectors(
+                                        Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
+                        }
+
+                        var i = 0;
+                        var colCount = UsedReportColumns.Count;
+                        for (var j = 0; j < colCount; j++)
+                            if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
+                            {
+                                set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
+                                i++;
+                            }
+
+                        if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
+                            set.Tables[tableName].Columns.Remove("VideoConnectors");
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                var tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName;
+
+                set.Tables.Add(tableName);
+                try
+                {
+                    new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
 
                     if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
                     {
@@ -322,42 +364,25 @@ namespace AccountingPC.AccountingReport
                     if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
                         set.Tables[tableName].Columns.Remove("VideoConnectors");
                 }
-            }
-            else
-            {
-                var tableName = ReportRelationCollection.Collection[Options.TypeReport].TableName;
-
-                set.Tables.Add(tableName);
-                new SqlDataAdapter(CommandTextBuilder(isFull), ConnectionString).Fill(set, tableName);
-
-                if (set.Tables[tableName].Columns.Contains("Видеоразъемы"))
+                catch (Exception exception)
                 {
-                    set.Tables[tableName].Columns["Видеоразъемы"].ColumnName = "VideoConnectors";
-                    set.Tables[tableName].Columns.Add("Видеоразъемы");
-
-                    for (var rowIndex = 0; rowIndex < set.Tables[tableName].Rows.Count; rowIndex++)
-                        set.Tables[tableName].Rows[rowIndex]["Видеоразъемы"] =
-                            AccountingPCWindow.GetVideoConnectors(
-                                Convert.ToInt32(set.Tables[tableName].Rows[rowIndex]["VideoConnectors"]));
+                    MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                        MessageBoxImage.Error);
                 }
-
-                var i = 0;
-                var colCount = UsedReportColumns.Count;
-                for (var j = 0; j < colCount; j++)
-                    if (set.Tables[tableName].Columns.Contains(UsedReportColumns[i].Name))
-                    {
-                        set.Tables[tableName].Columns[UsedReportColumns[i].Name].SetOrdinal(i);
-                        i++;
-                    }
-
-                if (set.Tables[tableName].Columns.Contains("VideoConnectors"))
-                    set.Tables[tableName].Columns.Remove("VideoConnectors");
             }
         }
 
         private void TypeChangedEventHandler()
         {
-            InitializeColumn();
+            try
+            {
+                InitializeColumn();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         public void OnPropertyChanged([CallerMemberName] string prop = "")

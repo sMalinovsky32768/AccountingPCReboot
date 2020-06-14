@@ -59,5 +59,14 @@ namespace AccountingPC.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AccountingPC.
+        /// </summary>
+        internal static string App_Application_Startup_AccountingPC {
+            get {
+                return ResourceManager.GetString("App_Application_Startup_AccountingPC", resourceCulture);
+            }
+        }
     }
 }

@@ -49,32 +49,48 @@ namespace AccountingPC.AccountingReport
 
         private void Options_CreateOptionsChangedEvent()
         {
-            switch (CurrentReport.Options.CreateOptions)
+            try
             {
-                case CreateReportOptions.SaveAsXlsx:
-                    IsSaveReport.IsChecked = true;
-                    break;
-                case CreateReportOptions.SaveAsPDF:
-                    IsSaveAsPDF.IsChecked = true;
-                    break;
-                case CreateReportOptions.OpenExcel:
-                    IsOperReport.IsChecked = true;
-                    break;
-                case CreateReportOptions.Print:
-                    break;
-                case CreateReportOptions.Preview:
-                    break;
+                switch (CurrentReport.Options.CreateOptions)
+                {
+                    case CreateReportOptions.SaveAsXlsx:
+                        IsSaveReport.IsChecked = true;
+                        break;
+                    case CreateReportOptions.SaveAsPDF:
+                        IsSaveAsPDF.IsChecked = true;
+                        break;
+                    case CreateReportOptions.OpenExcel:
+                        IsOpenReport.IsChecked = true;
+                        break;
+                    case CreateReportOptions.Print:
+                        break;
+                    case CreateReportOptions.Preview:
+                        break;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
         private void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         {
-            if (sortingParamsList.ItemContainerGenerator.Status ==
-                GeneratorStatus.ContainersGenerated)
+            try
             {
-                var containers = sortingParamsList.Items.Cast<object>().Select(
-                    item => (FrameworkElement) sortingParamsList.ItemContainerGenerator.ContainerFromItem(item));
-                foreach (var container in containers) container.Loaded += Container_Loaded;
+                if (sortingParamsList.ItemContainerGenerator.Status ==
+                    GeneratorStatus.ContainersGenerated)
+                {
+                    var containers = sortingParamsList.Items.Cast<object>().Select(
+                        item => (FrameworkElement) sortingParamsList.ItemContainerGenerator.ContainerFromItem(item));
+                    foreach (var container in containers) container.Loaded += Container_Loaded;
+                }
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -108,7 +124,6 @@ namespace AccountingPC.AccountingReport
         private void SetSourceForSorting()
         {
             var relations = new ObservableCollection<ReportColumnName>();
-            var orderNames = new ObservableCollection<OrderName>();
             for (var i = 0; i < sortingParamsList.Items.Count; i++)
             {
                 var item = sortingParamsList.Items[i];
@@ -123,8 +138,6 @@ namespace AccountingPC.AccountingReport
                     colBox.ItemsSource = CurrentReport.UsedReportColumns.Except(relations);
                     orderBox.ItemsSource = OrderNameCollection.Collection;
                     if (colBox.SelectedItem != null) relations.Add((ReportColumnName) colBox.SelectedItem);
-
-                    if (orderBox.SelectedItem != null) orderNames.Add((OrderName) orderBox.SelectedItem);
                 }
             }
         }
@@ -215,31 +228,37 @@ namespace AccountingPC.AccountingReport
             CurrentReport.Options.CreateOptions = CreateReportOptions.SaveAsXlsx;
         }
 
-        private void IsOperReport_Checked(object sender, RoutedEventArgs e)
+        private void IsOpenReport_Checked(object sender, RoutedEventArgs e)
         {
             CurrentReport.Options.CreateOptions = CreateReportOptions.OpenExcel;
         }
 
-        private void IsPrintReport_Checked(object sender, RoutedEventArgs e)
-        {
-            CurrentReport.Options.CreateOptions = CreateReportOptions.Print;
-        }
-
-        private void IsPreviewReport_Checked(object sender, RoutedEventArgs e)
-        {
-            CurrentReport.Options.CreateOptions = CreateReportOptions.Preview;
-        }
-
         private void FromDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, (DateTime) e.AddedItems[0]));
-            toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddDays(1), DateTime.MaxValue));
+            try
+            {
+                toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, (DateTime) e.AddedItems[0]));
+                toDate.BlackoutDates.Add(new CalendarDateRange(DateTime.Today.AddDays(1), DateTime.MaxValue));
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void ToDate_SelectedDateChanged(object sender, SelectionChangedEventArgs e)
         {
-            fromDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, DateTime.Parse("31.12.1999")));
-            fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime) e.AddedItems[0], DateTime.MaxValue));
+            try
+            {
+                fromDate.BlackoutDates.Add(new CalendarDateRange(DateTime.MinValue, DateTime.Parse("31.12.1999")));
+                fromDate.BlackoutDates.Add(new CalendarDateRange((DateTime) e.AddedItems[0], DateTime.MaxValue));
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void Split_Checked(object sender, RoutedEventArgs e)
@@ -278,7 +297,7 @@ namespace AccountingPC.AccountingReport
             if (dialog.ShowDialog(this) == false) return;
 
             var filename = dialog.FileName;
-            CurrentReport.CreateReportExcel(filename);
+            CurrentReport.CreateReport(filename);
         }
 
         private void SaveAsPDF()
@@ -292,12 +311,12 @@ namespace AccountingPC.AccountingReport
             if (dialog.ShowDialog(this) == false) return;
 
             var filename = dialog.FileName;
-            CurrentReport.CreateReportExcel(filename);
+            CurrentReport.CreateReport(filename);
         }
 
         private void OpenReport()
         {
-            CurrentReport.CreateReportExcel();
+            CurrentReport.CreateReport();
         }
     }
 }

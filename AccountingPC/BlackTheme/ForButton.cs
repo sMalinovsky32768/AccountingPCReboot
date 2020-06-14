@@ -44,10 +44,10 @@ namespace AccountingPC.BlackTheme
             if (((Window) sender).WindowState == WindowState.Maximized)
             {
                 ((Window) sender).WindowState = WindowState.Normal;
-                if (sender.GetType() == typeof(AccountingPCWindow))
+                if (sender is AccountingPCWindow pcWindow)
                 {
-                    ((Window) sender).Height = ((AccountingPCWindow) sender).LastHeight;
-                    ((Window) sender).Width = ((AccountingPCWindow) sender).LastWidth;
+                    ((Window) sender).Height = pcWindow.LastHeight;
+                    ((Window) sender).Width = pcWindow.LastWidth;
                 }
 
                 ((Path) ((Button) e.OriginalSource).Template.FindName("Maximize", (Button) e.OriginalSource)).Visibility
@@ -57,10 +57,10 @@ namespace AccountingPC.BlackTheme
             }
             else if (((Window) sender).WindowState == WindowState.Normal)
             {
-                if (sender.GetType() == typeof(AccountingPCWindow))
+                if (sender is AccountingPCWindow pcWindow)
                 {
-                    ((AccountingPCWindow) sender).LastHeight = ((Window) sender).Height;
-                    ((AccountingPCWindow) sender).LastWidth = ((Window) sender).Width;
+                    pcWindow.LastHeight = ((Window) sender).Height;
+                    pcWindow.LastWidth = ((Window) sender).Width;
                 }
 
                 ((Window) sender).WindowState = WindowState.Maximized;

@@ -60,19 +60,23 @@ namespace AccountingPC
 
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
+            int oldtheme = Settings.Default.THEME;
             if (((Button) sender).IsDefault) Settings.Default.Save();
-            switch (Settings.Default.THEME)
+            if (Settings.Default.THEME == oldtheme)
             {
-                case 0:
-                    Application.Current.Resources = new ResourceDictionary();
-                    Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
-                        {Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml")});
-                    break;
-                case 1:
-                    Application.Current.Resources = new ResourceDictionary();
-                    Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
-                        {Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml")});
-                    break;
+                switch (Settings.Default.THEME)
+                {
+                    case 0:
+                        Application.Current.Resources = new ResourceDictionary();
+                        Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
+                            { Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml") });
+                        break;
+                    case 1:
+                        Application.Current.Resources = new ResourceDictionary();
+                        Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary
+                            { Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml") });
+                        break;
+                }
             }
 
             DialogResult = true;

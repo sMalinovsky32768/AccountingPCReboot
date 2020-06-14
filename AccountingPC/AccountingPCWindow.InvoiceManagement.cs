@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace AccountingPC
 {
@@ -10,10 +11,18 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void LoadInvoiceList()
         {
-            DefaultDataSet.Tables["Invoice"].Clear();
-            new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(DefaultDataSet, "Invoice");
-            invoiceList.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
-            invoiceList.DisplayMemberPath = "Number";
+            try
+            {
+                DefaultDataSet.Tables["Invoice"].Clear();
+                new SqlDataAdapter("SELECT * FROM dbo.[GetAllInvoice]()", ConnectionString).Fill(DefaultDataSet, "Invoice");
+                invoiceList.ItemsSource = DefaultDataSet.Tables["Invoice"].DefaultView;
+                invoiceList.DisplayMemberPath = "Number";
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -65,7 +74,7 @@ namespace AccountingPC
                         for (var j = 0; j < table.Rows.Count; j++)
                         {
                             var row = table.Rows[j];
-                            row["Видеоразъемы"] = row["VideoConnectors"].GetType() == typeof(int)
+                            row["Видеоразъемы"] = row["VideoConnectors"] is int
                                 ? GetVideoConnectors(Convert.ToInt32(row["VideoConnectors"]))
                                 : row["VideoConnectors"];
                         }
@@ -81,10 +90,18 @@ namespace AccountingPC
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ChangeInvoiceView()
         {
-            UpdateInvoiceData();
-            invoiceItemsControl.ItemsSource = InvoiceSoftwareAndEquipmentDataSet.Tables;
-            invoiceNumberManager.Text = ((DataRowView) invoiceList?.SelectedItem)?.Row?["Number"].ToString();
-            dateManager.SelectedDate = Convert.ToDateTime(((DataRowView) invoiceList?.SelectedItem)?.Row?["Date"]);
+            try
+            {
+                UpdateInvoiceData();
+                invoiceItemsControl.ItemsSource = InvoiceSoftwareAndEquipmentDataSet.Tables;
+                invoiceNumberManager.Text = ((DataRowView) invoiceList?.SelectedItem)?.Row?["Number"].ToString() ?? string.Empty;
+                dateManager.SelectedDate = Convert.ToDateTime(((DataRowView) invoiceList?.SelectedItem)?.Row?["Date"]);
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
     }
 }

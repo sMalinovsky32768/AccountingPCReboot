@@ -239,8 +239,8 @@
                                              Content="Сохранить" Checked="IsSaveReport_Checked" Margin="0,0,20,0" />
                                 <RadioButton x:Name="IsSaveAsPDF" GroupName="CreateReportOption"
                                              Content="Сохранить в PDF" Checked="IsSaveAsPDF_Checked" Margin="0,0,20,0" />
-                                <RadioButton x:Name="IsOperReport" GroupName="CreateReportOption"
-                                             Content="Открыть в Excel" Checked="IsOperReport_Checked" Margin="0,0,20,0" />
+                                <RadioButton x:Name="IsOpenReport" GroupName="CreateReportOption"
+                                             Content="Открыть в Excel" Checked="IsOpenReport_Checked" Margin="0,0,20,0" />
                             </StackPanel>
                             <Separator DockPanel.Dock="Top" />
                             <Grid DockPanel.Dock="Top" Margin="10,0" x:Name="periodGrid">
@@ -319,7 +319,7 @@
                                                             Binding="{Binding ElementName=IsSaveReport, Path=IsChecked}"
                                                             Value="false" />
                                                         <Condition
-                                                            Binding="{Binding ElementName=IsOperReport, Path=IsChecked}"
+                                                            Binding="{Binding ElementName=IsOpenReport, Path=IsChecked}"
                                                             Value="false" />
                                                         <Condition
                                                             Binding="{Binding ElementName=IsPrintReport, Path=IsChecked}"
