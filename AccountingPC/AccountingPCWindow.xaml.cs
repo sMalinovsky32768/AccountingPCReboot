@@ -112,10 +112,19 @@ namespace AccountingPC
             UpdateImages();
             NowView = View.Equipment;
 
-            // Создание меню отчетов
-            reportMenu.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
-            reportMenu.ItemsSource = ReportNameCollection.Collection;
-            reportMenu.DisplayMemberPath = "Name";
+            if (Type.GetTypeFromProgID("Excel.Application") is null)
+            {
+                reportMenu.ToolTip = "Для создания отчетов установите MS Excel";
+                reportMenu.IsEnabled = false;
+            }
+            else
+            {
+                // Создание меню отчетов
+                reportMenu.ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+                reportMenu.ItemsSource = ReportNameCollection.Collection;
+                reportMenu.DisplayMemberPath = "Name";
+            }
+            audienceManagement.DataContext = new AudienceManagement(this);
         }
 
         public static string ConnectionString { get; } =
@@ -175,7 +184,8 @@ namespace AccountingPC
             if (ChangeWindow != null)
             {
                 ChangeWindow.Left = Left - (ChangeWindow.Width - Width) / 2;
-                ChangeWindow.Top = Top - (ChangeWindow.Height - Height) / 2;
+                double t = Top - (ChangeWindow.Height - Height) / 2;
+                ChangeWindow.Top = t < 0 ? 0 : t;
             }
         }
 
@@ -643,7 +653,8 @@ namespace AccountingPC
             if (ChangeWindow != null)
             {
                 ChangeWindow.Left = Left - (ChangeWindow.Width - Width) / 2;
-                ChangeWindow.Top = Top - (ChangeWindow.Height - Height) / 2;
+                double t = Top - (ChangeWindow.Height - Height) / 2;
+                ChangeWindow.Top = t < 0 ? 0 : t;
             }
         }
 

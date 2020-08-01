@@ -99,7 +99,7 @@
                                 <ListBoxItem Content="Ноутбуки и Моноблоки" />
                                 <ListBoxItem Content="Мониторы" />
                                 <ListBoxItem Content="Проекторы" />
-                                <ListBoxItem Content="Интерактивные доски" />
+                                <ListBoxItem Content="Интерактивное оборудование" />
                                 <ListBoxItem Content="Экраны для проекторов" />
                                 <ListBoxItem Content="Принтеры и сканеры" />
                                 <ListBoxItem Content="Сетевое оборудование" />
@@ -477,7 +477,7 @@
                             <ColumnDefinition Width="auto" />
                             <ColumnDefinition Width="4*" />
                         </Grid.ColumnDefinitions>
-                        <Grid>
+                        <Grid x:Name="audienceManagement">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="auto" />
@@ -546,7 +546,7 @@
                                     <Button x:Name="addAudienceButton" Style="{DynamicResource default-button}"
                                             Content="Добавить" Width="100" Height="25" Margin="0,10,0,0"
                                             Command="{Binding AddAudience}"
-                                            CommandParameter="{Binding Path=Text, ElementName=audienceName}" />
+                                            CommandParameter="{Binding Path=Text, ElementName=audienceName}"/>
                                 </StackPanel>
                             </Grid>
                             <Grid Grid.Row="2">
@@ -638,7 +638,7 @@
                                     <Image x:Name="deviceImageOnPlace" Margin="10" Width="400" />
                                 </Grid>
                                 <Grid>
-                                    <Grid x:Name="devicesGrid" MinWidth="350">
+                                    <Grid x:Name="devicesGrid" MinWidth="450">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="auto" />
                                             <RowDefinition />
@@ -661,7 +661,7 @@
                                             <ListBox.ItemTemplate>
                                                 <DataTemplate>
                                                     <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="{Binding Path=FullName}" />
+                                                        <TextBlock Text="{Binding Path=Name}" ToolTip="{Binding Path=FullName}"/>
                                                     </StackPanel>
                                                 </DataTemplate>
                                             </ListBox.ItemTemplate>

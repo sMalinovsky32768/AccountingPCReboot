@@ -401,7 +401,7 @@
                                                 <RowDefinition />
                                                 <RowDefinition />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Text="Технология изготовления матрицы" />
+                                            <TextBlock Text="Технология проецирования" />
                                             <ComboBox Grid.Row="1" x:Name="projectorTechnology"
                                                       IsTextSearchEnabled="True" />
                                         </Grid>

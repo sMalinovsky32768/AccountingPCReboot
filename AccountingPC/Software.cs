@@ -11,7 +11,7 @@ namespace AccountingPC
         public string Name { get; set; }
 
         public int Count { get; set; }
-        public float Cost { get; set; }
+        public decimal Cost { get; set; }
 
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public string InvoiceNumber { get; set; }

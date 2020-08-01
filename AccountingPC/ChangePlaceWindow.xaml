@@ -13,6 +13,11 @@
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:ChangeWindow.CloseCommand}" Executed="CloseCommand_Executed" />
     </Window.CommandBindings>
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource on-background-brush}"/>
+        </Style>
+    </Window.Resources>
     <Border Background="{DynamicResource background-brush}" BorderBrush="{DynamicResource mouse-over-brush}"
             BorderThickness="1"
             RenderTransformOrigin="0.5,0.5" MouseLeftButtonDown="MoveWindow">
@@ -30,7 +35,7 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Text="Название" VerticalAlignment="Center" />
                         <TextBox Grid.Column="2" x:Name="placeName" Style="{DynamicResource text-box}"
-                                 VerticalAlignment="Center" Text="{Binding Path=Name}" />
+                                 VerticalAlignment="Center" Text="{Binding Path=Name}" Height="27" Margin="0,0,1,0" />
                     </Grid>
                     <Separator DockPanel.Dock="Top" />
                     <Grid DockPanel.Dock="Top">
@@ -38,20 +43,34 @@
                             <RowDefinition Height="auto" />
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
-                                    Margin="2,0">
-                            <Button x:Name="addTypeDeviceButton" Width="27" Height="27"
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Margin="0,0,10,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Описание" VerticalAlignment="Center" />
+                                <TextBox Grid.Column="2" x:Name="placeDescription" Style="{DynamicResource text-box}"
+                                 VerticalAlignment="Center" Text="{Binding Path=Description}" Height="27" />
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Margin="2,0" Grid.Column="2">
+                                <Button x:Name="addTypeDeviceButton" Width="27" Height="27"
                                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                                     Margin="0,0,10,0" Command="{Binding AddTypeDevice}"
                                     Style="{DynamicResource default-button}">
-                                <Grid>
-                                    <Path
+                                    <Grid>
+                                        <Path
                                         Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
                                                   20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
                                                   C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z "
                                         Fill="Transparent" />
-                                    <Path
+                                        <Path
                                         Data="M 18.894531 12.757812 C 18.894531 13.054688 18.617188 13.296875 
                                                   18.277344 13.296875 L 13.554688 13.296875 L 13.554688 17.429688 C 13.554688 
                                                   17.726562 13.277344 17.96875 12.9375 17.96875 L 10.0625 17.96875 C 9.722656 
@@ -63,30 +82,31 @@
                                                   13.554688 5.570312 L 13.554688 9.703125 L 18.277344 9.703125 C 18.617188 
                                                   9.703125 18.894531 9.945312 18.894531 10.242188 Z"
                                         Fill="{DynamicResource on-background-brush}" />
-                                </Grid>
-                            </Button>
-                            <Button x:Name="delTypeDeviceButton" Width="27" Height="27"
+                                    </Grid>
+                                </Button>
+                                <Button x:Name="delTypeDeviceButton" Width="27" Height="27"
                                     HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                                     Margin="0" Style="{DynamicResource default-button}"
                                     Command="{Binding DelTypeDevice}"
                                     CommandParameter="{Binding Path=SelectedItem, ElementName=devicesOnPlace}">
-                                <Grid>
-                                    <Path
+                                    <Grid>
+                                        <Path
                                         Data="M 20.535156 1.4375 L 2.464844 1.4375 C 1.105469 1.4375 0 2.402344 0 
                                                   3.59375 L 0 19.40625 C 0 20.597656 1.105469 21.5625 2.464844 21.5625 L 
                                                   20.535156 21.5625 C 21.894531 21.5625 23 20.597656 23 19.40625 L 23 3.59375 
                                                   C 23 2.402344 21.894531 1.4375 20.535156 1.4375 Z "
                                         Fill="Transparent" />
-                                    <Path
+                                        <Path
                                         Data="M 4.722656 13.296875 C 4.382812 13.296875 4.105469 13.054688 4.105469 
                                                   12.757812 L 4.105469 10.242188 C 4.105469 9.945312 4.382812 9.703125 4.722656 
                                                   9.703125 L 18.277344 9.703125 C 18.617188 9.703125 18.894531 9.945312 
                                                   18.894531 10.242188 L 18.894531 12.757812 C 18.894531 13.054688 18.617188 
                                                   13.296875 18.277344 13.296875 Z "
                                         Fill="{DynamicResource on-background-brush}" />
-                                </Grid>
-                            </Button>
-                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                         <Grid Grid.Row="2">
                             <ListBox x:Name="devicesOnPlace" Height="400" Margin="1,5">
                                 <ListBox.Style>

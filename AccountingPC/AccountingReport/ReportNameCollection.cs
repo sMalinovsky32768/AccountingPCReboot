@@ -18,7 +18,7 @@ namespace AccountingPC.AccountingReport
             new ReportName {Type = TypeReport.OnlyNotebook, Name = "Ноутбуки и Моноблоки"},
             new ReportName {Type = TypeReport.OnlyMonitor, Name = "Мониторы"},
             new ReportName {Type = TypeReport.OnlyProjector, Name = "Проекторы"},
-            new ReportName {Type = TypeReport.OnlyBoard, Name = "Интерактивные доски"},
+            new ReportName {Type = TypeReport.OnlyBoard, Name = "Интерактивное оборудование"},
             new ReportName {Type = TypeReport.OnlyScreen, Name = "Экраны для проекторов"},
             new ReportName {Type = TypeReport.OnlyPrinterScanner, Name = "Принтеры и сканеры"},
             new ReportName {Type = TypeReport.OnlyNetworkSwitch, Name = "Сетевое оборудование"},

@@ -2,7 +2,6 @@
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -28,7 +27,7 @@ namespace AccountingPC
             {
                 var assembly = Assembly.GetExecutingAssembly();
                 var resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("icon.ico"));
-                using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
                 {
                     if (stream != null)
                         Icon = BitmapFrame.Create(stream);
@@ -124,12 +123,14 @@ namespace AccountingPC
             if (Accounting != null)
             {
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
-                Accounting.Top = Top - (Accounting.Height - Height) / 2;
+                double t = Top - (Accounting.Height - Height) / 2;
+                Accounting.Top = t < 0 ? 0 : t;
             }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            AudienceID = Accounting.AudienceID;
             Accounting.IsHitTestVisible = false;
             switch (Accounting.TypeChange)
             {
@@ -140,7 +141,6 @@ namespace AccountingPC
                     saveButton.Content = "Изменить";
                     try
                     {
-                        AudienceID = Accounting.AudienceID;
                         AudienceTableID = Accounting.AudienceTableID;
                         string commandString;
                         SqlDataReader reader;
@@ -149,9 +149,18 @@ namespace AccountingPC
                             connection.Open();
                             CurrentPlace.ID = AudienceTableID;
                             commandString =
-                                $"SELECT [Name] FROM [dbo].[GetAllLocationInAudience]({AudienceID}) Where ID={AudienceTableID}";
-                            CurrentPlace.Name = new SqlCommand(commandString, connection).ExecuteScalar().ToString();
+                                $"SELECT [Name], [Description] FROM [dbo].[GetAllLocationInAudience]({AudienceID}) Where ID={AudienceTableID}";
+                            reader = new SqlCommand(commandString, connection).ExecuteReader();
+                            if (reader.HasRows)
+                            {
+                                if (reader.Read())
+                                {
+                                    CurrentPlace.Description = reader["Description"].ToString();
+                                    CurrentPlace.Name = reader["Name"].ToString();
+                                }
+                            }
                             commandString = $"SELECT * FROM dbo.GetAllTypeAndDeviceOnPlace({AudienceTableID})";
+                            reader.Close();
                             reader = new SqlCommand(commandString, connection).ExecuteReader();
                             if (reader.HasRows)
                                 while (reader.Read())
@@ -222,7 +231,8 @@ namespace AccountingPC
             if (Accounting != null)
             {
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
-                Accounting.Top = Top - (Accounting.Height - Height) / 2;
+                double t = Top - (Accounting.Height - Height) / 2;
+                Accounting.Top = t < 0 ? 0 : t;
             }
         }
 
@@ -264,24 +274,26 @@ namespace AccountingPC
                     connection.Open();
                     if (AudienceTableID == 0)
                     {
-                        var command = new SqlCommand("AddLocation", connection)
+                        var command = new SqlCommand("AddAudienceTable", connection)
                         {
                             CommandType = CommandType.StoredProcedure
                         };
                         command.Parameters.Add(new SqlParameter("@AudienceID", AudienceID));
-                        var parameter = new SqlParameter
+                        command.Parameters.Add(new SqlParameter("@Name", CurrentPlace.Name));
+                        command.Parameters.Add(new SqlParameter("@Description", CurrentPlace.Description));
+                        command.Parameters.Add(new SqlParameter
                         {
                             ParameterName = "@TableID",
                             Direction = ParameterDirection.Output,
                             DbType = DbType.Int32
-                        };
-                        command.Parameters.Add(parameter);
+                        });
                         command.ExecuteNonQuery();
                         AudienceTableID = Convert.ToInt32(command.Parameters["@TableID"].Value);
+                        CurrentPlace.ID = AudienceTableID;
                     }
 
-                    new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}' where ID={CurrentPlace.ID}",
-                        connection).ExecuteNonQuery();
+                    //new SqlCommand($"Update AudienceTable Set Name=N'{CurrentPlace.Name}', Description=N'{CurrentPlace.Description}' where ID={CurrentPlace.ID}",
+                    //    connection).ExecuteNonQuery();
                     var count = CurrentPlace.TypeDeviceRemovedCollection.Count;
                     for (var i = 0; i < count; i++)
                     {
@@ -317,7 +329,7 @@ namespace AccountingPC
                                     $"Update {temp.Row["TableName"]} set PlaceID={temp.PlaceID} Where ID={temp.Row["ID"]}",
                                     connection).ExecuteNonQuery();
                         }
-                        else
+                        else if (!(temp.TypeDevice is null))
                         {
                             var command = new SqlCommand("AddLocation", connection)
                             {

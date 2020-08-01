@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 
 namespace AccountingPC
 {
@@ -10,6 +11,7 @@ namespace AccountingPC
 
         private AccountingCommand delTypeDevice;
         private string name;
+        private string description;
 
         private ObservableCollection<TypeDeviceOnPlace> typeDeviceCollection =
             new ObservableCollection<TypeDeviceOnPlace>();
@@ -48,6 +50,16 @@ namespace AccountingPC
             set
             {
                 name = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Description
+        {
+            get => description;
+            set
+            {
+                description = value;
                 OnPropertyChanged();
             }
         }

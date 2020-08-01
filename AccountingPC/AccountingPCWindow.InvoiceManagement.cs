@@ -33,7 +33,7 @@ namespace AccountingPC
             InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Ноутбуки и Моноблоки");
             InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Мониторы");
             InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Проекторы");
-            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Интерактивные доски");
+            InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Интерактивное оборудование");
             InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Экраны для проекторов");
             InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Принтеры и сканеры");
             InvoiceSoftwareAndEquipmentDataSet.Tables.Add("Сетевое оборудование");
@@ -50,7 +50,7 @@ namespace AccountingPC
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllProjector() Where InvoiceID={InvoiceID}",
                 ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Проекторы");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllBoard() Where InvoiceID={InvoiceID}",
-                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Интерактивные доски");
+                ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Интерактивное оборудование");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllScreen() Where InvoiceID={InvoiceID}",
                 ConnectionString).Fill(InvoiceSoftwareAndEquipmentDataSet, "Экраны для проекторов");
             new SqlDataAdapter($"SELECT * FROM dbo.GetAllPrinterScanner() Where InvoiceID={InvoiceID}",

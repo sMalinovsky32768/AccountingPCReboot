@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -14,7 +15,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using Microsoft.Win32;
 
 namespace AccountingPC
 {
@@ -27,6 +27,7 @@ namespace AccountingPC
         private Binding invNBinding;
 
         internal List<ListBoxItem> videoConnectorsItems;
+        //internal ChangeRelation TargetChangeRelation { get; private set; }
 
         public ChangeWindow(AccountingPCWindow window)
         {
@@ -69,14 +70,41 @@ namespace AccountingPC
             }
             Owner = window;
             Accounting = window;
+            DeviceID = Accounting.DeviceID;
+
+            switch (Accounting.TypeDevice)
+            {
+                case TypeDevice.PC:
+                    //TargetChangeRelation = new ChangeRelation()
+                    //{
+                    //    AddCommand = "AddPC",
+                    //    UpdateCommand = "UpdatePC",
+                    //    Columns = new List<ChangeColumnRelation>()
+                    //    {
+                    //        new ChangeColumnRelation()
+                    //        {
+                    //            ParameterName="@ID",
+                    //            IsUpdateOnly = true,
+                    //            Value = DeviceID,
+                    //        },
+                    //        new ChangeColumnRelation()
+                    //        {
+                    //            ParameterName="@Name",
+                    //            Box=name,
+                    //            Property=TextBox.TextProperty,
+                    //        },
+                    //    }
+                    //}
+                    break;
+            }
         }
 
         public static string ConnectionString { get; } =
             ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         private bool IsChangeAnalog { get; set; }
-        public AccountingPCWindow Accounting { get; }
-
+        public AccountingPCWindow Accounting { get; private set; }
+        public int DeviceID { get; set; }
         public DataSet DefaultDataSet { get; set; }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -103,7 +131,6 @@ namespace AccountingPC
             {
                 MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
                     MessageBoxImage.Error);
-                throw;
             }
         }
 
@@ -122,31 +149,31 @@ namespace AccountingPC
                             switch (Accounting.TypeDevice)
                             {
                                 case TypeDevice.PC:
-                                    GetPC(Accounting.DeviceID);
+                                    GetPC(DeviceID);
                                     break;
                                 case TypeDevice.Notebook:
-                                    GetNotebook(Accounting.DeviceID);
+                                    GetNotebook(DeviceID);
                                     break;
                                 case TypeDevice.Monitor:
-                                    GetMonitor(Accounting.DeviceID);
+                                    GetMonitor(DeviceID);
                                     break;
                                 case TypeDevice.Projector:
-                                    GetProjector(Accounting.DeviceID);
+                                    GetProjector(DeviceID);
                                     break;
                                 case TypeDevice.InteractiveWhiteboard:
-                                    GetInteractiveWhiteboard(Accounting.DeviceID);
+                                    GetInteractiveWhiteboard(DeviceID);
                                     break;
                                 case TypeDevice.ProjectorScreen:
-                                    GetProjectorScreen(Accounting.DeviceID);
+                                    GetProjectorScreen(DeviceID);
                                     break;
                                 case TypeDevice.PrinterScanner:
-                                    GetPrinterScanner(Accounting.DeviceID);
+                                    GetPrinterScanner(DeviceID);
                                     break;
                                 case TypeDevice.NetworkSwitch:
-                                    GetNetworkSwitch(Accounting.DeviceID);
+                                    GetNetworkSwitch(DeviceID);
                                     break;
                                 case TypeDevice.OtherEquipment:
-                                    GetOtherEquipment(Accounting.DeviceID);
+                                    GetOtherEquipment(DeviceID);
                                     break;
                             }
 
@@ -295,9 +322,9 @@ namespace AccountingPC
                     {
                         device = new PC
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             Motherboard = reader["MotherBoard"].ToString(),
                             CPU = reader["CPUModel"].ToString(),
                             Cores = Convert.ToUInt32(!(reader["NumberOfCores"] is DBNull)
@@ -310,7 +337,7 @@ namespace AccountingPC
                                 ? reader["MaxFrequencyProcessor"]
                                 : 0),
                             VCard = reader["VideoCard"].ToString(),
-                            VideoRAM = Convert.ToUInt32(reader["VideoRAMGB"] is DBNull
+                            VideoRAM = Convert.ToUInt32(!(reader["VideoRAMGB"] is DBNull)
                                 ? reader["VideoRAMGB"]
                                 : 0),
                             RAM = Convert.ToUInt32(!(reader["RAMGB"] is DBNull) ? reader["RAMGB"] : 0),
@@ -399,9 +426,9 @@ namespace AccountingPC
                     {
                         device = new Notebook
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             TypeID = Convert.ToUInt32(!(reader["TypeNotebookID"] is DBNull) ? reader["TypeNotebookID"] : 0),
                             CPU = reader["CPUModel"].ToString(),
                             Cores = Convert.ToUInt32(!(reader["NumberOfCores"] is DBNull)
@@ -432,7 +459,7 @@ namespace AccountingPC
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(!(reader["ScreenDiagonal"] is DBNull)
+                            Diagonal = Convert.ToDecimal(!(reader["ScreenDiagonal"] is DBNull)
                                 ? reader["ScreenDiagonal"]
                                 : 0),
                             ResolutionID = Convert.ToUInt32(!(reader["ResolutionID"] is DBNull)
@@ -545,14 +572,14 @@ namespace AccountingPC
                     {
                         device = new Monitor
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(!(reader["ScreenDiagonal"] is DBNull)
+                            Diagonal = Convert.ToDecimal(!(reader["ScreenDiagonal"] is DBNull)
                                 ? reader["ScreenDiagonal"]
                                 : 0),
                             ResolutionID = Convert.ToUInt32(!(reader["ResolutionID"] is DBNull)
@@ -637,14 +664,14 @@ namespace AccountingPC
                     {
                         device = new Projector
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(!(reader["MaxDiagonal"] is DBNull)
+                            Diagonal = Convert.ToDecimal(!(reader["MaxDiagonal"] is DBNull)
                                 ? reader["MaxDiagonal"]
                                 : 0),
                             ResolutionID = Convert.ToUInt32(!(reader["ResolutionID"] is DBNull)
@@ -718,14 +745,14 @@ namespace AccountingPC
                     {
                         device = new InteractiveWhiteboard
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(!(reader["Diagonal"] is DBNull)
+                            Diagonal = Convert.ToDecimal(!(reader["Diagonal"] is DBNull)
                                 ? reader["Diagonal"]
                                 : 0)
                         };
@@ -754,14 +781,14 @@ namespace AccountingPC
                     {
                         device = new ProjectorScreen
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
                                 : 0),
-                            Diagonal = Convert.ToSingle(!(reader["Diagonal"] is DBNull)
+                            Diagonal = Convert.ToDecimal(!(reader["Diagonal"] is DBNull)
                                 ? reader["Diagonal"]
                                 : 0),
                             AspectRatioID = Convert.ToUInt32(!(reader["AspectRatioID"] is DBNull)
@@ -820,11 +847,11 @@ namespace AccountingPC
                     {
                         device = new PrinterScanner
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             TypeID = Convert.ToUInt32(!(reader["TypePrinterID"] is DBNull)
                                 ? reader["TypePrinterID"] : 0),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
@@ -876,10 +903,10 @@ namespace AccountingPC
                     {
                         device = new NetworkSwitch
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             TypeID = Convert.ToUInt32(!(reader["TypeID"] is DBNull) ? reader["TypeID"] : 0),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
@@ -935,9 +962,9 @@ namespace AccountingPC
                     {
                         device = new OtherEquipment
                         {
-                            InventoryNumber = Convert.ToUInt32(reader["InventoryNumber"]),
+                            InventoryNumber = Convert.ToInt64(reader["InventoryNumber"]),
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Cost"] is DBNull) ? reader["Cost"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             PlaceID = Convert.ToUInt32(!(reader["PlaceID"] is DBNull)
                                 ? reader["PlaceID"]
@@ -978,12 +1005,14 @@ namespace AccountingPC
                     DisabledRepeatInvN_Checked();
                 else
                     DisabledRepeatInvN_Unchecked();
+                changeAnalog.Visibility = Visibility.Collapsed;
             }
             else if (Accounting.TypeChange == TypeChange.Change)
             {
                 autoInvN.Visibility = Visibility.Collapsed;
                 autoInvN.IsChecked = false;
                 DisabledRepeatInvN_Unchecked();
+                changeAnalog.Visibility = Visibility.Visible;
             }
 
             inventoryNumberGrid.Visibility = Visibility.Visible;
@@ -1877,7 +1906,6 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            int temp;
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
@@ -1886,40 +1914,23 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text == string.Empty ? null : cpu.Text));
-                temp = Convert.ToInt32(cores.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@Cores", temp));
-
-                temp = Convert.ToInt32(frequency.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@Frequency", temp));
-
-                temp = Convert.ToInt32(maxFrequency.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
-
-                temp = Convert.ToInt32(ram.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@RAM", temp));
-
-                temp = Convert.ToInt32(ramFrequency.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@FrequencyRAM", temp));
-
-                temp = Convert.ToInt32(ssd.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@SSD", temp));
-
-                temp = Convert.ToInt32(hdd.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@HDD", temp));
-
-                command.Parameters.Add(new SqlParameter("@Video", vCard.Text == string.Empty ? null : vCard.Text));
-                temp = Convert.ToInt32(videoram.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@VRAM", temp));
-
+                if (!string.IsNullOrWhiteSpace(cpu.Text)) command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                if (!string.IsNullOrWhiteSpace(cores.Text)) command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
+                if (!string.IsNullOrWhiteSpace(frequency.Text)) command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
+                if (!string.IsNullOrWhiteSpace(maxFrequency.Text)) command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToInt32(maxFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ram.Text)) command.Parameters.Add(new SqlParameter("@RAM", Convert.ToInt32(ram.Text)));
+                if (!string.IsNullOrWhiteSpace(ramFrequency.Text)) command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToInt32(ramFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ssd.Text)) command.Parameters.Add(new SqlParameter("@SSD", Convert.ToInt32(ssd.Text)));
+                if (!string.IsNullOrWhiteSpace(hdd.Text)) command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
+                if (!string.IsNullOrWhiteSpace(vCard.Text)) command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
+                if (!string.IsNullOrWhiteSpace(videoram.Text)) command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
                 command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
+                if (!string.IsNullOrWhiteSpace(motherboard.Text)) command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null)
@@ -1936,7 +1947,6 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            int temp;
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
@@ -1945,46 +1955,27 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
-                temp = Convert.ToInt32(cores.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@Cores", temp));
-
-                temp = Convert.ToInt32(frequency.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@Frequency", temp));
-
-                temp = Convert.ToInt32(maxFrequency.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@MaxFrequency", temp));
-
-                temp = Convert.ToInt32(ram.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@RAM", temp));
-
-                temp = Convert.ToInt32(ramFrequency.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@FrequencyRAM", temp));
-
-                temp = Convert.ToInt32(ssd.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@SSD", temp));
-
-                temp = Convert.ToInt32(hdd.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@HDD", temp));
-
-                command.Parameters.Add(new SqlParameter("@Video", vCard.Text == string.Empty ? null : vCard.Text));
-                temp = Convert.ToInt32(videoram.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@VRAM", temp));
-
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
+                if (!string.IsNullOrWhiteSpace(cpu.Text)) command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                if (!string.IsNullOrWhiteSpace(cores.Text)) command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
+                if (!string.IsNullOrWhiteSpace(frequency.Text)) command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
+                if (!string.IsNullOrWhiteSpace(maxFrequency.Text)) command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToInt32(maxFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ram.Text)) command.Parameters.Add(new SqlParameter("@RAM", Convert.ToInt32(ram.Text)));
+                if (!string.IsNullOrWhiteSpace(ramFrequency.Text)) command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToInt32(ramFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ssd.Text)) command.Parameters.Add(new SqlParameter("@SSD", Convert.ToInt32(ssd.Text)));
+                if (!string.IsNullOrWhiteSpace(hdd.Text)) command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
+                if (!string.IsNullOrWhiteSpace(vCard.Text)) command.Parameters.Add(new SqlParameter("@Video", invoice.Text));
+                if (!string.IsNullOrWhiteSpace(videoram.Text)) command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
                 command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID",
-                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(
-                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
@@ -2006,18 +1997,15 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID",
-                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(
-                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
@@ -2031,7 +2019,6 @@ namespace AccountingPC
         {
             string commandString;
             SqlCommand command;
-            int temp;
             using (var connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
@@ -2040,15 +2027,12 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                temp = Convert.ToInt32(ports.Text);
-                if (temp > 0) command.Parameters.Add(new SqlParameter("@Ports", temp));
-
+                if (!string.IsNullOrWhiteSpace(ports.Text)) command.Parameters.Add(new SqlParameter("@Ports", Convert.ToInt32(ports.Text)));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView) wifiFrequency?.SelectedItem)?[0]));
                 var bytes = LoadImage(imageFilename.Text);
@@ -2071,13 +2055,12 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
@@ -2098,11 +2081,10 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView) paperSize?.SelectedItem)?[0]));
@@ -2126,15 +2108,13 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@TechnologyID",
-                    ((DataRowView) projectorTechnology?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView) projectorTechnology?.SelectedItem)?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 var bytes = LoadImage(imageFilename.Text);
@@ -2157,18 +2137,15 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@IsElectronic", Convert.ToBoolean(isEDrive.IsChecked)));
-                command.Parameters.Add(
-                    new SqlParameter("@AspectRatioID", ((DataRowView) aspectRatio?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@InstalledID",
-                    ((DataRowView) screenInstalled?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView) aspectRatio?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView) screenInstalled?.SelectedItem)?[0]));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
@@ -2189,11 +2166,10 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
@@ -2215,22 +2191,22 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
-                command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
-                command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
-                command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToInt32(maxFrequency.Text)));
-                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToInt32(ram.Text)));
-                command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToInt32(ramFrequency.Text)));
-                command.Parameters.Add(new SqlParameter("@SSD", Convert.ToInt32(ssd.Text)));
-                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
-                command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
-                command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
+                if (!string.IsNullOrWhiteSpace(cpu.Text)) command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                if (!string.IsNullOrWhiteSpace(cores.Text)) command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
+                if (!string.IsNullOrWhiteSpace(frequency.Text)) command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
+                if (!string.IsNullOrWhiteSpace(maxFrequency.Text)) command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToInt32(maxFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ram.Text)) command.Parameters.Add(new SqlParameter("@RAM", Convert.ToInt32(ram.Text)));
+                if (!string.IsNullOrWhiteSpace(ramFrequency.Text)) command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToInt32(ramFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ssd.Text)) command.Parameters.Add(new SqlParameter("@SSD", Convert.ToInt32(ssd.Text)));
+                if (!string.IsNullOrWhiteSpace(hdd.Text)) command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
+                if (!string.IsNullOrWhiteSpace(vCard.Text)) command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
+                if (!string.IsNullOrWhiteSpace(videoram.Text)) command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
                 command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@MB", motherboard.Text));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
@@ -2255,24 +2231,24 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
-                command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
-                command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
-                command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
-                command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToInt32(maxFrequency.Text)));
-                command.Parameters.Add(new SqlParameter("@RAM", Convert.ToInt32(ram.Text)));
-                command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToInt32(ramFrequency.Text)));
-                command.Parameters.Add(new SqlParameter("@SSD", Convert.ToInt32(ssd.Text)));
-                command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
-                command.Parameters.Add(new SqlParameter("@Video", vCard.Text));
-                command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
+                if (!string.IsNullOrWhiteSpace(cpu.Text)) command.Parameters.Add(new SqlParameter("@CPU", cpu.Text));
+                if (!string.IsNullOrWhiteSpace(cores.Text)) command.Parameters.Add(new SqlParameter("@Cores", Convert.ToInt32(cores.Text)));
+                if (!string.IsNullOrWhiteSpace(frequency.Text)) command.Parameters.Add(new SqlParameter("@Frequency", Convert.ToInt32(frequency.Text)));
+                if (!string.IsNullOrWhiteSpace(maxFrequency.Text)) command.Parameters.Add(new SqlParameter("@MaxFrequency", Convert.ToInt32(maxFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ram.Text)) command.Parameters.Add(new SqlParameter("@RAM", Convert.ToInt32(ram.Text)));
+                if (!string.IsNullOrWhiteSpace(ramFrequency.Text)) command.Parameters.Add(new SqlParameter("@FrequencyRAM", Convert.ToInt32(ramFrequency.Text)));
+                if (!string.IsNullOrWhiteSpace(ssd.Text)) command.Parameters.Add(new SqlParameter("@SSD", Convert.ToInt32(ssd.Text)));
+                if (!string.IsNullOrWhiteSpace(hdd.Text)) command.Parameters.Add(new SqlParameter("@HDD", Convert.ToInt32(hdd.Text)));
+                if (!string.IsNullOrWhiteSpace(vCard.Text)) command.Parameters.Add(new SqlParameter("@Video", invoice.Text));
+                if (!string.IsNullOrWhiteSpace(videoram.Text)) command.Parameters.Add(new SqlParameter("@VRAM", Convert.ToInt32(videoram.Text)));
                 command.Parameters.Add(new SqlParameter("@OSID", ((DataRowView) os?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@FrequencyID",
@@ -2301,18 +2277,16 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@FrequencyID",
-                    ((DataRowView) screenFrequency?.SelectedItem)?[0]));
-                command.Parameters.Add(
-                    new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@FrequencyID", ((DataRowView) screenFrequency?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@MatrixID", ((DataRowView) matrixTechnology?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
@@ -2335,14 +2309,13 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                if (!string.IsNullOrWhiteSpace(ports.Text)) command.Parameters.Add(new SqlParameter("@NumberOfPorts", Convert.ToInt32(ports.Text)));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@Frequency", ((DataRowView) wifiFrequency?.SelectedItem)?[0]));
                 var bytes = LoadImage(imageFilename.Text);
@@ -2366,14 +2339,13 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
@@ -2395,12 +2367,11 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 command.Parameters.Add(new SqlParameter("@TypeID", ((DataRowView) type?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@PaperSizeID", ((DataRowView) paperSize?.SelectedItem)?[0]));
@@ -2425,16 +2396,14 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@TechnologyID",
-                    ((DataRowView) projectorTechnology?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                command.Parameters.Add(new SqlParameter("@TechnologyID", ((DataRowView) projectorTechnology?.SelectedItem)?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@ResolutionID", ((DataRowView) resolution?.SelectedItem)?[0]));
                 command.Parameters.Add(new SqlParameter("@VConnectors", GetValueVideoConnectors(vConnectors)));
                 var bytes = LoadImage(imageFilename.Text);
@@ -2458,19 +2427,16 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
-                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
-                command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToSingle(diagonal.Text)));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
+                command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView)location?.SelectedItem)?.Row?[0]));
+                if (!string.IsNullOrWhiteSpace(diagonal.Text)) command.Parameters.Add(new SqlParameter("@Diagonal", Convert.ToDecimal(diagonal.Text)));
                 command.Parameters.Add(new SqlParameter("@IsEDrive", Convert.ToBoolean(isEDrive.IsChecked)));
-                command.Parameters.Add(
-                    new SqlParameter("@AspectRatioID", ((DataRowView) aspectRatio?.SelectedItem)?[0]));
-                command.Parameters.Add(new SqlParameter("@InstalledID",
-                    ((DataRowView) screenInstalled?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@AspectRatioID", ((DataRowView) aspectRatio?.SelectedItem)?[0]));
+                command.Parameters.Add(new SqlParameter("@InstalledID", ((DataRowView) screenInstalled?.SelectedItem)?[0]));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
 
@@ -2492,12 +2458,11 @@ namespace AccountingPC
                 {
                     CommandType = CommandType.StoredProcedure
                 };
-                command.Parameters.Add(new SqlParameter("@ID", Accounting.DeviceID));
-                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt32(inventoryNumber.Text)));
+                command.Parameters.Add(new SqlParameter("@ID", DeviceID));
+                command.Parameters.Add(new SqlParameter("@InvN", Convert.ToInt64(inventoryNumber.Text)));
                 command.Parameters.Add(new SqlParameter("@Name", name.Text));
-                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToSingle(cost.Text)));
-                command.Parameters.Add(new SqlParameter("@InvoiceNumber",
-                    invoice.Text == string.Empty ? null : invoice.Text));
+                command.Parameters.Add(new SqlParameter("@Cost", Convert.ToDecimal(cost.Text)));
+                if (!string.IsNullOrWhiteSpace(invoice.Text)) command.Parameters.Add(new SqlParameter("@InvoiceNumber", invoice.Text));
                 command.Parameters.Add(new SqlParameter("@PlaceID", ((DataRowView) location?.SelectedItem)?.Row?[0]));
                 var bytes = LoadImage(imageFilename.Text);
                 if (bytes != null) command.Parameters.Add(new SqlParameter("@Image", bytes));
@@ -2551,7 +2516,7 @@ namespace AccountingPC
                     CommandType = CommandType.StoredProcedure
                 };
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
-                command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
+                command.Parameters.Add(new SqlParameter("@Price", Convert.ToDecimal(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) typeLicense.SelectedItem).Row[0]));
@@ -2571,7 +2536,7 @@ namespace AccountingPC
                     CommandType = CommandType.StoredProcedure
                 };
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
-                command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
+                command.Parameters.Add(new SqlParameter("@Price", Convert.ToDecimal(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command?.ExecuteNonQuery();
@@ -2591,7 +2556,7 @@ namespace AccountingPC
                 };
                 command.Parameters.Add(new SqlParameter("@ID", Accounting.SoftwareID));
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
-                command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
+                command.Parameters.Add(new SqlParameter("@Price", Convert.ToDecimal(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command.Parameters.Add(new SqlParameter("@Type", ((DataRowView) typeLicense.SelectedItem).Row[0]));
@@ -2612,7 +2577,7 @@ namespace AccountingPC
                 };
                 command.Parameters.Add(new SqlParameter("@ID", Accounting.SoftwareID));
                 command.Parameters.Add(new SqlParameter("@Name", softwareName.Text));
-                command.Parameters.Add(new SqlParameter("@Price", Convert.ToSingle(softwareCost.Text)));
+                command.Parameters.Add(new SqlParameter("@Price", Convert.ToDecimal(softwareCost.Text)));
                 command.Parameters.Add(new SqlParameter("@Count", Convert.ToInt32(softwareCount.Text)));
                 command.Parameters.Add(new SqlParameter("@InvoiceNumber", softwareInvoice.Text));
                 command?.ExecuteNonQuery();
@@ -2635,7 +2600,7 @@ namespace AccountingPC
                         soft = new LicenseSoftware
                         {
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Price"] is DBNull) ? reader["Price"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Price"] is DBNull) ? reader["Price"] : 0),
                             Count = Convert.ToInt32(!(reader["Count"] is DBNull) ? reader["Count"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString(),
                             Type = Convert.ToInt32(reader["Type"])
@@ -2674,7 +2639,7 @@ namespace AccountingPC
                         soft = new OS
                         {
                             Name = reader["Name"].ToString(),
-                            Cost = Convert.ToSingle(!(reader["Price"] is DBNull) ? reader["Price"] : 0),
+                            Cost = Convert.ToDecimal(!(reader["Price"] is DBNull) ? reader["Price"] : 0),
                             Count = Convert.ToInt32(!(reader["Count"] is DBNull) ? reader["Count"] : 0),
                             InvoiceNumber = reader["InvoiceNumber"].ToString()
                         };
@@ -2837,6 +2802,9 @@ namespace AccountingPC
                 MessageBox.Show(exception.Message, exception.GetType().Name, MessageBoxButton.OK,
                     MessageBoxImage.Error);
             }
+
+            if (Accounting.TypeChange == TypeChange.Change) CloseCommand.Execute(this, sender as UIElement);
+            else ChangeView();
         }
 
         private void MoveWindow(object sender, MouseButtonEventArgs e)
@@ -2845,7 +2813,8 @@ namespace AccountingPC
             if (Accounting != null)
             {
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
-                Accounting.Top = Top - (Accounting.Height - Height) / 2;
+                double t = Top - (Accounting.Height - Height) / 2;
+                Accounting.Top = t < 0 ? 0 : t;
             }
         }
 
@@ -2854,7 +2823,8 @@ namespace AccountingPC
             if (Accounting != null)
             {
                 Accounting.Left = Left - (Accounting.Width - Width) / 2;
-                Accounting.Top = Top - (Accounting.Height - Height) / 2;
+                double t = Top - (Accounting.Height - Height) / 2;
+                Accounting.Top = t < 0 ? 0 : t;
             }
         }
     }

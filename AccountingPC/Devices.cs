@@ -8,13 +8,13 @@ namespace AccountingPC
         public uint ID { get; set; }
 
         [Required(ErrorMessage = "Поле является обязательным")]
-        public uint InventoryNumber { get; set; }
+        public long InventoryNumber { get; set; }
 
         [Required(ErrorMessage = "Поле является обязательным")]
         [StringLength(200, ErrorMessage = "Максимальная длина - 200")]
         public string Name { get; set; }
 
-        public float Cost { get; set; }
+        public decimal Cost { get; set; }
 
         [StringLength(50, ErrorMessage = "Максимальная длина - 50")]
         public string InvoiceNumber { get; set; }
@@ -65,7 +65,7 @@ namespace AccountingPC
         public uint SSD { get; set; }
         public uint HDD { get; set; }
         public uint OSID { get; set; }
-        public float Diagonal { get; set; }
+        public decimal Diagonal { get; set; }
         public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
         public uint ResolutionID { get; set; }
@@ -76,12 +76,12 @@ namespace AccountingPC
 
     internal class InteractiveWhiteboard : Device
     {
-        public float Diagonal { get; set; }
+        public decimal Diagonal { get; set; }
     }
 
     internal class Projector : Device
     {
-        public float Diagonal { get; set; }
+        public decimal Diagonal { get; set; }
         public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
         public uint ResolutionID { get; set; }
@@ -90,7 +90,7 @@ namespace AccountingPC
 
     internal class ProjectorScreen : Device
     {
-        public float Diagonal { get; set; }
+        public decimal Diagonal { get; set; }
         public bool IsElectronicDrive { get; set; }
         public uint AspectRatioID { get; set; }
         public uint ScreenInstalledID { get; set; }
@@ -104,7 +104,7 @@ namespace AccountingPC
 
     internal class Monitor : Device
     {
-        public float Diagonal { get; set; }
+        public decimal Diagonal { get; set; }
         public List<string> VideoConnectors { get; set; }
         public int VideoConnectorsValue { get; set; }
         public uint ResolutionID { get; set; }

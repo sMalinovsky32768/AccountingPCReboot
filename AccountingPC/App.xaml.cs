@@ -1,5 +1,6 @@
 ﻿using AccountingPC.Properties;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Data;
@@ -10,8 +11,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Forms;
+using static System.Diagnostics.Process;
 using Application = System.Windows.Application;
 using Clipboard = System.Windows.Clipboard;
+using MessageBox = System.Windows.MessageBox;
 
 namespace AccountingPC
 {
@@ -29,6 +32,12 @@ namespace AccountingPC
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            if (GetProcessesByName(GetCurrentProcess().ProcessName).Length > 1)
+            {
+                MessageBox.Show("Приложение уже запущено", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                GetCurrentProcess().Kill();
+                //Shutdown(2);
+            }
             if (e.Args.Contains(@"\CreateDBNotRun"))
             {
                 CreateDB();
@@ -45,12 +54,12 @@ namespace AccountingPC
                     case 0:
                         Resources = new ResourceDictionary();
                         Resources.MergedDictionaries.Add(new ResourceDictionary
-                            { Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml") });
+                        { Source = new Uri("pack://application:,,,/BlackTheme/Theme.xaml") });
                         break;
                     case 1:
                         Resources = new ResourceDictionary();
                         Resources.MergedDictionaries.Add(new ResourceDictionary
-                            { Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml") });
+                        { Source = new Uri("pack://application:,,,/LightTheme/Theme.xaml") });
                         break;
                 }
 
@@ -118,6 +127,7 @@ namespace AccountingPC
             catch (Exception ex)
             {
                 Clipboard.SetText(ex.ToString());
+                MessageBox.Show(ex.ToString(), ex.GetType().Name, MessageBoxButton.OK, MessageBoxImage.Error);
             }
             finally
             {
@@ -166,9 +176,75 @@ namespace AccountingPC
                         }
                 }
 
-                string[] arr = str?.Split(new string[] {"GO"}, StringSplitOptions.None);
+                string[] arr = str?.Split(new[] { "GO" }, StringSplitOptions.None);
 
                 if (arr != null)
+                {
+                    List<string> arrList = new List<string>()
+                    {
+                        Capacity = 512,
+                    };
+                    for (int i = 0; i < arr.Length; i++)
+                    {
+                        str = arr[i];
+                        myCommand = new SqlCommand(str, myConn);
+                        try
+                        {
+                            myConn.Open();
+                            myCommand.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            Clipboard.SetText(ex.ToString());
+                            arrList.Add(str);
+                        }
+                        finally
+                        {
+                            if (myConn.State == ConnectionState.Open) myConn.Close();
+                        }
+                    }
+
+                    while (arrList.Count != 0)
+                    {
+                        int l = arr.Length;
+                        for (int i = 0; i < l; i++)
+                        {
+                            str = arr[i];
+                            myCommand = new SqlCommand(str, myConn);
+                            try
+                            {
+                                myConn.Open();
+                                myCommand.ExecuteNonQuery();
+                                arrList.Remove(str);
+                            }
+                            catch (Exception ex)
+                            {
+                                Clipboard.SetText(ex.ToString());
+                            }
+                            finally
+                            {
+                                if (myConn.State == ConnectionState.Open) myConn.Close();
+                            }
+                        }
+                    }
+                }
+
+
+
+                resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("CommonData.sql"));
+                using (var stream = assembly.GetManifestResourceStream(resourceName))
+                {
+                    if (stream != null)
+                        using (var reader = new StreamReader(stream))
+                        {
+                            str = reader.ReadToEnd();
+                        }
+                }
+
+                arr = str?.Split(new[] { "GO" }, StringSplitOptions.None);
+
+                if (arr != null)
+                {
                     for (int i = 0; i < arr.Length; i++)
                     {
                         str = arr[i];
@@ -187,32 +263,8 @@ namespace AccountingPC
                             if (myConn.State == ConnectionState.Open) myConn.Close();
                         }
                     }
-
-
-                resourceName = assembly.GetManifestResourceNames().Single(s => s.EndsWith("CommonData.sql"));
-                using (var stream = assembly.GetManifestResourceStream(resourceName))
-                {
-                    if (stream != null)
-                        using (var reader = new StreamReader(stream))
-                        {
-                            str = reader.ReadToEnd();
-                        }
                 }
 
-                myCommand = new SqlCommand(str, myConn);
-                try
-                {
-                    myConn.Open();
-                    myCommand.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    Clipboard.SetText(ex.ToString());
-                }
-                finally
-                {
-                    if (myConn.State == ConnectionState.Open) myConn.Close();
-                }
             }
         }
     }

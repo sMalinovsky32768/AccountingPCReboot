@@ -93,6 +93,8 @@
     <Compile Include="AccountingPCWindow.Part1.cs" />
     <Compile Include="AccountingPCWindow.WindowChange.cs" />
     <Compile Include="AccountingReport\Report.CreateExcel.cs" />
+    <Compile Include="AudienceManagement.cs" />
+    <Compile Include="ChangeRelation.cs" />
     <Compile Include="Properties\AccountingPCWindowSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

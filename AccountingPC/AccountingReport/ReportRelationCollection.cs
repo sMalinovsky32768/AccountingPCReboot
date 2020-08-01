@@ -20,9 +20,12 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.Type,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
-                            ReportColumn.Audience
+                            ReportColumn.Audience,
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -38,6 +41,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InventoryNumber,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.Motherboard,
                             ReportColumn.CPU,
                             ReportColumn.Cores,
@@ -53,7 +57,9 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.VideoConnectors,
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
-                            ReportColumn.Audience
+                            ReportColumn.Audience,
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -70,6 +76,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.Type,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.CPU,
                             ReportColumn.Cores,
                             ReportColumn.ProcessorFrequency,
@@ -89,7 +96,8 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -105,6 +113,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InventoryNumber,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.VideoConnectors,
                             ReportColumn.ScreenDiagonal,
                             ReportColumn.ScreenResolution,
@@ -113,7 +122,8 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -129,6 +139,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InventoryNumber,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.MaxDiagonal,
                             ReportColumn.ProjectorTechnology,
                             ReportColumn.ScreenResolution,
@@ -136,7 +147,8 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -152,11 +164,13 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InventoryNumber,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.Diagonal,
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -172,6 +186,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InventoryNumber,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.Diagonal,
                             ReportColumn.IsElectronicDrive,
                             ReportColumn.AspectRatio,
@@ -179,7 +194,8 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -196,11 +212,13 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.Type,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.PaperSize,
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -217,12 +235,14 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.Type,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.NumberOfPorts,
                             ReportColumn.WiFiFrequency,
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -238,10 +258,12 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.InventoryNumber,
                             ReportColumn.Name,
                             ReportColumn.Cost,
+                            ReportColumn.Count,
                             ReportColumn.InvoiceNumber,
                             ReportColumn.AcquisitionDate,
                             ReportColumn.Audience,
-                            ReportColumn.IsWorkingCondition
+                            ReportColumn.Description,
+                            ReportColumn.IsWorkingCondition,
                         }
                     }
                 },
@@ -260,7 +282,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.TotalCost,
                             ReportColumn.TypeLicense,
                             ReportColumn.InvoiceNumber,
-                            ReportColumn.AcquisitionDate
+                            ReportColumn.AcquisitionDate,
                         }
                     }
                 },
@@ -278,7 +300,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.Cost,
                             ReportColumn.TotalCost,
                             ReportColumn.InvoiceNumber,
-                            ReportColumn.AcquisitionDate
+                            ReportColumn.AcquisitionDate,
                         }
                     }
                 },
@@ -298,7 +320,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.TotalCost,
                             ReportColumn.TypeLicense,
                             ReportColumn.InvoiceNumber,
-                            ReportColumn.AcquisitionDate
+                            ReportColumn.AcquisitionDate,
                         }
                     }
                 },
@@ -315,7 +337,7 @@ namespace AccountingPC.AccountingReport
                             ReportColumn.Cost,
                             ReportColumn.Count,
                             ReportColumn.TotalCount,
-                            ReportColumn.IsAvailable
+                            ReportColumn.IsAvailable,
                         }
                     }
                 }

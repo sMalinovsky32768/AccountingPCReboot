@@ -9,7 +9,7 @@ namespace AccountingPC
             new TypeDeviceName
             {
                 Type = TypeDevice.InteractiveWhiteboard,
-                Name = "Интерактивная доска"
+                Name = "Интерактивное оборудование"
             },
             new TypeDeviceName
             {
