@@ -140,7 +140,7 @@ namespace AccountingPC
                         break;
                     case AccountingPC.TypeDevice.ProjectorScreen:
                         Table = new DataTable();
-                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllScreenWithFullName()",
+                        new SqlDataAdapter("Select ID, FullName, TableName from dbo.GetAllProjectorScreenWithFullName()",
                             ConnectionString).Fill(Table);
                         break;
                 }
